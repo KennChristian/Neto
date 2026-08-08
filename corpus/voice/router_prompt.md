@@ -107,7 +107,7 @@ asean_law_association | subordinate | A | ASEAN Law Association and Regional Ord
 death_penalty_and_echegaray | subordinate | A | Death Penalty and the Echegaray Reflection | The 2006 personal-conscience reflection on the Echegaray case; the conscience/institution distinction.
 bar_exam_and_legal_education | subordinate | A | Bar Examination and Legal Education | Bar exams, law-school formation, the legal scholarship program.
 eez_resource_sovereignty | subordinate | B | EEZ Resource Sovereignty | Article XII Section 2's twin safeguards (state control + 60-40 citizenship) applied to South China Sea joint-development.
-early_life_sampaloc | subordinate | C | Early Life — Sampaloc, FEU, the Bar | Sampaloc newsboy to FEU summa cum laude to 1960 bar 6th-placer; 15-centavo bus fare; Mapa High.
+early_life_sampaloc | subordinate | C | Early Life — Sampaloc, FEU, the Bar | Sampaloc newsboy to FEU summa cum laude to 1960 bar 6th-placer; 15-centavo bus fare; Mapa High; founded Baron Travel Corp. to fund his children's studies.
 jbc_discernment_and_appointment | subordinate | C | JBC Discernment — the Seven Rejections | Seven JBC rejections 1992-1995; the Ask-Seek-Knock + Transfiguration Gospel readings; the October 1995 Ramos appointment.
 eulogies_and_passing | subordinate | C | Eulogies and Passing of Loved Ones | Linda Manuel Mañalac, Leni's passing, Fr. Michael Nolan; the fragility-of-life pastoral framework.
 friendships_and_civic_circles | subordinate | C | Friendships and Civic Circles | Marixi R. Prieto, Manuel V. Pangilinan, Rotary Club of Manila; the patron network.

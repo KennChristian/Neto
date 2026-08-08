@@ -1,0 +1,160 @@
+#!/bin/bash
+# audio-out - switch Reachy Mini audio output between the internal speaker
+#             and the paired Bluetooth speakers.
+#
+# Lives outside /venvs on purpose: anything under /venvs is erased by a
+# daemon update.
+#
+# How this works: ~/.asoundrc routes playback through pcm.audio_out_route,
+# whose definition lives in ~/.asoundrc.route (loaded via an @hooks include).
+# This script rewrites that route file:
+#   internal   -> type pulse   (PipeWire default sink = internal XMOS)
+#   bluetooth  -> type bluealsa, device <MAC>, profile a2dp
+#
+# Bluetooth audio on this Pi goes through BlueALSA (vendor-enabled
+# bluealsa.service), NOT PipeWire: BlueALSA owns the A2DP endpoints, so
+# WirePlumber never creates a 'bluez' sink. Do not wait for one.
+#
+# ALSA reads the route at PCM open time, so only NEWLY opened playback
+# streams follow a switch. The robot app plays each utterance via a
+# short-lived aplay, so its next utterance picks up the new route.
+#
+# WARNING: Bluetooth output bypasses the XMOS speaker, which breaks its
+# echo cancellation -> end-of-speech detection degrades in the
+# conversation app. Use the internal speaker for demos.
+
+set -u
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
+
+ROUTE_FILE="$HOME/.asoundrc.route"
+TEST_WAV="/usr/share/sounds/alsa/Front_Center.wav"
+
+SONY_MAC="50:1B:6A:8B:16:F2"       # Sony ULT FIELD 1
+MARSHALL_MAC="04:21:44:84:1F:C1"   # Marshall EMBERTON
+
+bt_connected() { bluetoothctl info "$1" 2>/dev/null | grep -q "Connected: yes"; }
+
+bt_ensure_connected() {  # $1=mac  $2=label
+    if bt_connected "$1"; then return 0; fi
+    echo "connecting to $2 ..."
+    bluetoothctl connect "$1" >/dev/null 2>&1
+    for _ in $(seq 1 10); do
+        bt_connected "$1" && return 0
+        sleep 1
+    done
+    echo "error: could not connect to $2 ($1) - is it powered on?"
+    return 1
+}
+
+write_route_internal() {
+    cat > "$ROUTE_FILE" <<'EOF'
+# Written by ~/bin/audio-out - do not edit by hand.
+# Route: internal speaker (XMOS) via PipeWire default sink.
+pcm.!audio_out_route {
+    type pulse
+}
+EOF
+}
+
+write_route_bluealsa() {  # $1=mac  $2=label
+    cat > "$ROUTE_FILE" <<EOF
+# Written by ~/bin/audio-out - do not edit by hand.
+# Route: $2 ($1) via BlueALSA.
+pcm.!audio_out_route {
+    type plug
+    slave.pcm {
+        type bluealsa
+        device "$1"
+        profile "a2dp"
+    }
+}
+EOF
+}
+
+use_internal() {
+    write_route_internal
+    # keep PipeWire's default on the XMOS sink and pull live PipeWire
+    # streams back to it
+    local name si
+    name=$(pactl list sinks short 2>/dev/null | awk '/Reachy_Mini_Audio/ {print $2; exit}')
+    if [ -n "$name" ]; then
+        pactl set-default-sink "$name" 2>/dev/null
+        pactl set-sink-volume "$name" 100% 2>/dev/null
+        for si in $(pactl list sink-inputs short 2>/dev/null | awk '{print $1}'); do
+            pactl move-sink-input "$si" "$name" 2>/dev/null
+        done
+    fi
+    echo "output -> internal speaker (XMOS)"
+}
+
+use_bt() {  # $1=mac  $2=label
+    bt_ensure_connected "$1" "$2" || return 1
+    write_route_bluealsa "$1" "$2"
+    echo "output -> $2 ($1) via BlueALSA"
+    echo "note: BT bypasses XMOS echo-cancel; end-of-speech detection degrades"
+    echo "      in the conversation app. 'audio-out internal' switches back."
+}
+
+route_label() {
+    if grep -q "type bluealsa" "$ROUTE_FILE" 2>/dev/null; then
+        local mac
+        mac=$(awk -F'"' '/device/ {print $2; exit}' "$ROUTE_FILE")
+        case "$mac" in
+            "$SONY_MAC")     echo "bluetooth: Sony ULT FIELD 1 ($mac)" ;;
+            "$MARSHALL_MAC") echo "bluetooth: Marshall EMBERTON ($mac)" ;;
+            *)               echo "bluetooth: $mac" ;;
+        esac
+    else
+        echo "internal speaker (XMOS)"
+    fi
+}
+
+case "${1:-status}" in
+  internal|speaker|xmos)
+      use_internal
+      ;;
+  sony|ult|field)
+      use_bt "$SONY_MAC" "Sony ULT FIELD 1"
+      ;;
+  marshall|emberton)
+      use_bt "$MARSHALL_MAC" "Marshall EMBERTON"
+      ;;
+  bt|bluetooth)
+      # prefer a speaker that is already connected, else try Sony then Marshall
+      if bt_connected "$SONY_MAC"; then
+          use_bt "$SONY_MAC" "Sony ULT FIELD 1"
+      elif bt_connected "$MARSHALL_MAC"; then
+          use_bt "$MARSHALL_MAC" "Marshall EMBERTON"
+      else
+          use_bt "$SONY_MAC" "Sony ULT FIELD 1" || use_bt "$MARSHALL_MAC" "Marshall EMBERTON"
+      fi
+      ;;
+  disconnect)
+      bluetoothctl disconnect "$SONY_MAC" >/dev/null 2>&1
+      bluetoothctl disconnect "$MARSHALL_MAC" >/dev/null 2>&1
+      echo "Bluetooth disconnected; falling back to internal"
+      use_internal
+      ;;
+  test)
+      echo "playing test sound via current route: $(route_label)"
+      aplay -q -D reachymini_audio_sink "$TEST_WAV"
+      ;;
+  status|list)
+      echo "=== route (new playback streams) ==="
+      echo "  $(route_label)"
+      echo
+      echo "=== bluetooth speakers ==="
+      for entry in "$SONY_MAC|Sony ULT FIELD 1" "$MARSHALL_MAC|Marshall EMBERTON"; do
+          mac="${entry%%|*}"; label="${entry#*|}"
+          if bt_connected "$mac"; then st="connected"; else st="not connected"; fi
+          echo "  $label ($mac): $st"
+      done
+      echo
+      echo "=== active PipeWire playback streams ==="
+      pactl list sink-inputs 2>/dev/null | grep -E "Sink Input #|Sink:" || echo "  (none playing)"
+      ;;
+  *)
+      echo "usage: audio-out {internal|sony|marshall|bluetooth|disconnect|test|status}"
+      exit 1
+      ;;
+esac

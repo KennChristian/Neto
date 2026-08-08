@@ -171,6 +171,7 @@ def transcribe_openai(
     audio_path: str | Path,
     model: str | None = None,
     language: Optional[str] = None,
+    prompt: Optional[str] = None,
 ) -> str:
     """Transcribe an audio file via OpenAI Whisper API.
 
@@ -199,6 +200,8 @@ def transcribe_openai(
         }
         if language:
             kwargs["language"] = language
+        if prompt:
+            kwargs["prompt"] = prompt
         resp = client.audio.transcriptions.create(**kwargs)
     # response_format="text" returns a plain string; defensively
     # handle the structured-response shape too.
@@ -206,6 +209,70 @@ def transcribe_openai(
         return resp.strip()
     text = getattr(resp, "text", "")
     return str(text).strip()
+
+
+# Wake-window STT prompt: the wake phrase AND its forbidden near-misses as
+# contrast vocabulary. A bare "Cee-Jap" in a 1.5s window is an OOV word whisper
+# otherwise mangles ("You"), but biasing toward ONLY "Cee-Jap" flips a spoken
+# "See Jay" into the wake phrase (WW-5 violation, measured 2026-08-03). Listing
+# both lets whisper pick the acoustically closer spelling.
+_WAKE_PROMPT = "Words that may occur: Cee-Jap, See Jay, CJ, Japan."
+
+_LOCAL_WHISPER = None
+
+
+def _local_whisper():
+    """Resident faster-whisper model for on-device wake spotting (loaded once).
+    CJ_WAKE_LOCAL_MODEL sizes it; tiny/int8 is the Pi 4 budget."""
+    global _LOCAL_WHISPER
+    if _LOCAL_WHISPER is None:
+        from faster_whisper import WhisperModel
+        _LOCAL_WHISPER = WhisperModel(os.environ.get("CJ_WAKE_LOCAL_MODEL", "tiny"),
+                                      device="cpu", compute_type="int8")
+    return _LOCAL_WHISPER
+
+
+def transcribe(audio_path: str | Path, backend: Optional[str] = None,
+               language: Optional[str] = None) -> str:
+    """Adapter for develop-branch callers (wake_word.SttKeywordDetector expects
+    voice_io.transcribe(path, backend=..., language=...)). backend "local" runs
+    faster-whisper ON the robot — the idle wake loop then needs no network and
+    costs $0 — with OpenAI whisper-1 as the exception fallback; any other
+    backend value goes straight to whisper-1.
+
+    Echo guard (both backends): on noisy windows whisper sometimes parrots the
+    bias prompt itself ('Cee-Jap, See Jay, CJ, Japan.') — which contains the
+    wake phrase and caused a false wake (journal 2026-08-03 15:59). A real
+    visitor never says two-plus contrast terms in one 1.5s breath, so such
+    transcripts are dropped."""
+    def _local(p):
+        segments, _ = _local_whisper().transcribe(
+            str(p), language=language or "en", initial_prompt=_WAKE_PROMPT,
+            beam_size=1, condition_on_previous_text=False)
+        return " ".join(s.text.strip() for s in segments).strip()
+
+    def _cloud(p):
+        return transcribe_openai(p, language=language, prompt=_WAKE_PROMPT)
+
+    # Measured on the Pi 4 (2026-08-03): local tiny takes ~5.2s per 1.5s window
+    # and misses most spoken forms of "Cee-Jap" — NOT viable as the primary.
+    # whisper-1 (~1s, accurate) leads; local is the no-network degraded mode.
+    order = [("local", _local), ("openai", _cloud)] if (backend or "").lower() == "local" \
+        else [("openai", _cloud), ("local", _local)]
+    text = None
+    for name, fn in order:
+        try:
+            text = fn(audio_path)
+            break
+        except Exception as e:
+            print(f"[stt] {name} wake STT failed ({type(e).__name__}: {e}); trying next")
+    if text is None:
+        return ""
+    norm = text.lower()
+    echo_hits = ("see jay" in norm) + ("japan" in norm) + bool(re.search(r"\bcj\b", norm))
+    if echo_hits >= 2:
+        return ""
+    return text
 
 
 # ============================================================

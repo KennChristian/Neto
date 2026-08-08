@@ -1,0 +1,24 @@
+[Unit]
+Description=Supervaise CJ Panganiban hands-free voice robot (wake word "Cee-Jap")
+After=network-online.target bluetooth.service bluealsa.service reachy-mini-daemon.service speaker-watchdog.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pollen
+Group=pollen
+WorkingDirectory=/home/pollen/Supervaise-Reachy-Mini-Project-main/app
+# Playback goes aplay -> ALSA pulse plugin -> PipeWire (user session; pollen
+# has lingering enabled, so it is up at boot). XDG_RUNTIME_DIR is how the
+# plugin finds the PipeWire socket.
+Environment=CJ_WAKE_WORD_ENABLED=1
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+# Give the reachy-mini daemon a beat to expose the SDK before Gestures connects
+# (Gestures degrades to no-op for the whole process life if it can't connect).
+ExecStartPre=/bin/sleep 8
+ExecStart=/home/pollen/Supervaise-Reachy-Mini-Project-main/app/.venv/bin/python -u cj_voice_cloud.py --wake
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Auto-connect Sony ULT Field 1 speaker
+After=bluetooth.service bluealsa.service
+Wants=bluetooth.service bluealsa.service
+
+[Service]
+User=pollen
+ExecStart=/home/pollen/speaker-watchdog.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

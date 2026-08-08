@@ -99,6 +99,23 @@ from anthropic import Anthropic
 ROUTER_MODEL = os.environ.get("ROUTER_MODEL", "claude-haiku-4-5-20251001")
 INFERENCE_MODEL = os.environ.get("INFERENCE_MODEL", "claude-sonnet-4-6")
 
+# Latency knobs (Pi voice deployment). Env-overridable; defaults favor a fast
+# spoken turn: shorter answers and, on Sonnet, low effort (the server default
+# is `high`, which spends far more time/tokens than a short persona answer needs).
+COMPOSER_MAX_TOKENS = int(os.environ.get("CJ_COMPOSER_MAX_TOKENS", "220"))
+COMPOSER_EFFORT = os.environ.get("CJ_COMPOSER_EFFORT", "low").strip()
+SKIP_FIDELITY = os.environ.get("CJ_SKIP_FIDELITY", "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _composer_speed_kwargs() -> dict:
+    """Extra kwargs for the composer call. Haiku 4.5 rejects the effort
+    parameter, so send nothing there; on Sonnet 4.6+ disable thinking and
+    pin effort (empty CJ_COMPOSER_EFFORT sends neither)."""
+    if not COMPOSER_EFFORT or "haiku" in INFERENCE_MODEL:
+        return {}
+    return {"thinking": {"type": "disabled"},
+            "output_config": {"effort": COMPOSER_EFFORT}}
+
 
 # Per ADR-0011: doc IDs follow ^[SCG][A-E]\d+$. The first letter selects the
 # corpus subdirectory; the second letter selects the theme subdirectory.
@@ -516,7 +533,10 @@ Classify the user's question into ONE of these scopes:
 - "in_corpus": a question whose answer is reasonably present in
    CJP's published corpus (columns, speeches, biography) — legal
    doctrine, opinions, biography, FLP work, current events
-   commentary.
+   commentary. His biography in the corpus includes his business
+   ventures: he founded Baron Travel Corp. (travel agency) to fund
+   his children's education, so questions about Baron Travel or
+   his business career are in_corpus.
 
 - "out_of_corpus": a question whose answer is not in his record
    — recent news he hasn't written about, specifics of cases he
@@ -741,16 +761,24 @@ def generate_response(
 
     resp = client.messages.create(
         model=INFERENCE_MODEL,
-        max_tokens=300,  # spoken responses ~20-150 words = ~30-225 tokens (post-50% compression)
+        max_tokens=COMPOSER_MAX_TOKENS,  # spoken responses ~20-150 words (180 = fast Pi default)
         system=[{
             "type": "text",
             "text": artifacts.voice_card,
             "cache_control": {"type": "ephemeral"},
         }],
         messages=messages,
+        **_composer_speed_kwargs(),
     )
     _log_cache_usage("inference", resp.usage)
-    return _strip_stage_directions(resp.content[0].text.strip())
+    text = resp.content[0].text.strip()
+    if resp.stop_reason == "max_tokens":
+        # Cap hit mid-sentence — trim back to the last complete sentence so
+        # the spoken answer never ends on a cut-off clause.
+        cut = max(text.rfind("."), text.rfind("!"), text.rfind("?"))
+        if cut > len(text) // 2:
+            text = text[:cut + 1]
+    return _strip_stage_directions(text)
 
 
 def generate_response_stream(
@@ -789,13 +817,14 @@ def generate_response_stream(
 
     with client.messages.stream(
         model=INFERENCE_MODEL,
-        max_tokens=300,  # spoken responses ~20-150 words = ~30-225 tokens (post-50% compression)
+        max_tokens=COMPOSER_MAX_TOKENS,  # spoken responses ~20-150 words (180 = fast Pi default)
         system=[{
             "type": "text",
             "text": artifacts.voice_card,
             "cache_control": {"type": "ephemeral"},
         }],
         messages=messages,
+        **_composer_speed_kwargs(),
     ) as stream:
         for text in stream.text_stream:
             yield text
@@ -917,8 +946,15 @@ def generate_response_with_fidelity(
     documents the most-recent check; callers can show it in the
     operator dashboard.
     """
-    context = build_context(routing, artifacts)
     draft = generate_response(client, question, routing, artifacts, conversation_history)
+    if SKIP_FIDELITY:
+        return draft, {
+            "hallucination": False,
+            "voice_drift": False,
+            "guardrail_violation": False,
+            "reasoning": "fidelity check skipped (CJ_SKIP_FIDELITY)",
+        }
+    context = build_context(routing, artifacts)
     check = fidelity_check(client, context, draft)
 
     if not any([check["hallucination"], check["voice_drift"], check["guardrail_violation"]]):

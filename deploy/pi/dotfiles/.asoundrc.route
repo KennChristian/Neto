@@ -1,0 +1,5 @@
+# Written by ~/bin/audio-out - do not edit by hand.
+# Route: internal speaker (XMOS) via PipeWire default sink.
+pcm.!audio_out_route {
+    type pulse
+}
