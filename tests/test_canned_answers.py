@@ -66,6 +66,18 @@ for q, want in [
     ("Can you speak Tagalog?", "speak_tagalog"),
     ("Tell me a joke!", "tell_joke"),
     ("What is the Supreme Court?", "supreme_court_what"),
+    ("What was your most famous decision?", "famous_case"),
+    ("Why did you become a lawyer?", "why_lawyer"),
+    ("Tell me about your faith.", "faith"),
+    ("Are you religious?", "faith"),
+    ("Who made you?", "who_built_you"),
+    ("What do you do now?", "what_do_now"),
+    ("Are you retired?", "what_do_now"),
+    ("What is your message to the Filipino people?", "message_filipinos"),
+    ("What do you think about the West Philippine Sea?", "west_philippine_sea"),
+    ("Tell me about the Arbitral Award.", "west_philippine_sea"),
+    ("Can you sing?", "can_you_sing"),
+    ("Did you top the bar exam?", "education"),
 ]:
     check(f"hit: {q!r} -> {want}", hits(q) == want)
 
@@ -106,9 +118,13 @@ os.environ["CJ_CANNED_ENABLED"] = "1"
 
 # --- every entry's answers are non-empty strings ---
 entries = canned_answers._load()
-check("entries loaded", len(entries) >= 10)
+check("entries loaded", len(entries) >= 25)
 check("all answers non-empty",
       all(isinstance(a, str) and a.strip() for e in entries for a in e["answers"]))
+check("every entry has >=5 variants",
+      all(len(e["answers"]) >= 5 for e in entries))
+variants2 = {canned_answers.match("Who are you?")["answer"] for _ in range(40)}
+check("pattern entries rotate variants", len(variants2) >= 3)
 
 print(f"\n{PASS}/{PASS + FAIL} passed")
 sys.exit(1 if FAIL else 0)

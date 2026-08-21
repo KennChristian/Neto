@@ -537,6 +537,14 @@ def handle_get(h, path, params):
                     "text/plain; charset=utf-8")
         except OSError:
             h._send(404, "notes file not found", "text/plain; charset=utf-8")
+    elif path == "/canned-qa":  # compiled canned Q&A (scripts/export_canned_qa.py)
+        try:
+            h._send(200, open(os.path.join(HOME, "canned_qa.txt"),
+                              encoding="utf-8").read(),
+                    "text/plain; charset=utf-8")
+        except OSError:
+            h._send(404, "canned_qa.txt not found — run "
+                    "scripts/export_canned_qa.py", "text/plain; charset=utf-8")
     elif path == "/backup":  # newest checkpoint tarball from ~/backups, streamed
         import glob as _glob
         files = sorted(_glob.glob(os.path.join(HOME, "backups", "checkpoint-*.tar.gz")))
