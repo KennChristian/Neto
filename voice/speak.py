@@ -102,6 +102,13 @@ def effective_settings(speed: Optional[float] = None) -> dict:
     return s
 
 
+# Keep-alive session: sentence-streamed answers synth one request per sentence,
+# and a fresh TLS handshake to api.elevenlabs.io costs ~0.3-0.7s each on the
+# CM4. requests.Session reuses the connection across sentences (thread-safe
+# for this use: worker pool is size 1-2 and requests serializes per-connection).
+_session = requests.Session()
+
+
 def synthesize(text: str, speed: Optional[float] = None) -> np.ndarray:
     """Text → float32 mono PCM at audio.SYNTH_SAMPLE_RATE via ElevenLabs.
     Raises SynthError (never leaks the API key in messages)."""
@@ -116,7 +123,7 @@ def synthesize(text: str, speed: Optional[float] = None) -> np.ndarray:
     last_detail = "unknown"
     for attempt in range(config.MAX_RETRIES + 1):
         try:
-            resp = requests.post(url, headers=headers, json=body, params=params,
+            resp = _session.post(url, headers=headers, json=body, params=params,
                                  timeout=config.REQUEST_TIMEOUT_S)
         except (requests.ConnectionError, requests.Timeout) as e:
             last_detail = type(e).__name__

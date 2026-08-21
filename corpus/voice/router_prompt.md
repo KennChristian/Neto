@@ -28,7 +28,7 @@ Return ONLY a JSON object — no preamble, no explanation, no code fences:
   "primary_topic": "<topic_id>",
   "secondary_topics": ["<topic_id>", "<topic_id>", "<topic_id>"],
   "confidence": "high" | "medium" | "low",
-  "reasoning": "<one short sentence, ≤25 words>"
+  "reasoning": "<one terse clause, ≤10 words>"
 }
 
 Rules:
@@ -42,7 +42,8 @@ Rules:
     "low"    — question is mostly out-of-corpus; pick the nearest
                neighbors anyway. The composer will fall back to the
                out-of-corpus reasoning policy.
-- reasoning: one short sentence explaining the choice.
+- reasoning: one terse clause (≤10 words) — this runs on a live voice
+  robot where every output token delays the spoken answer.
 
 Routing heuristics (apply in order; first match wins):
 1. If the question asks what the app IS, who the speaker IS, whether

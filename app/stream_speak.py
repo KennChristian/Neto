@@ -313,10 +313,13 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
             route_box["r"] = route_question(client, question, artifacts)
         except Exception as e:
             route_box["err"] = e
+        finally:
+            route_box["s"] = round(time.monotonic() - t0, 2)
 
     rt = threading.Thread(target=_route, daemon=True)
     rt.start()
     gate = input_gate(client, question)
+    gate_s = round(time.monotonic() - t0, 2)
     if gate.get("scope") == "identity_probe":
         routing = force_meta_routing(gate.get("reasoning", ""))
     else:
@@ -324,6 +327,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         if "err" in route_box:
             raise route_box["err"]
         routing = route_box.get("r") or force_meta_routing("router timeout fallback")
+    print(f"[stream] gate {gate_s}s | route {route_box.get('s', '-')}s (parallel)")
     if abort.is_set():
         return None
 
@@ -359,6 +363,8 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
     buf, parts = "", []
     for piece in generate_response_stream(client, question, routing, artifacts,
                                           history):
+        if not parts:
+            print(f"[stream] first composer token {time.monotonic() - t0:.1f}s")
         if abort.is_set():
             if speaker.interrupted:
                 break        # stop word / mute fired: stop composing, report it

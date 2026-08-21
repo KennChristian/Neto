@@ -103,6 +103,11 @@ INFERENCE_MODEL = os.environ.get("INFERENCE_MODEL", "claude-sonnet-4-6")
 # spoken turn: shorter answers and, on Sonnet, low effort (the server default
 # is `high`, which spends far more time/tokens than a short persona answer needs).
 COMPOSER_MAX_TOKENS = int(os.environ.get("CJ_COMPOSER_MAX_TOKENS", "220"))
+# Router output cap (2026-08-21): the router emits ~100 tokens of compact JSON
+# (reasoning is prompt-capped to one short clause); a tight cap just bounds
+# runaway output. Do NOT set below ~140 — a truncated JSON parse falls back to
+# rule_of_law/low-confidence routing.
+ROUTER_MAX_TOKENS = int(os.environ.get("CJ_ROUTER_MAX_TOKENS", "300"))
 COMPOSER_EFFORT = os.environ.get("CJ_COMPOSER_EFFORT", "low").strip()
 SKIP_FIDELITY = os.environ.get("CJ_SKIP_FIDELITY", "").strip().lower() in {"1", "true", "yes", "on"}
 
@@ -197,10 +202,11 @@ def _length_note(max_tokens: int) -> str:
     """Brevity cue appended to the composer's user turn when the budget is
     tuned down (TOKEN_BUDGET_SCALE < 1.0). The model must KNOW the ceiling,
     or it composes a full-length answer and the cap truncates it mid-arc.
-    ~0.7 words/token for the persona's English; ~2.5 words/s spoken."""
+    ~0.6 words/token leaves headroom below the hard cap (at 0.7 the live META
+    turns wrote exactly to the cap and got sentence-trimmed); ~2.5 words/s."""
     if TOKEN_BUDGET_SCALE >= 1.0:
         return ""
-    words = max(20, int(max_tokens * 0.7))
+    words = max(20, int(max_tokens * 0.6))
     return (
         f"\n\n<length_note>\nThis is a live spoken conversation. Reply in about "
         f"{words} words or fewer (~{max(10, int(words / 2.5))} seconds of speech): "
@@ -554,7 +560,7 @@ def route_question(client: Anthropic, question: str, artifacts: CorpusArtifacts)
     """
     resp = client.messages.create(
         model=ROUTER_MODEL,
-        max_tokens=300,
+        max_tokens=ROUTER_MAX_TOKENS,
         system=[{
             "type": "text",
             "text": artifacts.router_system,
@@ -718,7 +724,11 @@ def force_meta_routing(reasoning: str = "Input gate flagged identity probe.") ->
 # PLAN-0001 §C: soft token budget for the assembled context. Source docs
 # are dropped lowest-priority-first when over budget; never truncate
 # mid-doc. ~4 chars ≈ 1 token (Anthropic tokeniser approximation).
-CONTEXT_TOKEN_BUDGET = 12_000
+# Composer context ceiling. Every context token is Sonnet PREFILL that delays
+# the first spoken sentence; with conversational-scale answers (~100 output
+# tokens) a lean context reads noticeably faster. Env CJ_CONTEXT_TOKEN_BUDGET
+# (deployed 5000 for the live kiosk; 12000 = the original full-grounding value).
+CONTEXT_TOKEN_BUDGET = int(os.environ.get("CJ_CONTEXT_TOKEN_BUDGET", "12000"))
 _CHARS_PER_TOKEN_APPROX = 4
 
 
