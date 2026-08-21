@@ -292,6 +292,15 @@ class SentenceSpeaker:
         self._done_feeding.set()
 
 
+def _fidelity_audit_enabled():
+    # Deliberately independent of CJ_SKIP_FIDELITY: that flag exists to skip
+    # the classic path's verify-before-speak retry loop (a LATENCY cost, and
+    # it is set in app/.env for that reason). This audit is async during
+    # playback — free — so it gets its own switch only.
+    return os.environ.get("CJ_FIDELITY_AUDIT", "1").strip().lower() not in {
+        "0", "false", "no", "off"}
+
+
 def stream_turn(client, artifacts, question, history, *, play_fn,
                 on_first_audio=None, abort=None, style_fn=None):
     """Gate -> route -> STREAMED compose, speaking sentence-by-sentence.
@@ -394,6 +403,25 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         ready, buf = split_ready(buf)
         for s in ready:
             _add_gated(_strip_stage_directions(s))
+    # Async fidelity audit (user-approved 2026-08-21): the Haiku checker runs
+    # WHILE the answer's audio plays (speaker.finish() below blocks for the
+    # remaining playback, which almost always outlasts the ~1-1.5s check), so
+    # it adds no turn latency. Flags are AUDITED — the audio is already out —
+    # and surface in the journal, turn meta, and maintenance page. Skipped for
+    # canned/out-of-topic prose (hand-curated). Disable: CJ_FIDELITY_AUDIT=0.
+    fid_box, fid_thread = {}, None
+    audit_text = _strip_stage_directions("".join(parts)).strip()
+    if ooc_text is None and audit_text and _fidelity_audit_enabled():
+        def _audit():
+            try:
+                from cj_chat import fidelity_check, build_context
+                ctx = build_context(routing, artifacts)
+                fid_box.update(fidelity_check(client, ctx, audit_text))
+            except Exception as e:   # audit must never break a turn
+                print(f"[fidelity] audit failed open: {type(e).__name__}: {e}")
+        fid_thread = threading.Thread(target=_audit, daemon=True)
+        fid_thread.start()
+
     dropped_tail = None
     if not speaker.interrupted:
         tail = _strip_stage_directions(buf.strip())
@@ -424,6 +452,17 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         if not gate_full["ok"]:
             print(f"[answer-gate] full-answer trip (audited, already spoken): "
                   f"{[t['rule'] for t in gate_full['tripped']]}")
+    if fid_thread is not None:
+        # Playback normally outlasts the audit; after a stop-word cut don't
+        # hold the turn open — the daemon thread just logs when it lands.
+        fid_thread.join(timeout=1.0 if interrupted else 12.0)
+        flags = [k for k in ("hallucination", "voice_drift",
+                             "guardrail_violation") if fid_box.get(k)]
+        if flags:
+            print(f"[fidelity] AUDIT flagged (already spoken): {flags} — "
+                  f"{fid_box.get('reasoning', '')[:140]}")
+        elif fid_box:
+            print("[fidelity] audit clean")
     return {
         "response": response_text,
         "routing": routing,
@@ -434,4 +473,5 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         "n_sentences": speaker.n_sentences,
         "gate_blocked_sentences": gate_blocked,
         "gate_full": gate_full,
+        "fidelity": fid_box or None,
     }

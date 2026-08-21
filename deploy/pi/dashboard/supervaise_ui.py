@@ -432,7 +432,11 @@ async function poll(){try{
     '<br><b>token budget:</b> '+esc(m.token_budget)+(m.dynamic_tokens?' (dynamic)':' (fixed)')+
     (m.cost_usd!=null?'<br><b>cost:</b> '+(100*m.cost_usd).toFixed(2)+'&cent; this turn'+
       (m.cost_total_usd!=null?' &middot; $'+m.cost_total_usd.toFixed(2)+' since service start':'')+
-      ' <span class="dim">(Anthropic only)</span>':'');
+      ' <span class="dim">(Anthropic only)</span>':'')+
+    (m.fidelity_flags?(m.fidelity_flags.length
+      ?'<br><b>fidelity:</b> <span class="raw">'+esc(m.fidelity_flags.join(', '))+'</span> &mdash; '+
+        esc((m.fidelity_reasoning||'').slice(0,120))
+      :'<br><b>fidelity:</b> <span class="fix">clean</span>'):'');
     let lat='STT '+m.stt_s+'s'+bar(m.stt_s,10)+'Compose '+m.compose_s+'s'+bar(m.compose_s,20);
     if(sp&&sp.question===m.question)
       lat+=(sp.streamed?'First audio '+(sp.first_audio_s!=null?sp.first_audio_s:'?')+'s'+bar(sp.first_audio_s||0,15)
@@ -446,7 +450,8 @@ async function poll(){try{
     Object.values(byQ).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12).map(x=>{
       const sp2=x.streamed?('first audio '+(x.first_audio_s!=null?x.first_audio_s+'s':'?'))
         :(x.synth_s!=null?('synth '+x.synth_s+'s / play '+x.play_s+'s'):'');
-      const fl=[x.streamed?'stream':'',x.dynamic_tokens?'dyn-tok':'',x.interrupted?'CUT':''].filter(Boolean).join(' ');
+      const fl=[x.streamed?'stream':'',x.dynamic_tokens?'dyn-tok':'',x.interrupted?'CUT':'',
+        (x.fidelity_flags&&x.fidelity_flags.length)?('FID:'+x.fidelity_flags.join(',')):''].filter(Boolean).join(' ');
       return '<tr><td>'+(x.ts?new Date(1000*x.ts).toLocaleTimeString():'')+'</td><td>'+
         esc((x.question||'').slice(0,60))+'</td><td>'+esc(x.theme||'')+'</td><td>'+esc(x.token_budget||'')+
         '</td><td>'+(x.cost_usd!=null?(x.cost_usd?(100*x.cost_usd).toFixed(2)+'¢':'free'):'')+

@@ -97,6 +97,17 @@ def _cost_meta(cost0):
             "cost_total_usd": round(now, 4)}
 
 
+def _fidelity_meta(fid):
+    """Maintenance-feed fields from the async fidelity audit (stream_speak);
+    empty when the audit didn't run or hadn't landed by turn end."""
+    if not fid:
+        return {}
+    flags = [k for k in ("hallucination", "voice_drift", "guardrail_violation")
+             if fid.get(k)]
+    return {"fidelity_flags": flags,
+            "fidelity_reasoning": fid.get("reasoning", "")[:300]}
+
+
 def _publish_turn_meta(rec):
     """Per-turn internals feed for the maintenance UI (P2.5). Fail-open."""
     try:
@@ -672,6 +683,11 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
             _publish_transcript(
                 "note", f"(answer gate full-answer audit tripped: "
                 f"{', '.join(t['rule'] for t in gf['tripped'])})")
+        fid_flags = _fidelity_meta(out.get("fidelity")).get("fidelity_flags")
+        if fid_flags:
+            _publish_transcript(
+                "note", f"(fidelity audit flagged: {', '.join(fid_flags)} — "
+                f"{(out.get('fidelity') or {}).get('reasoning', '')[:120]})")
         try:  # P2.5 maintenance feed
             from cj_chat import (TOKEN_BUDGET_BY_DIM, TOKEN_BUDGET_DIM_DEFAULT,
                                  DYNAMIC_TOKENS_ENABLED, COMPOSER_MAX_TOKENS,
@@ -689,7 +705,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                 "token_budget": budget, "dynamic_tokens": DYNAMIC_TOKENS_ENABLED,
                 "stt_s": stt_s, "compose_s": out.get("compose_s"),
                 "streamed": True, "first_audio_s": out.get("first_audio_s"),
-                **_cost_meta(cost0),
+                **_cost_meta(cost0), **_fidelity_meta(out.get("fidelity")),
             })
             _publish_turn_meta({
                 "phase": "spoken", "question": question,
