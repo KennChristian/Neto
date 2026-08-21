@@ -141,10 +141,25 @@ def synthesize(text: str, speed: Optional[float] = None) -> np.ndarray:
             return pcm
 
         if resp.status_code == 401:
-            # Do NOT retry. Say exactly what is wrong — without the key.
-            log.error("ElevenLabs returned 401: the API key is invalid or "
-                      "lacks the text_to_speech scope. Fix ELEVEN_API_KEY in "
-                      "voice/config.py or the environment.")
+            # Do NOT retry. 401 covers BOTH a bad key AND a per-key credit
+            # cap being exhausted (code "quota_exceeded" — hit live
+            # 2026-08-21: the key had a 10k cap while the account still had
+            # credits). Surface the API's own code so the two are never
+            # confused; the body carries no secrets.
+            try:
+                code = resp.json().get("detail", {}).get("code", "")
+            except Exception:
+                code = ""
+            if code == "quota_exceeded":
+                log.error("ElevenLabs 401 quota_exceeded: this API KEY's "
+                          "credit cap is used up (the account may still have "
+                          "credits). Raise the key's limit in the ElevenLabs "
+                          "dashboard under API Keys.")
+                raise SynthError("quota", "key credit cap exhausted (401)")
+            log.error("ElevenLabs returned 401 (%s): the API key is invalid "
+                      "or lacks the text_to_speech scope. Fix ELEVEN_API_KEY "
+                      "in voice/config.py or the environment.",
+                      code or "no detail code")
             raise SynthError("error", "unauthorized (401)")
 
         if resp.status_code == 429:

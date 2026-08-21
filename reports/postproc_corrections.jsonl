@@ -4,3 +4,44 @@
 {"ts": 1787298580.789, "source": "llm", "surface": "friends", "canonical": "Friends", "class": "person", "kind": "canonical", "confidence": 1.0}
 {"ts": 1787298580.789, "source": "llm", "surface": "eventually", "canonical": "Eventually", "class": "event", "kind": "canonical", "confidence": 1.0}
 {"ts": 1787298580.789, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787308702.751, "source": "llm", "surface": "the Supreme Court of the Philippines", "canonical": "The Supreme Court of the Philippines", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787308763.447, "source": "llm", "surface": "friends", "canonical": "Friends", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787308905.067, "source": "llm", "surface": "with due respect", "canonical": "With Due Respect", "class": "book", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787308945.581, "source": "llm", "surface": "tao", "canonical": "Tao", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309026.585, "source": "llm", "surface": "judiciary", "canonical": "Judiciary", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309127.754, "source": "llm", "surface": "friends", "canonical": "Friends", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309452.533, "source": "llm", "surface": "five children", "canonical": "Five children", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309493.063, "source": "llm", "surface": "father", "canonical": "Father", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309493.063, "source": "llm", "surface": "mother", "canonical": "Mother", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309553.742, "source": "llm", "surface": "five children", "canonical": "Five children", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309553.771, "source": "llm", "surface": "five children", "canonical": "Five children", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309574.011, "source": "llm", "surface": "constitution", "canonical": "Constitution", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309594.225, "source": "llm", "surface": "five children", "canonical": "Five children", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309614.457, "source": "llm", "surface": "five children", "canonical": "Five children", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309634.722, "source": "llm", "surface": "father", "canonical": "Father", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309817.045, "source": "llm", "surface": "judiciary", "canonical": "Judiciary", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309837.279, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309877.741, "source": "llm", "surface": "with due respect", "canonical": "With Due Respect", "class": "book", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309958.672, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787309978.889, "source": "llm", "surface": "mother", "canonical": "Mother", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310039.568, "source": "llm", "surface": "friends", "canonical": "Friends", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310039.568, "source": "llm", "surface": "eventually", "canonical": "Eventually", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310039.568, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310140.751, "source": "llm", "surface": "presidents", "canonical": "Presidents", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310160.974, "source": "llm", "surface": "the guardian", "canonical": "The Guardian", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310201.434, "source": "llm", "surface": "father", "canonical": "Father", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310201.434, "source": "llm", "surface": "Lambino versus Comelec", "canonical": "Lambino v. Comelec", "class": "case", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310221.667, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310221.667, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310221.667, "source": "llm", "surface": "Lambino versus Comelec", "canonical": "Lambino v. Comelec", "class": "case", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310241.896, "source": "llm", "surface": "Lambino versus Comelec", "canonical": "Lambino v. Comelec", "class": "case", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310262.136, "source": "llm", "surface": "Lambino versus Comelec", "canonical": "Lambino v. Comelec", "class": "case", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310282.58, "source": "llm", "surface": "Lambino versus Comelec", "canonical": "Lambino v. Comelec", "class": "case", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310404.289, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310525.643, "source": "llm", "surface": "mother", "canonical": "Mother", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310525.643, "source": "llm", "surface": "father", "canonical": "Father", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310606.535, "source": "llm", "surface": "five children", "canonical": "Five children", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310647.139, "source": "llm", "surface": "foundation for liberty and prosperity", "canonical": "Foundation for Liberty and Prosperity", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310667.361, "source": "llm", "surface": "father", "canonical": "Father", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310748.437, "source": "llm", "surface": "rose", "canonical": "Rose", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1787310971.262, "source": "llm", "surface": "five children", "canonical": "Five children", "class": "person", "kind": "canonical", "confidence": 1.0}
