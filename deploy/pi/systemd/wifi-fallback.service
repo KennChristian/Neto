@@ -1,0 +1,12 @@
+[Unit]
+Description=ReachyMini WiFi setup-hotspot fallback
+After=NetworkManager.service
+Wants=NetworkManager.service
+
+[Service]
+ExecStart=/home/pollen/pi_dashboard/wifi_fallback.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -62,3 +62,8 @@ desktop.ini
 .claude/settings.local.json
 # Claude Code per-project session/state cache (machine-specific)
 .claude/
+
+# ElevenLabs voice module — local credentials + clip cache
+voice/config.py
+voice/.voice_cache/
+.voice_cache/

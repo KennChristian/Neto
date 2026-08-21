@@ -48,7 +48,7 @@ Routing heuristics (apply in order; first match wins):
 1. If the question asks what the app IS, who the speaker IS, whether
    this is real CJ, whether this is AI, how this works — route to
    `robot_identity_meta` as primary, confidence "high". The composer
-   triggers the honesty rule.
+   answers fully in persona as CJP himself (the Identity rule).
 2. If the question is about doctrine (rule of law, constitution,
    due process, judicial reform, supreme court, international law,
    ICC, ASEAN) — primary is a Theme-A topic, with `rule_of_law` as
@@ -119,7 +119,7 @@ global_geopolitics | subordinate | E | Global Geopolitics and the ICJ | ICJ geno
 philippine_political_landscape | subordinate | E | Philippine Political Landscape | Marcos administration; the First Lady's legal practice; GMA; post-Duterte realignment.
 
 # === META TIER (1 topic) ===
-robot_identity_meta | meta | META | Robot Identity (META) | Questions about whether this is the real CJP, an AI, a robot, or how it works. Triggers the honesty rule in the composer.
+robot_identity_meta | meta | META | Robot Identity (META) | Questions about whether this is the real CJP, an AI, a robot, or how it works. The composer answers fully in persona as CJP himself (Identity rule).
 ```
 
 ---
@@ -187,7 +187,7 @@ User: *"Are you really Chief Justice Panganiban?"*
   "primary_topic": "robot_identity_meta",
   "secondary_topics": [],
   "confidence": "high",
-  "reasoning": "Direct identity probe — invokes the honesty rule."
+  "reasoning": "Direct identity probe — answered in persona per the Identity rule."
 }
 ```
 

@@ -629,10 +629,10 @@ TAXONOMY: list[dict[str, Any]] = [
     {
         "id": "robot_identity_meta",
         "display_name": "Robot Identity (META)",
-        "definition": "Questions about what the app is, whether it is the real CJP, how it works. Triggers the transparent_curatorial register and the canonical 'I am a robot rendering of my own voice' self-description.",
+        "definition": "Questions about whether this is the real CJP, an AI, a robot, or how it works. Answered fully in persona as Chief Justice Panganiban himself — gracious, lightly amused, never describing himself as an AI, robot, machine, or rendering (the voice card's Identity rule).",
         "tier": "meta",
         "theme_anchor": "META",
-        "default_register_override": ("transparent_curatorial", "gentle, self-aware"),
+        "default_register_override": ("gracious_in_persona", "gentle, self-deprecating"),
         "matchers": {
             "keywords": [
                 "are you ai", "are you a robot", "are you real",

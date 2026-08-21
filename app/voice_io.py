@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import asyncio
 import io
+import json
 import os
 import re
 import shutil
@@ -162,6 +163,169 @@ TTS_VOICE_DEFAULT = os.environ.get("OPENAI_TTS_VOICE", "echo")
 # normal pace so the delivery still feels measured without dragging,
 # which the user landed on after A/B-testing 0.75 → 0.97 → 0.98.
 TTS_SPEED_DEFAULT = float(os.environ.get("OPENAI_TTS_SPEED", "0.98"))
+# Voice-steering instructions for gpt-4o-mini-tts (accent/pace/tone). Ignored
+# by tts-1 (which rejects the param). When set with a gpt-4o* model, `speed`
+# is folded into the instructions instead (the steerable model ignores it).
+TTS_INSTRUCTIONS_DEFAULT = os.environ.get("OPENAI_TTS_INSTRUCTIONS", "").strip()
+# TTS engine switch: "openai" (default, everything above) or "elevenlabs"
+# (the cloned voice via the repo-root voice/ package: flash_v2_5 + EQ chain +
+# ~/.voice_cache; credentials come from ELEVEN_API_KEY / ELEVEN_VOICE_ID in
+# app/.env). Every elevenlabs call site FAILS OPEN to the openai path.
+TTS_BACKEND = os.environ.get("CJ_TTS_BACKEND", "openai").strip().lower()
+
+# Filipino pronunciation lexicon (P2 lexicon override map): per-request
+# pronunciation directions are appended for exactly the names present in the
+# text being synthesized. Hand-editable JSON; hot-reloaded on mtime change.
+PRONUNCIATION_LEXICON_PATH = os.environ.get(
+    "CJ_PRONUNCIATION_LEXICON",
+    str(Path(__file__).resolve().parent.parent / "data" / "entities"
+        / "pronunciation_lexicon.json"))
+_lex_cache = {"mtime": None, "compiled": [], "force": []}
+
+
+def _fold_n(s: str) -> str:
+    return s.replace("ñ", "n").replace("Ñ", "N").lower()
+
+
+def _reload_lexicon() -> None:
+    try:
+        mtime = os.path.getmtime(PRONUNCIATION_LEXICON_PATH)
+    except OSError:
+        return
+    if _lex_cache["mtime"] == mtime:
+        return
+    try:
+        raw = json.loads(open(PRONUNCIATION_LEXICON_PATH, encoding="utf-8").read())
+    except (OSError, ValueError):
+        return
+    _lex_cache["compiled"] = [
+        (re.compile(r"(?<![a-z0-9])" + re.escape(_fold_n(k)) + r"(?![a-z0-9])"), k, v)
+        for k, v in raw.items()
+        if isinstance(v, str) and not k.startswith("_")]
+    # "_force": stubborn words the model anglicizes even when hinted — these
+    # get their respelling substituted INTO the TTS input text instead.
+    force = []
+    for k in raw.get("_force", []):
+        phon = raw.get(k)
+        if isinstance(phon, str):
+            pat = re.escape(k).replace("ñ", "[ñn]").replace("Ñ", "[ÑNñn]")
+            force.append((re.compile(r"(?<![A-Za-z0-9])" + pat + r"(?![A-Za-z0-9])",
+                                     re.IGNORECASE), phon))
+    _lex_cache["force"] = force
+    _lex_cache["mtime"] = mtime
+
+
+def _lexicon() -> list:
+    """[(compiled pattern, display key, phonetic)] with mtime hot-reload.
+    Patterns are compiled once per reload — the lexicon exceeds re's
+    512-entry internal cache, so per-call re.search would recompile all.
+    """
+    _reload_lexicon()
+    return _lex_cache["compiled"]
+
+
+def apply_forced_respellings(text: str) -> str:
+    """Substitute the phonetic respelling directly into the TTS input for the
+    lexicon's "_force" words. Captions/transcripts keep the real spelling —
+    only what the voice engine READS changes."""
+    _reload_lexicon()
+    for pattern, phon in _lex_cache["force"]:
+        text = pattern.sub(phon, text)
+    return text
+
+
+def pronunciation_hints(text: str, cap: int = 6) -> str:
+    """'Pronounce X as "Y".' lines for lexicon words present in `text`."""
+    folded = _fold_n(text)
+    hits = []
+    for pattern, display, phon in _lexicon():
+        if pattern.search(folded):
+            hits.append(f'"{display}" as "{phon}"')
+            if len(hits) >= cap:
+                break
+    if not hits:
+        return ""
+    return " Pronounce " + "; ".join(hits) + "."
+
+
+def tts_create_kwargs(model: str, voice: str, speed: float, text: str) -> dict:
+    """Kwargs for audio.speech.create across both engines (tts-1 vs gpt-4o*)."""
+    text = apply_forced_respellings(text)   # stubborn words: respell in-text
+    kw = {"model": model, "voice": voice, "input": text}
+    if TTS_INSTRUCTIONS_DEFAULT and model.startswith("gpt-4o"):
+        kw["instructions"] = TTS_INSTRUCTIONS_DEFAULT + pronunciation_hints(text)
+    else:
+        kw["speed"] = speed
+    return kw
+
+
+# Dynamic speaking speed (2026-08-20): per-sentence delta on the cloned
+# voice's base speed, driven by stream_speak.classify_emotion. Solemn lines
+# slow down, playful lines pick up. Values are deltas on VOICE_SETTINGS
+# speed (0.9 base), clamped to ElevenLabs' 0.7–1.2. Disable with
+# CJ_DYNAMIC_SPEED=0 (every sentence then uses the base speed).
+_EMOTION_SPEED_DELTA = {
+    "solemn": -0.06, "warm": -0.02, "neutral": 0.0,
+    "question": 0.02, "emphatic": 0.04, "amused": 0.05,
+}
+
+
+def emotion_speed(emotion: str) -> float | None:
+    """Speed for a sentence of this emotion, or None (= base) when dynamic
+    speed is disabled or the voice config is unavailable."""
+    if os.environ.get("CJ_DYNAMIC_SPEED", "1") != "1":
+        return None
+    try:
+        import sys as _sys
+        root = str(Path(__file__).resolve().parent.parent)
+        if root not in _sys.path:
+            _sys.path.insert(0, root)
+        from voice import config as v_config
+        base = float(v_config.VOICE_SETTINGS.get("speed", 0.9))
+    except Exception:
+        base = 0.9
+    return round(min(1.2, max(0.7, base + _EMOTION_SPEED_DELTA.get(emotion, 0.0))), 3)
+
+
+def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
+                       speed: float | None = None) -> str:
+    """Synthesize with the cloned voice (repo-root voice/ package) and return
+    the path of a 24 kHz mono PCM_16 wav. Uses the local clip cache, so
+    repeat lines are instant. Raises on any failure — callers keep the
+    openai path as the fallback.
+
+    pronunciation_hints are OpenAI-only (no instructions param here). The
+    lexicon's forced respellings are OFF by default — the cloned Filipino
+    voice reads Tagalog natively — but can be enabled with CJ_ELEVEN_RESPELL=1
+    (A/B-tested 2026-08-19) if specific names still come out wrong. Entity
+    correction (process_tts_sentence) still happens at the call sites,
+    engine-agnostic."""
+    import sys as _sys
+    import tempfile as _tempfile
+    root = str(Path(__file__).resolve().parent.parent)
+    if root not in _sys.path:
+        _sys.path.insert(0, root)
+    import soundfile as sf
+    from voice import audio as v_audio
+    from voice import cache as v_cache
+    from voice.speak import effective_settings, synthesize as v_synthesize
+
+    if os.environ.get("CJ_ELEVEN_RESPELL", "0") == "1":
+        text = apply_forced_respellings(text)
+    norm = v_cache.normalize_text(text)
+    key = v_cache.cache_key(norm, effective_settings(speed))
+    hit = v_cache.get(key)
+    if hit is not None:
+        pcm, sr = hit
+    else:
+        pcm = v_audio.process(v_synthesize(norm, speed=speed),
+                              v_audio.SYNTH_SAMPLE_RATE)
+        sr = v_audio.SYNTH_SAMPLE_RATE
+        v_cache.put(key, pcm, sr)
+    f = _tempfile.NamedTemporaryFile(suffix=".wav", delete=False, dir=out_dir)
+    f.close()
+    sf.write(f.name, pcm, sr, subtype="PCM_16")
+    return f.name
 
 
 # ============================================================
@@ -380,11 +544,8 @@ async def _tts_one_async(client, text: str, voice: str, model: str, speed: float
     bytes as they're generated — but we still consume the whole stream
     here because Streamlit's `st.audio` needs a complete blob."""
     async with client.audio.speech.with_streaming_response.create(
-        model=model,
-        voice=voice,
-        input=text,
-        speed=speed,
         response_format="mp3",
+        **tts_create_kwargs(model, voice, speed, text),
     ) as response:
         out = bytearray()
         async for chunk in response.iter_bytes():

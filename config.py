@@ -687,6 +687,15 @@ WAKE_OWW_MODEL_PATH: str = _env_str("CJ_WAKE_OWW_MODEL_PATH", "")
 # reach. 0.5 is the trained model's recommended_threshold (training_record.json);
 # tune upward against real gallery ambient (Phase 4) if false accepts appear.
 WAKE_OWW_THRESHOLD: float = _env_float("CJ_WAKE_OWW_THRESHOLD", 0.5)
+# STOP WORD (barge-in): saying the wake phrase WHILE the robot is speaking cuts
+# playback and goes straight to listening for the next question. openwakeword
+# (streaming) backend only — the STT backend can't listen during playback.
+STOP_WORD_ENABLED: bool = _env_bool("CJ_STOP_WORD_ENABLED", True)
+# Separate, HIGHER threshold than WAKE_OWW_THRESHOLD: a false stop mid-answer is
+# far more disruptive than a missed wake, and the mic hears the robot's own
+# speaker during playback (XMOS AEC covers the internal speaker only — on a
+# Bluetooth speaker there is NO echo cancellation, so keep this conservative).
+STOP_OWW_THRESHOLD: float = _env_float("CJ_STOP_OWW_THRESHOLD", 0.4)
 
 
 # ===========================================================================
@@ -722,6 +731,55 @@ HEAD_ORIENT_CONTROLLER: str = _env_str("CJ_HEAD_ORIENT_CONTROLLER", "log")
 # Display-name source (Part D output) — spoken topic names + speakable flags.
 TOPIC_DISPLAY_NAMES_PATH: Path = _env_path(
     "CJ_TOPIC_DISPLAY_NAMES_PATH", REPO_ROOT / "eval" / "results" / "topic_display_names.json")
+
+
+# ===========================================================================
+# 14. POST-PROCESSING — dictionary-grounded NER + ASR-mishear correction  [P0]
+#    app/postprocess.py (ported from develop 2026-08-11): detects domain
+#    entities (person/org/case/event/book) against data/entities/entity_dict.json
+#    (+ hand-curated entity_overrides.json, hot-reloaded on mtime — no restart
+#    needed), corrects ASR mishears to the canonical form, and enforces exact
+#    SC-citation strings. Wired in cj_voice_cloud.handle_turn (transcript) and
+#    speak() (TTS text). DARK unless enabled.
+# ===========================================================================
+# Master switch (OFF = byte-identical passthrough; postprocess never loads the dict).
+POSTPROC_ENABLED: bool = _env_bool("CJ_POSTPROC_ENABLED", False)
+# Canonical entity dictionary (generated on develop by scripts/build_entity_dict.py).
+ENTITY_DICT_PATH: Path = _env_path(
+    "CJ_ENTITY_DICT_PATH", REPO_ROOT / "data" / "entities" / "entity_dict.json")
+# Hand-curated overlay (merge/remove/add over the dict; edit freely, no rebuild).
+ENTITY_OVERRIDES_PATH: Path = _env_path(
+    "CJ_ENTITY_OVERRIDES_PATH", REPO_ROOT / "data" / "entities" / "entity_overrides.json")
+# Correction audit log (JSONL, append-only). On the Pi keep this on /dev/shm.
+POSTPROC_LOG_PATH: Path = _env_path(
+    "CJ_POSTPROC_LOG_PATH", REPO_ROOT / "reports" / "postproc_corrections.jsonl")
+# Fuzzy accept threshold (difflib ratio on folded keys); higher = stricter.
+POSTPROC_FUZZY_RATIO: float = _env_float("CJ_POSTPROC_FUZZY_RATIO", 0.84)
+# Minimum folded length (chars) before a window may fuzzy-match; keep >= 8.
+POSTPROC_FUZZY_MIN_CHARS: int = _env_int("CJ_POSTPROC_FUZZY_MIN_CHARS", 8)
+# Fuzzy-correction targets need >= this doc_freq (rare one-offs must not rewrite speech).
+POSTPROC_FUZZY_MIN_DOC_FREQ: int = _env_int("CJ_POSTPROC_FUZZY_MIN_DOC_FREQ", 2)
+# Dictionary forms longer than this many words are skipped at index build.
+POSTPROC_MAX_PHRASE_WORDS: int = _env_int("CJ_POSTPROC_MAX_PHRASE_WORDS", 6)
+
+
+# ===========================================================================
+# ANSWER GATE [P0] — deterministic recheck of composed answers BEFORE TTS.
+#    app/answer_gate.py: keyword/regex rules (data/entities/answer_gate_rules
+#    .json, mtime hot-reload) verify each answer against hand-curated expected
+#    data — wrong dates, missing case names, AI self-description. ZERO LLM
+#    calls, ~0.15 ms per check. Kiosk wiring: streaming answers get a
+#    per-sentence FORBID screen before each sentence is spoken (a tripped
+#    sentence is skipped) + a full-answer check logged at the end; the classic
+#    (non-streaming) path blocks the whole answer and speaks the safe
+#    fallback instead. Ships DARK.
+# ===========================================================================
+ANSWER_GATE_ENABLED: bool = _env_bool("CJ_ANSWER_GATE_ENABLED", False)
+ANSWER_GATE_RULES_PATH: Path = _env_path(
+    "CJ_ANSWER_GATE_RULES_PATH", REPO_ROOT / "data" / "entities" / "answer_gate_rules.json")
+# Trip audit log (JSONL, append-only). On the Pi keep this on /dev/shm.
+ANSWER_GATE_LOG_PATH: Path = _env_path(
+    "CJ_ANSWER_GATE_LOG_PATH", REPO_ROOT / "reports" / "answer_gate.jsonl")
 
 
 # ---------------------------------------------------------------------------

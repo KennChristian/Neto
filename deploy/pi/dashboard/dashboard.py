@@ -24,6 +24,12 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+try:  # P2.5 dual demo UI (/audience, /maintain) — optional module, fail-open
+    import supervaise_ui
+except Exception as _e:
+    supervaise_ui = None
+    print(f"[dashboard] supervaise_ui unavailable: {_e}")
+
 PORT = 8080
 HOME = os.path.expanduser("~")
 AUDIO_OUT = os.path.join(HOME, "bin", "audio-out")
@@ -36,6 +42,7 @@ UNITS = {
     "speaker-watchdog": "speaker-watchdog.service",
     "bluealsa": "bluealsa.service",
     "pi-dashboard": "pi-dashboard.service",
+    "wifi-fallback": "wifi-fallback.service",
 }
 
 SPEAKERS = {
@@ -53,6 +60,7 @@ ACTIONS = {
     "audio-sony":       [AUDIO_OUT, "sony"],
     "audio-marshall":   [AUDIO_OUT, "marshall"],
     "test-sound":       ["aplay", "-q", TEST_WAV],
+    "tagalog-sample":   ["aplay", "-q", os.path.join(HOME, "demo_clips", "tagalog_sample_2026-08-13.wav")],
     "activate-listening": ["touch", "/dev/shm/cj_wake_trigger"],
     "enroll-voice":     ["touch", "/dev/shm/cj_enroll_trigger"],
     "gate-on":          ["touch", os.path.join(HOME, "speaker_id", "enabled")],
@@ -102,11 +110,15 @@ def wifi_scan(rescan=False):
     return nets
 
 
-def wifi_connect(ssid, password=None):
-    """Bring up a saved connection, or join a new network. NOTE: on success
-    the phone loses the dashboard until it re-joins the same network."""
-    if not ssid or len(ssid) > 32:
-        return False, "invalid ssid"
+SETUP_CON = "ReachySetup"   # wifi_fallback.sh setup-hotspot profile name
+
+
+def hotspot_active():
+    _, out = run(["nmcli", "-t", "-f", "NAME", "connection", "show", "--active"])
+    return SETUP_CON in out.splitlines()
+
+
+def _wifi_join(ssid, password=None):
     saved, _ = wifi_status()
     if password:
         code, out = run(["nmcli", "dev", "wifi", "connect", ssid,
@@ -116,6 +128,28 @@ def wifi_connect(ssid, password=None):
     else:
         code, out = run(["nmcli", "dev", "wifi", "connect", ssid], timeout=45)
     return code == 0, out[-300:]
+
+
+def wifi_connect(ssid, password=None):
+    """Bring up a saved connection, or join a new network. NOTE: on success
+    the phone loses the dashboard until it re-joins the same network."""
+    if not ssid or len(ssid) > 32:
+        return False, "invalid ssid"
+    if hotspot_active():
+        # The phone is on the setup hotspot: joining a network takes the AP
+        # (and this HTTP connection) down, so reply first and switch in the
+        # background; on failure the hotspot comes straight back.
+        def _switch():
+            run(["nmcli", "connection", "down", SETUP_CON], timeout=15)
+            ok, out = _wifi_join(ssid, password)
+            if not ok:
+                print(f"[wifi-fallback] join {ssid!r} failed ({out}) — hotspot back up")
+                run(["nmcli", "connection", "up", SETUP_CON], timeout=20)
+        threading.Thread(target=_switch, daemon=True).start()
+        return True, (f'trying to join "{ssid}" — reconnect your phone to that '
+                      "network and reopen the dashboard; if joining fails, the "
+                      "ReachyMini-Setup hotspot returns within a minute")
+    return _wifi_join(ssid, password)
 
 
 MAC_RE = re.compile(r"^[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}$")
@@ -477,6 +511,16 @@ PAGE = """<!DOCTYPE html>
   <div class="row" style="border:0"><span class="lbl">Networks (tap to switch)</span></div>
   <div id="wifi-list" style="font-size:14px">tap Scan to list networks</div>
   <div class="btns"><button onclick="wifiScan()">Scan networks</button></div>
+  <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
+    <input id="wm-ssid" placeholder="network name" style="flex:1;min-width:110px;padding:8px;
+      border-radius:8px;border:1px solid #30363d;background:#0d1117;color:inherit">
+    <input id="wm-pw" type="password" placeholder="password" style="flex:1;min-width:110px;
+      padding:8px;border-radius:8px;border:1px solid #30363d;background:#0d1117;color:inherit">
+    <button onclick="wifiManual()">Join</button>
+  </div>
+  <div class="row" style="border:0;margin-top:4px"><span class="lbl" style="font-size:12px">
+    Manual entry works even in setup-hotspot mode (where scanning is unavailable)
+    and for hidden networks.</span></div>
   <div class="row" style="border:0"><span class="lbl" style="font-size:12px">
     ⚠ Switching networks drops this dashboard — rejoin the same WiFi on your
     phone to reconnect. New networks ask for a password.</span></div>
@@ -506,6 +550,7 @@ PAGE = """<!DOCTYPE html>
     <button onclick="act('audio-sony')">Route: Sony</button>
     <button onclick="act('audio-marshall')">Route: Marshall</button>
     <button onclick="act('test-sound')">Play test sound</button>
+    <button onclick="act('tagalog-sample')">Play Tagalog sample</button>
     <button id="wd-btn" onclick="toggleWatchdog()">…</button>
   </div>
   <div class="row" style="border:0;margin-top:6px"><span class="lbl" style="font-size:12px">
@@ -725,6 +770,11 @@ async function wifiScan() {
   try {
     const r = await fetch("/api/wifi?rescan=1");
     const w = await r.json();
+    if (w.hotspot && !w.networks.length) {
+      $("wifi-list").textContent =
+        "setup hotspot active — scanning unavailable; type the network below";
+      return;
+    }
     if (!w.networks.length) { $("wifi-list").textContent = "no networks found"; return; }
     $("wifi-list").innerHTML = w.networks.map(n => {
       const bars = n.signal > 66 ? "▂▄▆" : n.signal > 33 ? "▂▄" : "▂";
@@ -738,12 +788,7 @@ async function wifiScan() {
   } catch (e) { $("wifi-list").textContent = "scan failed: " + e.message; }
 }
 
-async function wifiJoin(ssid, known) {
-  let password = null;
-  if (!known) {
-    password = prompt('Password for "' + ssid + '" (leave empty if open):');
-    if (password === null) return;
-  }
+async function wifiSend(ssid, password) {
   if (!confirm("Switch the robot to \\"" + ssid + "\\"?\\n\\nThe dashboard will drop " +
       "until your phone is on the same network.")) return;
   toast("switching to " + ssid + "…");
@@ -752,10 +797,23 @@ async function wifiJoin(ssid, known) {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ssid, password}) });
     const out = await r.json();
-    toast(out.ok ? "now on " + ssid : "FAILED — " + out.output);
+    toast(out.ok ? out.output || ("now on " + ssid) : "FAILED — " + out.output);
   } catch (e) {
     toast("dashboard dropped — rejoin " + ssid + " on your phone and reload");
   }
+}
+async function wifiJoin(ssid, known) {
+  let password = null;
+  if (!known) {
+    password = prompt('Password for "' + ssid + '" (leave empty if open):');
+    if (password === null) return;
+  }
+  wifiSend(ssid, password);
+}
+function wifiManual() {
+  const ssid = $("wm-ssid").value.trim(), pw = $("wm-pw").value;
+  if (!ssid) { toast("enter a network name"); return; }
+  wifiSend(ssid, pw || null);
 }
 
 // ── Bluetooth connect / disconnect / pair ─────────────────────────
@@ -885,6 +943,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path, _, query = self.path.partition("?")
         params = dict(p.split("=", 1) for p in query.split("&") if "=" in p)
+        if supervaise_ui and supervaise_ui.handle_get(self, path, params):
+            return
         if path == "/":
             self._send(200, PAGE, "text/html; charset=utf-8")
         elif path == "/api/status":
@@ -897,7 +957,8 @@ class Handler(BaseHTTPRequestHandler):
             for n in nets:
                 n["saved"] = n["ssid"] in saved
             self._send(200, json.dumps(
-                {"current": current, "saved": saved, "networks": nets}))
+                {"current": current, "saved": saved, "networks": nets,
+                 "hotspot": current == SETUP_CON}))
         elif path == "/api/bt":
             devs = bt_scan() if params.get("scan") == "1" else bt_devices()
             self._send(200, json.dumps({"devices": devs}))
@@ -909,6 +970,14 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, json.dumps({"error": "not found"}))
 
     def do_POST(self):
+        if supervaise_ui and self.path.partition("?")[0] in ("/api/ctl", "/api/entities"):
+            try:
+                n = int(self.headers.get("Content-Length", 0))
+                body = json.loads(self.rfile.read(n) or b"{}")
+            except Exception:
+                body = {}
+            if supervaise_ui.handle_post(self, self.path.partition("?")[0], body):
+                return
         if self.path == "/api/wifi/connect":
             try:
                 n = int(self.headers.get("Content-Length", 0))
@@ -959,7 +1028,8 @@ class Handler(BaseHTTPRequestHandler):
         if name not in ACTIONS:
             self._send(400, json.dumps({"ok": False, "output": f"unknown action {name!r}"}))
             return
-        code, out = run(ACTIONS[name], timeout=30)
+        # tagalog-sample is a ~45 s clip — the generic 30 s cap would cut it off
+        code, out = run(ACTIONS[name], timeout=90 if name == "tagalog-sample" else 30)
         self._send(200, json.dumps({"ok": code == 0, "output": out[-500:]}))
 
 

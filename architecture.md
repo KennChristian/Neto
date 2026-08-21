@@ -61,7 +61,7 @@ flowchart TB
 
         U --> IG
         IG -->|in-scope| RT
-        IG -->|identity question| METAFLOW["META register<br/>(transparent_curatorial)"]
+        IG -->|identity question| METAFLOW["META register<br/>(gracious_in_persona)"]
         METAFLOW --> CMP
         RT --> LU
         LU --> LOAD
