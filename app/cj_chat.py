@@ -157,6 +157,16 @@ _TOKEN_BUDGET_DEFAULT = {
     "robot_identity_meta": 120,
 }
 TOKEN_BUDGET_DIM_DEFAULT = int(os.environ.get("CJ_TOKEN_BUDGET_DIM_DEFAULT", "220"))
+# Conversational tune-down (2026-08-21, user-directed): one scale multiplied
+# into every budget for snappier back-and-forth (0.4 ≈ half-minute answers
+# become ~25s; 1.0 = the published table unchanged). Below 1.0 the composer
+# also receives a <length_note> so answers are WRITTEN short and end cleanly
+# instead of being truncated at the cap.
+try:
+    TOKEN_BUDGET_SCALE = float(os.environ.get("CJ_TOKEN_BUDGET_SCALE", "1.0"))
+except ValueError:
+    TOKEN_BUDGET_SCALE = 1.0
+TOKEN_BUDGET_MIN = int(os.environ.get("CJ_TOKEN_BUDGET_MIN", "60"))
 try:
     TOKEN_BUDGET_BY_DIM = dict(_TOKEN_BUDGET_DEFAULT,
                                **json.loads(os.environ.get("CJ_TOKEN_BUDGET_BY_DIM", "{}")))
@@ -168,15 +178,34 @@ def _topic_max_tokens(routing: dict, artifacts) -> int:
     """Composer cap for this turn: routed TOPIC's budget, or the fixed cap when
     dark/unroutable. Never raises — a budget bug must not kill a spoken turn."""
     if not DYNAMIC_TOKENS_ENABLED:
-        return COMPOSER_MAX_TOKENS
+        return _scale_budget(COMPOSER_MAX_TOKENS)
     try:
         topic = routing["primary_topic"]
-        budget = int(TOKEN_BUDGET_BY_DIM.get(topic, TOKEN_BUDGET_DIM_DEFAULT))
-        print(f"[token-budget] dim={topic} -> max_tokens={budget}")
+        budget = _scale_budget(int(TOKEN_BUDGET_BY_DIM.get(topic, TOKEN_BUDGET_DIM_DEFAULT)))
+        print(f"[token-budget] dim={topic} scale={TOKEN_BUDGET_SCALE} -> max_tokens={budget}")
         return budget
     except Exception as e:
         print(f"[token-budget] fallback to fixed {COMPOSER_MAX_TOKENS}: {e}")
-        return COMPOSER_MAX_TOKENS
+        return _scale_budget(COMPOSER_MAX_TOKENS)
+
+
+def _scale_budget(budget: int) -> int:
+    return max(TOKEN_BUDGET_MIN, int(budget * TOKEN_BUDGET_SCALE))
+
+
+def _length_note(max_tokens: int) -> str:
+    """Brevity cue appended to the composer's user turn when the budget is
+    tuned down (TOKEN_BUDGET_SCALE < 1.0). The model must KNOW the ceiling,
+    or it composes a full-length answer and the cap truncates it mid-arc.
+    ~0.7 words/token for the persona's English; ~2.5 words/s spoken."""
+    if TOKEN_BUDGET_SCALE >= 1.0:
+        return ""
+    words = max(20, int(max_tokens * 0.7))
+    return (
+        f"\n\n<length_note>\nThis is a live spoken conversation. Reply in about "
+        f"{words} words or fewer (~{max(10, int(words / 2.5))} seconds of speech): "
+        f"make ONE focused point in voice, end on a complete sentence, and yield "
+        f"the floor. Do not pad with preamble or summary.\n</length_note>")
 
 
 _theme_max_tokens = _topic_max_tokens  # retired name — kept for any stale caller
@@ -819,6 +848,7 @@ def generate_response(
         "low": "The user's question is largely out-of-corpus. Use the out-of-corpus reasoning policy from the voice card — reason from nearest principles, mark the move softly, do not invent facts.",
     }.get(routing.get("confidence", "low"), "")
 
+    max_tokens = _topic_max_tokens(routing, artifacts)  # P1: per-topic budget (fixed cap when dark)
     user_content = f"""{context}
 
 <grounding_note>
@@ -827,7 +857,7 @@ def generate_response(
 
 <user_question>
 {question}
-</user_question>"""
+</user_question>{_length_note(max_tokens)}"""
 
     messages = []
     if conversation_history:
@@ -836,7 +866,7 @@ def generate_response(
 
     resp = client.messages.create(
         model=INFERENCE_MODEL,
-        max_tokens=_topic_max_tokens(routing, artifacts),  # P1: per-topic budget (fixed cap when dark)
+        max_tokens=max_tokens,
         system=[{
             "type": "text",
             "text": artifacts.voice_card,
@@ -880,10 +910,12 @@ def generate_response_stream(
         "low":    "The user's question is largely out-of-corpus. Use the out-of-corpus reasoning policy from the voice card — reason from nearest principles, mark the move softly, do not invent facts.",
     }.get(routing.get("confidence", "low"), "")
 
+    max_tokens = _topic_max_tokens(routing, artifacts)  # P1: per-topic budget (fixed cap when dark)
     user_content = (
         f"{context}\n\n"
         f"<grounding_note>\n{confidence_note}\n</grounding_note>\n\n"
         f"<user_question>\n{question}\n</user_question>"
+        f"{_length_note(max_tokens)}"
     )
     messages = []
     if conversation_history:
@@ -892,7 +924,7 @@ def generate_response_stream(
 
     with client.messages.stream(
         model=INFERENCE_MODEL,
-        max_tokens=_topic_max_tokens(routing, artifacts),  # P1: per-topic budget (fixed cap when dark)
+        max_tokens=max_tokens,
         system=[{
             "type": "text",
             "text": artifacts.voice_card,

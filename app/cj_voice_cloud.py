@@ -644,12 +644,15 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                 "note", f"(answer gate full-answer audit tripped: "
                 f"{', '.join(t['rule'] for t in gf['tripped'])})")
         try:  # P2.5 maintenance feed
-            from cj_chat import (TOKEN_BUDGET_BY_DIM, DYNAMIC_TOKENS_ENABLED,
-                                 COMPOSER_MAX_TOKENS)
+            from cj_chat import (TOKEN_BUDGET_BY_DIM, TOKEN_BUDGET_DIM_DEFAULT,
+                                 DYNAMIC_TOKENS_ENABLED, COMPOSER_MAX_TOKENS,
+                                 _scale_budget)
             topic = (routing or {}).get("primary_topic")
             theme = artifacts.topics.get(topic, {}).get("theme_anchor", "")
-            budget = (int(TOKEN_BUDGET_BY_DIM.get(theme, COMPOSER_MAX_TOKENS))
-                      if DYNAMIC_TOKENS_ENABLED else int(COMPOSER_MAX_TOKENS))
+            # keys are TOPICS since the 2026-08-20 refactor (theme was stale here)
+            budget = _scale_budget(
+                int(TOKEN_BUDGET_BY_DIM.get(topic, TOKEN_BUDGET_DIM_DEFAULT))
+                if DYNAMIC_TOKENS_ENABLED else int(COMPOSER_MAX_TOKENS))
             _publish_turn_meta({
                 "phase": "composed", "raw_asr": raw_asr, "question": question,
                 "answer": response, "topic": topic, "theme": theme,
@@ -676,13 +679,25 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         filler.stop()
 
 
-def handle_turn(client, artifacts, gestures, history, stop=None):
+def _followup_window():
+    """Seconds the mic stays open for a follow-up question after a completed
+    answer (no fresh wake needed). 0 disables the conversational window."""
+    try:
+        return max(0.0, float(os.environ.get("CJ_FOLLOWUP_WINDOW_S", "6")))
+    except ValueError:
+        return 6.0
+
+
+def handle_turn(client, artifacts, gestures, history, stop=None, followup=False):
     """Capture ONE question from the mic and answer it. Mutates `history` in
     place. Returns True if a full turn ran, False on mic timeout / empty STT,
     or "interrupted" (truthy) when the stop word cut the answer — the caller
-    should go straight back to listening without requiring a fresh wake."""
+    should go straight back to listening without requiring a fresh wake.
+    followup=True shortens the no-speech timeout to the follow-up window, so
+    silence hands control back to the caller quickly."""
     gestures.start("listen")
-    path = record_with_meter()
+    path = record_with_meter(
+        no_speech_timeout_s=(_followup_window() if followup else 12))
     if not path:
         _publish_transcript("note", "(mic timeout — no speech captured)")
         return False
@@ -817,11 +832,13 @@ def handle_turn(client, artifacts, gestures, history, stop=None):
             _publish_transcript("cj", response)
             try:  # P2.5 maintenance feed: routing + budget + stage latency
                 from cj_chat import (TOKEN_BUDGET_BY_DIM, TOKEN_BUDGET_DIM_DEFAULT,
-                                     DYNAMIC_TOKENS_ENABLED, COMPOSER_MAX_TOKENS)
+                                     DYNAMIC_TOKENS_ENABLED, COMPOSER_MAX_TOKENS,
+                                     _scale_budget)
                 topic = (routing or {}).get("primary_topic")
                 theme = artifacts.topics.get(topic, {}).get("theme_anchor", "")
-                budget = (int(TOKEN_BUDGET_BY_DIM.get(topic, TOKEN_BUDGET_DIM_DEFAULT))
-                          if DYNAMIC_TOKENS_ENABLED else int(COMPOSER_MAX_TOKENS))
+                budget = _scale_budget(
+                    int(TOKEN_BUDGET_BY_DIM.get(topic, TOKEN_BUDGET_DIM_DEFAULT))
+                    if DYNAMIC_TOKENS_ENABLED else int(COMPOSER_MAX_TOKENS))
                 _publish_turn_meta({
                     "phase": "composed", "raw_asr": raw_asr, "question": question,
                     "answer": response, "topic": topic, "theme": theme,
@@ -1009,13 +1026,28 @@ def wake_loop(client, artifacts, gestures):
             print(f"[wake] re-armed — say \"{phrase}\"")
             continue
         r = handle_turn(client, artifacts, gestures, history, stop=stop)
-        # Stop word fired mid-answer: just stop and go back to SLEEP — the
-        # next question needs a fresh wake (user decision 2026-08-20;
-        # CJ_STOP_RELISTEN=1 restores the old Alexa-style instant re-listen).
-        while r == "interrupted" and os.environ.get("CJ_STOP_RELISTEN", "0") == "1":
-            gestures.perk()
-            print("[stop] listening for the next question (no wake needed)")
-            r = handle_turn(client, artifacts, gestures, history, stop=stop)
+        while True:
+            # Stop word fired mid-answer: just stop and go back to SLEEP — the
+            # next question needs a fresh wake (user decision 2026-08-20;
+            # CJ_STOP_RELISTEN=1 restores the old Alexa-style instant re-listen).
+            if r == "interrupted" and os.environ.get("CJ_STOP_RELISTEN", "0") == "1":
+                gestures.perk()
+                print("[stop] listening for the next question (no wake needed)")
+                r = handle_turn(client, artifacts, gestures, history, stop=stop)
+                continue
+            # Conversational follow-up (2026-08-21): after a COMPLETED answer
+            # the mic re-opens for CJ_FOLLOWUP_WINDOW_S so the visitor can just
+            # keep talking. Silence closes the window -> back to sleep.
+            if r is True and _followup_window() > 0:
+                time.sleep(grace)       # speaker/room tail before the mic re-arms
+                gestures.perk()
+                print(f"[followup] listening {_followup_window():.0f}s for a "
+                      f"follow-up (no wake needed)")
+                _publish_transcript("note", "(listening for a follow-up — no wake needed)")
+                r = handle_turn(client, artifacts, gestures, history, stop=stop,
+                                followup=True)
+                continue
+            break
         if r == "interrupted":
             print(f"[stop] answer stopped — back to sleep, say \"{phrase}\" to ask again")
         gestures.neutral()
