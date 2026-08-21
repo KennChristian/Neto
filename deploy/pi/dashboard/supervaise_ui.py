@@ -381,7 +381,7 @@ img#cam{width:100%;border-radius:8px;background:#000;min-height:120px}
   <h2 style="margin-top:10px">Stage latency</h2><div id="lat" class="dim">&mdash;</div></div>
 <div class="card" style="grid-column:1/-1"><h2>Recent turns (tracking)</h2>
   <div style="overflow-x:auto"><table id="hist"><tr><th>time</th><th>question</th><th>theme</th>
-  <th>tokens</th><th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr></table></div></div>
+  <th>tokens</th><th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr></table></div></div>
 <div class="card"><h2>Conversation (raw vs corrected)</h2>
   <table id="conv"><tr><th>who</th><th>text</th></tr></table></div>
 <div class="card"><h2>NER corrections (P0)</h2>
@@ -429,7 +429,10 @@ async function poll(){try{
     '<b>Q:</b> '+esc(m.question)+'<br><b>raw ASR:</b> <span class="mono raw">'+esc(m.raw_asr)+'</span>'+
     '<br><b>topic:</b> '+esc(m.topic)+' <b>theme:</b> '+esc(m.theme)+
     ' <b>conf:</b> '+esc(m.confidence)+
-    '<br><b>token budget:</b> '+esc(m.token_budget)+(m.dynamic_tokens?' (dynamic)':' (fixed)');
+    '<br><b>token budget:</b> '+esc(m.token_budget)+(m.dynamic_tokens?' (dynamic)':' (fixed)')+
+    (m.cost_usd!=null?'<br><b>cost:</b> '+(100*m.cost_usd).toFixed(2)+'&cent; this turn'+
+      (m.cost_total_usd!=null?' &middot; $'+m.cost_total_usd.toFixed(2)+' since service start':'')+
+      ' <span class="dim">(Anthropic only)</span>':'');
     let lat='STT '+m.stt_s+'s'+bar(m.stt_s,10)+'Compose '+m.compose_s+'s'+bar(m.compose_s,20);
     if(sp&&sp.question===m.question)
       lat+=(sp.streamed?'First audio '+(sp.first_audio_s!=null?sp.first_audio_s:'?')+'s'+bar(sp.first_audio_s||0,15)
@@ -439,13 +442,14 @@ async function poll(){try{
   const byQ={};
   (s.metas||[]).forEach(x=>{const k=x.question||'';byQ[k]=Object.assign(byQ[k]||{},x);});
   $('hist').innerHTML='<tr><th>time</th><th>question</th><th>theme</th><th>tokens</th>'+
-    '<th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr>'+
+    '<th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr>'+
     Object.values(byQ).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12).map(x=>{
       const sp2=x.streamed?('first audio '+(x.first_audio_s!=null?x.first_audio_s+'s':'?'))
         :(x.synth_s!=null?('synth '+x.synth_s+'s / play '+x.play_s+'s'):'');
       const fl=[x.streamed?'stream':'',x.dynamic_tokens?'dyn-tok':'',x.interrupted?'CUT':''].filter(Boolean).join(' ');
       return '<tr><td>'+(x.ts?new Date(1000*x.ts).toLocaleTimeString():'')+'</td><td>'+
         esc((x.question||'').slice(0,60))+'</td><td>'+esc(x.theme||'')+'</td><td>'+esc(x.token_budget||'')+
+        '</td><td>'+(x.cost_usd!=null?(x.cost_usd?(100*x.cost_usd).toFixed(2)+'¢':'free'):'')+
         '</td><td>'+esc(x.stt_s!=null?x.stt_s:'')+'</td><td>'+esc(x.compose_s!=null?x.compose_s:'')+
         '</td><td>'+esc(sp2)+'</td><td'+(x.interrupted?' class="raw"':'')+'>'+esc(fl)+'</td></tr>';}).join('');
   $('conv').innerHTML='<tr><th>who</th><th>text</th></tr>'+

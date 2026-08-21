@@ -392,6 +392,21 @@ def _log_cache_usage(label: str, usage) -> None:
               f"regular_input={regular}  output={output}", file=sys.stderr)
 
 
+def api_cost_usd() -> float:
+    """Cumulative Anthropic spend (USD) since process start, priced from
+    CACHE_STATS at the same rates as cache_savings_summary. Whisper STT and
+    ElevenLabs are different providers and are NOT included. Per-turn cost =
+    the delta between two snapshots of this value."""
+    prices = {"router": (1.00, 1.25, 0.10, 5.00),      # Haiku 4.5
+              "inference": (3.00, 3.75, 0.30, 15.00)}  # Sonnet 4.6
+    total = 0.0
+    for label, s in CACHE_STATS.items():
+        p_in, p_write, p_read, p_out = prices.get(label, (0.0, 0.0, 0.0, 0.0))
+        total += (s["regular_input"] * p_in + s["creation"] * p_write
+                  + s["read"] * p_read + s["output"] * p_out) / 1e6
+    return total
+
+
 def cache_savings_summary() -> str:
     """Return a human-readable cost breakdown showing what prompt caching saved.
     Uses late-2025 Anthropic pricing for Haiku 4.5 and Sonnet 4.6."""

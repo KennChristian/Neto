@@ -77,6 +77,26 @@ MUTE_TRIGGER = "/dev/shm/cj_mute_trigger"
 _speak_timing = {}  # populated by speak(): synth_s, play_s
 
 
+def _api_cost_snapshot():
+    """Cumulative Anthropic $ this service run (cj_chat.api_cost_usd);
+    None if unavailable — cost display is best-effort, never turn-breaking."""
+    try:
+        from cj_chat import api_cost_usd
+        return api_cost_usd()
+    except Exception:
+        return None
+
+
+def _cost_meta(cost0):
+    """Maintenance-feed cost fields: this turn's Anthropic spend (delta from
+    the start-of-turn snapshot) + the running session total."""
+    now = _api_cost_snapshot()
+    if now is None:
+        return {}
+    return {"cost_usd": (round(now - cost0, 5) if cost0 is not None else None),
+            "cost_total_usd": round(now, 4)}
+
+
 def _publish_turn_meta(rec):
     """Per-turn internals feed for the maintenance UI (P2.5). Fail-open."""
     try:
@@ -576,6 +596,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
     starts at the FIRST composed sentence (stream_speak.py). Same filler,
     bail-out, offline, history, and stop-word semantics as the classic path."""
     t0 = time.monotonic()
+    cost0 = _api_cost_snapshot()
     filler = play_filler()
     try:  # P3: question-relevant filler generated in parallel (fails open)
         import dynamic_filler
@@ -668,6 +689,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                 "token_budget": budget, "dynamic_tokens": DYNAMIC_TOKENS_ENABLED,
                 "stt_s": stt_s, "compose_s": out.get("compose_s"),
                 "streamed": True, "first_audio_s": out.get("first_audio_s"),
+                **_cost_meta(cost0),
             })
             _publish_turn_meta({
                 "phase": "spoken", "question": question,
@@ -788,6 +810,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
             "answer": response, "topic": f"canned:{hit['id']}", "theme": "",
             "confidence": "canned", "token_budget": 0, "dynamic_tokens": False,
             "stt_s": stt_s, "compose_s": 0.0,
+            "cost_usd": 0.0, "cost_total_usd": _cost_meta(None).get("cost_total_usd"),
         })
         _publish_turn_meta({
             "phase": "spoken", "question": question,
@@ -805,6 +828,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
         return _handle_turn_streaming(client, artifacts, gestures, history, stop,
                                       question, raw_asr, stt_s)
     t0 = time.monotonic()
+    cost0 = _api_cost_snapshot()
     filler = play_filler()
     try:  # P3: question-relevant filler generated in parallel (fails open)
         import dynamic_filler
@@ -888,6 +912,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
                     "confidence": (routing or {}).get("confidence"),
                     "token_budget": budget, "dynamic_tokens": DYNAMIC_TOKENS_ENABLED,
                     "stt_s": stt_s, "compose_s": compose_s,
+                    **_cost_meta(cost0),
                 })
             except Exception as e:
                 print(f"[meta] publish skipped: {e}")
