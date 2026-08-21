@@ -1461,6 +1461,20 @@ def run_turn(
         if gate["scope"] == "identity_probe":
             routing = force_meta_routing(gate["reasoning"])
         else:
+            if gate["scope"] == "out_of_corpus":
+                try:  # canned out-of-topic deflection (fails open to composer)
+                    import canned_answers
+                    ooc = canned_answers.get("out_of_topic")
+                except Exception as e:
+                    print(f"[canned] ooc unavailable ({e})")
+                    ooc = None
+                if ooc is not None:
+                    print("[canned] out-of-topic fast path — router/composer skipped")
+                    routing = {"primary_topic": "out_of_topic_canned",
+                               "secondary_topics": [], "confidence": "low",
+                               "reasoning": gate["reasoning"]}
+                    print(f"\n⚖️  CJ: {ooc}\n")
+                    return question, ooc, routing
             # Step 2: Route
             print("🧭 Routing...")
             routing = route_question(client, question, artifacts)

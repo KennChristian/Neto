@@ -320,13 +320,29 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
     rt.start()
     gate = input_gate(client, question)
     gate_s = round(time.monotonic() - t0, 2)
+    ooc_text = None
     if gate.get("scope") == "identity_probe":
         routing = force_meta_routing(gate.get("reasoning", ""))
     else:
-        rt.join(timeout=30)
-        if "err" in route_box:
-            raise route_box["err"]
-        routing = route_box.get("r") or force_meta_routing("router timeout fallback")
+        if gate.get("scope") == "out_of_corpus":
+            try:  # canned out-of-topic deflection (fails open to the composer)
+                import canned_answers
+                ooc_text = canned_answers.get("out_of_topic")
+            except Exception as e:
+                print(f"[canned] ooc unavailable ({e})")
+        if ooc_text is not None:
+            # Skip the router join AND the composer — zero Sonnet tokens; the
+            # canned prose flows through the normal sentence/speaker machinery
+            # (captions, gestures, stop word) below.
+            routing = {"primary_topic": "out_of_topic_canned",
+                       "secondary_topics": [], "confidence": "low",
+                       "reasoning": gate.get("reasoning", "")}
+            print("[canned] out-of-topic fast path — router/composer skipped")
+        else:
+            rt.join(timeout=30)
+            if "err" in route_box:
+                raise route_box["err"]
+            routing = route_box.get("r") or force_meta_routing("router timeout fallback")
     print(f"[stream] gate {gate_s}s | route {route_box.get('s', '-')}s (parallel)")
     if abort.is_set():
         return None
@@ -361,8 +377,10 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         speaker.add(s)
 
     buf, parts = "", []
-    for piece in generate_response_stream(client, question, routing, artifacts,
-                                          history):
+    stream_src = ([ooc_text] if ooc_text is not None else
+                  generate_response_stream(client, question, routing, artifacts,
+                                           history))
+    for piece in stream_src:
         if not parts:
             print(f"[stream] first composer token {time.monotonic() - t0:.1f}s")
         if abort.is_set():

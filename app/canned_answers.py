@@ -64,7 +64,10 @@ def _load():
             except re.error as err:
                 print(f"[canned] bad regex in {e.get('id')!r} skipped: {err}")
         answers = e.get("answers") or ([e["answer"]] if e.get("answer") else [])
-        if pats and answers:
+        # Entries with no patterns are legal: they are selected by id via
+        # get() (e.g. "out_of_topic", chosen by the input gate's scope),
+        # never by transcript matching.
+        if answers:
             entries.append({"id": e.get("id", "?"), "patterns": pats,
                             "answers": answers})
     _cache.update(path=path, mtime=mtime, entries=entries)
@@ -85,4 +88,20 @@ def match(question: str):
                 return {"id": e["id"], "answer": random.choice(e["answers"])}
     except Exception as err:   # never let the fast path break a turn
         print(f"[canned] match failed open: {type(err).__name__}: {err}")
+    return None
+
+
+def get(entry_id: str):
+    """Random answer variant for an entry selected by id (not by transcript) —
+    e.g. "out_of_topic" when the input gate scopes a question out_of_corpus.
+    None when disabled, missing, or on any error (callers fall through to
+    the composer)."""
+    try:
+        if not enabled():
+            return None
+        for e in _load():
+            if e["id"] == entry_id:
+                return random.choice(e["answers"])
+    except Exception as err:
+        print(f"[canned] get({entry_id!r}) failed open: {type(err).__name__}: {err}")
     return None

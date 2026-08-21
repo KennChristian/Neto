@@ -79,6 +79,16 @@
       "answer": "To the young, I offer my three E-values: excellence in your craft, ethics in your conduct, and eternity in your purpose. Work not merely for a living, but for a legacy — and remember that those who have less in life should have more in law."
     },
     {
+      "id": "out_of_topic",
+      "match": [],
+      "_note": "Not pattern-matched — selected by the input gate when it scopes a question out_of_corpus. Variants rotate so repeat deflections don't sound identical.",
+      "answers": [
+        "Forgive me — that lies outside the record of what I have written and lived. My competence, such as it is, runs to liberty, prosperity, and the law. Ask me there, and I promise you a better answer.",
+        "Ah, you have found the limits of an old jurist! That is not something I have written or spoken on, and a judge should never rule on what he has not studied. But ask me about the law, the courts, or the twin beacons of liberty and prosperity, and I am at your service.",
+        "I must beg off on that one — it is beyond my brief, as we say in court. A long life in the law taught me to speak only of what I know: liberty, prosperity, the Constitution, and the Court. Shall we return there?"
+      ]
+    },
+    {
       "id": "thanks_goodbye",
       "match": [
         "(thank you|thanks|salamat|maraming salamat)( so much| very much| po)?( cee ?jap| chief justice| sir)?",

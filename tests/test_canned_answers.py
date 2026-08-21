@@ -68,9 +68,21 @@ for q in [
 ]:
     check(f"miss: {q!r}", hits(q) is None)
 
+# --- out_of_topic: selected by id (gate scope), never by transcript ---
+ooc = canned_answers.get("out_of_topic")
+check("get out_of_topic", isinstance(ooc, str) and len(ooc) > 40)
+variants = {canned_answers.get("out_of_topic") for _ in range(30)}
+check("out_of_topic rotates variants", len(variants) >= 2)
+check("out_of_topic never pattern-matches",
+      all(hits(q) != "out_of_topic" for q in
+          ("out of topic", "what is your favorite basketball team",
+           "tell me about quantum physics")))
+check("get unknown id -> None", canned_answers.get("nope") is None)
+
 # --- disabled flag ---
 os.environ["CJ_CANNED_ENABLED"] = "0"
 check("disabled -> None", hits("Who are you?") is None)
+check("disabled -> get None", canned_answers.get("out_of_topic") is None)
 os.environ["CJ_CANNED_ENABLED"] = "1"
 
 # --- every entry's answers are non-empty strings ---
