@@ -12,7 +12,7 @@ Modes:
              WHILE the answer plays cuts playback and goes straight back to
              listening — see StopWord / config.STOP_OWW_THRESHOLD.
 """
-import argparse, glob, json, os, random, socket, subprocess, tempfile, threading, time
+import argparse, glob, json, os, random, socket, subprocess, sys, tempfile, threading, time
 from collections import deque
 import numpy as np
 import sounddevice as sd
@@ -75,6 +75,48 @@ TURN_META = "/dev/shm/cj_turn_meta.jsonl"
 LAST_ANSWER_MP3 = "/dev/shm/cj_last_answer.mp3"
 MUTE_TRIGGER = "/dev/shm/cj_mute_trigger"
 _speak_timing = {}  # populated by speak(): synth_s, play_s
+
+
+def prewarm_connections(client):
+    """Fire tiny no-token requests at every remote service the turn will hit,
+    in daemon threads, the moment the wake word fires. The user is still
+    SPEAKING their question, so TLS/HTTP setup happens during the question
+    instead of after it — cold-start spikes measured 5-7s to OpenAI on the
+    CM4 (STT), and similar first-call costs on Anthropic and ElevenLabs.
+    Every branch fails silently; a prewarm must never break a turn.
+    Disable with CJ_PREWARM=0."""
+    if os.environ.get("CJ_PREWARM", "1").strip().lower() in {"0", "false", "no", "off"}:
+        return
+
+    def _openai():
+        try:  # STT path uses voice_io._sync_client(); any request warms its pool
+            voice_io._sync_client().models.retrieve("whisper-1")
+        except Exception as e:
+            print(f"[prewarm] openai skipped: {type(e).__name__}")
+
+    def _anthropic():
+        try:  # gate/route/composer share this client; GET /v1/models = 0 tokens
+            client.models.list(limit=1)
+        except Exception as e:
+            print(f"[prewarm] anthropic skipped: {type(e).__name__}")
+
+    def _eleven():
+        try:
+            if getattr(voice_io, "TTS_BACKEND", "openai") != "elevenlabs":
+                return
+            root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            if root not in sys.path:              # voice/ pkg lives at repo root
+                sys.path.insert(0, root)
+            import voice.speak                    # noqa: F401 — register module
+            mod = sys.modules["voice.speak"]      # voice.speak attr is the FUNCTION
+            mod._session.get("https://api.elevenlabs.io/v1/user",
+                             headers={"xi-api-key": mod.config.ELEVEN_API_KEY},
+                             timeout=6)
+        except Exception as e:
+            print(f"[prewarm] elevenlabs skipped: {type(e).__name__}")
+
+    for fn in (_openai, _anthropic, _eleven):
+        threading.Thread(target=fn, daemon=True).start()
 
 
 def _api_cost_snapshot():
@@ -1114,6 +1156,7 @@ def wake_loop(client, artifacts, gestures):
             res = wake_word.wait_for_wake(
                 detector, windows=_wake_windows(), on_listen=_on_listen)
             print(f"[wake] FIRED on {res.variant!r} (score {res.score}, heard: {res.heard!r})")
+        prewarm_connections(client)   # warm OpenAI/Anthropic/ElevenLabs while the user speaks
         gestures.perk()
         if not internet_up(1.2):   # short probe: don't hold the mic open on a slow LAN
             # Say so instead of recording a question no cloud call can answer.
