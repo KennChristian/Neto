@@ -798,6 +798,25 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         filler.stop()
 
 
+_ACK_DIR = os.path.expanduser("~/fillers_ack")
+
+
+def _play_ack():
+    """Instant acknowledgment the moment the mic CLOSES — a sub-second 'Ah.'/
+    'Hmm.' in the cloned voice, launched non-blocking BEFORE transcription
+    starts. First sound lands ~1s after the user stops talking instead of
+    after the 2.5-3.5s STT wait (user report: pause still very noticeable).
+    The clip ends well before any filler or canned answer starts. Disable
+    with CJ_ACK_ENABLED=0."""
+    if os.environ.get("CJ_ACK_ENABLED", "1").strip().lower() in {
+            "0", "false", "no", "off"}:
+        return
+    clips = glob.glob(_ACK_DIR + "/*.wav")
+    if clips:
+        subprocess.Popen(["aplay", "-q", random.choice(clips)],
+                         stderr=subprocess.DEVNULL)
+
+
 def _followup_window():
     """Seconds the mic stays open for a follow-up question after a completed
     answer (no fresh wake needed). 0 disables the conversational window."""
@@ -820,6 +839,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
     if not path:
         _publish_transcript("note", "(mic timeout — no speech captured)")
         return False
+    _play_ack()   # sub-second "Ah."/"Hmm." NOW — sound before the STT wait
     try:
         import speaker_id
         if speaker_id.gate_active():
