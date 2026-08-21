@@ -385,7 +385,15 @@ class FillerLoop:
     `exhausted` — handle_turn treats that as "taking too long, bail out"."""
 
     def __init__(self, gap_range=(2.5, 5.0), max_clips=None):
-        self._clips = glob.glob(FILLER_DIR + "/*.wav")
+        # CJ_FILLERS_ENABLED=0 silences the "let me think" clips so a turn is
+        # just question -> answer (A/B: does the pause pass as direct
+        # speech?). No clips -> the thread below never starts, so callers'
+        # stop()/inject()/exhausted plumbing works unchanged. Note that
+        # `exhausted` then never fires — the taking-too-long bail-out is
+        # off while fillers are disabled.
+        disabled = os.environ.get("CJ_FILLERS_ENABLED", "1").strip().lower() in {
+            "0", "false", "no", "off"}
+        self._clips = [] if disabled else glob.glob(FILLER_DIR + "/*.wav")
         self._gap_range = gap_range
         self._stop = threading.Event()
         self.max_clips = (max_clips if max_clips is not None
