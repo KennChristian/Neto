@@ -29,14 +29,33 @@ try:
 except Exception:
     process_tts_sentence = lambda t: t  # noqa: E731
 
-total = 0
+total, failed = 0, []
 for e in canned_answers._load():
-    for answer in e["answers"]:
+    for i, answer in enumerate(e["answers"], 1):
         text = process_tts_sentence(answer)
-        t0 = time.time()
-        wav = voice_io.tts_elevenlabs_wav(text)
-        os.unlink(wav)
-        dt = time.time() - t0
-        total += 1
-        print(f"  {e['id']}: {dt:.1f}s {'(cache hit)' if dt < 0.5 else '(rendered)'}")
-print(f"{total} answers in the clip cache.")
+        label = f"{e['id']}[{i}]"
+        for attempt in (1, 2):
+            t0 = time.time()
+            try:
+                wav = voice_io.tts_elevenlabs_wav(text)
+            except Exception as err:
+                # ElevenLabs intermittently 401s rapid-fire batch renders even
+                # on a valid key — pause and retry once, then move on (a
+                # missed clip just renders on its first live ask).
+                print(f"  {label}: FAILED ({err}); "
+                      f"{'retrying after pause' if attempt == 1 else 'skipping'}")
+                if attempt == 1:
+                    time.sleep(20)
+                    continue
+                failed.append(label)
+                break
+            os.unlink(wav)
+            dt = time.time() - t0
+            total += 1
+            print(f"  {label}: {dt:.1f}s "
+                  f"{'(cache hit)' if dt < 0.5 else '(rendered)'}")
+            if dt >= 0.5:
+                time.sleep(1.5)   # be polite: don't hammer the TTS endpoint
+            break
+print(f"{total} answers in the clip cache." +
+      (f"  FAILED: {', '.join(failed)}" if failed else ""))
