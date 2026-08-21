@@ -5,19 +5,50 @@
       "id": "book::love-god-serve-man",
       "class": "book",
       "canonical": "Love God, Serve Man",
-      "variants": ["Love God Serve Man"],
+      "variants": [
+        "Love God Serve Man"
+      ],
       "misrecognitions": [],
-      "gloss": ["CJP's book/vision; also an Inquirer honor phrase"],
+      "gloss": [
+        "CJP's book/vision; also an Inquirer honor phrase"
+      ],
       "doc_freq": 5
     },
     {
       "id": "org::museum-of-liberty-and-prosperity",
       "class": "org",
       "canonical": "Museum of Liberty and Prosperity",
-      "variants": ["Interactive Museum of Liberty and Prosperity", "Museum for Liberty and Prosperity", "Museum on Liberty and Prosperity"],
+      "variants": [
+        "Interactive Museum of Liberty and Prosperity",
+        "Museum for Liberty and Prosperity",
+        "Museum on Liberty and Prosperity"
+      ],
       "misrecognitions": [],
-      "gloss": ["FLP flagship museum project, in partnership with the Supreme Court"],
+      "gloss": [
+        "FLP flagship museum project, in partnership with the Supreme Court"
+      ],
       "doc_freq": 4
+    },
+    {
+      "id": "place::west-philippine-sea",
+      "class": "place",
+      "canonical": "West Philippine Sea",
+      "variants": [
+        "West Philippines Sea",
+        "the West Philippine Sea"
+      ],
+      "misrecognitions": [],
+      "gloss": []
+    },
+    {
+      "id": "place::south-china-sea",
+      "class": "place",
+      "canonical": "South China Sea",
+      "variants": [
+        "South China Seas"
+      ],
+      "misrecognitions": [],
+      "gloss": []
     }
   ],
   "merge": {
@@ -34,7 +65,9 @@
     },
     "person::elenita-leni-carpio-panganiban": {
       "canonical": "Elenita 'Leni' Carpio Panganiban",
-      "gloss": ["CJ Panganiban's wife"],
+      "gloss": [
+        "CJ Panganiban's wife"
+      ],
       "add_variants": [
         "Leni Panganiban",
         "Leni Carpio Panganiban",
@@ -45,19 +78,38 @@
         "CJ's wife Leni",
         "CJP's wife Leni"
       ],
-      "add_misrecognitions": ["Lenny Panganiban", "Lennie Panganiban"]
+      "add_misrecognitions": [
+        "Lenny Panganiban",
+        "Lennie Panganiban"
+      ]
     },
     "org::supreme-court-of-the-philippines": {
-      "add_variants": ["Supreme Court", "The Supreme Court", "Philippine Supreme Court"]
+      "add_variants": [
+        "Supreme Court",
+        "The Supreme Court",
+        "Philippine Supreme Court"
+      ]
     },
     "person::renato-c-corona": {
       "canonical": "Renato C. Corona",
-      "add_variants": ["Chief Justice Renato C. Corona", "CJ Renato Corona", "Renato Corona", "Chief Justice Corona"],
-      "gloss": ["Chief Justice, impeached 2012"]
+      "add_variants": [
+        "Chief Justice Renato C. Corona",
+        "CJ Renato Corona",
+        "Renato Corona",
+        "Chief Justice Corona"
+      ],
+      "gloss": [
+        "Chief Justice, impeached 2012"
+      ]
     },
     "person::dr-jovito-r-salonga": {
-      "add_variants": ["Jovito Salonga", "Senator Jovito Salonga"],
-      "gloss": ["CJ Panganiban's guru/mentor"]
+      "add_variants": [
+        "Jovito Salonga",
+        "Senator Jovito Salonga"
+      ],
+      "gloss": [
+        "CJ Panganiban's guru/mentor"
+      ]
     }
   },
   "remove": [
@@ -77,6 +129,7 @@
     "person::cj-s-wife-leni",
     "person::cjp-s-wife-leni",
     "person::professor-elenita-leni-carpio-panganiban",
-    "person::lola-leni-elenita-panganiban"
+    "person::lola-leni-elenita-panganiban",
+    "org::philippines"
   ]
 }

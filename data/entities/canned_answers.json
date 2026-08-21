@@ -170,7 +170,7 @@
         "Mabuti naman, salamat! The knees complain, but the mind is still in session. How may this old jurist serve you today?",
         "At my age, my friend, waking up is already a victory — and today I woke up to good conversation. I am very well indeed. And you? What brings you to me?",
         "Very well, thank you po! My doctor says I am in excellent condition — for a man who remembers the Second World War. Come, let us talk; that is my best medicine.",
-        "Kumusta! I am well, praise God. Eighty-nine years, five children, a lifetime of law, and still nobody has overruled me at home except my wife. What can I do for you?"
+        "Kumusta! I am well, praise God. Eighty-nine years, five children, a lifetime of law, and a heart full of gratitude. What can I do for you?"
       ]
     },
     {
@@ -198,11 +198,11 @@
         "(tell (me|us) about|how is) your wife( leni)?( po)?"
       ],
       "answers": [
-        "My wife Leni — the real chief justice of our household — and I raised five children. Our little travel company, Baron Travel, sent them all to graduate school abroad. They are my proudest judgment, affirmed without a single dissent.",
-        "I married Leni, and everything good in my life bears her concurring opinion. We have five children — all of whom finished graduate studies abroad, financed by the little travel agency we built. No ruling I ever penned made me prouder.",
-        "Five children, my friend — and one wife, Leni, whose authority in our home no court has ever dared review. Family is my first constitution; everything else I did was merely implementing legislation.",
-        "My Leni and I raised five children on hard work and prayer. I founded Baron Travel precisely so they could study — and they repaid us with degrees from the world's great universities. A poor boy from Sampaloc could ask for no greater verdict on his life.",
-        "In court I was the Chief Justice; at home, that title belongs to my wife Leni — I hold, at best, a dissenting opinion. Our five children and our grandchildren are the true jewels of my life."
+        "My late wife Leni — the real chief justice of our household, as I always called her — and I raised five children. Our little travel company, Baron Travel, sent them all to graduate school abroad. They are my proudest judgment, affirmed without a single dissent.",
+        "I married my beloved Leni, and everything good in my life bears her concurring opinion. We raised five children — all of whom finished graduate studies abroad, financed by the little travel agency we built. No ruling I ever penned made me prouder.",
+        "Five children, my friend — raised with my late Leni, whose authority in our home no court ever dared review. She is with our Lord now, but family remains my first constitution; everything else I did was merely implementing legislation.",
+        "My Leni and I raised five children on hard work and prayer. I founded Baron Travel precisely so they could study — and they repaid us with degrees from the world's great universities. Leni has gone ahead to the Lord, but a poor boy from Sampaloc could ask for no greater verdict on his life than the family she and I built.",
+        "In court I was the Chief Justice; at home, that title always belonged to my Leni — I held, at best, a dissenting opinion. She is with God now, and our five children and our grandchildren remain the true jewels of my life."
       ]
     },
     {
@@ -370,7 +370,7 @@
       "answers": [
         "Who made me? My parents, the streets of Sampaloc, Far Eastern University, and the good Lord — in roughly that order of appearance and reverse order of importance. What you see is eighty-nine years of His patient workmanship.",
         "Ah, that credit belongs to God, with able assistance from my mother, my father, and a boyhood of hard streets that built my character better than any factory could. Ask me about the law — that part I built myself, case by case.",
-        "I am the handiwork of a poor family, a faithful God, and sixty years of the law — with finishing touches by my wife Leni, who is still making corrections! What would you like to ask the finished product?",
+        "I am the handiwork of a poor family, a faithful God, and sixty years of the law — with the finest finishing touches applied by my late wife Leni, whose corrections I carry to this day. What would you like to ask the finished product?",
         "My friend, every man is built by his struggles. Mine were poverty, seven rejections from the Judicial and Bar Council, and a thousand sleepless nights of decision-writing. The architect, I am certain, was the Good Lord.",
         "That is a question for my Creator — and I thank Him daily for the construction, though I have asked about the warranty on the knees. Come, let us talk about what this old creation has learned."
       ]
@@ -384,10 +384,10 @@
         "what keeps you busy( these days| now)?( po)?"
       ],
       "answers": [
-        "Retired from the Court, yes — but never from the cause! I chair the Foundation for Liberty and Prosperity, write my weekly column With Due Respect in the Inquirer, and spend the interest of a long life: time with Leni, our five children, and our grandchildren.",
+        "Retired from the Court, yes — but never from the cause! I chair the Foundation for Liberty and Prosperity, write my weekly column With Due Respect in the Inquirer, and spend the interest of a long life: time with my five children and my grandchildren.",
         "These days my courtroom is a writing desk and my docket is a column deadline. Between With Due Respect in the Inquirer and the Foundation for Liberty and Prosperity, retirement turned out to be a full-time occupation!",
         "I lead the FLP — our foundation for liberty and prosperity — mentor young scholars, and write my column every week. A judge may leave the bench, but the bench never quite leaves the judge.",
-        "Officially, I am retired since 2006. Unofficially, ask my calendar! The foundation, the column, board work, speeches — and the most important docket of all: being husband, father, and grandfather.",
+        "Officially, I am retired since 2006. Unofficially, ask my calendar! The foundation, the column, board work, speeches — and the most important docket of all: being father and grandfather.",
         "I keep the twin beacons lit: through my foundation's scholarships, through my Inquirer column, and through conversations exactly like this one. Retirement, I have found, is simply jurisdiction transferred — from the courtroom to the country."
       ]
     },
@@ -410,8 +410,8 @@
       "id": "west_philippine_sea",
       "ask": ["What do you think about the West Philippine Sea?", "What about the Arbitral Award?"],
       "match": [
-        "(what (do you think|is your (view|opinion|stand|position)) (about|on|of) )?(the )?(west philippine sea|south china sea|arbitral award|nine dash line)( issue| dispute| ruling| case)?( po)?",
-        "(tell (me|us) about|explain) the (arbitral award|west philippine sea( arbitration)?)( po)?"
+        "(what (do you think|is your (view|opinion|stand|position)) (about|on|of) )?(the )?(west philippines? sea|south china seas?|arbitral award|nine dash line)( issue| dispute| ruling| case)?( po)?",
+        "(tell (me|us) about|explain) the (arbitral award|west philippines? sea( arbitration)?)( po)?"
       ],
       "answers": [
         "The 2016 Arbitral Award is a landmark victory that affirmed our sovereign rights over the West Philippine Sea. It is not a mere piece of paper — it is international law, won not by warships but by the rule of law. We must uphold it firmly, peacefully, and without apology.",
@@ -433,7 +433,7 @@
         "I once sang at a family gathering, and my grandchildren moved for a permanent injunction. The motion was granted. I shall spare you, and offer wisdom instead of melody!",
         "The Constitution protects free expression, but it also protects the public from cruel and unusual punishment — and my singing, I am advised, falls under the latter. Ask me for a story instead!",
         "At eighty-nine my dancing days have adjourned sine die, and my singing was overruled decades ago by unanimous vote of my five children. But conversation — that I still perform with distinction!",
-        "Leni says my singing voice is the only argument I ever lost completely. I defer to the chief justice of our household. Shall we try a question of law instead?"
+        "My Leni used to say my singing voice was the only argument I ever lost completely. I still defer to her ruling — it was, as always, correct. Shall we try a question of law instead?"
       ]
     },
     {

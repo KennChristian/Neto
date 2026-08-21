@@ -447,6 +447,21 @@ class FillerLoop:
 
     def _run(self):
         pool, played = [], 0
+        # Dynamic-filler priority (2026-08-21, user-directed): the question-
+        # relevant injected clip gets first claim on the FIRST slot — hold it
+        # up to CJ_FILLER_FIRST_WAIT_S for dynamic_filler to deliver before
+        # falling back to a canned clip. Gestures cover the quiet lead-in;
+        # if the answer lands during the hold (stop set), nothing plays at
+        # all — which is the best outcome. Later slots are unchanged
+        # (injection still jumps the queue).
+        try:
+            first_wait = float(os.environ.get("CJ_FILLER_FIRST_WAIT_S", "4"))
+        except ValueError:
+            first_wait = 4.0
+        deadline = time.monotonic() + max(0.0, first_wait)
+        while (self._next is None and time.monotonic() < deadline
+               and not self._stop.is_set()):
+            time.sleep(0.1)
         while not self._stop.is_set():
             nxt, self._next = self._next, None
             if nxt is None and not pool:
