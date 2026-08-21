@@ -478,6 +478,15 @@ class FillerLoop:
         if self._clips:
             self._thread.start()
 
+    @staticmethod
+    def _duration(path):
+        try:
+            import wave
+            with wave.open(path) as w:
+                return w.getnframes() / (w.getframerate() or 1)
+        except Exception:
+            return 5.0
+
     def inject(self, wav_path):
         """Queue `wav_path` as the NEXT clip instead of a random canned one
         (P3 dynamic filler). Returns False if the loop is already done —
@@ -489,21 +498,22 @@ class FillerLoop:
 
     def _run(self):
         pool, played = [], 0
-        # Dynamic-filler priority (2026-08-21, user-directed): the question-
-        # relevant injected clip gets first claim on the FIRST slot — hold it
-        # up to CJ_FILLER_FIRST_WAIT_S for dynamic_filler to deliver before
-        # falling back to a canned clip. Gestures cover the quiet lead-in;
-        # if the answer lands during the hold (stop set), nothing plays at
-        # all — which is the best outcome. Later slots are unchanged
-        # (injection still jumps the queue).
+        # Dynamic-filler priority, v2 (2026-08-21 — v1's 4s silent hold read
+        # as a "big pause", user report): hold only a short natural beat
+        # (CJ_FILLER_FIRST_WAIT_S, default 1.2s) for the question-relevant
+        # clip, then play the SHORTEST canned clip so there is sound on the
+        # air quickly; the dynamic clip injects as the very next slot with a
+        # shortened gap after the first clip. Answer landing during the beat
+        # still plays nothing at all.
         try:
-            first_wait = float(os.environ.get("CJ_FILLER_FIRST_WAIT_S", "4"))
+            first_wait = float(os.environ.get("CJ_FILLER_FIRST_WAIT_S", "1.2"))
         except ValueError:
-            first_wait = 4.0
+            first_wait = 1.2
         deadline = time.monotonic() + max(0.0, first_wait)
         while (self._next is None and time.monotonic() < deadline
                and not self._stop.is_set()):
             time.sleep(0.1)
+        first = True
         while not self._stop.is_set():
             nxt, self._next = self._next, None
             if nxt is None and not pool:
@@ -512,6 +522,8 @@ class FillerLoop:
                 pool = ([c for c in self._clips if c not in _RECENT_FILLERS]
                         or self._clips[:])
                 random.shuffle(pool)
+                if first:   # pop() takes the LAST element -> shortest clip first
+                    pool.sort(key=self._duration, reverse=True)
             clip = nxt or pool.pop()
             if not nxt:
                 _RECENT_FILLERS.append(clip)
@@ -526,7 +538,11 @@ class FillerLoop:
             if self.max_clips and played >= self.max_clips:
                 self.exhausted.set()
                 return
-            if self._stop.wait(random.uniform(*self._gap_range)):
+            # short gap after the FIRST clip so an injected dynamic clip gets
+            # on the air before the answer arrives; normal pacing afterwards
+            gap = (0.7, 1.4) if first else self._gap_range
+            first = False
+            if self._stop.wait(random.uniform(*gap)):
                 break
 
     def stop(self):

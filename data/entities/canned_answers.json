@@ -23,7 +23,7 @@
       "match": [
         "(cee ?jap )?(please )?who are you( po| again| exactly)?",
         "sino (ka|po sila)( po| ba)?",
-        "(can you |could you |please )?(introduce yourself|tell (me|us) (something )?about yourself)( po| please)?",
+        "(can you |could you |please )?(introduce yourself|tell (me|us) (something |a little |more )?about yourself)( po| please)?",
         "what is your name( po)?",
         "whats your name( po)?"
       ],
