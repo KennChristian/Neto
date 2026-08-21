@@ -377,9 +377,10 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         speaker.add(s)
 
     buf, parts = "", []
+    stream_info = {}
     stream_src = ([ooc_text] if ooc_text is not None else
                   generate_response_stream(client, question, routing, artifacts,
-                                           history))
+                                           history, info=stream_info))
     for piece in stream_src:
         if not parts:
             print(f"[stream] first composer token {time.monotonic() - t0:.1f}s")
@@ -393,13 +394,27 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         ready, buf = split_ready(buf)
         for s in ready:
             _add_gated(_strip_stage_directions(s))
+    dropped_tail = None
     if not speaker.interrupted:
         tail = _strip_stage_directions(buf.strip())
         if tail:
-            _add_gated(tail)
+            # Cap-hit truncation guard: if the stream stopped on max_tokens
+            # and the leftover buffer is not a complete sentence, it is a
+            # mid-clause fragment — never voice it (the classic path trims
+            # the same way; the streaming path used to speak it).
+            if (stream_info.get("stop_reason") == "max_tokens"
+                    and tail[-1] not in ".!?…\"”'’"):
+                dropped_tail = tail
+                print(f"[stream] cap-hit fragment dropped (never voiced): "
+                      f"{tail[:60]!r}")
+            else:
+                _add_gated(tail)
     compose_s = round(time.monotonic() - t0, 2)
     interrupted = speaker.finish()
     response_text = _strip_stage_directions("".join(parts)).strip()
+    if dropped_tail and response_text.endswith(dropped_tail):
+        # Keep captions/history/dashboard consistent with what was SPOKEN.
+        response_text = response_text[:-len(dropped_tail)].rstrip()
     gate_full = None
     if gate_mod is not None:
         # full-answer check: expected facts need the whole answer. The audio

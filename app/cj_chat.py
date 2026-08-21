@@ -198,6 +198,21 @@ def _scale_budget(budget: int) -> int:
     return max(TOKEN_BUDGET_MIN, int(budget * TOKEN_BUDGET_SCALE))
 
 
+def _cap_with_headroom(budget: int) -> int:
+    """The API max_tokens sent with a length note. The composer AIMS at the
+    note's word target (derived from `budget`); the cap is only a safety net,
+    and headroom above the target lets a final sentence FINISH instead of
+    truncating mid-clause (live turns were writing exactly to the cap and
+    getting cut). Without a note (scale >= 1.0) the cap stays == budget."""
+    if TOKEN_BUDGET_SCALE >= 1.0:
+        return budget
+    try:
+        h = float(os.environ.get("CJ_TOKEN_CAP_HEADROOM", "1.35"))
+    except ValueError:
+        h = 1.35
+    return int(budget * max(1.0, h))
+
+
 def _length_note(max_tokens: int) -> str:
     """Brevity cue appended to the composer's user turn when the budget is
     tuned down (TOKEN_BUDGET_SCALE < 1.0). The model must KNOW the ceiling,
@@ -880,7 +895,7 @@ def generate_response(
 
     resp = client.messages.create(
         model=INFERENCE_MODEL,
-        max_tokens=max_tokens,
+        max_tokens=_cap_with_headroom(max_tokens),
         system=[{
             "type": "text",
             "text": artifacts.voice_card,
@@ -906,6 +921,7 @@ def generate_response_stream(
     routing: dict,
     artifacts: CorpusArtifacts,
     conversation_history: list = None,
+    info: dict = None,
 ):
     """Yield Sonnet's response in chunks for live UI rendering.
 
@@ -938,7 +954,7 @@ def generate_response_stream(
 
     with client.messages.stream(
         model=INFERENCE_MODEL,
-        max_tokens=max_tokens,
+        max_tokens=_cap_with_headroom(max_tokens),
         system=[{
             "type": "text",
             "text": artifacts.voice_card,
@@ -950,10 +966,14 @@ def generate_response_stream(
         for text in stream.text_stream:
             yield text
         # Log cache usage once the stream ends (usage is finalised
-        # only on the closing event).
+        # only on the closing event). Also expose stop_reason to the caller
+        # (via the `info` out-param) so the streaming speaker can drop a
+        # cap-truncated final fragment instead of voicing it.
         try:
             final = stream.get_final_message()
             _log_cache_usage("inference", final.usage)
+            if info is not None:
+                info["stop_reason"] = final.stop_reason
         except Exception:
             pass
 
