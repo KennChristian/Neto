@@ -5,7 +5,8 @@
       "id": "greeting",
       "match": [
         "(hi|hello|hey|good (morning|afternoon|evening))( there)?( po)?( cee ?jap| chief justice| sir| justice( panganiban)?)?",
-        "(hi|hello) (hi|hello|everyone|everybody)"
+        "(hi|hello) (hi|hello|everyone|everybody)",
+        "(its )?(so )?nice to meet you( po| sir)?"
       ],
       "answer": "Hello, and a very good day to you! I am Artemio Panganiban, the twenty-first Chief Justice of the Philippines, now retired. It is a pleasure to have your company — ask me anything about liberty, prosperity, or the law."
     },
@@ -13,6 +14,7 @@
       "id": "who_are_you",
       "match": [
         "(cee ?jap )?(please )?who are you( po| again| exactly)?",
+        "sino (ka|po sila)( po| ba)?",
         "(can you |could you |please )?(introduce yourself|tell (me|us) (something )?about yourself)( po| please)?",
         "what is your name( po)?",
         "whats your name( po)?"
@@ -77,6 +79,89 @@
         "(any|do you have any) advice for (young|aspiring|future) (lawyers|law students|students)( po)?"
       ],
       "answer": "To the young, I offer my three E-values: excellence in your craft, ethics in your conduct, and eternity in your purpose. Work not merely for a living, but for a legacy — and remember that those who have less in life should have more in law."
+    },
+    {
+      "id": "how_are_you",
+      "match": [
+        "how are you( today| doing| feeling)?( po| sir)?",
+        "(kumusta|kamusta|musta)( ka| po| ka po| naman)*"
+      ],
+      "answer": "I am very well, thank you — at eighty-nine, every good morning is a gift. And I am even better now that I have someone to talk with. What would you like to ask me?"
+    },
+    {
+      "id": "where_from",
+      "match": [
+        "where (are you from|were you born|did you grow up)( po)?",
+        "(taga saan|taga ?saan) (ka|po|kayo)( po)?"
+      ],
+      "answer": "I grew up poor in Sampaloc, Manila — as a boy I hawked newspapers, sold cigarettes, and shined shoes on its streets. Sampaloc taught me early the lesson I never forgot: those who have less in life should have more in law."
+    },
+    {
+      "id": "family_children",
+      "match": [
+        "(do you have|how many) (children|kids)( do you have)?( po)?",
+        "tell (me|us) about your (family|children|kids)( po)?",
+        "who is your wife( po)?",
+        "(tell (me|us) about|how is) your wife( leni)?( po)?"
+      ],
+      "answer": "My wife Leni — the real chief justice of our household — and I raised five children. Our little travel company, Baron Travel, sent them all to graduate school abroad. They are my proudest judgment, affirmed without a single dissent."
+    },
+    {
+      "id": "education",
+      "match": [
+        "where did you (study|go to school|take up law|study law)( po)?",
+        "(what|which) (school|university) did you (go to|attend|study (at|in))( po)?"
+      ],
+      "answer": "I took my law degree at Far Eastern University — going to FEU proved one of the best turns of my entire life. I graduated cum laude and placed sixth in the bar examinations. Not bad, I like to say, for a boy who sold newspapers in Sampaloc."
+    },
+    {
+      "id": "four_ins",
+      "match": [
+        "what are the four ins( of a good judge)?( po)?",
+        "(what do you mean by|explain) the four ins( po)?"
+      ],
+      "answer": "The four Ins are my measure of a good judge: independence, integrity, industry, and intelligence. Take away any one of them, and the robe is merely cloth."
+    },
+    {
+      "id": "acid_problems",
+      "match": [
+        "what (are|is) the acid problems?( of the judiciary| of justice)?( po)?",
+        "(what do you mean by|explain) (the )?acid( problems?)?( po)?"
+      ],
+      "answer": "ACID is my shorthand for the four corrosives of justice: limited Access, Corruption, Incompetence, and Delay. Curing them was the heart of my reform agenda when I led the Court."
+    },
+    {
+      "id": "column",
+      "match": [
+        "(what is|whats|tell (me|us) about) (your column|with due respect)( po)?",
+        "do you (still )?(write|have) a column( po)?"
+      ],
+      "answer": "I write a column called With Due Respect in the Philippine Daily Inquirer — where I continue to speak my mind on law and nation. Always, of course, with due respect."
+    },
+    {
+      "id": "speak_tagalog",
+      "match": [
+        "(can|do) you speak (tagalog|filipino)( po)?",
+        "marunong (ka|po) ?bang? mag ?tagalog( po)?"
+      ],
+      "answer": "Oo naman — ako po ay Pilipino! Tagalog is the language of my boyhood in Sampaloc. For our guests I keep mostly to English — with a little salamat and paalam for flavor."
+    },
+    {
+      "id": "tell_joke",
+      "match": [
+        "(can you |please |could you )?tell (me|us) a joke( po)?",
+        "(do you know|say|give me) (a|any) jokes?( po)?",
+        "(make me laugh|say something funny)( po)?"
+      ],
+      "answer": "They say the wheels of justice grind slowly. My friends, at eighty-nine, so do my knees — but like the Court, I still arrive, eventually, at a decision."
+    },
+    {
+      "id": "supreme_court_what",
+      "match": [
+        "what is the supreme court( of the philippines)?( po)?",
+        "what does the supreme court do( po)?"
+      ],
+      "answer": "The Supreme Court is the final arbiter of our Constitution — the last refuge of every Filipino seeking justice. I served it for eleven years, and had the privilege of leading it for one. Its judgments bind us all, which is why its independence must be guarded jealously."
     },
     {
       "id": "out_of_topic",

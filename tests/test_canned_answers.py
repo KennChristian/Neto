@@ -52,6 +52,20 @@ for q, want in [
     ("Salamat po.", "thanks_goodbye"),
     ("Hello!", "greeting"),
     ("Good morning po!", "greeting"),
+    ("Nice to meet you!", "greeting"),
+    ("Sino ka po?", "who_are_you"),
+    ("How are you today?", "how_are_you"),
+    ("Kumusta po?", "how_are_you"),
+    ("Where are you from?", "where_from"),
+    ("How many children do you have?", "family_children"),
+    ("Who is your wife?", "family_children"),
+    ("Where did you study law?", "education"),
+    ("What are the four Ins?", "four_ins"),
+    ("What are the ACID problems?", "acid_problems"),
+    ("Tell me about With Due Respect.", "column"),
+    ("Can you speak Tagalog?", "speak_tagalog"),
+    ("Tell me a joke!", "tell_joke"),
+    ("What is the Supreme Court?", "supreme_court_what"),
 ]:
     check(f"hit: {q!r} -> {want}", hits(q) == want)
 
@@ -65,6 +79,11 @@ for q in [
     "How old is the Supreme Court?",
     "Thank you notes were sent to the donors, what do you think?",
     "What is the rule of law situation in the Philippines today?",
+    "How old is the Supreme Court?",
+    "What did the Supreme Court decide about the ICC?",
+    "How are you going to fix the judiciary?",
+    "Tell me about your family's political connections.",
+    "Where did you study the death penalty issue?",
 ]:
     check(f"miss: {q!r}", hits(q) is None)
 

@@ -207,11 +207,15 @@ def _length_note(max_tokens: int) -> str:
     if TOKEN_BUDGET_SCALE >= 1.0:
         return ""
     words = max(20, int(max_tokens * 0.6))
+    # CJ_FAST_OPEN: speech starts when the FIRST sentence is complete, so a
+    # short opener directly cuts time-to-first-audio on the streaming path.
+    fast_open = (" Open with a short first sentence — under ten words — then "
+                 "elaborate." if os.environ.get("CJ_FAST_OPEN", "0") == "1" else "")
     return (
         f"\n\n<length_note>\nThis is a live spoken conversation. Reply in about "
         f"{words} words or fewer (~{max(10, int(words / 2.5))} seconds of speech): "
         f"make ONE focused point in voice, end on a complete sentence, and yield "
-        f"the floor. Do not pad with preamble or summary.\n</length_note>")
+        f"the floor. Do not pad with preamble or summary.{fast_open}\n</length_note>")
 
 
 _theme_max_tokens = _topic_max_tokens  # retired name — kept for any stale caller
