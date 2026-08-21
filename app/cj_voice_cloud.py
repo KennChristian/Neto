@@ -758,6 +758,41 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
     except Exception as e:
         print(f"[postproc] transcript pass skipped: {e}")
     _publish_transcript("user", question)
+    try:  # canned fast path: curated answers for common questions (fails open)
+        import canned_answers
+        hit = canned_answers.match(question)
+    except Exception as e:
+        print(f"[canned] unavailable ({e})")
+        hit = None
+    if hit:
+        # No router, no composer, zero tokens — the clip cache makes repeats
+        # play near-instantly. speak() still runs the entity TTS pass,
+        # captions, and stop-word interruptible playback.
+        print(f"[canned] fast path hit: {hit['id']}")
+        _publish_transcript("note", f"(canned answer: {hit['id']})")
+        response = hit["answer"]
+        t0 = time.monotonic()
+        gestures.start("talk")
+        interrupted = speak(response, None, stop=stop)
+        _publish_transcript("cj", response)
+        _publish_turn_meta({
+            "phase": "composed", "raw_asr": raw_asr, "question": question,
+            "answer": response, "topic": f"canned:{hit['id']}", "theme": "",
+            "confidence": "canned", "token_budget": 0, "dynamic_tokens": False,
+            "stt_s": stt_s, "compose_s": 0.0,
+        })
+        _publish_turn_meta({
+            "phase": "spoken", "question": question,
+            "synth_s": round(time.monotonic() - t0, 2), "play_s": None,
+            "interrupted": bool(interrupted),
+        })
+        history += [{"role": "user", "content": question},
+                    {"role": "assistant", "content": response}]
+        del history[:-20]
+        if interrupted:
+            _publish_transcript("note", "(answer interrupted by wake phrase — listening)")
+            return "interrupted"
+        return True
     if os.environ.get("CJ_STREAM_SPEECH", "").strip().lower() in {"1", "true", "yes", "on"}:
         return _handle_turn_streaming(client, artifacts, gestures, history, stop,
                                       question, raw_asr, stt_s)

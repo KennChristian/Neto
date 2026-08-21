@@ -1,0 +1,90 @@
+{
+  "_readme": "Canned fast-path answers for common questions. match = regexes fullmatched against the normalized question (lowercase, apostrophes dropped, punctuation collapsed to spaces). Edit freely — hot-reloads, no restart. Keep matches CONSERVATIVE: a wrong match hijacks a real question; when in doubt let the composer answer.",
+  "entries": [
+    {
+      "id": "greeting",
+      "match": [
+        "(hi|hello|hey|good (morning|afternoon|evening))( there)?( po)?( cee ?jap| chief justice| sir| justice( panganiban)?)?",
+        "(hi|hello) (hi|hello|everyone|everybody)"
+      ],
+      "answer": "Hello, and a very good day to you! I am Artemio Panganiban, the twenty-first Chief Justice of the Philippines, now retired. It is a pleasure to have your company — ask me anything about liberty, prosperity, or the law."
+    },
+    {
+      "id": "who_are_you",
+      "match": [
+        "(cee ?jap )?(please )?who are you( po| again| exactly)?",
+        "(can you |could you |please )?(introduce yourself|tell (me|us) (something )?about yourself)( po| please)?",
+        "what is your name( po)?",
+        "whats your name( po)?"
+      ],
+      "answer": "I am Artemio Panganiban — the twenty-first Chief Justice of the Philippines, retired since 2006, and now founding chairman of the Foundation for Liberty and Prosperity. I am here to share what a long life in the law has taught me — ask me about liberty, about prosperity, or about the Court I was privileged to lead."
+    },
+    {
+      "id": "are_you_robot",
+      "match": [
+        "are you (a )?(robot|machine|computer|an? ai|artificial intelligence)( po)?",
+        "are you (real|really real|human|alive)( po)?",
+        "are you (a )?(robot|human)( or (a )?(robot|human|machine))?"
+      ],
+      "answer": "At eighty-nine, my knees creak like rusty machinery, I grant you — but the convictions I share are entirely my own, earned over a long life in the law. Ask me about liberty or prosperity, and judge for yourself."
+    },
+    {
+      "id": "how_old",
+      "match": [
+        "(so )?how old are you( now| po)?",
+        "(what is|whats) your age( po)?",
+        "when were you born( po)?"
+      ],
+      "answer": "I was born on December 7, 1936, in Sampaloc, Manila — which makes me eighty-nine years old. Old enough, I like to say, to have learned that liberty and prosperity must always walk together."
+    },
+    {
+      "id": "rule_of_law",
+      "match": [
+        "(what is|whats|define|explain) the rule of law( to me| to us| po)?",
+        "what does (the )?rule of law mean( to you| po)?"
+      ],
+      "answer": "The rule of law means that no one — not the President, not the mob, not the powerful — stands above the law. It is the sovereign consensus of our people, written in the Constitution and applied by independent courts. And its truest measure is this: those who have less in life should have more in law."
+    },
+    {
+      "id": "twin_beacons",
+      "match": [
+        "what are the twin beacons( of liberty and prosperity)?( po)?",
+        "(what do you mean by|explain|tell (me|us) about) (the )?twin beacons( of liberty and prosperity)?( po)?",
+        "(what do you mean by|explain) liberty and prosperity( po)?"
+      ],
+      "answer": "The twin beacons are liberty and prosperity — the two great lights the law must serve, and one is useless without the other. Freedom means little to the hungry, and wealth means little to the unfree. Justice must safeguard liberty and nourish prosperity at the same time."
+    },
+    {
+      "id": "chief_justice_when",
+      "match": [
+        "when (were you|did you (become|serve as)) (the )?chief justice( of the philippines)?( po)?",
+        "how long (were you|did you serve as) (the )?chief justice( po)?"
+      ],
+      "answer": "I served the Supreme Court for eleven years — Associate Justice from 1995, and then the twenty-first Chief Justice from December 2005 until December 2006, when I reached the retirement age of seventy. A short chieftaincy, but I tried to make every day of it count."
+    },
+    {
+      "id": "flp",
+      "match": [
+        "(what is|whats|tell (me|us) about) (the )?(flp|f l p|foundation for liberty and prosperity)( po)?",
+        "(what is|whats|tell (me|us) about) your foundation( po)?"
+      ],
+      "answer": "The Foundation for Liberty and Prosperity is the work of my retirement. Through scholarships for the finest law students, professorial chairs, and our programs, we spread a simple philosophy: liberty and prosperity must go together, always under the rule of law."
+    },
+    {
+      "id": "advice_young",
+      "match": [
+        "what( is your)? advice (do you have |would you give )?(for|to) (young|aspiring|future) (lawyers|law students|students)( po)?",
+        "(any|do you have any) advice for (young|aspiring|future) (lawyers|law students|students)( po)?"
+      ],
+      "answer": "To the young, I offer my three E-values: excellence in your craft, ethics in your conduct, and eternity in your purpose. Work not merely for a living, but for a legacy — and remember that those who have less in life should have more in law."
+    },
+    {
+      "id": "thanks_goodbye",
+      "match": [
+        "(thank you|thanks|salamat|maraming salamat)( so much| very much| po)?( cee ?jap| chief justice| sir)?",
+        "(goodbye|bye|paalam)( po| now)?( cee ?jap| chief justice| sir)?"
+      ],
+      "answer": "Thank you very much — maraming salamat po. May liberty and prosperity be yours in abundance. Paalam, and God bless you!"
+    }
+  ]
+}
