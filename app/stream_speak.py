@@ -30,20 +30,44 @@ LAST_ANSWER_MP3 = "/dev/shm/cj_last_answer.mp3"
 SPEAKING_LIVE = "/dev/shm/cj_speaking.json"
 
 
+def publish_sentence_wav(wav):
+    """Copy this sentence's wav to a stable tmpfs name for the /face-avatar
+    page (it feeds the audio to the LiveAvatar session). Keeps the last 4
+    copies; returns the basename, or None (fails open)."""
+    try:
+        import glob as _glob
+        name = f"cj_sent_{int(time.time()*1000)}.wav"
+        tmp = "/dev/shm/." + name
+        with open(wav, "rb") as src, open(tmp, "wb") as dst:
+            dst.write(src.read())
+        os.replace(tmp, "/dev/shm/" + name)
+        old = sorted(_glob.glob("/dev/shm/cj_sent_*.wav"))[:-4]
+        for p in old:
+            try:
+                os.unlink(p)
+            except OSError:
+                pass
+        return name
+    except OSError:
+        return None
+
+
 def publish_speaking(spoken, current, done, interrupted=False, emotion=None,
-                     words=None):
+                     words=None, wav=None):
     """Atomically publish what is being spoken right now (fails open).
 
     words: real per-word timings [[word, start_s, end_s], ...] from the
     ElevenLabs alignment sidecar, relative to this sentence's audio start —
-    the /face page lip-syncs from them (estimates when absent)."""
+    the /face page lip-syncs from them (estimates when absent).
+    wav: basename of the sentence's audio copy in /dev/shm (see
+    publish_sentence_wav) — the /face-avatar page fetches it."""
     try:
         tmp = SPEAKING_LIVE + ".tmp"
         with open(tmp, "w") as f:
             json.dump({"ts": time.time(), "spoken": list(spoken),
                        "current": current, "done": done,
                        "interrupted": interrupted, "emotion": emotion,
-                       "words": words}, f)
+                       "words": words, "wav": wav}, f)
         os.replace(tmp, SPEAKING_LIVE)
     except OSError:
         pass
@@ -271,7 +295,8 @@ class SentenceSpeaker:
                 pass
             self._spoken_texts.append(sentence)
             publish_speaking(self._spoken_texts, sentence, done=False,
-                             emotion=emo, words=words)
+                             emotion=emo, words=words,
+                             wav=publish_sentence_wav(wav))
             cut = self._play_fn(wav)
             for p in (wav, wav + ".align.json"):
                 try:

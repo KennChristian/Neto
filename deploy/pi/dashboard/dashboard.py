@@ -988,7 +988,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if supervaise_ui and self.path.partition("?")[0] in (
                 "/api/ctl", "/api/entities", "/api/face-photo",
-                "/api/face-calib"):
+                "/api/face-calib", "/api/avatar-session",
+                "/api/avatar-stop"):
             try:
                 n = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(n) or b"{}")

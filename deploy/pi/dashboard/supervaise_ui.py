@@ -22,6 +22,7 @@ Stdlib only, same discipline as dashboard.py.
 """
 import json
 import os
+import re
 import socket
 import subprocess
 import threading
@@ -43,6 +44,7 @@ ENTITY_OVERLAY = os.path.join(MAIN, "data", "entities", "entity_overrides.json")
 ASSETS = os.path.join(HOME, "pi_dashboard", "assets")
 FACE_PHOTO = os.path.join(ASSETS, "cjap.jpg")       # real-photo face mode
 FACE_CALIB = os.path.join(ASSETS, "face_calib.json")  # eye/mouth landmarks
+LIVEAVATAR_CONF = os.path.join(ASSETS, "liveavatar.json")  # api_key etc.
 os.makedirs(ASSETS, exist_ok=True)
 
 DASH_KEY = os.environ.get("CJ_DASH_KEY", "cjap")
@@ -1013,6 +1015,173 @@ function decide(){
 </script></body></html>"""
 
 
+FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CJAP LiveAvatar</title>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js"></script>
+<style>
+:root{--bg:#0d1117;--ink:#e6edf3;--gold:#c9a227;--dim:#8b949e}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+  font-family:Georgia,'Times New Roman',serif}
+#stage{display:flex;flex-direction:column;align-items:center;
+  justify-content:center;height:100vh;gap:1.2vh}
+#vidbox{position:relative;width:min(64vw,74vh);aspect-ratio:9/10;
+  background:#161b22;border-radius:1.5vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center}
+video{width:100%;height:100%;object-fit:cover}
+#bar{display:flex;gap:1.2vw;align-items:center;font-size:2.2vh}
+button{background:#21262d;color:var(--ink);border:1px solid #30363d;
+  border-radius:.8vh;padding:.8vh 1.6vw;font-size:2.2vh;cursor:pointer}
+button:hover{border-color:var(--gold)}
+#st{color:var(--dim);font-size:2vh;max-width:88vw;text-align:center}
+#cap{min-height:10vh;max-width:90vw;text-align:center;font-size:3.6vh;
+  line-height:1.35;color:var(--gold)}
+</style></head><body><div id="stage">
+<div id="vidbox"><span id="hint" style="color:var(--dim)">
+  press Start to open the sandbox avatar session</span>
+<video id="vid" autoplay playsinline></video>
+<audio id="aud" autoplay></audio></div>
+<div id="bar">
+  <button id="btnStart">Start</button>
+  <button id="btnStop">Stop</button>
+  <button id="btnMute">avatar audio: OFF</button>
+</div>
+<div id="st">idle</div><div id="cap"></div></div><script>
+const $ = id => document.getElementById(id);
+const KEY = new URLSearchParams(location.search).get("key") || "";
+let room = null, ws = null, ready = false, sessTok = null;
+let avatarMuted = true, lastStart = 0, keepTimer = null;
+$("aud").muted = true;
+
+function st(msg){ $("st").textContent = msg; }
+
+async function post(path, doc){
+  doc.key = KEY;
+  const r = await fetch(path, {method:"POST",
+    headers:{"Content-Type":"application/json"}, body:JSON.stringify(doc)});
+  return r.json();
+}
+
+async function start(){
+  if (ready || Date.now() - lastStart < 8000) return;
+  lastStart = Date.now();
+  st("creating session…");
+  const out = await post("/api/avatar-session", {});
+  if (!out.ok){ st("session failed: " + JSON.stringify(out.output)); return; }
+  const s = out.output;
+  sessTok = s.session_token;
+  st("connecting to room…");
+  try{
+    room = new LivekitClient.Room();
+    room.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {
+      if (track.kind === "video"){ track.attach($("vid"));
+        $("hint").style.display = "none"; }
+      if (track.kind === "audio"){ track.attach($("aud"));
+        $("aud").muted = avatarMuted; }
+    });
+    await room.connect(s.livekit_url, s.livekit_client_token);
+  }catch(e){ st("LiveKit connect failed: " + e.message); return; }
+  st("opening control socket…");
+  ws = new WebSocket(s.ws_url);
+  ws.onmessage = ev => {
+    let m = {};
+    try{ m = JSON.parse(ev.data); }catch(e){ return; }
+    if (m.type === "session.state_updated"){
+      st("session " + m.state +
+         (m.state === "connected" ? " — ask the robot something" : ""));
+      ready = (m.state === "connected");
+    }
+  };
+  ws.onclose = () => { ready = false;
+    st("session ended (sandbox caps at ~1 min) — restarts on next answer");
+    stopKeep(); };
+  ws.onerror = () => { ready = false; };
+  keepTimer = setInterval(() => {
+    if (ws && ws.readyState === 1)
+      ws.send(JSON.stringify({type:"session.keep_alive",
+                              event_id:String(Date.now())}));
+  }, 25000);
+}
+function stopKeep(){ if (keepTimer){ clearInterval(keepTimer);
+  keepTimer = null; } }
+
+async function stop(){
+  stopKeep(); ready = false;
+  try{ if (ws) ws.close(); }catch(e){}
+  try{ if (room) room.disconnect(); }catch(e){}
+  if (sessTok) await post("/api/avatar-stop", {session_token: sessTok});
+  sessTok = null; st("stopped");
+}
+$("btnStart").onclick = start;
+$("btnStop").onclick = stop;
+$("btnMute").onclick = () => {
+  avatarMuted = !avatarMuted;
+  $("aud").muted = avatarMuted;
+  $("btnMute").textContent = "avatar audio: " + (avatarMuted ? "OFF" : "ON");
+};
+
+// ---- feed the avatar our ElevenLabs sentence audio -----------------------
+function b64(u8){
+  let s = "";
+  for (let i = 0; i < u8.length; i += 32768)
+    s += String.fromCharCode.apply(null, u8.subarray(i, i + 32768));
+  return btoa(s);
+}
+function wavPcm(buf){          // RIFF walk → the data chunk's bytes
+  const dv = new DataView(buf), u8 = new Uint8Array(buf);
+  let pos = 12;
+  while (pos + 8 <= u8.length){
+    const id = String.fromCharCode(u8[pos], u8[pos+1], u8[pos+2], u8[pos+3]);
+    const size = dv.getUint32(pos + 4, true);
+    if (id === "data") return u8.subarray(pos + 8, pos + 8 + size);
+    pos += 8 + size + (size % 2);
+  }
+  return null;
+}
+async function speakWav(name){
+  if (!ready) await start();
+  for (let w = 0; w < 40 && !ready; w++)
+    await new Promise(r => setTimeout(r, 250));
+  if (!ready){ st("session not ready — sentence skipped"); return; }
+  try{
+    const buf = await (await fetch("/api/sentence.wav?name=" + name))
+      .arrayBuffer();
+    const pcm = wavPcm(buf);
+    if (!pcm){ st("bad wav"); return; }
+    for (let i = 0; i < pcm.length; i += 48000)     // 1s @ 24kHz 16-bit
+      ws.send(JSON.stringify({type:"agent.speak",
+                              audio: b64(pcm.subarray(i, i + 48000))}));
+    ws.send(JSON.stringify({type:"agent.speak_end",
+                            event_id:String(Date.now())}));
+  }catch(e){ st("audio feed failed: " + e.message); }
+}
+
+// ---- state poll ----------------------------------------------------------
+let sentKey = "";
+async function poll(){
+  try{
+    const stt = await (await fetch("/api/state")).json();
+    const sp = stt.speaking || {};
+    if (sp.current && !sp.done){
+      const key = sp.ts + "|" + sp.current;
+      if (key !== sentKey){
+        sentKey = key;
+        $("cap").textContent = sp.current;
+        if (sp.wav) speakWav(sp.wav);
+      }
+    } else if (sp.done){
+      if (sp.interrupted && ws && ws.readyState === 1)
+        ws.send(JSON.stringify({type:"agent.interrupt"}));
+      sentKey = "";
+    }
+  }catch(e){}
+  setTimeout(poll, 250);
+}
+poll();
+</script></body></html>"""
+
+
 # ---------------------------------------------------------------------------
 # request dispatch (called from dashboard.Handler)
 # ---------------------------------------------------------------------------
@@ -1081,6 +1250,18 @@ def handle_get(h, path, params):
             h._send(404, json.dumps({"error": "no face photo uploaded"}))
     elif path == "/api/face-calib":
         h._send(200, json.dumps(_read_json(FACE_CALIB) or {}))
+    elif path == "/face-avatar":
+        h._send(200, FACE_AVATAR_PAGE, "text/html; charset=utf-8")
+    elif path == "/api/sentence.wav":
+        name = params.get("name", "")
+        if not re.fullmatch(r"cj_sent_[0-9]+\.wav", name):
+            h._send(400, json.dumps({"error": "bad name"}))
+        else:
+            try:
+                h._send(200, open("/dev/shm/" + name, "rb").read(),
+                        "audio/wav")
+            except OSError:
+                h._send(404, json.dumps({"error": "gone"}))
     elif path == "/api/camera.mjpg":
         _serve_mjpeg(h)
     elif path == "/api/entities":
@@ -1119,6 +1300,18 @@ def handle_post(h, path, body):
         else:
             ok, out = _face_calib_put(body.get("calib"))
             h._send(200, json.dumps({"ok": ok, "output": out}))
+    elif path == "/api/avatar-session":
+        if not _authed({}, body):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            ok, out = avatar_session()
+            h._send(200, json.dumps({"ok": ok, "output": out}))
+    elif path == "/api/avatar-stop":
+        if not _authed({}, body):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            ok, out = avatar_stop(body.get("session_token"))
+            h._send(200, json.dumps({"ok": ok, "output": out}))
     else:
         return False
     return True
@@ -1143,6 +1336,59 @@ def _face_photo_put(image_b64):
         return True, "photo saved — now calibrate"
     except OSError as e:
         return False, str(e)
+
+
+def _liveavatar_request(path, payload, auth_header):
+    """POST to api.liveavatar.com (stdlib urllib; 15s timeout)."""
+    import urllib.request
+    req = urllib.request.Request(
+        "https://api.liveavatar.com" + path,
+        json.dumps(payload).encode(),
+        {"Content-Type": "application/json", **auth_header})
+    with urllib.request.urlopen(req, timeout=15) as r:
+        return json.loads(r.read())
+
+
+def avatar_session():
+    """Create a LiveAvatar LITE session (sandbox by default) and return
+    the connection material for the /face-avatar page. The API key stays
+    server-side (assets/liveavatar.json — never sent to the browser)."""
+    conf = _read_json(LIVEAVATAR_CONF)
+    if not conf or not conf.get("api_key"):
+        return False, ("no assets/liveavatar.json — create it with "
+                       '{"api_key": "...", "avatar_id": "...", '
+                       '"sandbox": true}')
+    try:
+        tok = _liveavatar_request(
+            "/v1/sessions/token",
+            {"mode": "LITE",
+             "avatar_id": conf.get(
+                 "avatar_id", "dd73ea75-1218-4ef3-92ce-606d5f7fbc0a"),
+             "is_sandbox": bool(conf.get("sandbox", True))},
+            {"X-API-KEY": conf["api_key"]})
+        data = tok.get("data") or {}
+        session_token = data.get("session_token")
+        if not session_token:
+            return False, f"token refused: {tok.get('message')}"
+        start = _liveavatar_request(
+            "/v1/sessions/start", {},
+            {"Authorization": "Bearer " + session_token})
+        sd = start.get("data") or {}
+        if not sd.get("livekit_url"):
+            return False, f"start refused: {start.get('message')}"
+        sd["session_token"] = session_token   # page needs it for stop
+        return True, sd
+    except Exception as e:
+        return False, f"{type(e).__name__}: {e}"
+
+
+def avatar_stop(session_token):
+    try:
+        _liveavatar_request("/v1/sessions/stop", {"reason": "USER_CLOSED"},
+                            {"Authorization": "Bearer " + (session_token or "")})
+        return True, "stopped"
+    except Exception as e:
+        return False, f"{type(e).__name__}"
 
 
 def _face_calib_put(calib):
