@@ -536,6 +536,136 @@ background:#21262d;color:#e6edf3;font-size:16px}</style></head><body>
 <input id="k" type="password" autofocus><button>Enter</button></form></body></html>"""
 
 
+FACE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CJAP</title><style>
+:root{--bg:#0d1117;--ink:#e6edf3;--gold:#c9a227;--dim:#8b949e}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+  font-family:Georgia,'Times New Roman',serif}
+#stage{display:flex;flex-direction:column;align-items:center;
+  justify-content:center;height:100vh;gap:2vh}
+#face{width:min(72vw,64vh);transition:transform .5s ease}
+#cap{min-height:12vh;max-width:88vw;text-align:center;font-size:4.2vh;
+  line-height:1.35;color:var(--dim)}
+#cap b{color:var(--gold);font-weight:normal}
+</style></head><body><div id="stage">
+<svg id="face" viewBox="-160 -110 320 240">
+  <g id="head">
+    <g id="browL"><rect x="-92" y="-72" width="52" height="9" rx="4.5"
+        fill="#e6edf3"/></g>
+    <g id="browR"><rect x="40" y="-72" width="52" height="9" rx="4.5"
+        fill="#e6edf3"/></g>
+    <g id="eyeL" transform="translate(-66,-30)">
+      <ellipse id="eLw" rx="30" ry="34" fill="#e6edf3"/>
+      <circle id="eLp" r="12" fill="#0d1117"/></g>
+    <g id="eyeR" transform="translate(66,-30)">
+      <ellipse id="eRw" rx="30" ry="34" fill="#e6edf3"/>
+      <circle id="eRp" r="12" fill="#0d1117"/></g>
+    <path id="mouth" fill="#c9a227" stroke="#c9a227" stroke-width="6"
+        stroke-linejoin="round" stroke-linecap="round"
+        d="M -60 60 Q 0 80 60 60 Q 0 80 -60 60"/>
+  </g>
+</svg><div id="cap"></div></div><script>
+// Emotion presets: brow lift/tilt, eye squeeze, mouth corner curve, tilt.
+const EMO = {
+  neutral: {brow:0, tiltL:0, tiltR:0, eye:1,   smile:14, head:0},
+  warm:    {brow:-3, tiltL:0, tiltR:0, eye:.8, smile:26, head:0},
+  solemn:  {brow:4,  tiltL:12, tiltR:-12, eye:.72, smile:-8, head:0},
+  emphatic:{brow:-10, tiltL:0, tiltR:0, eye:1.18, smile:16, head:0},
+  question:{brow:-2, tiltL:-14, tiltR:0, eye:1.02, smile:8, head:-4},
+  amused:  {brow:-6, tiltL:0, tiltR:0, eye:.3,  smile:32, head:3},
+};
+let emo = EMO.neutral, emoName = "neutral";
+let blink = 1;                 // 1 = open, 0 = shut
+let mouthOpen = 0, mouthTarget = 0;
+let words = [], wordIdx = -1, sentKey = "", speakUntil = 0, wordTimer = null;
+const $ = id => document.getElementById(id);
+
+function setEmotion(name){
+  emoName = name in EMO ? name : "neutral";
+  emo = EMO[emoName];
+  $("face").style.transform = `rotate(${emo.head}deg)`;
+}
+function startSentence(text){
+  words = text.split(/\\s+/).filter(Boolean);
+  wordIdx = -1;
+  if (wordTimer) clearInterval(wordTimer);
+  // ~2.4 words/s matches the composed speaking pace
+  const per = 1000/2.4;
+  speakUntil = Date.now() + words.length*per + 800;
+  wordTimer = setInterval(()=>{
+    wordIdx++;
+    if (wordIdx >= words.length){ clearInterval(wordTimer); wordTimer=null;
+      mouthTarget = 0; renderCap(); return; }
+    // longer words open the mouth wider, tiny ones barely move it
+    mouthTarget = Math.min(1, .3 + words[wordIdx].length*.09);
+    setTimeout(()=>{ if(Date.now()<speakUntil) mouthTarget = .08; }, per*.6);
+    renderCap();
+  }, per);
+}
+function renderCap(){
+  const cap = $("cap");
+  if (!words.length){ cap.innerHTML=""; return; }
+  cap.innerHTML = words.map((w,i)=> i<=wordIdx?`<b>${w}</b>`:w).join(" ");
+}
+// ---- animation loop: mouth easing, blinks, idle pupil wander -------------
+let px=0, py=0, ptx=0, pty=0, nextBlink=Date.now()+2500, blinkPhase=0;
+function tick(){
+  mouthOpen += (mouthTarget-mouthOpen)*.35;
+  const o = mouthOpen*34, s = emo.smile;
+  $("mouth").setAttribute("d",
+    `M -60 60 Q 0 ${60+s-o*.55} 60 60 Q 0 ${60+s+o} -60 60`);
+  const now = Date.now();
+  if (blinkPhase===0 && now>nextBlink){ blinkPhase=1; }
+  if (blinkPhase===1){ blink=Math.max(0,blink-.34);
+    if(blink===0) blinkPhase=2; }
+  else if (blinkPhase===2){ blink=Math.min(1,blink+.25);
+    if(blink===1){ blinkPhase=0; nextBlink=now+2200+Math.random()*3800; } }
+  const ry = 34*emo.eye*blink;
+  $("eLw").setAttribute("ry", Math.max(2.5, ry));
+  $("eRw").setAttribute("ry", Math.max(2.5, ry));
+  $("browL").setAttribute("transform",
+    `translate(0,${emo.brow}) rotate(${emo.tiltL},-66,-68)`);
+  $("browR").setAttribute("transform",
+    `translate(0,${emo.brow}) rotate(${emo.tiltR},66,-68)`);
+  // pupils: track nothing — wander gently when idle, center when speaking
+  if (now>speakUntil && Math.random()<.006){ ptx=(Math.random()-.5)*14;
+    pty=(Math.random()-.5)*8; }
+  if (now<=speakUntil){ ptx=0; pty=2; }
+  px += (ptx-px)*.06; py += (pty-py)*.06;
+  $("eLp").setAttribute("cx",px); $("eLp").setAttribute("cy",py);
+  $("eRp").setAttribute("cx",px); $("eRp").setAttribute("cy",py);
+  requestAnimationFrame(tick);
+}
+tick();
+// ---- state poll ----------------------------------------------------------
+async function poll(){
+  try{
+    const st = await (await fetch("/api/state")).json();
+    const sp = st.speaking || {};
+    const fresh = sp.ts && (Date.now()/1000 - sp.ts) < 30;
+    if (fresh && sp.current && !sp.done){
+      const key = sp.ts + "|" + sp.current;
+      if (key !== sentKey){ sentKey = key;
+        setEmotion(sp.emotion || "neutral");
+        startSentence(sp.current); }
+    } else if (sp.done || !fresh){
+      if (wordTimer && (sp.interrupted || !fresh)){
+        clearInterval(wordTimer); wordTimer=null; words=[]; wordIdx=-1;
+        mouthTarget=0; speakUntil=0; renderCap(); }
+      if (!wordTimer && Date.now()>speakUntil+1500 && emoName!=="neutral")
+        setEmotion("neutral");
+      if (Date.now()>speakUntil+6000 && words.length){ words=[]; renderCap(); }
+      sentKey = "";
+    }
+  }catch(e){}
+  setTimeout(poll, 250);
+}
+poll();
+</script></body></html>"""
+
+
 # ---------------------------------------------------------------------------
 # request dispatch (called from dashboard.Handler)
 # ---------------------------------------------------------------------------
@@ -544,6 +674,8 @@ def handle_get(h, path, params):
     """Returns True if this module handled the request."""
     if path == "/audience":
         h._send(200, AUDIENCE_PAGE, "text/html; charset=utf-8")
+    elif path == "/face":
+        h._send(200, FACE_PAGE, "text/html; charset=utf-8")
     elif path == "/notes":   # plain-text project notes, downloadable from any device
         try:
             h._send(200, open(os.path.join(HOME, "PROJECT_NOTES.txt"),

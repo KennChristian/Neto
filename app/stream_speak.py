@@ -30,14 +30,14 @@ LAST_ANSWER_MP3 = "/dev/shm/cj_last_answer.mp3"
 SPEAKING_LIVE = "/dev/shm/cj_speaking.json"
 
 
-def publish_speaking(spoken, current, done, interrupted=False):
+def publish_speaking(spoken, current, done, interrupted=False, emotion=None):
     """Atomically publish what is being spoken right now (fails open)."""
     try:
         tmp = SPEAKING_LIVE + ".tmp"
         with open(tmp, "w") as f:
             json.dump({"ts": time.time(), "spoken": list(spoken),
                        "current": current, "done": done,
-                       "interrupted": interrupted}, f)
+                       "interrupted": interrupted, "emotion": emotion}, f)
         os.replace(tmp, SPEAKING_LIVE)
     except OSError:
         pass
@@ -244,13 +244,18 @@ class SentenceSpeaker:
                         self._on_first()
                     except Exception:
                         pass
+            try:
+                emo = classify_emotion(sentence)
+            except Exception:
+                emo = None
             if self._style_fn:
                 try:  # emotion-matched gesture for THIS sentence
-                    self._style_fn(sentence, classify_emotion(sentence))
+                    self._style_fn(sentence, emo or "neutral")
                 except Exception:
                     pass
             self._spoken_texts.append(sentence)
-            publish_speaking(self._spoken_texts, sentence, done=False)
+            publish_speaking(self._spoken_texts, sentence, done=False,
+                             emotion=emo)
             cut = self._play_fn(wav)
             try:
                 os.unlink(wav)

@@ -216,11 +216,27 @@ def say_text(text):
         if code != 0:
             return False, out[-250:]
         with _play_lock:
+            _publish_say_speaking(text, done=False)
             code, out = run(["aplay", "-q", wav], timeout=120)
+            _publish_say_speaking(text, done=True)
         return code == 0, out[-200:]
     finally:
         if os.path.exists(wav):
             os.unlink(wav)
+
+
+def _publish_say_speaking(text, done):
+    """Mirror the app's /dev/shm/cj_speaking.json feed for typed say-text
+    lines so the /face and /audience pages animate them too (fails open)."""
+    try:
+        tmp = "/dev/shm/cj_speaking.json.tmp"
+        with open(tmp, "w") as f:
+            json.dump({"ts": time.time(), "spoken": [text],
+                       "current": None if done else text, "done": done,
+                       "interrupted": False, "emotion": None}, f)
+        os.replace(tmp, "/dev/shm/cj_speaking.json")
+    except OSError:
+        pass
 
 
 def play_phone_audio(blob):
