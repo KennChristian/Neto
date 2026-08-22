@@ -52,8 +52,18 @@ def publish_sentence_wav(wav):
         return None
 
 
+def wav_duration(path):
+    """Duration in seconds from the wav header (None on any failure)."""
+    try:
+        import wave
+        with wave.open(path, "rb") as w:
+            return round(w.getnframes() / float(w.getframerate()), 2)
+    except Exception:
+        return None
+
+
 def publish_speaking(spoken, current, done, interrupted=False, emotion=None,
-                     words=None, wav=None):
+                     words=None, wav=None, dur=None):
     """Atomically publish what is being spoken right now (fails open).
 
     words: real per-word timings [[word, start_s, end_s], ...] from the
@@ -67,7 +77,7 @@ def publish_speaking(spoken, current, done, interrupted=False, emotion=None,
             json.dump({"ts": time.time(), "spoken": list(spoken),
                        "current": current, "done": done,
                        "interrupted": interrupted, "emotion": emotion,
-                       "words": words, "wav": wav}, f)
+                       "words": words, "wav": wav, "dur": dur}, f)
         os.replace(tmp, SPEAKING_LIVE)
     except OSError:
         pass
@@ -296,7 +306,8 @@ class SentenceSpeaker:
             self._spoken_texts.append(sentence)
             publish_speaking(self._spoken_texts, sentence, done=False,
                              emotion=emo, words=words,
-                             wav=publish_sentence_wav(wav))
+                             wav=publish_sentence_wav(wav),
+                             dur=wav_duration(wav))
             cut = self._play_fn(wav)
             for p in (wav, wav + ".align.json"):
                 try:

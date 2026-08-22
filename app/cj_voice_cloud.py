@@ -744,12 +744,14 @@ def speak(text, filler=None, stop=None):
         if filler is not None:
             filler.stop()  # let the current clip finish, then start the answer
         try:  # live caption feed (audience page); whole answer on this path
-            from stream_speak import publish_speaking, publish_sentence_wav
+            from stream_speak import (publish_speaking, publish_sentence_wav,
+                                      wav_duration)
         except Exception:
             publish_speaking = None
         if publish_speaking:
             publish_speaking([text], text, done=False,
-                             wav=publish_sentence_wav(wav_path))
+                             wav=publish_sentence_wav(wav_path),
+                             dur=wav_duration(wav_path))
         if stop is not None:
             interrupted = _play_wav_interruptible(wav_path, stop)
         else:

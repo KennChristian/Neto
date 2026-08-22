@@ -715,13 +715,20 @@ function buildTimeline(words){
   timeline.push({t:prevEnd, o:0, w:1});
   tlEnd = prevEnd;
 }
-function estimateWords(text){
+function estimateWords(text, dur){
   const ws = text.split(" ").filter(Boolean);
   let t = .12; const out = [];
   for (const w of ws){
     const d = .09 + .052*w.length;
-    out.push([w, +t.toFixed(3), +(t+d).toFixed(3)]);
+    out.push([w, t, t + d]);
     t += d + .055;
+  }
+  // scale the whole guess to the clip's real duration when known —
+  // unscaled estimates drift badly across long cached answers
+  if (dur && out.length){
+    const k = Math.max(.3, (dur - .25)) / out[out.length-1][2];
+    for (const w of out){ w[1] = +(w[1]*k).toFixed(3);
+      w[2] = +(w[2]*k).toFixed(3); }
   }
   return out;
 }
@@ -971,7 +978,7 @@ async function poll(){
         sentKey = key;
         setEmotion(sp.emotion || "neutral");
         buildTimeline(sp.words && sp.words.length ? sp.words
-                      : estimateWords(sp.current));
+                      : estimateWords(sp.current, sp.dur));
         audioStart = sp.ts + skew;
         renderCap(0);
       }
