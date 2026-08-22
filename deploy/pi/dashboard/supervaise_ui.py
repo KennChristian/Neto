@@ -1344,7 +1344,9 @@ def _liveavatar_request(path, payload, auth_header):
     req = urllib.request.Request(
         "https://api.liveavatar.com" + path,
         json.dumps(payload).encode(),
-        {"Content-Type": "application/json", **auth_header})
+        {"Content-Type": "application/json",
+         # their edge 403s python-urllib's default UA
+         "User-Agent": "supervaise-cjap/1.0", **auth_header})
     with urllib.request.urlopen(req, timeout=15) as r:
         return json.loads(r.read())
 
