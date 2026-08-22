@@ -674,17 +674,34 @@ Classify the user's question into ONE of these scopes:
    in-corpus biographical questions. Identity probes ask about
    the SPEAKER, not the BIOGRAPHICAL CJP.
 
-- "in_corpus": a question whose answer is reasonably present in
-   CJP's published corpus (columns, speeches, biography) — legal
-   doctrine, opinions, biography, FLP work, current events
-   commentary. His biography in the corpus includes his business
-   ventures: he founded Baron Travel Corp. (travel agency) to fund
-   his children's education, so questions about Baron Travel or
-   his business career are in_corpus.
+- "in_corpus": everything CJP can answer — from his record OR at
+   the level of principle. His corpus (columns, speeches,
+   biography) covers legal doctrine, the courts, due process,
+   liberty and prosperity, Philippine current events and
+   governance, his biography (including Baron Travel Corp.,
+   founded to fund his children's education), FLP work, faith,
+   and values. IMPORTANT:
+     * Requests for his OPINION, advice, or reflections — even
+       personal or philosophical ones ("Is it too late to start
+       over?", "What makes a good leader?") — are in_corpus: he
+       answers from his published principles and life experience.
+     * Questions about Philippine news, politics, or ongoing
+       cases are in_corpus: he was a newspaper columnist
+       commenting on exactly such events, and he answers at the
+       level of doctrine and principle without inventing facts.
+     * Short or vague FOLLOW-UP questions that continue the
+       prior exchange (see the conversation context when
+       provided) are in_corpus.
 
-- "out_of_corpus": a question whose answer is not in his record
-   — recent news he hasn't written about, specifics of cases he
-   didn't write, personal opinions on unrelated topics, etc.
+- "out_of_corpus": ONLY a question with no meaningful connection
+   to his life, the law, the courts, faith, values, or the
+   Philippines — and which cannot be answered from principle
+   either. Examples: sports scores, celebrity gossip, recipes,
+   tech support, homework math, the weather.
+
+When in doubt, choose "in_corpus" — a wrong deflection is a
+refusal the audience hears, while the composer can always answer
+carefully from principle.
 
 Return ONLY a JSON object — no preamble, no code fences:
 
@@ -707,14 +724,29 @@ META_FALLBACK_RESPONSE = (
 )
 
 
-def input_gate(client: Anthropic, question: str) -> dict:
+def input_gate(client: Anthropic, question: str,
+               history: list = None) -> dict:
     """Pre-router Haiku call: classifies the question scope.
 
     Returns {scope, reasoning}. On error or unparseable output,
     defaults to {"scope": "in_corpus", "reasoning": "gate fallback"} —
     safer to over-route to the corpus than to mis-trigger the META
     path on a normal biographical question.
+
+    history: the conversation history ([{role, content}, ...]); the
+    last exchange is shown to the classifier so short follow-ups
+    ("Where did the money come from?") aren't judged in isolation.
     """
+    content = question
+    if history:
+        ctx_lines = []
+        for m in history[-2:]:
+            who = "Guest" if m.get("role") == "user" else "CJP"
+            ctx_lines.append(f"{who}: {str(m.get('content', ''))[:300]}")
+        if ctx_lines:
+            content = ("<conversation_context>\n" + "\n".join(ctx_lines)
+                       + "\n</conversation_context>\n\n"
+                       + f"Classify this question: {question}")
     try:
         resp = client.messages.create(
             model=ROUTER_MODEL,
@@ -724,7 +756,7 @@ def input_gate(client: Anthropic, question: str) -> dict:
                 "text": INPUT_GATE_SYSTEM,
                 "cache_control": {"type": "ephemeral"},
             }],
-            messages=[{"role": "user", "content": question}],
+            messages=[{"role": "user", "content": content}],
         )
         _log_cache_usage("router", resp.usage)
         raw = resp.content[0].text.strip()
@@ -1511,7 +1543,7 @@ def run_turn(
         # The gate decides whether the question is an identity probe; if so,
         # we bypass the router and force the META path.
         print("🚪 Gating...")
-        gate = input_gate(client, question)
+        gate = input_gate(client, question, conversation_history)
         print(f"   scope: {gate['scope']} — {gate['reasoning']}")
 
         if gate["scope"] == "identity_probe":

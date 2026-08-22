@@ -327,7 +327,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
 
     rt = threading.Thread(target=_route, daemon=True)
     rt.start()
-    gate = input_gate(client, question)
+    gate = input_gate(client, question, history)
     gate_s = round(time.monotonic() - t0, 2)
     ooc_text = None
     if gate.get("scope") == "identity_probe":

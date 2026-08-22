@@ -1,0 +1,673 @@
+SUPERVAISE ROBOT PROJECT NOTES
+Updated August 13 2026 evening
+Download the latest copy of this file any time from
+http://reachy-mini.local:8080/notes
+
+This file is a simple record of what has been done for each priority.
+The robot is the Reachy Mini. The app makes it speak as retired Chief
+Justice Artemio Panganiban. It runs as a service called supervaise
+and starts by itself when the robot powers on.
+
+
+PRIORITY 0. NAME ACCURACY (owner EPK)
+Done August 11.
+The robot used to mishear Filipino names and case names. Now there is
+a correction step that fixes the transcript after speech recognition.
+It uses a dictionary of 11204 names built from the corpus.
+To fix a name by hand, edit the file entity_overrides.json in the main
+checkout. Changes apply right away, no restart needed.
+Benchmark result: name errors dropped from 17 percent to 4 percent.
+Still open: record real team voices to grow the test set.
+
+PRIORITY 1. ANSWER LENGTH CONTROL (owner Kenn)
+Done August 11.
+The robot now picks how long an answer should be based on the topic.
+Legal topics get longer answers, small talk gets shorter ones.
+This saves tokens and time. Average answer uses about 33 fewer tokens.
+Still open: a live quality comparison, waiting for API credits.
+
+PRIORITY 2. VOICE CLONING (owners Elaine and Pao)
+Skipped by decision on August 11.
+OpenAI does not offer voice cloning. ElevenLabs would cost 22 dollars
+a month. Instead we improved the current voice overall, see below.
+
+VOICE IMPROVEMENTS DONE INSTEAD OF CLONING
+August 12. The voice now uses a newer speech model with instructions
+to sound like an elderly Filipino statesman with a natural Filipino
+accent.
+August 12. Streaming speech. The robot now starts talking about 9
+seconds after you finish your question instead of 15 to 20. It speaks
+sentence by sentence while the rest of the answer is still being
+written.
+August 13. All 44 pre recorded clips, the thinking fillers and the
+notices, were regenerated in the new accent voice so everything
+sounds like the same person.
+August 13. Pronunciation dictionary. 1042 Filipino words and names
+now have spelled out pronunciations, for example Panganiban is
+pahng gah NEE bahn. Covers justices, politicians, case names, places,
+Tagalog phrases from his writings, and everyday Tagalog he could say
+in conversation such as greetings, legal words, family words, food,
+heroes, provinces and cities, church words, and connective words.
+Words not in the dictionary fall back to the accent voice, which can
+sound Americanized, so when a word still sounds wrong the fix is to
+add it here. When writing a pronunciation use gh for a hard g sound,
+for example kah mee GHEEN for Camiguin, because gee can be read like
+jean. For very stubborn words that stay wrong even with a hint, put
+the word in the _force list inside the same file. The voice then
+reads a smooth respelling written like a normal word, for example
+Dappittan for Dapitan, Kamihgheen for Camiguin and Kabanatuahn for
+Cabanatuan, while the screen still shows the real spelling. These
+spellings were tuned by ear with Dev0 on August 13: use double
+consonants for short crisp vowels, gh for a hard g, and write the
+respelling as one smooth word because hyphens make the voice choppy.
+Words currently on the force list: Dapitan, Biak-na-Bato,
+Cabanatuan, Camiguin, nga, taos-puso, taos. To add or fix a word, edit the file
+pronunciation_lexicon.json in the main checkout under data entities.
+Changes apply right away, no restart needed.
+
+PRIORITY 2.5. TWO WEB PAGES (owner Kenn)
+Done August 11.
+The dashboard now has two views.
+Audience page: camera on top, question and answer below. For the
+demo audience to watch.
+Improved August 13. The page now shows the question right after it
+is heard, then shows the answer growing sentence by sentence exactly
+as the robot speaks it, with the current sentence highlighted in
+gold. Text is bigger for reading from a distance.
+Maintenance page: needs the key cjap in the address. Shows raw and
+corrected transcripts, timing, wake word activity, health, and has
+mute and replay buttons.
+Improved August 13. The maintenance page now also has everything
+from the original troubleshooting page so one screen tracks it all:
+live wake word meter with a moving graph, system vitals such as
+temperature load memory disk, status lights for every service
+including the new wifi fallback, on off lights for each feature,
+a table of recent turns with their timings for tracking performance,
+service logs with a picker, and buttons for restart app, test sound
+and the Tagalog sample.
+Recommended setup: a laptop opens both pages in a browser and
+connects to a monitor over HDMI. See docs WIRING.md.
+
+PRIORITY 3. DYNAMIC FILLER (owner EPK)
+First version done August 13, decided in session with Dev0.
+The first filler is always a pre recorded clip so there is never a
+delay. While it plays, the robot writes and voices one short sentence
+about the topic of the question, for example Ah, the West Philippine
+Sea, a matter close to my heart. That sentence plays as the second
+filler. Measured at 3 to 4 seconds to prepare, which fits inside the
+first clip, so nothing gets slower. If it is not ready in time the
+robot just uses the normal clips. Turn off with CJ_DYNAMIC_FILLER=0.
+Remaining question for EPK: should a filler survive being
+interrupted by the stop word.
+
+PRIORITY 4. STOP WORD
+On hold as decided, but already working since August 9.
+Saying the wake phrase while the robot is talking cuts the answer and
+it listens for your next question right away.
+
+PRIORITY 5. GESTURES
+Done August 12.
+While talking the robot keeps its gaze on the speaker and moves with
+small nods and antenna motion. The style changes with the mood of
+each sentence: solemn, warm, emphatic, question, or neutral.
+Fixed August 13. The robot used to repeat the same nod over and over
+during a sentence. Now the expressive nod or bow happens once when a
+new sentence starts, and at most every six seconds after that. In
+between it just bobs gently. Adjust the spacing with the setting
+CJ_GESTURE_NOD_COOLDOWN_S.
+Improved August 13. The feeling detection is much better. It now
+weighs many more clues in each sentence including Tagalog words, so
+the gesture matches what the sentence feels like: solemn bow for sad
+or grave topics, firm nod for firm statements, bright antennas for
+warm family moments, curious tilt for questions, and a new playful
+wiggle when he jokes or teases.
+Also August 13, filler clips no longer repeat across questions. The
+robot remembers the last twelve clips it played and picks different
+ones, so a few questions in a row all sound fresh. Adjust with
+CJ_FILLER_NO_REPEAT.
+Also August 13, idle gestures. While waiting for the wake word the
+robot now does a noticeable alive gesture every ten seconds, either
+a slow look around, a curious glance up, a stretch, or an antenna
+wiggle, with gentle swaying in between. Change the interval with the
+setting CJ_IDLE_GESTURE_S.
+
+PRIORITY 6. WAKE WORD CJAP WITHOUT HEY
+Partly done. The robot answers to Cee Jap or Hi Cee Jap. The
+detection threshold was tuned on August 12 so the bare phrase works.
+The proper fix is retraining the wake model with the new phrase. The
+training notebook is at the develop checkout root. Needs a Colab run.
+
+OTHER THINGS DONE
+Identity rule since August 9. The robot always answers as the Chief
+Justice himself. It never says it is a robot or an AI. It deflects
+such questions with humor.
+Speaker gate. Optional. When enabled the robot only answers the
+enrolled voice. Enroll from the dashboard.
+Offline notice. If the internet is down the robot says it is not
+connected instead of failing silently.
+Dashboard on port 8080 on the robot. Shows status, transcripts, wake
+meter, wifi and bluetooth controls, remote voice, reboot.
+A demo clip with Tagalog words is saved at demo_clips in the home
+folder and can be played from the dashboard with the Play Tagalog
+sample button in the Audio section.
+
+WIFI SETUP HOTSPOT ADDED AUGUST 13
+If the robot cannot find any known wifi for about one minute, it now
+broadcasts its own network so you can set it up from a phone.
+Connect your phone to the network ReachyMini-Setup with password
+reachymini, then open http://10.42.0.1:8080 and use the WiFi card.
+Type the venue network name and password in the manual entry boxes
+and press Join. The robot switches over and the setup network
+disappears. If the join fails the setup network comes back within a
+minute so you can try again.
+While the setup network is on, the robot checks every five minutes
+whether a known wifi has appeared and rejoins it by itself.
+Quick alternative that also still works: turn on the phone hotspot
+named Paoooo and the robot joins it automatically.
+Note this was installed but not yet fire tested since testing needs
+the wifi to actually go away. To test safely, take the robot out of
+router range or turn off the router, wait one minute, and look for
+the ReachyMini-Setup network on a phone.
+
+HOW THE CODE IS BUILT, FOR STUDYING
+
+Where the code lives. The robot runs from the folder
+Supervaise-Reachy-Mini-Project-main in the home folder. The app code
+is in its app subfolder. The web dashboard is separate, in the
+pi_dashboard folder. A second folder ending in -develop holds the
+research pipeline and is not what the robot runs.
+
+The main files and what each one does, with their size in lines so
+you know how big a read each is.
+
+cj_voice_cloud.py, 1010 lines. The conductor. Owns the whole voice
+loop: wake word listening, recording, the filler player, the stop
+word, gestures, speaker gate, and it publishes everything the
+dashboard shows. Start reading here.
+
+cj_chat.py, 1481 lines. The brain. Loads the corpus and the voice
+card, asks the router model which topic a question belongs to, then
+asks the composer model to write the answer in his voice. Also
+counts tokens and cache usage. The token budget lives here.
+
+stream_speak.py, 343 lines. The mouth. Cuts the answer into
+sentences as it is being written, turns each sentence into audio,
+plays them one after another, tags each sentence with a feeling for
+the gestures, and publishes the live captions.
+
+voice_io.py, 640 lines. The ears and voice engine. Speech to text,
+text to speech, the Filipino accent instructions, and the
+pronunciation dictionary logic.
+
+postprocess.py, 368 lines. The spelling fixer. Corrects misheard
+Filipino names in the transcript using the entity dictionary.
+
+dynamic_filler.py, 87 lines. Writes and voices the one sentence
+filler that matches the question topic.
+
+wake_word.py, 342 lines. The wake word detector wrapper.
+
+speaker_id.py, 82 lines. The voice matcher for the speaker gate.
+
+config.py, 781 lines. Every setting with its default and the
+environment variable that overrides it.
+
+dashboard.py, 1053 lines and supervaise_ui.py, 587 lines in
+pi_dashboard. The web pages: troubleshooting page, audience page,
+maintenance page.
+
+How one question flows through the system, step by step.
+1. wake_word hears Cee-Jap and cj_voice_cloud perks the robot.
+2. The microphone records until you stop talking.
+3. voice_io sends the recording to speech to text.
+4. postprocess fixes misheard names in the transcript.
+5. The question appears on the audience page.
+6. A pre recorded filler clip starts playing at once, and
+   dynamic_filler starts writing a topic filler in the background.
+7. cj_chat asks the router which topic this is, picks the token
+   budget for that theme, and starts the composer writing.
+8. stream_speak takes each finished sentence, adds pronunciation
+   help for hard Filipino words, makes audio, and plays it. First
+   audio lands about nine seconds after you stop talking.
+9. Each sentence updates the captions and sets the gesture feeling.
+10. The full answer is saved for the replay button and the robot
+    goes back to idle, doing an alive gesture every ten seconds.
+
+How the parts talk to each other. The robot and the dashboard are
+separate programs. They share small files in the memory only folder
+called /dev/shm. The robot writes what it heard, what it answered,
+what it is saying right now, wake word scores, and timing. The
+dashboard reads those files and also writes small trigger files that
+the robot checks, for the mute button and force listen and enroll.
+These files vanish on reboot which is fine because they are live
+state, not records.
+
+Where settings live. Boot settings for the robot service are in
+/etc/systemd/system/supervaise.service.d/wakeword.conf. Secrets and
+a few caps are in app/.env. Defaults for everything are in
+config.py. A setting in wakeword.conf wins over the default.
+
+Suggested reading order for study. First read this file. Then read
+the flow above while looking at cj_voice_cloud.py handle_turn and
+wake_loop. Then cj_chat.py run_turn for routing and composing. Then
+stream_speak.py for the sentence pipeline. The rest are helpers you
+can read as they come up.
+
+
+THE TOKEN SYSTEM AND TOTALS
+
+What a token is. Models read and write text in pieces called
+tokens. A token is about three quarters of an English word, so 100
+tokens is roughly 75 words.
+
+Which models are used. A small fast model called Haiku decides the
+topic of each question and writes the topic filler. A larger model
+called Sonnet writes the actual answer. Answers cost tokens two
+ways: the prompt we send in, and the answer that comes out.
+
+The answer budget. Each answer has a hard cap on how many tokens it
+may write. Since August 11 the cap depends on the theme of the
+question. The live numbers are:
+Theme A legal doctrine 260
+Theme B commentary and current events 240
+Theme C biography and personal 200
+Theme D foundation and mission 220
+Theme E speeches and occasions 240
+META questions about the robot itself 120
+
+Why exactly those numbers. The base was 220, which came from
+listening tests before August: at his slow speaking pace, about 220
+tokens is roughly 165 words, which is about one minute of speech,
+the right length for a kiosk answer. The themes then scale around
+that base. Legal doctrine gets the most, 260, because citing a case
+properly takes extra words. Biography gets 200 because anecdotes
+are naturally compact. META gets 120 so identity questions get a
+short graceful deflection, not a speech. These are first guesses by
+design and can be tuned per theme with CJ_TOKEN_BUDGET_BY_DIM after
+we watch real demo turns in the maintenance page turn table.
+
+What one question costs in tokens, roughly. The prompt sent to the
+composer is the big part: the voice card plus the retrieved corpus
+passages, around five to nine thousand tokens per turn. Most of
+that is identical every turn, so it is cached: cached tokens cost
+one tenth of the normal price. The answer out is at most the budget
+above. The router adds about a thousand tokens in and a few dozen
+out per call.
+
+Total tokens so far. The robot keeps its count in the system log,
+and the log on this machine only reaches back to the current boot,
+one in the morning of August 13. Since then the composer made 8
+calls and processed 79760 tokens in total. The breakdown explains
+the number: 42458 fresh prompt tokens plus 13587 tokens written
+into the cache plus 22645 tokens read back cheaply from the cache,
+and only 1070 tokens of actual answers out. In money that is about
+twenty US cents. The number is input heavy because every answer
+carries the whole persona and corpus context in with it, while the
+budgets keep the spoken output small. That is the designed shape:
+we pay pennies of mostly cached input to keep his voice and facts
+right, and the caps keep both cost and answer length in check.
+
+
+WHAT TO IMPROVE NEXT, IN ORDER OF URGENCY
+Written August 13 after review with Dev0.
+
+1. Protect the work. Everything built this week lives only on the
+robot memory card and memory cards die without warning. Nothing has
+been pushed to GitHub because the robot has no GitHub login. First
+job: push all code to GitHub and take a full copy of the memory
+card. This matters more than any feature.
+
+2. Demo day reliability. The wifi setup hotspot has never been
+tested for real. The speaker gate has never been enrolled with a
+real voice. There is no quick health check before a demo. Build a
+one button pre demo check: microphone, internet, wake word, one full
+test question, camera, disk and temperature, all green or red in ten
+seconds.
+
+3. The wake word runs on a workaround. The detection threshold is
+set very low so that the short phrase works, but that risks the
+robot waking on similar sounding words in a noisy room. The real fix
+is retraining the wake model with the new phrase. The training
+notebook is ready and needs one Colab session with a GPU.
+
+4. Make it respond even faster. Of the nine seconds before the robot
+speaks, two to four are spent converting your speech to text, and
+that only starts after you finish talking. Streaming transcription
+could cut this. A cheaper quick win: warm up the internet
+connections at the wake word instead of at transcription, which
+speeds up the first question of every session.
+
+5. Finish the measurements we started. The name accuracy test set
+still needs real team voice recordings. The answer length budgets
+are first guesses and the maintenance page now collects the timing
+data needed to tune them. The pronunciation dictionary should get a
+batch listening session: the robot reads all entries in chunks,
+someone flags the wrong ones, we fix them in one pass instead of
+finding them one demo at a time.
+
+6. Presence polish. The robot looks in a fixed direction while
+talking. The camera already works, so it could track the speaker's
+face and truly follow them. Idle gestures could glance toward
+sudden sounds.
+
+7. Longer term. Voice cloning through ElevenLabs at 22 dollars a
+month if the family provides recordings. An offline mode that
+answers the ten most likely questions from saved audio in case the
+venue internet dies. A permanent token and cost counter that
+survives restarts.
+
+STILL WAITING ON
+EPK answers for priority 3.
+API credits for the priority 1 live comparison.
+Team mic time for the priority 0 test set.
+A Colab training run for the priority 6 wake model.
+
+UPDATE 2026-08-19
+
+Two new pieces landed on the develop checkout today.
+
+1. Answer recheck gate (before the robot speaks). A zero-cost keyword
+check now verifies every composed answer against a hand-edited list
+of known facts (his appointment year, who appointed him, his birth
+date, his column name, and a ban on any "I am an AI/robot" slip)
+BEFORE text-to-speech. If a draft fails, the system recomposes once
+with the correction spelled out; if it still fails, a safe fallback
+line is spoken instead of the wrong fact. Off by default until we
+enable it. The fact list is data/entities/answer_gate_rules.json —
+edit it freely, changes load without a restart. Benchmark: 34 test
+cases, catches 16/16 seeded errors, zero false alarms.
+
+2. Cloned voice module (ElevenLabs). New voice/ folder: speak("...")
+plays text in the cloned voice, EQ-tuned for the robot's small
+speaker, with a local cache (repeat lines cost nothing and play
+instantly) and a fallback ladder so the robot never goes silent —
+canned clips for "connection lost / quota out / error" are already
+rendered, and espeak-ng is installed as the very last resort.
+Credentials live in voice/config.py which git ignores; the API key
+must never be committed or pasted into logs. Live-tested against the
+ElevenLabs API today; playback through the robot speaker not yet
+exercised (the running service owns the speaker).
+
+UPDATE 2026-08-19 (afternoon)
+
+Full switch to the cloned voice is staged. All 44 pre-recorded clips
+(the 40 "let me think" fillers and the 4 notices: not-connected,
+be-specific, voice-enrollment prompts) were regenerated in the
+ElevenLabs cloned voice and are already live — the old accent clips
+are kept at ~/fillers.bak-accent-20260819 in case we want them back.
+The dynamic question-matched filler and the answers themselves flip
+to the cloned voice the moment the credentials are added to app/.env
+and the service restarts (one command, Dev0 has it). Until then
+answers stay in the old voice; every cloned-voice path safely falls
+back to the old voice if ElevenLabs is ever unreachable, so the
+robot can never lose speech over this. Note the quota: about 0.5
+ElevenLabs credits per character for fresh answers; repeated
+questions replay from the local cache for free.
+
+UPDATE 2026-08-20
+
+Everything below is live on the robot.
+
+1. The cloned voice now speaks ALL answers, slowed to a measured
+pace, and "Panganiban" is pronounced correctly (tuned by ear with
+Dev0). Speaking speed is now dynamic per sentence: solemn lines
+slow down, playful lines pick up — driven by the same emotion
+signal as the gestures.
+
+2. A zero-cost answer check runs before the robot speaks: each
+sentence is screened for persona breaks (it can never say "I am an
+AI") before its audio exists, and answers with wrong facts on the
+classic path are replaced with a safe fallback. Costs no tokens,
+uses no AI model — pure rules in an editable file
+(data/entities/answer_gate_rules.json, reloads without restart).
+
+3. Answer length budgets are now set per topic (35 entries), not
+per theme — each topic's cap is individually tunable as timing
+data comes in from the maintenance page.
+
+4. The stop word now simply stops the answer and the robot goes
+back to sleep; the next question needs a fresh "Cee-Jap". The old
+instant re-listen is one setting away if a demo needs it.
+
+STILL OPEN: wake model retrain (Colab GPU run), git push of all
+work (top risk — nothing is on GitHub), team voice recordings for
+the name-accuracy test set, ElevenLabs credit balance before demo
+day (fresh answers cost ~300-450 credits each; repeats are free).
+
+UPDATE 2026-08-21
+
+Conversational mode is live: the robot now talks back and forth in
+real time instead of delivering minute-long answers.
+
+1. Answers are tuned down to roughly 30 seconds (about 70-90 words).
+One setting controls it: CJ_TOKEN_BUDGET_SCALE in the wakeword.conf
+drop-in (0.4 now; 1.0 restores full-length answers, 0.3 makes them
+punchier). The composer is TOLD its word budget, so short answers
+end on a complete sentence instead of getting cut off.
+
+2. After each answer the mic stays open for 6 seconds — just keep
+talking, no need to say "Cee-Jap" again. Silence puts the robot
+back to sleep. Setting: CJ_FOLLOWUP_WINDOW_S (0 turns it off).
+Conversation memory carries across follow-ups as before.
+
+Also fixed: the maintenance page was showing the wrong token budget
+for streamed answers since the 08-20 refactor (display-only bug).
+
+Verified: live composed turn at the new scale (82 words, clean
+ending, in persona), answer-gate tests 15/15, dashboard tests 7/7,
+service restarted healthy.
+
+UPDATE 2026-08-21 (second pass — reply speed)
+
+Dev0 asked for real-time replies with the wake word kept between
+turns. The 6-second follow-up window from this morning is OFF again
+(CJ_FOLLOWUP_WINDOW_S=0 — one setting turns it back on).
+
+Speed work, all live:
+1. Router now answers in a terse clause and is capped at 160 tokens.
+2. The composer reads a leaner briefing (5,000-token context ceiling,
+was 12,000) — big topics were feeding it 10,000+ tokens for a
+90-word answer, which delayed the first spoken sentence.
+3. The cloned-voice synth reuses one network connection instead of
+reconnecting for every sentence (~half a second saved per sentence).
+4. Short answers no longer risk getting clipped at their token cap
+(budget floor raised to 80, word target given more margin).
+
+Measured after the change: first spoken audio 4.9-6.2 seconds after
+the transcript, first-sentence synth 1.7-2.5s (was up to 6.5s cold).
+The maintenance page now also logs gate/route seconds and
+first-composer-token time per turn for tuning.
+
+UPDATE 2026-08-21 (third pass — instant answers to common questions)
+
+Ten common questions now have hand-written answers that play almost
+immediately after the question is transcribed — no AI calls, zero
+tokens, pre-rendered in the cloned voice: greeting, "who are you",
+"are you a robot", age/birthday, rule of law, twin beacons, when he
+was Chief Justice, the FLP, advice for young lawyers, thank
+you/goodbye.
+
+To edit or add answers: data/entities/canned_answers.json (takes
+effect immediately, no restart), then run
+scripts/prerender_canned.py once so the new audio is cached.
+Matching is deliberately strict — a question that doesn't match
+word-for-word patterns goes to the normal AI path, so real
+questions are never hijacked. Turn off with CJ_CANNED_ENABLED=0.
+
+The maintenance page shows canned turns as topic "canned:<id>"
+with token budget 0.
+
+UPDATE 2026-08-21 (fourth pass — out-of-topic + speed experiment + more
+canned answers)
+
+1. Out-of-topic questions now get an instant, graceful in-persona
+deflection ("that is beyond my brief... ask me about liberty,
+prosperity, the law") — three variants that rotate. No AI compose,
+zero tokens. It fires when the question scope check says the topic
+is outside his published record.
+
+2. Speed experiment result: telling the composer to OPEN WITH A
+SHORT SENTENCE cut first-audio from ~5.5s to ~4.4s after the
+transcript (speech starts when the first sentence is done). Now
+live (CJ_FAST_OPEN=1). We also tested a smaller context (no gain,
+kept at 5000) and the faster Haiku model as composer (REJECTED —
+it couldn't recall specific cases like Lambino).
+
+3. Canned answers grown from 10 to 20 questions — added: how are
+you / kumusta, where are you from, family & five children, wife
+Leni, FEU education, the four Ins, the ACID problems, the With Due
+Respect column, "can you speak Tagalog", tell me a joke, what is
+the Supreme Court, plus Tagalog phrasings (sino ka po, taga saan).
+All facts checked against his own speeches/columns. Edit them in
+data/entities/canned_answers.json (live immediately), then run
+scripts/prerender_canned.py once. Tests: 54/54.
+
+UPDATE 2026-08-21 (fifth pass — cut-off answers fixed)
+
+Cause found in the logs: several answers were hitting their token
+cap exactly, and the streaming speech path voiced the resulting
+mid-sentence fragment (the older non-streaming path already trimmed
+it — the streaming one did not).
+
+Fix, both halves live:
+1. The cap now sits 35% ABOVE the word target the composer is given
+(CJ_TOKEN_CAP_HEADROOM, default 1.35). Answers stay just as short —
+the model still aims at the word target — but a final sentence now
+has room to finish instead of being scissored.
+2. Even if the cap is ever hit, the robot now silently drops an
+incomplete final fragment instead of speaking it, and the captions/
+history keep only what was actually spoken.
+
+Verified: a previously cut-off identity answer now ends 59 tokens
+under its cap with a clean final sentence. Not a cause this time,
+but for the record: the stop word ("Cee-Jap" mid-answer) also cuts
+playback by design — journal showed zero such interruptions today.
+
+UPDATE 2026-08-21 (sixth pass — cost tracking on the dashboard)
+
+The maintenance page now shows what each question costs in AI calls:
+- "Current turn" card: this turn's cost in cents + running total in
+dollars since the service started (Anthropic calls only — the
+ElevenLabs voice is billed separately in credits, roughly 5-7 cents
+per fresh answer; repeats are free from cache).
+- "Recent turns" table: a cost column per question. Canned answers
+show "free".
+Typical composed answer: about 2 cents. Canned/out-of-topic: ~0.
+The running total resets when the service restarts; lifetime spend
+is visible in the Anthropic console.
+
+UPDATE 2026-08-21 (seventh pass — fidelity audit is back on)
+
+Finding: the fidelity checker (the AI that reviews each answer for
+made-up facts, persona breaks, and sub judice violations) had NEVER
+run in production — it was only wired into the old non-streaming
+path, and an old latency setting had disabled even that.
+
+Now live: the checker runs in the background WHILE the answer is
+being spoken, so it costs no response time (~0.1 cents per turn).
+It cannot un-say anything — it is an auditor, not a gate (the
+zero-cost answer gate still screens every sentence before it is
+voiced). Results show on the maintenance page: a "fidelity" line
+under Current turn (clean / flagged with the reason) and a FID tag
+in the Recent-turns table. Verified with seeded errors: it catches
+AI self-description, invented cases/dates/quotes, and stances
+contradicting his published views. Off switch: CJ_FIDELITY_AUDIT=0.
+
+UPDATE 2026-08-21 (eighth pass — canned Q&A tripled, with variety)
+
+The hardcoded question set is now 29 groups with 5 rephrased answers
+each (145 total) — the robot picks one at random per ask, so repeat
+questions do not sound scripted. New groups: most famous decision
+(Lambino v. Comelec, carefully hedged), why he became a lawyer, his
+faith journey, "who built you" (in-persona humor), what he does now,
+message to the Filipino people, the West Philippine Sea / Arbitral
+Award, and "can you sing" (comic deflection). All facts checked
+against his own speeches and columns.
+
+THE FULL LIST is compiled in one readable file. From Windows:
+  Invoke-WebRequest http://reachy-mini.local:8080/canned-qa -OutFile canned_qa.txt
+(29 groups, every question form and all 5 answers per group.)
+
+To edit: data/entities/canned_answers.json (live immediately), then
+run scripts/export_canned_qa.py (refreshes the download file) and
+scripts/prerender_canned.py (caches the new audio). Tests: 68/68.
+
+⚠ URGENT 2026-08-21: ELEVENLABS KEY CAP EXHAUSTED
+
+The API key named "CJAP API" was created with a 10,000-credit cap and
+has now used all of it — even though the ACCOUNT still has ~121,000
+credits this month. Until fixed, FRESH answers fall back to the old
+OpenAI voice (the robot never goes silent; cached clips still play in
+the cloned voice).
+
+FIX (2 minutes, needs the ElevenLabs account login):
+  elevenlabs.io -> profile -> API Keys -> "CJAP API" -> edit ->
+  raise or remove the credit limit (or create a new unlimited key and
+  put it in app/.env as ELEVEN_API_KEY, then restart supervaise).
+
+After the fix, re-run scripts/prerender_canned.py to finish caching
+the 121 remaining canned-answer clips (~14k credits).
+
+UPDATE 2026-08-21 (ninth pass — fillers smarter, two important corrections)
+
+1. Fillers are back ON, and the question-relevant filler now comes
+FIRST: the robot waits up to 4 seconds for the tailored remark
+before falling back to a generic "let me think" clip. If the answer
+arrives within those 4 seconds, no filler plays at all. Knob:
+CJ_FILLER_FIRST_WAIT_S (0 = old canned-first behavior).
+
+2. IMPORTANT CORRECTION — the corpus confirms CJ's wife Leni has
+passed away ("my late Leni"). All hardcoded family answers now speak
+of her in loving memory instead of present tense. Please review the
+FAMILY CHILDREN group in the canned-qa download and adjust wording
+if the family prefers different phrasing.
+
+3. Speech-recognition fix: the entity corrector was mangling
+"West Philippine Sea" into "West Philippines Sea" (and then
+"Philippine Senate"). Protected entities added; the phrase now
+passes through untouched. Flag for EPK: the auto-built dictionary
+has ~240 single-word entries including junk like "Momentum" and
+"Recent" — worth a cleanup sweep in entity_overrides.json.
+
+All 145 canned voice clips are now cached (the key-cap fix worked).
+
+UPDATE 2026-08-21 (tenth pass — full fact audit of the hardcoded answers)
+
+Every fact in the canned answers was rechecked against CJ's own
+speeches and columns. Two real corrections:
+1. FAMOUS CASES — fixed a wrong attribution: Lambino v. Comelec was
+NOT his ponencia (it was the Panganiban Court's crucial 8-7 case;
+he led the Court). His authored landmark is Tañada v. Angara (1997,
+unanimous, WTO membership). The answers now credit each correctly.
+2. Removed an unverified "wakes before dawn to write his column"
+claim; the column correctly says "every Sunday" now.
+Also: wife's full name Elenita Carpio Panganiban added (per Kenn),
+and "Sampaloc" now has a locked pronunciation ("Sampahlok") in the
+voice lexicon — re-audition via the dashboard say-text box if it
+sounds off.
+
+Verified good: birth Dec 7 1936 Sampaloc; youngest of 4; five
+children; 21st CJ Dec 2005-Dec 2006; Oct 1995 Ramos appointment;
+7 JBC rejections; FEU cum laude, 6th in the bar, Yale offer; Baron
+Travel; FLP; four Ins; ACID; three E's; twin beacons; Arbitral
+Award stance; spiritual rebirth in the mid-1980s.
+
+UI check (same day): /audience and /maintain both healthy — cost
+and fidelity columns populated, live captions feed working, camera
+streaming, wake meter live, and the maintain key gate correctly
+blocks wrong keys. Fresh canned-qa file is up at /canned-qa.
+
+2026-08-21 — Stop word fixed + grounding-docs window
+- Stop word (barge-in) was effectively dead on the streaming path: the mic
+  listener was re-opened and the wake model RESET for every sentence (the
+  model needs ~1-2s of audio after a reset before scores mean anything, and
+  the gaps between sentences were deaf). Now ONE listener spans the whole
+  answer (StopListener in cj_voice_cloud.py). Threshold also lowered
+  0.4 -> 0.2 (wake needs 0.07, so 0.4 was out of reach for many real
+  voices). After each un-interrupted answer the journal now logs
+  "[stop] answer played out — peak mid-answer score X" — use it to tune
+  CJ_STOP_OWW_THRESHOLD in wakeword.conf.
+- /maintain gained a "Grounding documents" card: the source docs the
+  composer was given for the last turn (title, id, date, theme, summary,
+  budget-dropped flag) + a docs column in Recent turns. Data flows from
+  cj_chat.build_context via turn meta; older turns show "no doc data".
