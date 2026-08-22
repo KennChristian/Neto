@@ -663,6 +663,10 @@ const $ = id => document.getElementById(id);
 const SVGNS = "http://www.w3.org/2000/svg";
 const Q = new URLSearchParams(location.search);
 const KEY = Q.get("key") || "";
+// lips were observed trailing the audio slightly — start the timeline this
+// many seconds early; tune per venue with ?sync=0.4 (bigger = lips earlier)
+const LEAD = isNaN(parseFloat(Q.get("sync"))) ? .25
+             : parseFloat(Q.get("sync"));
 let MODE = "vector", havePhoto = false, calib = null;
 
 const EMO = {
@@ -979,7 +983,7 @@ async function poll(){
         setEmotion(sp.emotion || "neutral");
         buildTimeline(sp.words && sp.words.length ? sp.words
                       : estimateWords(sp.current, sp.dur));
-        audioStart = sp.ts + skew;
+        audioStart = sp.ts + skew - LEAD;
         renderCap(0);
       }
     } else {
