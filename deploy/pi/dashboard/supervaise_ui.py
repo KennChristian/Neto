@@ -42,8 +42,6 @@ WAKE_TRIGGER = "/dev/shm/cj_wake_trigger"
 ENTITY_OVERLAY = os.path.join(MAIN, "data", "entities", "entity_overrides.json")
 
 ASSETS = os.path.join(HOME, "pi_dashboard", "assets")
-FACE_PHOTO = os.path.join(ASSETS, "cjap.jpg")       # real-photo face mode
-FACE_CALIB = os.path.join(ASSETS, "face_calib.json")  # eye/mouth landmarks
 LIVEAVATAR_CONF = os.path.join(ASSETS, "liveavatar.json")  # api_key etc.
 os.makedirs(ASSETS, exist_ok=True)
 
@@ -552,489 +550,6 @@ background:#21262d;color:#e6edf3;font-size:16px}</style></head><body>
 <input id="k" type="password" autofocus><button>Enter</button></form></body></html>"""
 
 
-FACE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CJAP</title><style>
-:root{--bg:#0d1117;--ink:#e6edf3;--gold:#c9a227;--dim:#8b949e}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
-  font-family:Georgia,'Times New Roman',serif}
-#stage{display:flex;flex-direction:column;align-items:center;
-  justify-content:center;height:100vh;gap:1vh}
-#face{width:min(60vw,66vh)}
-#photoFrame{position:relative;overflow:hidden;border-radius:1.5vh;
-  display:none}
-#photoInner{position:relative;transform-origin:50% 62%}
-#ph{display:block;width:100%;height:auto;user-select:none}
-#phsvg{position:absolute;left:0;top:0;width:100%;height:100%}
-#vig{position:absolute;inset:-2px;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 42%,transparent 58%,#0d1117 96%)}
-#calBar{display:none;max-width:88vw;text-align:center;font-size:2.4vh;
-  color:var(--ink)}
-#calBar a{color:var(--gold)}
-#calBar input{margin-top:.8vh;color:var(--dim)}
-#cap{min-height:13vh;max-width:90vw;text-align:center;font-size:4vh;
-  line-height:1.35;color:var(--dim)}
-#cap b{color:var(--gold);font-weight:normal}
-</style></head><body><div id="stage">
-<svg id="face" viewBox="-170 -200 340 420">
-<defs>
-  <radialGradient id="gskin" cx="50%" cy="38%" r="75%">
-    <stop offset="0%" stop-color="#c9a081"/>
-    <stop offset="70%" stop-color="#b08663"/>
-    <stop offset="100%" stop-color="#96694c"/></radialGradient>
-  <linearGradient id="ghair" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#dcdcdc"/>
-    <stop offset="100%" stop-color="#93989e"/></linearGradient>
-  <radialGradient id="giris" cx="40%" cy="35%" r="70%">
-    <stop offset="0%" stop-color="#6b442a"/>
-    <stop offset="100%" stop-color="#2a180d"/></radialGradient>
-</defs>
-<g id="headG">
-  <ellipse cx="0" cy="168" rx="128" ry="66" fill="#232830"/>
-  <path d="M -30 96 L 30 96 L 26 140 L -26 140 Z" fill="url(#gskin)"/>
-  <path d="M -34 128 L 0 150 L 34 128 L 60 200 L -60 200 Z" fill="#f0ede6"/>
-  <path d="M -6 138 L 6 138 L 10 176 L 0 196 L -10 176 Z" fill="#7a1f2b"/>
-  <g id="head">
-    <ellipse cx="-104" cy="-22" rx="14" ry="23" fill="url(#gskin)"/>
-    <ellipse cx="104" cy="-22" rx="14" ry="23" fill="url(#gskin)"/>
-    <path d="M 0 -148 C 88 -148 104 -76 99 -12 C 95 52 58 106 0 114
-             C -58 106 -95 52 -99 -12 C -104 -76 -88 -148 0 -148 Z"
-          fill="url(#gskin)"/>
-    <path d="M -99 -38 C -112 -132 -58 -172 0 -172 C 58 -172 112 -132 99 -38
-             C 94 -88 66 -122 0 -122 C -66 -122 -94 -88 -99 -38 Z"
-          fill="url(#ghair)"/>
-    <path d="M -46 -96 Q 0 -104 46 -96" stroke="rgba(60,35,20,.14)"
-          stroke-width="2.5" fill="none"/>
-    <path d="M -40 -85 Q 0 -92 40 -85" stroke="rgba(60,35,20,.10)"
-          stroke-width="2" fill="none"/>
-    <g id="browL"><path d="M -70 -64 Q -48 -74 -25 -65"
-        stroke="#8b8f94" stroke-width="7.5" fill="none"
-        stroke-linecap="round"/></g>
-    <g id="browR"><path d="M 25 -65 Q 48 -74 70 -64"
-        stroke="#8b8f94" stroke-width="7.5" fill="none"
-        stroke-linecap="round"/></g>
-    <g id="eyeL" transform="translate(-45,-38)">
-      <ellipse rx="21" ry="11.5" fill="#f5f1ea"/>
-      <g id="gazeL"><circle r="8.5" fill="url(#giris)"/>
-        <circle r="3.6" fill="#140c06"/>
-        <circle cx="2.6" cy="-2.6" r="1.7" fill="#fff" opacity=".85"/></g>
-      <path id="lidLtop" fill="url(#gskin)"/>
-      <path id="lidLbot" fill="url(#gskin)"/>
-      <ellipse rx="21" ry="11.5" fill="none"
-        stroke="rgba(60,35,20,.35)" stroke-width="1.2"/>
-    </g>
-    <g id="eyeR" transform="translate(45,-38)">
-      <ellipse rx="21" ry="11.5" fill="#f5f1ea"/>
-      <g id="gazeR"><circle r="8.5" fill="url(#giris)"/>
-        <circle r="3.6" fill="#140c06"/>
-        <circle cx="2.6" cy="-2.6" r="1.7" fill="#fff" opacity=".85"/></g>
-      <path id="lidRtop" fill="url(#gskin)"/>
-      <path id="lidRbot" fill="url(#gskin)"/>
-      <ellipse rx="21" ry="11.5" fill="none"
-        stroke="rgba(60,35,20,.35)" stroke-width="1.2"/>
-    </g>
-    <g stroke="#383c44" stroke-width="3.2" fill="none" opacity=".92">
-      <rect x="-74" y="-59" width="58" height="42" rx="13"/>
-      <rect x="16" y="-59" width="58" height="42" rx="13"/>
-      <path d="M -16 -45 Q 0 -53 16 -45"/>
-      <path d="M -74 -45 L -101 -34"/><path d="M 74 -45 L 101 -34"/>
-    </g>
-    <path d="M -4 -28 C -8 -6 -13 4 -15 12 M -15 12 Q -7 19 0 17 Q 7 19 15 12
-             M 4 -28 C 8 -6 13 4 15 12"
-          stroke="rgba(85,50,30,.40)" stroke-width="2.3" fill="none"
-          stroke-linecap="round"/>
-    <path d="M -20 22 Q -30 40 -34 50 M 20 22 Q 30 40 34 50"
-          stroke="rgba(0,0,0,.08)" stroke-width="2.5" fill="none"/>
-    <g id="mouthG" transform="translate(0,55)">
-      <clipPath id="mclip"><path id="mclipP"/></clipPath>
-      <path id="mInner" fill="#4e1f1c"/>
-      <g clip-path="url(#mclip)">
-        <rect id="teeth" x="-33" y="-16" width="66" height="15" rx="3"
-              fill="#efe9dc"/>
-        <ellipse id="tongue" cx="0" cy="16" rx="19" ry="10" fill="#9a4a42"/>
-      </g>
-      <path id="lipTop" fill="#a96b58"/>
-      <path id="lipBot" fill="#b87862"/>
-    </g>
-    <path d="M -14 86 Q 0 92 14 86" stroke="rgba(0,0,0,.10)"
-          stroke-width="2.5" fill="none"/>
-  </g>
-</g>
-</svg>
-<div id="photoFrame"><div id="photoInner">
-  <img id="ph" alt=""><svg id="phsvg"></svg>
-</div><div id="vig"></div></div>
-<div id="calBar"><span id="calMsg"></span><br>
-  <input type="file" id="phFile" accept="image/jpeg,image/png"></div>
-<div id="cap"></div></div><script>
-const $ = id => document.getElementById(id);
-const SVGNS = "http://www.w3.org/2000/svg";
-const Q = new URLSearchParams(location.search);
-const KEY = Q.get("key") || "";
-// per-venue lip-sync trim: ?sync=0.3 starts the timeline 0.3s early
-// (lips earlier), negative values delay it; default = no offset
-const LEAD = isNaN(parseFloat(Q.get("sync"))) ? 0
-             : parseFloat(Q.get("sync"));
-let MODE = "vector", havePhoto = false, calib = null;
-
-const EMO = {
-  neutral: {brow:0, tiltL:0, tiltR:0, squint:.12, smile:5,  head:0},
-  warm:    {brow:1, tiltL:0, tiltR:0, squint:.30, smile:11, head:0},
-  solemn:  {brow:5, tiltL:8, tiltR:-8, squint:.28, smile:-4, head:0},
-  emphatic:{brow:-7, tiltL:0, tiltR:0, squint:.02, smile:6, head:0},
-  question:{brow:-3, tiltL:-10, tiltR:2, squint:.10, smile:4, head:-3.5},
-  amused:  {brow:-2, tiltL:0, tiltR:0, squint:.55, smile:14, head:2.5},
-};
-let emo = EMO.neutral, emoName = "neutral";
-
-function setEmotion(name){
-  emoName = name in EMO ? name : "neutral";
-  emo = EMO[emoName];
-  $("browL").setAttribute("transform",
-    "translate(0," + emo.brow + ") rotate(" + emo.tiltL + ",-25,-65)");
-  $("browR").setAttribute("transform",
-    "translate(0," + emo.brow + ") rotate(" + emo.tiltR + ",25,-65)");
-}
-
-// ---- viseme lip sync -----------------------------------------------------
-function visemeOf(ch){
-  ch = ch.toLowerCase();
-  if ("mbp".indexOf(ch) >= 0) return {o:.03, w:1};
-  if ("fv".indexOf(ch) >= 0)  return {o:.13, w:1.05};
-  if ("ouw".indexOf(ch) >= 0) return {o:.52, w:.62};
-  if (ch === "a")             return {o:.85, w:.98};
-  if (ch === "e")             return {o:.45, w:1.10};
-  if ("iy".indexOf(ch) >= 0)  return {o:.30, w:1.14};
-  if ("sz".indexOf(ch) >= 0)  return {o:.12, w:1.08};
-  return {o:.22, w:.95};
-}
-let timeline = [], tlEnd = 0, audioStart = -1;
-let capWords = [], capTimes = [];
-function buildTimeline(words){
-  timeline = []; capWords = []; capTimes = [];
-  let prevEnd = 0;
-  for (const wse of words){
-    const w = wse[0], s = wse[1], e = wse[2];
-    capWords.push(w); capTimes.push(s);
-    if (s > prevEnd + .03) timeline.push({t:prevEnd, o:.05, w:1});
-    const L = Math.max(1, w.length), dur = (e - s) / L;
-    for (let i = 0; i < L; i++){
-      const v = visemeOf(w[i]);
-      timeline.push({t:s + i*dur, o:v.o, w:v.w});
-    }
-    prevEnd = e;
-  }
-  timeline.push({t:prevEnd, o:0, w:1});
-  tlEnd = prevEnd;
-}
-function estimateWords(text, dur){
-  const ws = text.split(" ").filter(Boolean);
-  let t = .12; const out = [];
-  for (const w of ws){
-    const d = .09 + .052*w.length;
-    out.push([w, t, t + d]);
-    t += d + .055;
-  }
-  // scale the whole guess to the clip's real duration when known —
-  // unscaled estimates drift badly across long cached answers
-  if (dur && out.length){
-    const k = Math.max(.3, (dur - .25)) / out[out.length-1][2];
-    for (const w of out){ w[1] = +(w[1]*k).toFixed(3);
-      w[2] = +(w[2]*k).toFixed(3); }
-  }
-  return out;
-}
-function targetAt(tt){
-  if (!timeline.length || tt < 0 || tt > tlEnd + .4) return {o:0, w:1};
-  let cur = {o:0, w:1};
-  for (const k of timeline){ if (k.t <= tt) cur = k; else break; }
-  return cur;
-}
-function renderCap(tt){
-  if (!capWords.length){ $("cap").innerHTML = ""; return; }
-  let html = "";
-  for (let i = 0; i < capWords.length; i++)
-    html += (capTimes[i] <= tt ? "<b>"+capWords[i]+"</b>" : capWords[i]) + " ";
-  $("cap").innerHTML = html;
-}
-
-// ---- shared mouth geometry (vector ids or photo-overlay ids) -------------
-function mouthPaths(o, wdt, s){
-  const cx = 36*wdt, cy = -s*.55;
-  const top = -2 - o*7, bot = 2 + o*30;
-  const inner = "M " + (-cx) + " " + cy + " Q 0 " + top + " " + cx + " " + cy
-              + " Q 0 " + bot + " " + (-cx) + " " + cy + " Z";
-  return {inner: inner, top: top, bot: bot,
-    lipTop: "M " + (-cx-5) + " " + cy + " Q 0 " + (top-8) + " " + (cx+5)
-      + " " + cy + " Q 0 " + (top+2) + " " + (-cx-5) + " " + cy + " Z",
-    lipBot: "M " + (-cx-5) + " " + cy + " Q 0 " + (bot+9) + " " + (cx+5)
-      + " " + cy + " Q 0 " + (bot-1) + " " + (-cx-5) + " " + cy + " Z"};
-}
-function setMouthVector(o, wdt, s){
-  const m = mouthPaths(o, wdt, s);
-  $("mInner").setAttribute("d", m.inner);
-  $("mclipP").setAttribute("d", m.inner);
-  $("teeth").setAttribute("y", m.top - 2);
-  $("tongue").setAttribute("cy", m.bot - 4);
-  $("lipTop").setAttribute("d", m.lipTop);
-  $("lipBot").setAttribute("d", m.lipBot);
-}
-function setLids(side, closed, squint){
-  const topY = -12 + Math.min(1, closed)*25;
-  $("lid"+side+"top").setAttribute("d",
-    "M -22 -16 L 22 -16 L 22 -12 Q 0 " + topY + " -22 -12 Z");
-  const botY = 12 - squint*13;
-  $("lid"+side+"bot").setAttribute("d",
-    "M -22 16 L 22 16 L 22 12 Q 0 " + botY + " -22 12 Z");
-}
-
-// ---- photo mode ----------------------------------------------------------
-let phGeom = null;   // {mx,my,scale,angle, eyes:[{x,y}], eyeRx, cheek}
-function setupPhoto(){
-  MODE = "photo";
-  $("face").style.display = "none";
-  const fr = $("photoFrame"), ph = $("ph");
-  fr.style.display = "block";
-  const ar = ph.naturalWidth / ph.naturalHeight;
-  const w = Math.min(innerWidth*.66, innerHeight*.72*ar);
-  fr.style.width = w + "px";
-  const W = w, H = w/ar;
-  const P = (nx, ny) => ({x: nx*W, y: ny*H});
-  const L = P(calib.lx, calib.ly), R = P(calib.rx, calib.ry);
-  const ML = P(calib.mlx, calib.mly), MR = P(calib.mrx, calib.mry);
-  const eyeDist = Math.hypot(R.x-L.x, R.y-L.y);
-  const mw = Math.hypot(MR.x-ML.x, MR.y-ML.y);
-  phGeom = {
-    mx: (ML.x+MR.x)/2, my: (ML.y+MR.y)/2,
-    scale: mw/68,
-    angle: Math.atan2(MR.y-ML.y, MR.x-ML.x)*180/Math.PI,
-    eyes: [L, R], eyeRx: eyeDist*.16, cheek: "rgb(172,132,100)",
-  };
-  try{  // sample real cheek color for the eyelid patches
-    const cv = document.createElement("canvas");
-    cv.width = ph.naturalWidth; cv.height = ph.naturalHeight;
-    const g = cv.getContext("2d");
-    g.drawImage(ph, 0, 0);
-    const sx = Math.round(calib.lx*ph.naturalWidth);
-    const sy = Math.round((calib.ly + (calib.mly-calib.ly)*.4)
-                          * ph.naturalHeight);
-    const d = g.getImageData(sx, sy, 3, 3).data;
-    phGeom.cheek = "rgb(" + d[0] + "," + d[1] + "," + d[2] + ")";
-  }catch(e){}
-  const svg = $("phsvg");
-  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
-  svg.innerHTML =
-    '<defs><clipPath id="mclipPh"><path id="mclipPhP"/></clipPath></defs>' +
-    '<g id="mouthPh" opacity=".2">' +
-    '<path id="mInnerPh" fill="#3d1714"/>' +
-    '<g clip-path="url(#mclipPh)">' +
-    '<rect id="teethPh" x="-33" y="-16" width="66" height="15" rx="3" ' +
-    'fill="#efe9dc"/>' +
-    '<ellipse id="tonguePh" cx="0" cy="16" rx="19" ry="10" fill="#8e423b"/>' +
-    '</g><path id="lipTopPh" fill="rgba(140,80,64,.55)"/>' +
-    '<path id="lipBotPh" fill="rgba(155,90,70,.55)"/></g>' +
-    '<ellipse id="lidPhL" opacity="0"/><ellipse id="lidPhR" opacity="0"/>';
-  $("mouthPh").setAttribute("transform",
-    "translate(" + phGeom.mx + "," + phGeom.my + ") rotate("
-    + phGeom.angle + ") scale(" + phGeom.scale + ")");
-  for (let i = 0; i < 2; i++){
-    const el = $(i ? "lidPhR" : "lidPhL");
-    el.setAttribute("cx", phGeom.eyes[i].x);
-    el.setAttribute("cy", phGeom.eyes[i].y);
-    el.setAttribute("rx", phGeom.eyeRx);
-    el.setAttribute("fill", phGeom.cheek);
-  }
-}
-function setMouthPhoto(o, wdt, s){
-  const m = mouthPaths(o, wdt, s);
-  $("mInnerPh").setAttribute("d", m.inner);
-  $("mclipPhP").setAttribute("d", m.inner);
-  $("teethPh").setAttribute("y", m.top - 2);
-  $("tonguePh").setAttribute("cy", m.bot - 4);
-  $("lipTopPh").setAttribute("d", m.lipTop);
-  $("lipBotPh").setAttribute("d", m.lipBot);
-  $("mouthPh").setAttribute("opacity",
-    Math.min(1, .15 + o*2.4).toFixed(2));
-}
-
-// ---- calibration mode ----------------------------------------------------
-const CAL_STEPS = [
-  ["lx","ly","Click the CENTER of the eye on the LEFT of the photo"],
-  ["rx","ry","Click the CENTER of the eye on the RIGHT"],
-  ["mlx","mly","Click the LEFT corner of the mouth"],
-  ["mrx","mry","Click the RIGHT corner of the mouth"]];
-let calStep = 0, calDraft = {};
-function setupCal(){
-  MODE = "cal";
-  $("face").style.display = "none";
-  $("calBar").style.display = "block";
-  const fr = $("photoFrame"), ph = $("ph");
-  if (!havePhoto){
-    $("calMsg").textContent =
-      "No photo yet — choose a clear FRONTAL photo (JPEG/PNG, under 8 MB):";
-    return;
-  }
-  fr.style.display = "block";
-  const ar = ph.naturalWidth / ph.naturalHeight;
-  fr.style.width = Math.min(innerWidth*.66, innerHeight*.66*ar) + "px";
-  $("calMsg").textContent = CAL_STEPS[0][2];
-  ph.style.cursor = "crosshair";
-  ph.addEventListener("click", ev => {
-    if (calStep >= CAL_STEPS.length) return;
-    const r = ph.getBoundingClientRect();
-    const nx = (ev.clientX - r.left)/r.width;
-    const ny = (ev.clientY - r.top)/r.height;
-    const st = CAL_STEPS[calStep];
-    calDraft[st[0]] = nx; calDraft[st[1]] = ny;
-    const svg = $("phsvg");
-    svg.setAttribute("viewBox", "0 0 " + r.width + " " + r.height);
-    const dot = document.createElementNS(SVGNS, "circle");
-    dot.setAttribute("cx", nx*r.width); dot.setAttribute("cy", ny*r.height);
-    dot.setAttribute("r", 5); dot.setAttribute("fill", "#c9a227");
-    svg.appendChild(dot);
-    calStep++;
-    if (calStep < CAL_STEPS.length){
-      $("calMsg").textContent = CAL_STEPS[calStep][2];
-    } else {
-      $("calMsg").textContent = "Saving…";
-      fetch("/api/face-calib", {method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({key: KEY, calib: calDraft})})
-      .then(r => r.json()).then(out => {
-        $("calMsg").innerHTML = out.ok
-          ? 'Saved. <a href="/face">Open the live face</a>'
-          : "Failed: " + out.output;
-      });
-    }
-  });
-}
-$("phFile").addEventListener("change", ev => {
-  const f = ev.target.files[0];
-  if (!f) return;
-  $("calMsg").textContent = "Uploading…";
-  const rd = new FileReader();
-  rd.onload = () => {
-    const b64 = String(rd.result).split(",")[1] || "";
-    fetch("/api/face-photo", {method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({key: KEY, image_b64: b64})})
-    .then(r => r.json()).then(out => {
-      if (out.ok) location.reload();
-      else $("calMsg").textContent = "Upload failed: " + out.output;
-    });
-  };
-  rd.readAsDataURL(f);
-});
-
-// ---- animation loop ------------------------------------------------------
-let mouthO = 0, mouthW = 1, blink = 0, blinkPhase = 0;
-let nextBlink = Date.now() + 2600, gx = 0, gy = 0, gtx = 0, gty = 0;
-function tick(){
-  const now = Date.now();
-  const tt = audioStart > 0 ? now/1000 - audioStart : -1;
-  const tgt = targetAt(tt);
-  mouthO += (tgt.o - mouthO)*.45;
-  mouthW += (tgt.w - mouthW)*.3;
-  if (tt >= 0 && tt <= tlEnd + .4) renderCap(tt);
-
-  if (blinkPhase === 0 && now > nextBlink) blinkPhase = 1;
-  if (blinkPhase === 1){ blink = Math.min(1, blink+.34);
-    if (blink === 1) blinkPhase = 2; }
-  else if (blinkPhase === 2){ blink = Math.max(0, blink-.22);
-    if (blink === 0){ blinkPhase = 0;
-      nextBlink = now + 2200 + Math.random()*3800; } }
-
-  const talking = tt >= 0 && tt <= tlEnd;
-  const breath = Math.sin(now/1900)*1.4;
-  const nod = talking ? mouthO*2.2 : 0;
-  const sway = talking ? Math.sin(now/700)*.7 : 0;
-
-  if (MODE === "photo" && phGeom){
-    setMouthPhoto(mouthO, mouthW, emo.smile*.5);
-    const lidAmt = Math.max(blink, emo.squint*.4);
-    for (const id of ["lidPhL","lidPhR"]){
-      $(id).setAttribute("ry", Math.max(.5, phGeom.eyeRx*.62*lidAmt));
-      $(id).setAttribute("opacity", lidAmt > .03 ? ".96" : "0");
-    }
-    $("photoInner").style.transform =
-      "scale(1.06) rotate(" + ((emo.head*.5 + sway)*.6).toFixed(2)
-      + "deg) translateY(" + ((breath - nod)*.6).toFixed(2) + "px)";
-  } else if (MODE === "vector"){
-    setMouthVector(mouthO, mouthW, emo.smile);
-    setLids("L", blink, emo.squint); setLids("R", blink, emo.squint);
-    if (!talking && Math.random() < .005){
-      gtx = (Math.random()-.5)*10; gty = (Math.random()-.5)*5; }
-    if (talking){ gtx = 0; gty = 1.5; }
-    gx += (gtx-gx)*.07; gy += (gty-gy)*.07;
-    $("gazeL").setAttribute("transform", "translate("+gx+","+gy+")");
-    $("gazeR").setAttribute("transform", "translate("+gx+","+gy+")");
-    $("headG").setAttribute("transform",
-      "rotate(" + (emo.head + sway) + ") translate(0," + (breath - nod) + ")");
-  }
-  requestAnimationFrame(tick);
-}
-tick();
-
-// ---- state poll ----------------------------------------------------------
-let sentKey = "";
-async function poll(){
-  if (MODE === "cal"){ setTimeout(poll, 2000); return; }
-  try{
-    const st = await (await fetch("/api/state")).json();
-    const sp = st.speaking || {};
-    const skew = st.ts ? Date.now()/1000 - st.ts : 0;
-    const fresh = sp.ts && (Date.now()/1000 - (sp.ts + skew)) < 30;
-    if (fresh && sp.current && !sp.done){
-      const key = sp.ts + "|" + sp.current;
-      if (key !== sentKey){
-        sentKey = key;
-        setEmotion(sp.emotion || "neutral");
-        buildTimeline(sp.words && sp.words.length ? sp.words
-                      : estimateWords(sp.current, sp.dur));
-        audioStart = sp.ts + skew - LEAD;
-        renderCap(0);
-      }
-    } else {
-      if (sp.interrupted && timeline.length){
-        timeline = []; tlEnd = 0; audioStart = -1;
-        $("cap").innerHTML = ""; setEmotion("neutral");
-      }
-      const idle = audioStart < 0 || Date.now()/1000 - audioStart > tlEnd + 2;
-      if (idle && emoName !== "neutral") setEmotion("neutral");
-      if (idle && audioStart > 0 &&
-          Date.now()/1000 - audioStart > tlEnd + 7){
-        audioStart = -1; timeline = []; capWords = [];
-        $("cap").innerHTML = "";
-      }
-      sentKey = "";
-    }
-  }catch(e){}
-  setTimeout(poll, 250);
-}
-poll();
-
-// ---- mode selection ------------------------------------------------------
-(async function init(){
-  try{
-    const c = await (await fetch("/api/face-calib")).json();
-    if (c && c.lx !== undefined) calib = c;
-  }catch(e){}
-  const ph = $("ph");
-  ph.onload = () => { havePhoto = true; decide(); };
-  ph.onerror = () => { havePhoto = false; decide(); };
-  ph.src = "/assets/cjap.jpg?t=" + Date.now();
-})();
-function decide(){
-  if (Q.get("calibrate")){ setupCal(); return; }
-  if (havePhoto && calib) setupPhoto();
-  else if (havePhoto && !calib)
-    $("cap").innerHTML = "photo uploaded — finish setup at " +
-      "/face?calibrate=1&key=…";
-}
-</script></body></html>"""
-
-
 FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CJAP LiveAvatar</title>
@@ -1110,7 +625,10 @@ async function start(){
     if (m.type === "session.state_updated"){
       st("session " + m.state +
          (m.state === "connected" ? " — ask the robot something" : ""));
+      const was = ready;
       ready = (m.state === "connected");
+      // focusing on the avatar: it owns the voice as soon as it can speak
+      if (ready && !was) setVoice(true);
     }
   };
   ws.onclose = () => { ready = false;
@@ -1128,6 +646,7 @@ function stopKeep(){ if (keepTimer){ clearInterval(keepTimer);
 
 async function stop(){
   stopKeep(); ready = false;
+  await setVoice(false);          // hand the voice back to the robot
   try{ if (ws) ws.close(); }catch(e){}
   try{ if (room) room.disconnect(); }catch(e){}
   if (sessTok) await post("/api/avatar-stop", {session_token: sessTok});
@@ -1135,15 +654,16 @@ async function stop(){
 }
 $("btnStart").onclick = start;
 $("btnStop").onclick = stop;
-$("btnMute").onclick = async () => {
-  avatarMuted = !avatarMuted;
+async function setVoice(avatar){
+  // one voice source at a time — the avatar speaking silences the robot
+  // speaker (and vice versa), so there is nothing to drift out of sync
+  avatarMuted = !avatar;
   $("aud").muted = avatarMuted;
-  // unmuting the avatar silences the robot speaker (and vice versa) —
-  // one voice source at a time, so there is nothing to drift out of sync
   await post("/api/ctl",
-             {action: avatarMuted ? "avatar-voice-off" : "avatar-voice-on"});
-  $("btnMute").textContent = "voice: " + (avatarMuted ? "robot" : "AVATAR");
-};
+             {action: avatar ? "avatar-voice-on" : "avatar-voice-off"});
+  $("btnMute").textContent = "voice: " + (avatar ? "AVATAR" : "robot");
+}
+$("btnMute").onclick = () => setVoice(avatarMuted);
 addEventListener("beforeunload", () => {
   if (!avatarMuted) navigator.sendBeacon("/api/ctl",
     new Blob([JSON.stringify({key:KEY, action:"avatar-voice-off"})],
@@ -1205,7 +725,7 @@ async function poll(){
       sentKey = "";
     }
   }catch(e){}
-  setTimeout(poll, 250);
+  setTimeout(poll, 120);
 }
 poll();
 </script></body></html>"""
@@ -1219,8 +739,6 @@ def handle_get(h, path, params):
     """Returns True if this module handled the request."""
     if path == "/audience":
         h._send(200, AUDIENCE_PAGE, "text/html; charset=utf-8")
-    elif path == "/face":
-        h._send(200, FACE_PAGE, "text/html; charset=utf-8")
     elif path == "/notes":   # plain-text project notes, downloadable from any device
         try:
             h._send(200, open(os.path.join(HOME, "PROJECT_NOTES.txt"),
@@ -1272,13 +790,10 @@ def handle_get(h, path, params):
             h._send(200, frame, "image/jpeg")
         else:
             h._send(503, json.dumps({"error": "camera unavailable"}))
-    elif path == "/assets/cjap.jpg":
-        try:
-            h._send(200, open(FACE_PHOTO, "rb").read(), "image/jpeg")
-        except OSError:
-            h._send(404, json.dumps({"error": "no face photo uploaded"}))
-    elif path == "/api/face-calib":
-        h._send(200, json.dumps(_read_json(FACE_CALIB) or {}))
+    elif path == "/face":   # retired drawn-face page → the avatar is the face
+        h.send_response(302)
+        h.send_header("Location", "/face-avatar")
+        h.end_headers()
     elif path == "/face-avatar":
         h._send(200, FACE_AVATAR_PAGE, "text/html; charset=utf-8")
     elif path == "/api/sentence.wav":
@@ -1317,18 +832,6 @@ def handle_post(h, path, body):
         else:
             ok, out = entities_put(body.get("content", ""))
             h._send(200, json.dumps({"ok": ok, "output": out}))
-    elif path == "/api/face-photo":
-        if not _authed({}, body):
-            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
-        else:
-            ok, out = _face_photo_put(body.get("image_b64", ""))
-            h._send(200, json.dumps({"ok": ok, "output": out}))
-    elif path == "/api/face-calib":
-        if not _authed({}, body):
-            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
-        else:
-            ok, out = _face_calib_put(body.get("calib"))
-            h._send(200, json.dumps({"ok": ok, "output": out}))
     elif path == "/api/avatar-session":
         if not _authed({}, body):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
@@ -1344,27 +847,6 @@ def handle_post(h, path, body):
     else:
         return False
     return True
-
-
-def _face_photo_put(image_b64):
-    """Save the uploaded face photo (JPEG bytes, base64; ≤8 MB decoded)."""
-    import base64
-    try:
-        raw = base64.b64decode(image_b64 or "", validate=True)
-    except Exception:
-        return False, "invalid base64"
-    if not (1000 < len(raw) <= 8_000_000):
-        return False, f"bad size ({len(raw)} bytes; need 1KB-8MB)"
-    if not (raw[:3] == b"\xff\xd8\xff" or raw[:8] == b"\x89PNG\r\n\x1a\n"):
-        return False, "not a JPEG/PNG file"
-    try:
-        tmp = FACE_PHOTO + ".tmp"
-        with open(tmp, "wb") as f:
-            f.write(raw)
-        os.replace(tmp, FACE_PHOTO)
-        return True, "photo saved — now calibrate"
-    except OSError as e:
-        return False, str(e)
 
 
 def _liveavatar_request(path, payload, auth_header):
@@ -1420,27 +902,6 @@ def avatar_stop(session_token):
         return True, "stopped"
     except Exception as e:
         return False, f"{type(e).__name__}"
-
-
-def _face_calib_put(calib):
-    """Save normalized landmark coords {lx,ly,rx,ry,mlx,mly,mrx,mry}."""
-    keys = ("lx", "ly", "rx", "ry", "mlx", "mly", "mrx", "mry")
-    if not isinstance(calib, dict):
-        return False, "calib must be an object"
-    try:
-        clean = {k: round(float(calib[k]), 4) for k in keys}
-    except (KeyError, TypeError, ValueError):
-        return False, f"calib needs float fields {keys}"
-    if not all(0.0 <= v <= 1.0 for v in clean.values()):
-        return False, "coords must be normalized 0..1"
-    try:
-        tmp = FACE_CALIB + ".tmp"
-        with open(tmp, "w") as f:
-            json.dump(clean, f)
-        os.replace(tmp, FACE_CALIB)
-        return True, "calibration saved"
-    except OSError as e:
-        return False, str(e)
 
 
 def _serve_mjpeg(h):
