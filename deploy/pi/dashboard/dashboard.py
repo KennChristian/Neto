@@ -986,7 +986,9 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, json.dumps({"error": "not found"}))
 
     def do_POST(self):
-        if supervaise_ui and self.path.partition("?")[0] in ("/api/ctl", "/api/entities"):
+        if supervaise_ui and self.path.partition("?")[0] in (
+                "/api/ctl", "/api/entities", "/api/face-photo",
+                "/api/face-calib"):
             try:
                 n = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(n) or b"{}")
