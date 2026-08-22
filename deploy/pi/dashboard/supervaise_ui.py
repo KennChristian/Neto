@@ -196,6 +196,15 @@ def control(action):
     if action == "mute":
         open(MUTE_TRIGGER, "w").close()
         return True, "mute trigger set (cuts current playback)"
+    if action == "avatar-voice-on":
+        open("/dev/shm/cj_avatar_audio", "w").close()
+        return True, "robot silenced — the avatar page is the voice"
+    if action == "avatar-voice-off":
+        try:
+            os.unlink("/dev/shm/cj_avatar_audio")
+        except OSError:
+            pass
+        return True, "robot speaker restored"
     if action == "force-listen":
         open(WAKE_TRIGGER, "w").close()
         return True, "listening activated"
@@ -1056,7 +1065,7 @@ button:hover{border-color:var(--gold)}
 <div id="bar">
   <button id="btnStart">Start</button>
   <button id="btnStop">Stop</button>
-  <button id="btnMute">avatar audio: OFF</button>
+  <button id="btnMute">voice: robot</button>
 </div>
 <div id="st">idle</div><div id="cap"></div></div><script>
 const $ = id => document.getElementById(id);
@@ -1126,11 +1135,20 @@ async function stop(){
 }
 $("btnStart").onclick = start;
 $("btnStop").onclick = stop;
-$("btnMute").onclick = () => {
+$("btnMute").onclick = async () => {
   avatarMuted = !avatarMuted;
   $("aud").muted = avatarMuted;
-  $("btnMute").textContent = "avatar audio: " + (avatarMuted ? "OFF" : "ON");
+  // unmuting the avatar silences the robot speaker (and vice versa) —
+  // one voice source at a time, so there is nothing to drift out of sync
+  await post("/api/ctl",
+             {action: avatarMuted ? "avatar-voice-off" : "avatar-voice-on"});
+  $("btnMute").textContent = "voice: " + (avatarMuted ? "robot" : "AVATAR");
 };
+addEventListener("beforeunload", () => {
+  if (!avatarMuted) navigator.sendBeacon("/api/ctl",
+    new Blob([JSON.stringify({key:KEY, action:"avatar-voice-off"})],
+             {type:"application/json"}));
+});
 
 // ---- feed the avatar our ElevenLabs sentence audio -----------------------
 function b64(u8){

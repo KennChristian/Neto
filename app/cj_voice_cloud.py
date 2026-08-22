@@ -683,12 +683,26 @@ class StopListener:
                   f"{self.peak:.3f} (threshold {self._stop.threshold})")
 
 
+AVATAR_AUDIO_FLAG = "/dev/shm/cj_avatar_audio"
+
+
 def _play_wav_listener(wav_path, listener):
     """aplay one streamed sentence while the answer-spanning StopListener
     watches the mic. Returns True if the stop word (or dashboard mute) cut
     the answer — including a fire in the gap BEFORE this sentence started."""
     if listener.fired:
         return True
+    if os.path.exists(AVATAR_AUDIO_FLAG):
+        # The /face-avatar page is the voice: stay silent here but hold the
+        # sentence's duration so pacing/captions/gestures stay in step and
+        # the speaking feed doesn't flood the avatar's buffer.
+        from stream_speak import wav_duration
+        end = time.monotonic() + (wav_duration(wav_path) or 2.0)
+        while time.monotonic() < end:
+            if listener.fired:
+                return True
+            time.sleep(0.1)
+        return False
     proc = subprocess.Popen(["aplay", "-q", wav_path])
     while proc.poll() is None:
         if listener.fired:
@@ -752,7 +766,12 @@ def speak(text, filler=None, stop=None):
             publish_speaking([text], text, done=False,
                              wav=publish_sentence_wav(wav_path),
                              dur=wav_duration(wav_path))
-        if stop is not None:
+        if os.path.exists(AVATAR_AUDIO_FLAG):
+            from stream_speak import wav_duration
+            end = time.monotonic() + (wav_duration(wav_path) or 2.0)
+            while time.monotonic() < end:  # avatar page is the voice
+                time.sleep(0.1)
+        elif stop is not None:
             interrupted = _play_wav_interruptible(wav_path, stop)
         else:
             r = subprocess.run(["aplay", "-q", wav_path])
