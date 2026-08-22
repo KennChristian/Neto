@@ -672,9 +672,9 @@ const $ = id => document.getElementById(id);
 const SVGNS = "http://www.w3.org/2000/svg";
 const Q = new URLSearchParams(location.search);
 const KEY = Q.get("key") || "";
-// lips were observed trailing the audio slightly — start the timeline this
-// many seconds early; tune per venue with ?sync=0.4 (bigger = lips earlier)
-const LEAD = isNaN(parseFloat(Q.get("sync"))) ? .25
+// per-venue lip-sync trim: ?sync=0.3 starts the timeline 0.3s early
+// (lips earlier), negative values delay it; default = no offset
+const LEAD = isNaN(parseFloat(Q.get("sync"))) ? 0
              : parseFloat(Q.get("sync"));
 let MODE = "vector", havePhoto = false, calib = null;
 
