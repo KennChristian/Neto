@@ -695,9 +695,17 @@ def _play_wav_listener(wav_path, listener):
     if os.path.exists(AVATAR_AUDIO_FLAG):
         # The /face-avatar page is the voice: stay silent here but hold the
         # sentence's duration so pacing/captions/gestures stay in step and
-        # the speaking feed doesn't flood the avatar's buffer.
+        # the speaking feed doesn't flood the avatar's buffer. The avatar
+        # starts ~CJ_AVATAR_LAG_S after the feed publish (fetch + upload +
+        # HeyGen buffering), so the FIRST sentence of an answer also waits
+        # that long — the robot's pacing then coincides with the avatar's
+        # actual speech (later sentences chain in the avatar's buffer).
         from stream_speak import wav_duration
-        end = time.monotonic() + (wav_duration(wav_path) or 2.0)
+        hold = wav_duration(wav_path) or 2.0
+        if not getattr(listener, "avatar_lagged", False):
+            listener.avatar_lagged = True
+            hold += float(os.environ.get("CJ_AVATAR_LAG_S", "0.8"))
+        end = time.monotonic() + hold
         while time.monotonic() < end:
             if listener.fired:
                 return True
@@ -768,7 +776,8 @@ def speak(text, filler=None, stop=None):
                              dur=wav_duration(wav_path))
         if os.path.exists(AVATAR_AUDIO_FLAG):
             from stream_speak import wav_duration
-            end = time.monotonic() + (wav_duration(wav_path) or 2.0)
+            end = time.monotonic() + (wav_duration(wav_path) or 2.0) \
+                + float(os.environ.get("CJ_AVATAR_LAG_S", "0.8"))
             while time.monotonic() < end:  # avatar page is the voice
                 time.sleep(0.1)
         elif stop is not None:
