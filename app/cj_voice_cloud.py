@@ -684,6 +684,26 @@ class StopListener:
 
 
 AVATAR_AUDIO_FLAG = "/dev/shm/cj_avatar_audio"
+AVATAR_LAG_FILE = "/dev/shm/cj_avatar_lag"
+
+
+def _avatar_mode():
+    """None (robot voice), "solo" (avatar only), or "sync" (both voices,
+    robot delayed to coincide with the avatar's measured start lag)."""
+    try:
+        with open(AVATAR_AUDIO_FLAG) as f:
+            return f.read().strip() or "solo"
+    except OSError:
+        return None
+
+
+def _avatar_lag():
+    """Avatar start lag in seconds: the /face-avatar page measures the real
+    publish→speak_started delay and reports it here; env default fallback."""
+    try:
+        return max(0.0, min(4.0, float(open(AVATAR_LAG_FILE).read())))
+    except (OSError, ValueError):
+        return float(os.environ.get("CJ_AVATAR_LAG_S", "0.8"))
 
 
 def _play_wav_listener(wav_path, listener):
@@ -692,20 +712,26 @@ def _play_wav_listener(wav_path, listener):
     the answer — including a fire in the gap BEFORE this sentence started."""
     if listener.fired:
         return True
-    if os.path.exists(AVATAR_AUDIO_FLAG):
-        # The /face-avatar page is the voice: stay silent here but hold the
-        # sentence's duration so pacing/captions/gestures stay in step and
-        # the speaking feed doesn't flood the avatar's buffer. The avatar
-        # starts ~CJ_AVATAR_LAG_S after the feed publish (fetch + upload +
-        # HeyGen buffering), so the FIRST sentence of an answer also waits
-        # that long — the robot's pacing then coincides with the avatar's
-        # actual speech (later sentences chain in the avatar's buffer).
-        from stream_speak import wav_duration
-        hold = wav_duration(wav_path) or 2.0
+    mode = _avatar_mode()
+    if mode:
+        # The avatar speaks this audio too. It starts ~lag after the feed
+        # publish (fetch + upload + HeyGen buffering), so the FIRST sentence
+        # of an answer waits that long here — the robot's pacing (and in
+        # "sync" mode its own audio) then coincides with the avatar; later
+        # sentences chain in the avatar's playback buffer.
+        lag = 0.0
         if not getattr(listener, "avatar_lagged", False):
             listener.avatar_lagged = True
-            hold += float(os.environ.get("CJ_AVATAR_LAG_S", "0.8"))
-        end = time.monotonic() + hold
+            lag = _avatar_lag()
+        end = time.monotonic() + lag
+        while time.monotonic() < end:
+            if listener.fired:
+                return True
+            time.sleep(0.05)
+    if mode == "solo":
+        # avatar is the only voice: silent hold for the sentence's duration
+        from stream_speak import wav_duration
+        end = time.monotonic() + (wav_duration(wav_path) or 2.0)
         while time.monotonic() < end:
             if listener.fired:
                 return True
@@ -774,11 +800,14 @@ def speak(text, filler=None, stop=None):
             publish_speaking([text], text, done=False,
                              wav=publish_sentence_wav(wav_path),
                              dur=wav_duration(wav_path))
-        if os.path.exists(AVATAR_AUDIO_FLAG):
+        _amode = _avatar_mode()
+        if _amode == "sync":
+            time.sleep(_avatar_lag())   # let the avatar catch up, then BOTH speak
+        if _amode == "solo":
             from stream_speak import wav_duration
             end = time.monotonic() + (wav_duration(wav_path) or 2.0) \
-                + float(os.environ.get("CJ_AVATAR_LAG_S", "0.8"))
-            while time.monotonic() < end:  # avatar page is the voice
+                + _avatar_lag()
+            while time.monotonic() < end:  # avatar page is the only voice
                 time.sleep(0.1)
         elif stop is not None:
             interrupted = _play_wav_interruptible(wav_path, stop)

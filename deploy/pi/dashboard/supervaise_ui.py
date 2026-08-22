@@ -195,8 +195,13 @@ def control(action):
         open(MUTE_TRIGGER, "w").close()
         return True, "mute trigger set (cuts current playback)"
     if action == "avatar-voice-on":
-        open("/dev/shm/cj_avatar_audio", "w").close()
+        with open("/dev/shm/cj_avatar_audio", "w") as f:
+            f.write("solo")
         return True, "robot silenced — the avatar page is the voice"
+    if action == "avatar-voice-sync":
+        with open("/dev/shm/cj_avatar_audio", "w") as f:
+            f.write("sync")
+        return True, "both voices — robot delayed to match the avatar"
     if action == "avatar-voice-off":
         try:
             os.unlink("/dev/shm/cj_avatar_audio")
@@ -587,6 +592,7 @@ const $ = id => document.getElementById(id);
 const KEY = new URLSearchParams(location.search).get("key") || "";
 let room = null, ws = null, ready = false, sessTok = null;
 let avatarMuted = true, lastStart = 0, keepTimer = null;
+let pendingLagT0 = null, lagEma = null;
 $("aud").muted = true;
 
 function st(msg){ $("st").textContent = msg; }
@@ -627,8 +633,20 @@ async function start(){
          (m.state === "connected" ? " — ask the robot something" : ""));
       const was = ready;
       ready = (m.state === "connected");
-      // focusing on the avatar: it owns the voice as soon as it can speak
-      if (ready && !was) setVoice(true);
+      // default once connected: both voices, robot delayed to coincide
+      if (ready && !was) setVoice("sync");
+    }
+    if (m.type === "agent.speak_started" && pendingLagT0){
+      // closed-loop sync: how long after the feed publish did the avatar
+      // actually start speaking? Report the smoothed value to the Pi —
+      // the robot delays its own audio by exactly this much.
+      const lag = Date.now()/1000 - pendingLagT0;
+      pendingLagT0 = null;
+      if (lag > 0 && lag < 5){
+        lagEma = lagEma === null ? lag : lagEma*.6 + lag*.4;
+        post("/api/avatar-lag", {lag: +lagEma.toFixed(2)});
+        st("speaking — avatar start lag " + lagEma.toFixed(2) + "s (auto-sync)");
+      }
     }
   };
   ws.onclose = () => { ready = false;
@@ -646,7 +664,7 @@ function stopKeep(){ if (keepTimer){ clearInterval(keepTimer);
 
 async function stop(){
   stopKeep(); ready = false;
-  await setVoice(false);          // hand the voice back to the robot
+  await setVoice("robot");        // hand the voice back to the robot
   try{ if (ws) ws.close(); }catch(e){}
   try{ if (room) room.disconnect(); }catch(e){}
   if (sessTok) await post("/api/avatar-stop", {session_token: sessTok});
@@ -654,16 +672,20 @@ async function stop(){
 }
 $("btnStart").onclick = start;
 $("btnStop").onclick = stop;
-async function setVoice(avatar){
-  // one voice source at a time — the avatar speaking silences the robot
-  // speaker (and vice versa), so there is nothing to drift out of sync
-  avatarMuted = !avatar;
+const MODES = ["sync", "avatar", "robot"];
+let voiceMode = "robot";
+async function setVoice(mode){
+  voiceMode = mode;
+  avatarMuted = (mode === "robot");
   $("aud").muted = avatarMuted;
-  await post("/api/ctl",
-             {action: avatar ? "avatar-voice-on" : "avatar-voice-off"});
-  $("btnMute").textContent = "voice: " + (avatar ? "AVATAR" : "robot");
+  const act = mode === "robot" ? "avatar-voice-off"
+            : mode === "avatar" ? "avatar-voice-on" : "avatar-voice-sync";
+  await post("/api/ctl", {action: act});
+  $("btnMute").textContent = "voice: " + (mode === "robot" ? "robot"
+    : mode === "avatar" ? "AVATAR only" : "BOTH synced");
 }
-$("btnMute").onclick = () => setVoice(avatarMuted);
+$("btnMute").onclick = () => setVoice(
+  MODES[(MODES.indexOf(voiceMode) + 1) % MODES.length]);
 addEventListener("beforeunload", () => {
   if (!avatarMuted) navigator.sendBeacon("/api/ctl",
     new Blob([JSON.stringify({key:KEY, action:"avatar-voice-off"})],
@@ -715,9 +737,16 @@ async function poll(){
     if (sp.current && !sp.done){
       const key = sp.ts + "|" + sp.current;
       if (key !== sentKey){
+        const wasIdle = sentKey === "";
         sentKey = key;
         $("cap").textContent = sp.current;
-        if (sp.wav) speakWav(sp.wav);
+        if (sp.wav){
+          // measure start lag only on an answer's FIRST sentence with the
+          // session already live (a cold session start isn't speak lag)
+          if (wasIdle && ready && stt.ts)
+            pendingLagT0 = sp.ts + (Date.now()/1000 - stt.ts);
+          speakWav(sp.wav);
+        }
       }
     } else if (sp.done){
       if (sp.interrupted && ws && ws.readyState === 1)
@@ -844,6 +873,19 @@ def handle_post(h, path, body):
         else:
             ok, out = avatar_stop(body.get("session_token"))
             h._send(200, json.dumps({"ok": ok, "output": out}))
+    elif path == "/api/avatar-lag":
+        # measured publish→speak_started delay from the /face-avatar page;
+        # the robot delays its own audio by this much in "sync" voice mode
+        if not _authed({}, body):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            try:
+                lag = max(0.0, min(4.0, float(body.get("lag"))))
+                with open("/dev/shm/cj_avatar_lag", "w") as f:
+                    f.write(f"{lag:.2f}")
+                h._send(200, json.dumps({"ok": True, "output": lag}))
+            except (TypeError, ValueError):
+                h._send(200, json.dumps({"ok": False, "output": "bad lag"}))
     else:
         return False
     return True
