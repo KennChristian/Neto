@@ -379,9 +379,11 @@ img#cam{width:100%;border-radius:8px;background:#000;min-height:120px}
   <table id="wake"><tr><th>time</th><th>score</th></tr></table></div>
 <div class="card"><h2>Current turn</h2><div id="turn" class="dim">no turn yet</div>
   <h2 style="margin-top:10px">Stage latency</h2><div id="lat" class="dim">&mdash;</div></div>
+<div class="card"><h2>Grounding documents <span class="dim">(composer context, last turn)</span></h2>
+  <div id="docs" class="dim" style="max-height:260px;overflow:auto">no turn yet</div></div>
 <div class="card" style="grid-column:1/-1"><h2>Recent turns (tracking)</h2>
   <div style="overflow-x:auto"><table id="hist"><tr><th>time</th><th>question</th><th>theme</th>
-  <th>tokens</th><th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr></table></div></div>
+  <th>docs</th><th>tokens</th><th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr></table></div></div>
 <div class="card"><h2>Conversation (raw vs corrected)</h2>
   <table id="conv"><tr><th>who</th><th>text</th></tr></table></div>
 <div class="card"><h2>NER corrections (P0)</h2>
@@ -437,6 +439,15 @@ async function poll(){try{
       ?'<br><b>fidelity:</b> <span class="raw">'+esc(m.fidelity_flags.join(', '))+'</span> &mdash; '+
         esc((m.fidelity_reasoning||'').slice(0,120))
       :'<br><b>fidelity:</b> <span class="fix">clean</span>'):'');
+    $('docs').innerHTML=(m.docs&&m.docs.length)?m.docs.map(d=>
+      '<div style="margin-bottom:8px'+(d.dropped_for_budget?';opacity:.45':'')+'">'+
+      '<b>'+esc(d.title||d.doc_id)+'</b>'+
+      (d.dropped_for_budget?' <span class="raw">dropped (token budget)</span>':'')+
+      '<br><span class="mono dim">'+esc(d.doc_id)+(d.date?' &middot; '+esc(d.date):'')+
+      (d.theme_label?' &middot; '+esc(d.theme_label):'')+'</span>'+
+      (d.summary?'<br><span class="dim">'+esc(d.summary)+'</span>':'')+'</div>').join('')
+      :(m.docs?'<span class="dim">none (canned / out-of-topic / meta turn)</span>'
+        :'<span class="dim">no doc data (turn predates this feature)</span>');
     let lat='STT '+m.stt_s+'s'+bar(m.stt_s,10)+'Compose '+m.compose_s+'s'+bar(m.compose_s,20);
     if(sp&&sp.question===m.question)
       lat+=(sp.streamed?'First audio '+(sp.first_audio_s!=null?sp.first_audio_s:'?')+'s'+bar(sp.first_audio_s||0,15)
@@ -445,15 +456,18 @@ async function poll(){try{
     $('lat').innerHTML=lat;}
   const byQ={};
   (s.metas||[]).forEach(x=>{const k=x.question||'';byQ[k]=Object.assign(byQ[k]||{},x);});
-  $('hist').innerHTML='<tr><th>time</th><th>question</th><th>theme</th><th>tokens</th>'+
+  $('hist').innerHTML='<tr><th>time</th><th>question</th><th>theme</th><th>docs</th><th>tokens</th>'+
     '<th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr>'+
     Object.values(byQ).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12).map(x=>{
       const sp2=x.streamed?('first audio '+(x.first_audio_s!=null?x.first_audio_s+'s':'?'))
         :(x.synth_s!=null?('synth '+x.synth_s+'s / play '+x.play_s+'s'):'');
       const fl=[x.streamed?'stream':'',x.dynamic_tokens?'dyn-tok':'',x.interrupted?'CUT':'',
         (x.fidelity_flags&&x.fidelity_flags.length)?('FID:'+x.fidelity_flags.join(',')):''].filter(Boolean).join(' ');
+      const dks=(x.docs||[]).filter(d=>!d.dropped_for_budget).map(d=>d.doc_id).join(', ');
       return '<tr><td>'+(x.ts?new Date(1000*x.ts).toLocaleTimeString():'')+'</td><td>'+
-        esc((x.question||'').slice(0,60))+'</td><td>'+esc(x.theme||'')+'</td><td>'+esc(x.token_budget||'')+
+        esc((x.question||'').slice(0,60))+'</td><td>'+esc(x.theme||'')+
+        '</td><td title="'+esc(dks)+'">'+esc(dks.slice(0,48)+(dks.length>48?'\\u2026':''))+
+        '</td><td>'+esc(x.token_budget||'')+
         '</td><td>'+(x.cost_usd!=null?(x.cost_usd?(100*x.cost_usd).toFixed(2)+'¢':'free'):'')+
         '</td><td>'+esc(x.stt_s!=null?x.stt_s:'')+'</td><td>'+esc(x.compose_s!=null?x.compose_s:'')+
         '</td><td>'+esc(sp2)+'</td><td'+(x.interrupted?' class="raw"':'')+'>'+esc(fl)+'</td></tr>';}).join('');

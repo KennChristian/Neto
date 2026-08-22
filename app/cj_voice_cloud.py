@@ -107,11 +107,21 @@ def prewarm_connections(client):
             root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             if root not in sys.path:              # voice/ pkg lives at repo root
                 sys.path.insert(0, root)
+            import requests                       # dep of voice.speak, present
             import voice.speak                    # noqa: F401 — register module
             mod = sys.modules["voice.speak"]      # voice.speak attr is the FUNCTION
-            mod._session.get("https://api.elevenlabs.io/v1/user",
-                             headers={"xi-api-key": mod.config.ELEVEN_API_KEY},
-                             timeout=6)
+            for attempt in (0, 1):
+                try:
+                    mod._session.get("https://api.elevenlabs.io/v1/user",
+                                     headers={"xi-api-key": mod.config.ELEVEN_API_KEY},
+                                     timeout=6)
+                    break
+                except requests.exceptions.ConnectionError:
+                    # After a long idle the pooled keep-alive socket is dead
+                    # (server closed it); the retry opens a fresh TLS
+                    # connection — which is the warm-up we came for.
+                    if attempt:
+                        raise
         except Exception as e:
             print(f"[prewarm] elevenlabs skipped: {type(e).__name__}")
 
@@ -578,7 +588,7 @@ def _play_wav_interruptible(wav_path, stop):
     if playback was cut short by the stop word, False if it played out.
     Any listener failure degrades to normal (uninterruptible) playback."""
     proc = subprocess.Popen(["aplay", "-q", wav_path])
-    fired = 0.0
+    fired = peak = 0.0
     try:
         model = stop.detector._load()
         model.reset()
@@ -594,18 +604,99 @@ def _play_wav_interruptible(wav_path, stop):
                     break
                 frame, _ = stream.read(frame_len)
                 score = float(max(model.predict(frame[:, 0]).values()))
+                peak = max(peak, score)
                 _publish_wake(score, fired=score >= stop.threshold)
                 if score >= stop.threshold:
                     fired = score
                     proc.terminate()
                     break
         model.reset()   # don't leak playback audio into the next arming
+        if not fired:   # tuning evidence: what did the mic actually score?
+            print(f"[stop] answer played out — peak mid-answer score "
+                  f"{peak:.3f} (threshold {stop.threshold})")
     except Exception as e:
         print(f"[stop] barge-in listener failed ({type(e).__name__}: {e}) "
               "— playback continues uninterruptible")
     r = proc.wait()
     if fired:
         print(f"[stop] wake phrase during playback (score {fired:.3f}) — answer cut")
+        return True
+    if r != 0:
+        print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
+    return False
+
+
+class StopListener:
+    """Answer-spanning barge-in listener for the STREAMING path. The old
+    per-sentence `_play_wav_interruptible` re-opened the mic and reset the
+    openWakeWord model for EVERY sentence — the model needs ~1-2 s of audio
+    context after a reset before scores mean anything, and the gaps between
+    sentences were deaf, so a "Cee-Jap" said there was simply missed. This
+    holds ONE mic stream + ONE warmed-up model across the whole answer and
+    keeps scoring through the inter-sentence gaps."""
+
+    def __init__(self, stop):
+        self._stop = stop
+        self.fired = 0.0     # score on fire; -1.0 = dashboard mute
+        self.peak = 0.0
+        self.failed = False
+        self._closing = threading.Event()
+        self._thread = threading.Thread(target=self._run, daemon=True)
+        self._thread.start()
+
+    def _run(self):
+        try:
+            model = self._stop.detector._load()
+            model.reset()
+            try:
+                frame_len = 1280  # 80 ms at 16 kHz, openWakeWord's frame
+                with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
+                                    blocksize=frame_len) as stream:
+                    while not self._closing.is_set():
+                        if os.path.exists(MUTE_TRIGGER):  # P2.5 operator mute
+                            os.unlink(MUTE_TRIGGER)
+                            print("[stop] muted from the maintenance dashboard "
+                                  "— answer cut")
+                            self.fired = -1.0
+                            return
+                        frame, _ = stream.read(frame_len)
+                        score = float(max(model.predict(frame[:, 0]).values()))
+                        self.peak = max(self.peak, score)
+                        _publish_wake(score, fired=score >= self._stop.threshold)
+                        if score >= self._stop.threshold:
+                            self.fired = score
+                            print(f"[stop] wake phrase during playback "
+                                  f"(score {score:.3f}) — answer cut")
+                            return
+            finally:
+                model.reset()  # don't leak playback audio into the next arming
+        except Exception as e:
+            self.failed = True
+            print(f"[stop] barge-in listener failed ({type(e).__name__}: {e}) "
+                  "— playback continues uninterruptible")
+
+    def close(self):
+        self._closing.set()
+        self._thread.join(timeout=2.0)
+        if not self.fired and not self.failed:
+            print(f"[stop] answer played out — peak mid-answer score "
+                  f"{self.peak:.3f} (threshold {self._stop.threshold})")
+
+
+def _play_wav_listener(wav_path, listener):
+    """aplay one streamed sentence while the answer-spanning StopListener
+    watches the mic. Returns True if the stop word (or dashboard mute) cut
+    the answer — including a fire in the gap BEFORE this sentence started."""
+    if listener.fired:
+        return True
+    proc = subprocess.Popen(["aplay", "-q", wav_path])
+    while proc.poll() is None:
+        if listener.fired:
+            proc.terminate()
+            break
+        time.sleep(0.05)
+    r = proc.wait()
+    if listener.fired:
         return True
     if r != 0:
         print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
@@ -689,16 +780,20 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         print(f"[dynfiller] unavailable ({e})")
     abort, first_audio = threading.Event(), threading.Event()
     result, done = {}, threading.Event()
+    listener_box = {}   # holds the answer-spanning StopListener once armed
 
     def _play(wav):
-        if stop is not None:
-            return _play_wav_interruptible(wav, stop)
+        listener = listener_box.get("l")
+        if listener is not None:
+            return _play_wav_listener(wav, listener)
         r = subprocess.run(["aplay", "-q", wav])
         if r.returncode != 0:
             print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
         return False
 
     def _on_first():
+        if stop is not None:    # arm BEFORE filler.stop(): the model's ~1-2 s
+            listener_box["l"] = StopListener(stop)  # warm-up overlaps the tail
         filler.stop()          # waits for the current clip, then we speak
         gestures.start("talk")
         first_audio.set()
@@ -720,6 +815,11 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         finally:
             done.set()
 
+    try:    # canned/aborted turns never call build_context — don't show the
+        import cj_chat as _cjc     # previous turn's grounding docs for them
+        _cjc.LAST_CONTEXT_DOCS[:] = []
+    except Exception:
+        pass
     threading.Thread(target=_worker, daemon=True).start()
     try:
         while not done.wait(0.25):
@@ -764,7 +864,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         try:  # P2.5 maintenance feed
             from cj_chat import (TOKEN_BUDGET_BY_DIM, TOKEN_BUDGET_DIM_DEFAULT,
                                  DYNAMIC_TOKENS_ENABLED, COMPOSER_MAX_TOKENS,
-                                 _scale_budget)
+                                 LAST_CONTEXT_DOCS, _scale_budget)
             topic = (routing or {}).get("primary_topic")
             theme = artifacts.topics.get(topic, {}).get("theme_anchor", "")
             # keys are TOPICS since the 2026-08-20 refactor (theme was stale here)
@@ -777,6 +877,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                 "confidence": (routing or {}).get("confidence"),
                 "token_budget": budget, "dynamic_tokens": DYNAMIC_TOKENS_ENABLED,
                 "stt_s": stt_s, "compose_s": out.get("compose_s"),
+                "docs": list(LAST_CONTEXT_DOCS),
                 "streamed": True, "first_audio_s": out.get("first_audio_s"),
                 **_cost_meta(cost0), **_fidelity_meta(out.get("fidelity")),
             })
@@ -796,6 +897,9 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         return True
     finally:
         filler.stop()
+        listener = listener_box.get("l")
+        if listener is not None:
+            listener.close()
 
 
 _ACK_DIR = os.path.expanduser("~/fillers_ack")
@@ -1009,7 +1113,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
             try:  # P2.5 maintenance feed: routing + budget + stage latency
                 from cj_chat import (TOKEN_BUDGET_BY_DIM, TOKEN_BUDGET_DIM_DEFAULT,
                                      DYNAMIC_TOKENS_ENABLED, COMPOSER_MAX_TOKENS,
-                                     _scale_budget)
+                                     LAST_CONTEXT_DOCS, _scale_budget)
                 topic = (routing or {}).get("primary_topic")
                 theme = artifacts.topics.get(topic, {}).get("theme_anchor", "")
                 budget = _scale_budget(
@@ -1021,6 +1125,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
                     "confidence": (routing or {}).get("confidence"),
                     "token_budget": budget, "dynamic_tokens": DYNAMIC_TOKENS_ENABLED,
                     "stt_s": stt_s, "compose_s": compose_s,
+                    "docs": list(LAST_CONTEXT_DOCS),
                     **_cost_meta(cost0),
                 })
             except Exception as e:

@@ -816,6 +816,13 @@ def _trim_doc(raw: dict) -> dict:
     }
 
 
+# What the composer last saw: the source docs that survived the budget trim
+# (and the ones dropped by it), refreshed by every build_context call. Read
+# by cj_voice_cloud's turn-meta publish so the maintenance dashboard can show
+# the grounding documents per turn.
+LAST_CONTEXT_DOCS: list[dict] = []
+
+
 def build_context(
     routing: dict,
     artifacts: CorpusArtifacts,
@@ -867,8 +874,18 @@ def build_context(
             + "\n</source_documents>"
         )
 
+    picked = list(source_docs)
     while source_docs and _approx_tokens(_assemble(source_docs)) > token_budget:
         source_docs.pop()  # drop the lowest-priority remaining doc
+
+    kept = {d["doc_id"] for d in source_docs}
+    LAST_CONTEXT_DOCS[:] = [
+        {"doc_id": d["doc_id"], "title": d.get("title"), "date": d.get("date"),
+         "theme_label": d.get("theme_label"),
+         "summary": (d.get("one_paragraph_summary") or "")[:300],
+         "dropped_for_budget": d["doc_id"] not in kept}
+        for d in picked
+    ]
 
     return _assemble(source_docs)
 
