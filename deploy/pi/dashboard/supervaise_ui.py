@@ -544,119 +544,265 @@ FACE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
   font-family:Georgia,'Times New Roman',serif}
 #stage{display:flex;flex-direction:column;align-items:center;
-  justify-content:center;height:100vh;gap:2vh}
-#face{width:min(72vw,64vh);transition:transform .5s ease}
-#cap{min-height:12vh;max-width:88vw;text-align:center;font-size:4.2vh;
+  justify-content:center;height:100vh;gap:1vh}
+#face{width:min(60vw,66vh)}
+#cap{min-height:13vh;max-width:90vw;text-align:center;font-size:4vh;
   line-height:1.35;color:var(--dim)}
 #cap b{color:var(--gold);font-weight:normal}
 </style></head><body><div id="stage">
-<svg id="face" viewBox="-160 -110 320 240">
+<svg id="face" viewBox="-170 -200 340 420">
+<defs>
+  <radialGradient id="gskin" cx="50%" cy="38%" r="75%">
+    <stop offset="0%" stop-color="#c9a081"/>
+    <stop offset="70%" stop-color="#b08663"/>
+    <stop offset="100%" stop-color="#96694c"/></radialGradient>
+  <linearGradient id="ghair" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#dcdcdc"/>
+    <stop offset="100%" stop-color="#93989e"/></linearGradient>
+  <radialGradient id="giris" cx="40%" cy="35%" r="70%">
+    <stop offset="0%" stop-color="#6b442a"/>
+    <stop offset="100%" stop-color="#2a180d"/></radialGradient>
+</defs>
+<g id="headG">
+  <ellipse cx="0" cy="168" rx="128" ry="66" fill="#232830"/>
+  <path d="M -30 96 L 30 96 L 26 140 L -26 140 Z" fill="url(#gskin)"/>
+  <path d="M -34 128 L 0 150 L 34 128 L 60 200 L -60 200 Z" fill="#f0ede6"/>
+  <path d="M -6 138 L 6 138 L 10 176 L 0 196 L -10 176 Z" fill="#7a1f2b"/>
   <g id="head">
-    <g id="browL"><rect x="-92" y="-72" width="52" height="9" rx="4.5"
-        fill="#e6edf3"/></g>
-    <g id="browR"><rect x="40" y="-72" width="52" height="9" rx="4.5"
-        fill="#e6edf3"/></g>
-    <g id="eyeL" transform="translate(-66,-30)">
-      <ellipse id="eLw" rx="30" ry="34" fill="#e6edf3"/>
-      <circle id="eLp" r="12" fill="#0d1117"/></g>
-    <g id="eyeR" transform="translate(66,-30)">
-      <ellipse id="eRw" rx="30" ry="34" fill="#e6edf3"/>
-      <circle id="eRp" r="12" fill="#0d1117"/></g>
-    <path id="mouth" fill="#c9a227" stroke="#c9a227" stroke-width="6"
-        stroke-linejoin="round" stroke-linecap="round"
-        d="M -60 60 Q 0 80 60 60 Q 0 80 -60 60"/>
+    <ellipse cx="-104" cy="-22" rx="14" ry="23" fill="url(#gskin)"/>
+    <ellipse cx="104" cy="-22" rx="14" ry="23" fill="url(#gskin)"/>
+    <path d="M 0 -148 C 88 -148 104 -76 99 -12 C 95 52 58 106 0 114
+             C -58 106 -95 52 -99 -12 C -104 -76 -88 -148 0 -148 Z"
+          fill="url(#gskin)"/>
+    <path d="M -99 -38 C -112 -132 -58 -172 0 -172 C 58 -172 112 -132 99 -38
+             C 94 -88 66 -122 0 -122 C -66 -122 -94 -88 -99 -38 Z"
+          fill="url(#ghair)"/>
+    <path d="M -46 -96 Q 0 -104 46 -96" stroke="rgba(60,35,20,.14)"
+          stroke-width="2.5" fill="none"/>
+    <path d="M -40 -85 Q 0 -92 40 -85" stroke="rgba(60,35,20,.10)"
+          stroke-width="2" fill="none"/>
+    <g id="browL"><path d="M -70 -64 Q -48 -74 -25 -65"
+        stroke="#8b8f94" stroke-width="7.5" fill="none"
+        stroke-linecap="round"/></g>
+    <g id="browR"><path d="M 25 -65 Q 48 -74 70 -64"
+        stroke="#8b8f94" stroke-width="7.5" fill="none"
+        stroke-linecap="round"/></g>
+    <g id="eyeL" transform="translate(-45,-38)">
+      <ellipse rx="21" ry="11.5" fill="#f5f1ea"/>
+      <g id="gazeL"><circle r="8.5" fill="url(#giris)"/>
+        <circle r="3.6" fill="#140c06"/>
+        <circle cx="2.6" cy="-2.6" r="1.7" fill="#fff" opacity=".85"/></g>
+      <path id="lidLtop" fill="url(#gskin)"/>
+      <path id="lidLbot" fill="url(#gskin)"/>
+      <ellipse rx="21" ry="11.5" fill="none"
+        stroke="rgba(60,35,20,.35)" stroke-width="1.2"/>
+    </g>
+    <g id="eyeR" transform="translate(45,-38)">
+      <ellipse rx="21" ry="11.5" fill="#f5f1ea"/>
+      <g id="gazeR"><circle r="8.5" fill="url(#giris)"/>
+        <circle r="3.6" fill="#140c06"/>
+        <circle cx="2.6" cy="-2.6" r="1.7" fill="#fff" opacity=".85"/></g>
+      <path id="lidRtop" fill="url(#gskin)"/>
+      <path id="lidRbot" fill="url(#gskin)"/>
+      <ellipse rx="21" ry="11.5" fill="none"
+        stroke="rgba(60,35,20,.35)" stroke-width="1.2"/>
+    </g>
+    <g stroke="#383c44" stroke-width="3.2" fill="none" opacity=".92">
+      <rect x="-74" y="-59" width="58" height="42" rx="13"/>
+      <rect x="16" y="-59" width="58" height="42" rx="13"/>
+      <path d="M -16 -45 Q 0 -53 16 -45"/>
+      <path d="M -74 -45 L -101 -34"/><path d="M 74 -45 L 101 -34"/>
+    </g>
+    <path d="M -4 -28 C -8 -6 -13 4 -15 12 M -15 12 Q -7 19 0 17 Q 7 19 15 12
+             M 4 -28 C 8 -6 13 4 15 12"
+          stroke="rgba(85,50,30,.40)" stroke-width="2.3" fill="none"
+          stroke-linecap="round"/>
+    <path d="M -20 22 Q -30 40 -34 50 M 20 22 Q 30 40 34 50"
+          stroke="rgba(0,0,0,.08)" stroke-width="2.5" fill="none"/>
+    <g id="mouthG" transform="translate(0,55)">
+      <clipPath id="mclip"><path id="mclipP"/></clipPath>
+      <path id="mInner" fill="#4e1f1c"/>
+      <g clip-path="url(#mclip)">
+        <rect id="teeth" x="-33" y="-16" width="66" height="15" rx="3"
+              fill="#efe9dc"/>
+        <ellipse id="tongue" cx="0" cy="16" rx="19" ry="10" fill="#9a4a42"/>
+      </g>
+      <path id="lipTop" fill="#a96b58"/>
+      <path id="lipBot" fill="#b87862"/>
+    </g>
+    <path d="M -14 86 Q 0 92 14 86" stroke="rgba(0,0,0,.10)"
+          stroke-width="2.5" fill="none"/>
   </g>
+</g>
 </svg><div id="cap"></div></div><script>
-// Emotion presets: brow lift/tilt, eye squeeze, mouth corner curve, tilt.
+const $ = id => document.getElementById(id);
 const EMO = {
-  neutral: {brow:0, tiltL:0, tiltR:0, eye:1,   smile:14, head:0},
-  warm:    {brow:-3, tiltL:0, tiltR:0, eye:.8, smile:26, head:0},
-  solemn:  {brow:4,  tiltL:12, tiltR:-12, eye:.72, smile:-8, head:0},
-  emphatic:{brow:-10, tiltL:0, tiltR:0, eye:1.18, smile:16, head:0},
-  question:{brow:-2, tiltL:-14, tiltR:0, eye:1.02, smile:8, head:-4},
-  amused:  {brow:-6, tiltL:0, tiltR:0, eye:.3,  smile:32, head:3},
+  neutral: {brow:0, tiltL:0, tiltR:0, squint:.12, smile:5,  head:0},
+  warm:    {brow:1, tiltL:0, tiltR:0, squint:.30, smile:11, head:0},
+  solemn:  {brow:5, tiltL:8, tiltR:-8, squint:.28, smile:-4, head:0},
+  emphatic:{brow:-7, tiltL:0, tiltR:0, squint:.02, smile:6, head:0},
+  question:{brow:-3, tiltL:-10, tiltR:2, squint:.10, smile:4, head:-3.5},
+  amused:  {brow:-2, tiltL:0, tiltR:0, squint:.55, smile:14, head:2.5},
 };
 let emo = EMO.neutral, emoName = "neutral";
-let blink = 1;                 // 1 = open, 0 = shut
-let mouthOpen = 0, mouthTarget = 0;
-let words = [], wordIdx = -1, sentKey = "", speakUntil = 0, wordTimer = null;
-const $ = id => document.getElementById(id);
 
 function setEmotion(name){
   emoName = name in EMO ? name : "neutral";
   emo = EMO[emoName];
-  $("face").style.transform = `rotate(${emo.head}deg)`;
-}
-function startSentence(text){
-  words = text.split(/\\s+/).filter(Boolean);
-  wordIdx = -1;
-  if (wordTimer) clearInterval(wordTimer);
-  // ~2.4 words/s matches the composed speaking pace
-  const per = 1000/2.4;
-  speakUntil = Date.now() + words.length*per + 800;
-  wordTimer = setInterval(()=>{
-    wordIdx++;
-    if (wordIdx >= words.length){ clearInterval(wordTimer); wordTimer=null;
-      mouthTarget = 0; renderCap(); return; }
-    // longer words open the mouth wider, tiny ones barely move it
-    mouthTarget = Math.min(1, .3 + words[wordIdx].length*.09);
-    setTimeout(()=>{ if(Date.now()<speakUntil) mouthTarget = .08; }, per*.6);
-    renderCap();
-  }, per);
-}
-function renderCap(){
-  const cap = $("cap");
-  if (!words.length){ cap.innerHTML=""; return; }
-  cap.innerHTML = words.map((w,i)=> i<=wordIdx?`<b>${w}</b>`:w).join(" ");
-}
-// ---- animation loop: mouth easing, blinks, idle pupil wander -------------
-let px=0, py=0, ptx=0, pty=0, nextBlink=Date.now()+2500, blinkPhase=0;
-function tick(){
-  mouthOpen += (mouthTarget-mouthOpen)*.35;
-  const o = mouthOpen*34, s = emo.smile;
-  $("mouth").setAttribute("d",
-    `M -60 60 Q 0 ${60+s-o*.55} 60 60 Q 0 ${60+s+o} -60 60`);
-  const now = Date.now();
-  if (blinkPhase===0 && now>nextBlink){ blinkPhase=1; }
-  if (blinkPhase===1){ blink=Math.max(0,blink-.34);
-    if(blink===0) blinkPhase=2; }
-  else if (blinkPhase===2){ blink=Math.min(1,blink+.25);
-    if(blink===1){ blinkPhase=0; nextBlink=now+2200+Math.random()*3800; } }
-  const ry = 34*emo.eye*blink;
-  $("eLw").setAttribute("ry", Math.max(2.5, ry));
-  $("eRw").setAttribute("ry", Math.max(2.5, ry));
   $("browL").setAttribute("transform",
-    `translate(0,${emo.brow}) rotate(${emo.tiltL},-66,-68)`);
+    "translate(0," + emo.brow + ") rotate(" + emo.tiltL + ",-25,-65)");
   $("browR").setAttribute("transform",
-    `translate(0,${emo.brow}) rotate(${emo.tiltR},66,-68)`);
-  // pupils: track nothing — wander gently when idle, center when speaking
-  if (now>speakUntil && Math.random()<.006){ ptx=(Math.random()-.5)*14;
-    pty=(Math.random()-.5)*8; }
-  if (now<=speakUntil){ ptx=0; pty=2; }
-  px += (ptx-px)*.06; py += (pty-py)*.06;
-  $("eLp").setAttribute("cx",px); $("eLp").setAttribute("cy",py);
-  $("eRp").setAttribute("cx",px); $("eRp").setAttribute("cy",py);
+    "translate(0," + emo.brow + ") rotate(" + emo.tiltR + ",25,-65)");
+}
+
+// ---- viseme lip sync -----------------------------------------------------
+function visemeOf(ch){
+  ch = ch.toLowerCase();
+  if ("mbp".indexOf(ch) >= 0) return {o:.03, w:1};
+  if ("fv".indexOf(ch) >= 0)  return {o:.13, w:1.05};
+  if ("ouw".indexOf(ch) >= 0) return {o:.52, w:.62};
+  if (ch === "a")             return {o:.85, w:.98};
+  if (ch === "e")             return {o:.45, w:1.10};
+  if ("iy".indexOf(ch) >= 0)  return {o:.30, w:1.14};
+  if ("sz".indexOf(ch) >= 0)  return {o:.12, w:1.08};
+  return {o:.22, w:.95};
+}
+let timeline = [], tlEnd = 0, audioStart = -1;
+let capWords = [], capTimes = [];
+function buildTimeline(words){
+  timeline = []; capWords = []; capTimes = [];
+  let prevEnd = 0;
+  for (const wse of words){
+    const w = wse[0], s = wse[1], e = wse[2];
+    capWords.push(w); capTimes.push(s);
+    if (s > prevEnd + .03) timeline.push({t:prevEnd, o:.05, w:1});
+    const L = Math.max(1, w.length), dur = (e - s) / L;
+    for (let i = 0; i < L; i++){
+      const v = visemeOf(w[i]);
+      timeline.push({t:s + i*dur, o:v.o, w:v.w});
+    }
+    prevEnd = e;
+  }
+  timeline.push({t:prevEnd, o:0, w:1});
+  tlEnd = prevEnd;
+}
+function estimateWords(text){
+  const ws = text.split(" ").filter(Boolean);
+  let t = .12; const out = [];
+  for (const w of ws){
+    const d = .09 + .052*w.length;
+    out.push([w, +t.toFixed(3), +(t+d).toFixed(3)]);
+    t += d + .055;
+  }
+  return out;
+}
+function targetAt(tt){
+  if (!timeline.length || tt < 0 || tt > tlEnd + .4) return {o:0, w:1};
+  let cur = {o:0, w:1};
+  for (const k of timeline){ if (k.t <= tt) cur = k; else break; }
+  return cur;
+}
+function renderCap(tt){
+  if (!capWords.length){ $("cap").innerHTML = ""; return; }
+  let html = "";
+  for (let i = 0; i < capWords.length; i++)
+    html += (capTimes[i] <= tt ? "<b>"+capWords[i]+"</b>" : capWords[i]) + " ";
+  $("cap").innerHTML = html;
+}
+
+// ---- geometry ------------------------------------------------------------
+function setMouth(o, wdt, s){
+  const cx = 36*wdt, cy = -s*.55;
+  const top = -2 - o*7, bot = 2 + o*30;
+  const inner = "M " + (-cx) + " " + cy + " Q 0 " + top + " " + cx + " " + cy
+              + " Q 0 " + bot + " " + (-cx) + " " + cy + " Z";
+  $("mInner").setAttribute("d", inner);
+  $("mclipP").setAttribute("d", inner);
+  $("teeth").setAttribute("y", top - 2);
+  $("tongue").setAttribute("cy", bot - 4);
+  $("lipTop").setAttribute("d",
+    "M " + (-cx-5) + " " + cy + " Q 0 " + (top-8) + " " + (cx+5) + " " + cy
+    + " Q 0 " + (top+2) + " " + (-cx-5) + " " + cy + " Z");
+  $("lipBot").setAttribute("d",
+    "M " + (-cx-5) + " " + cy + " Q 0 " + (bot+9) + " " + (cx+5) + " " + cy
+    + " Q 0 " + (bot-1) + " " + (-cx-5) + " " + cy + " Z");
+}
+function setLids(side, closed, squint){
+  const topY = -12 + Math.min(1, closed)*25;
+  $("lid"+side+"top").setAttribute("d",
+    "M -22 -16 L 22 -16 L 22 -12 Q 0 " + topY + " -22 -12 Z");
+  const botY = 12 - squint*13;
+  $("lid"+side+"bot").setAttribute("d",
+    "M -22 16 L 22 16 L 22 12 Q 0 " + botY + " -22 12 Z");
+}
+
+// ---- animation loop ------------------------------------------------------
+let mouthO = 0, mouthW = 1, blink = 0, blinkPhase = 0;
+let nextBlink = Date.now() + 2600, gx = 0, gy = 0, gtx = 0, gty = 0;
+function tick(){
+  const now = Date.now();
+  const tt = audioStart > 0 ? now/1000 - audioStart : -1;
+  const tgt = targetAt(tt);
+  mouthO += (tgt.o - mouthO)*.45;
+  mouthW += (tgt.w - mouthW)*.3;
+  setMouth(mouthO, mouthW, emo.smile);
+  if (tt >= 0 && tt <= tlEnd + .4) renderCap(tt);
+
+  if (blinkPhase === 0 && now > nextBlink) blinkPhase = 1;
+  if (blinkPhase === 1){ blink = Math.min(1, blink+.34);
+    if (blink === 1) blinkPhase = 2; }
+  else if (blinkPhase === 2){ blink = Math.max(0, blink-.22);
+    if (blink === 0){ blinkPhase = 0;
+      nextBlink = now + 2200 + Math.random()*3800; } }
+  setLids("L", blink, emo.squint); setLids("R", blink, emo.squint);
+
+  const talking = tt >= 0 && tt <= tlEnd;
+  if (!talking && Math.random() < .005){
+    gtx = (Math.random()-.5)*10; gty = (Math.random()-.5)*5; }
+  if (talking){ gtx = 0; gty = 1.5; }
+  gx += (gtx-gx)*.07; gy += (gty-gy)*.07;
+  $("gazeL").setAttribute("transform", "translate("+gx+","+gy+")");
+  $("gazeR").setAttribute("transform", "translate("+gx+","+gy+")");
+
+  const breath = Math.sin(now/1900)*1.4;
+  const nod = talking ? mouthO*2.2 : 0;
+  const sway = talking ? Math.sin(now/700)*.7 : 0;
+  $("headG").setAttribute("transform",
+    "rotate(" + (emo.head + sway) + ") translate(0," + (breath - nod) + ")");
   requestAnimationFrame(tick);
 }
 tick();
+
 // ---- state poll ----------------------------------------------------------
+let sentKey = "";
 async function poll(){
   try{
     const st = await (await fetch("/api/state")).json();
     const sp = st.speaking || {};
-    const fresh = sp.ts && (Date.now()/1000 - sp.ts) < 30;
+    const skew = st.ts ? Date.now()/1000 - st.ts : 0;
+    const fresh = sp.ts && (Date.now()/1000 - (sp.ts + skew)) < 30;
     if (fresh && sp.current && !sp.done){
       const key = sp.ts + "|" + sp.current;
-      if (key !== sentKey){ sentKey = key;
+      if (key !== sentKey){
+        sentKey = key;
         setEmotion(sp.emotion || "neutral");
-        startSentence(sp.current); }
-    } else if (sp.done || !fresh){
-      if (wordTimer && (sp.interrupted || !fresh)){
-        clearInterval(wordTimer); wordTimer=null; words=[]; wordIdx=-1;
-        mouthTarget=0; speakUntil=0; renderCap(); }
-      if (!wordTimer && Date.now()>speakUntil+1500 && emoName!=="neutral")
-        setEmotion("neutral");
-      if (Date.now()>speakUntil+6000 && words.length){ words=[]; renderCap(); }
+        buildTimeline(sp.words && sp.words.length ? sp.words
+                      : estimateWords(sp.current));
+        audioStart = sp.ts + skew;
+        renderCap(0);
+      }
+    } else {
+      if (sp.interrupted && timeline.length){
+        timeline = []; tlEnd = 0; audioStart = -1;
+        $("cap").innerHTML = ""; setEmotion("neutral");
+      }
+      const idle = audioStart < 0 || Date.now()/1000 - audioStart > tlEnd + 2;
+      if (idle && emoName !== "neutral") setEmotion("neutral");
+      if (idle && audioStart > 0 &&
+          Date.now()/1000 - audioStart > tlEnd + 7){
+        audioStart = -1; timeline = []; capWords = [];
+        $("cap").innerHTML = "";
+      }
       sentKey = "";
     }
   }catch(e){}

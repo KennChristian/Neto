@@ -314,18 +314,61 @@ def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
         text = apply_forced_respellings(text)
     norm = v_cache.normalize_text(text)
     key = v_cache.cache_key(norm, effective_settings(speed))
+    align_path = v_cache.cache_dir() / f"{key}.align.json"
+    words = None
     hit = v_cache.get(key)
     if hit is not None:
         pcm, sr = hit
+        try:  # sidecar exists only for clips synthesized post-2026-08-22
+            words = json.loads(align_path.read_text())
+        except (OSError, ValueError):
+            words = None
     else:
-        pcm = v_audio.process(v_synthesize(norm, speed=speed),
+        align: dict = {}
+        pcm = v_audio.process(v_synthesize(norm, speed=speed, align_out=align),
                               v_audio.SYNTH_SAMPLE_RATE)
         sr = v_audio.SYNTH_SAMPLE_RATE
         v_cache.put(key, pcm, sr)
+        words = _align_to_words(align)
+        if words:
+            try:
+                align_path.write_text(json.dumps(words))
+            except OSError:
+                pass
     f = _tempfile.NamedTemporaryFile(suffix=".wav", delete=False, dir=out_dir)
     f.close()
     sf.write(f.name, pcm, sr, subtype="PCM_16")
+    if words:
+        try:  # sidecar rides beside the temp wav for the speaking feed
+            with open(f.name + ".align.json", "w") as af:
+                json.dump(words, af)
+        except OSError:
+            pass
     return f.name
+
+
+def _align_to_words(align: dict) -> list | None:
+    """ElevenLabs character alignment → [[word, start_s, end_s], ...]."""
+    try:
+        triples = zip(align["characters"],
+                      align["character_start_times_seconds"],
+                      align["character_end_times_seconds"])
+    except (KeyError, TypeError):
+        return None
+    words, cur, s0, e0 = [], "", 0.0, 0.0
+    for ch, s, e in triples:
+        if ch.isspace():
+            if cur:
+                words.append([cur, round(s0, 3), round(e0, 3)])
+                cur = ""
+            continue
+        if not cur:
+            s0 = s
+        cur += ch
+        e0 = e
+    if cur:
+        words.append([cur, round(s0, 3), round(e0, 3)])
+    return words or None
 
 
 # ============================================================

@@ -30,14 +30,20 @@ LAST_ANSWER_MP3 = "/dev/shm/cj_last_answer.mp3"
 SPEAKING_LIVE = "/dev/shm/cj_speaking.json"
 
 
-def publish_speaking(spoken, current, done, interrupted=False, emotion=None):
-    """Atomically publish what is being spoken right now (fails open)."""
+def publish_speaking(spoken, current, done, interrupted=False, emotion=None,
+                     words=None):
+    """Atomically publish what is being spoken right now (fails open).
+
+    words: real per-word timings [[word, start_s, end_s], ...] from the
+    ElevenLabs alignment sidecar, relative to this sentence's audio start —
+    the /face page lip-syncs from them (estimates when absent)."""
     try:
         tmp = SPEAKING_LIVE + ".tmp"
         with open(tmp, "w") as f:
             json.dump({"ts": time.time(), "spoken": list(spoken),
                        "current": current, "done": done,
-                       "interrupted": interrupted, "emotion": emotion}, f)
+                       "interrupted": interrupted, "emotion": emotion,
+                       "words": words}, f)
         os.replace(tmp, SPEAKING_LIVE)
     except OSError:
         pass
@@ -235,7 +241,11 @@ class SentenceSpeaker:
                 continue
             self._mp3s.append(mp3_path)
             if self._abort.is_set():
-                os.unlink(wav)
+                for p in (wav, wav + ".align.json"):
+                    try:
+                        os.unlink(p)
+                    except OSError:
+                        pass
                 return
             if self.first_audio_ts is None:
                 self.first_audio_ts = time.monotonic()
@@ -253,14 +263,21 @@ class SentenceSpeaker:
                     self._style_fn(sentence, emo or "neutral")
                 except Exception:
                     pass
+            words = None
+            try:  # alignment sidecar written by voice_io.tts_elevenlabs_wav
+                with open(wav + ".align.json") as af:
+                    words = json.load(af)
+            except (OSError, ValueError):
+                pass
             self._spoken_texts.append(sentence)
             publish_speaking(self._spoken_texts, sentence, done=False,
-                             emotion=emo)
+                             emotion=emo, words=words)
             cut = self._play_fn(wav)
-            try:
-                os.unlink(wav)
-            except OSError:
-                pass
+            for p in (wav, wav + ".align.json"):
+                try:
+                    os.unlink(p)
+                except OSError:
+                    pass
             if cut:
                 self.interrupted = True
                 self._abort.set()

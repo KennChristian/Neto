@@ -18,8 +18,10 @@ The real playback surface is ``mini.media`` (MediaManager):
 
 from __future__ import annotations
 
+import base64
 import json
 import logging
+import os
 import subprocess
 import tempfile
 import threading
@@ -109,13 +111,35 @@ def effective_settings(speed: Optional[float] = None) -> dict:
 _session = requests.Session()
 
 
-def synthesize(text: str, speed: Optional[float] = None) -> np.ndarray:
+# The /with-timestamps endpoint returns the same audio plus per-character
+# timing (drives the /face page's lip sync; same credit cost). If it ever
+# rejects the request (model/tier), we fall back to the plain endpoint for
+# the rest of the process. CJ_ELEVEN_TIMESTAMPS=0 disables it outright.
+_ts_enabled = True
+
+
+def _want_timestamps() -> bool:
+    return _ts_enabled and os.environ.get(
+        "CJ_ELEVEN_TIMESTAMPS", "1").strip().lower() not in {
+        "0", "false", "no", "off"}
+
+
+def synthesize(text: str, speed: Optional[float] = None,
+               align_out: Optional[dict] = None) -> np.ndarray:
     """Text → float32 mono PCM at audio.SYNTH_SAMPLE_RATE via ElevenLabs.
-    Raises SynthError (never leaks the API key in messages)."""
-    url = (f"https://api.elevenlabs.io/v1/text-to-speech/"
-           f"{config.ELEVEN_VOICE_ID}")
+    Raises SynthError (never leaks the API key in messages).
+
+    align_out: pass a dict to receive the ElevenLabs character alignment
+    (characters / character_start_times_seconds / character_end_times_seconds)
+    when the timestamps endpoint is available; left empty otherwise."""
+    global _ts_enabled
+    base_url = (f"https://api.elevenlabs.io/v1/text-to-speech/"
+                f"{config.ELEVEN_VOICE_ID}")
+    use_ts = _want_timestamps()
+    url = base_url + ("/with-timestamps" if use_ts else "")
     headers = {"xi-api-key": config.ELEVEN_API_KEY,
-               "accept": "application/octet-stream"}
+               "accept": "application/json" if use_ts
+               else "application/octet-stream"}
     body = {"text": text, "model_id": config.MODEL_ID,
             "voice_settings": effective_settings(speed)}
     params = {"output_format": config.OUTPUT_FORMAT}
@@ -135,10 +159,33 @@ def synthesize(text: str, speed: Optional[float] = None) -> np.ndarray:
             raise SynthError("network", last_detail)
 
         if resp.status_code == 200:
-            pcm = audio.pcm16_bytes_to_float(resp.content)
+            if use_ts:
+                try:
+                    doc = resp.json()
+                    raw = base64.b64decode(doc["audio_base64"])
+                    if align_out is not None and doc.get("alignment"):
+                        align_out.update(doc["alignment"])
+                except (ValueError, KeyError, TypeError) as e:
+                    raise SynthError(
+                        "error", f"bad timestamps payload ({type(e).__name__})")
+            else:
+                raw = resp.content
+            pcm = audio.pcm16_bytes_to_float(raw)
             if pcm.size == 0:
                 raise SynthError("error", "empty audio response")
             return pcm
+
+        if use_ts and resp.status_code in (400, 404, 405, 422):
+            # with-timestamps not available for this model/tier — drop to the
+            # plain endpoint for the rest of the process (lip sync degrades
+            # to estimated timing; audio unaffected).
+            log.warning("with-timestamps rejected (HTTP %d) — plain TTS "
+                        "fallback for this process", resp.status_code)
+            _ts_enabled = False
+            use_ts = False
+            url = base_url
+            headers["accept"] = "application/octet-stream"
+            continue
 
         if resp.status_code == 401:
             # Do NOT retry. 401 covers BOTH a bad key AND a per-key credit
