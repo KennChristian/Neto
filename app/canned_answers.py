@@ -38,6 +38,16 @@ def enabled() -> bool:
         "1", "true", "yes", "on"}
 
 
+def event_mode() -> bool:
+    """Event mode: when the flag file exists, the scripted event_* entries
+    take part in voice matching (an emcee's scripted question gets the
+    scripted answer). When absent they are voice-inert — only the /event
+    page's buttons can play them. Toggled from the /event page; checked per
+    call so flips apply instantly, no restart."""
+    path = os.environ.get("CJ_CANNED_PATH", _DEFAULT_PATH)
+    return os.path.exists(os.path.join(os.path.dirname(path), "event_mode.on"))
+
+
 def normalize(text: str) -> str:
     """Lowercase, drop apostrophes, collapse all other punctuation to spaces —
     so "What's the Rule of Law?" and "whats the rule of law" both match."""
@@ -83,7 +93,10 @@ def match(question: str):
         norm = normalize(question)
         if not norm:
             return None
+        skip_event = not event_mode()
         for e in _load():
+            if skip_event and e["id"].startswith("event_"):
+                continue
             if any(p.fullmatch(norm) for p in e["patterns"]):
                 return {"id": e["id"], "answer": random.choice(e["answers"])}
     except Exception as err:   # never let the fast path break a turn

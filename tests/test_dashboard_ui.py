@@ -140,7 +140,9 @@ def test_http_pages_and_gating():
     srv, base = _serve()
     try:
         aud = urlopen(base + "/audience").read()
-        assert b'id="say"' in aud and b"object-fit:contain" in aud
+        assert b'id="q"' in aud and b'id="a"' in aud   # Q left / A right
+        assert b"object-fit:cover" in aud                # full-bleed camera
+        assert b'id="bar"' in aud                       # floating caption band
         assert b"You asked" not in aud and b"Chief Justice says" not in aud
         gate = urlopen(base + "/maintain").read()
         assert b"access key" in gate            # no key -> gate page
@@ -156,6 +158,53 @@ def test_http_pages_and_gating():
             assert False, "expected 403"
         except Exception as e:
             assert getattr(e, "code", None) == 403
+    finally:
+        srv.shutdown()
+
+
+def test_event_mode_toggle():
+    _point_at_fixtures()
+    ui.EVENT_FLAG = str(TMP / "event_mode.on")   # keep the real flag untouched
+    ok, _ = ui.control("event-on")
+    assert ok and os.path.exists(ui.EVENT_FLAG)
+    assert ui.state()["event_mode"] is True
+    ok, _ = ui.control("event-off")
+    assert ok and not os.path.exists(ui.EVENT_FLAG)
+    assert ui.state()["event_mode"] is False
+    ok, _ = ui.control("event-off")   # idempotent when already off
+    assert ok
+
+
+def test_event_page_and_ask():
+    _fixture_files()
+    _point_at_fixtures()
+    ui.ASK_TRIGGER = str(TMP / "ask_trigger")   # keep /dev/shm untouched
+    srv, base = _serve()
+    try:
+        gate = urlopen(base + "/event").read()
+        assert b"access key" in gate and b"/event?key=" in gate
+        page = urlopen(base + "/event?key=" + ui.DASH_KEY).read().decode()
+        for q in ("How are you feeling today", "State Properties Corporation",
+                  "ready to answer some questions", "end our program"):
+            assert q in page, q
+        assert "modeBtn" in page and "toggleMode" in page
+        req = Request(base + "/api/ask", data=json.dumps(
+            {"id": "event_ready", "key": "WRONG"}).encode(), method="POST")
+        try:
+            urlopen(req)
+            assert False, "expected 403"
+        except Exception as e:
+            assert getattr(e, "code", None) == 403
+        req = Request(base + "/api/ask", data=json.dumps(
+            {"id": "event_ready", "key": ui.DASH_KEY}).encode(), method="POST")
+        r = json.loads(urlopen(req).read())
+        assert r["ok"], r
+        trig = json.loads((TMP / "ask_trigger").read_text())
+        assert trig["id"] == "event_ready" and trig["a"].startswith("I was born ready")
+        req = Request(base + "/api/ask", data=json.dumps(
+            {"id": "nope", "key": ui.DASH_KEY}).encode(), method="POST")
+        r = json.loads(urlopen(req).read())
+        assert not r["ok"] and "unknown" in r["output"]
     finally:
         srv.shutdown()
 

@@ -1,7 +1,23 @@
 SUPERVAISE ROBOT PROJECT NOTES
-Updated August 13 2026 evening
+Updated August 24 2026
 Download the latest copy of this file any time from
 http://reachy-mini.local:8080/notes
+
+NEW August 24: EVENT QUESTION BUTTONS
+The four scripted event questions (how are you feeling / are you
+ready / message to the donor State Properties Corporation / closing
+message to guests) are hard coded with their exact scripted answers.
+Ask them aloud after the wake word and the robot answers with the
+script, word for word, from a pre-rendered clip in the cloned voice.
+Backup: open http://reachy-mini.local:8080/event?key=cjap on a phone.
+It shows one button per question. Tap a button and the robot speaks
+the exact scripted answer as soon as it is idle, even if the emcee
+was misheard. A tap expires after 30 seconds if the robot is busy.
+The same page has an EVENT MODE toggle switch at the top. ON means
+spoken questions like how are you feeling get the scripted event
+answers. OFF means normal conversation. The buttons work in both
+modes. The switch applies instantly, no restart, and it stays as
+set even after a reboot. It is ON right now.
 
 This file is a simple record of what has been done for each priority.
 The robot is the Reachy Mini. The app makes it speak as retired Chief

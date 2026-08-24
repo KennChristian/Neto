@@ -216,8 +216,19 @@ def say_text(text):
         if code != 0:
             return False, out[-250:]
         with _play_lock:
-            _publish_say_speaking(text, done=False)
-            code, out = run(["aplay", "-q", wav], timeout=120)
+            name = _publish_sentence_copy(wav)
+            _publish_say_speaking(text, done=False, wav=name,
+                                  dur=_wav_duration(wav))
+            mode = _avatar_mode()
+            if mode:   # /face-avatar page is live: give it its head start
+                time.sleep(_avatar_lag())
+            _publish_say_speaking(text, done=False, wav=name,
+                                  dur=_wav_duration(wav), play_ts=time.time())
+            if mode == "solo":   # avatar is the only voice
+                time.sleep(_wav_duration(wav) or 2.0)
+                code, out = 0, ""
+            else:
+                code, out = run(["aplay", "-q", wav], timeout=120)
             _publish_say_speaking(text, done=True)
         return code == 0, out[-200:]
     finally:
@@ -225,18 +236,69 @@ def say_text(text):
             os.unlink(wav)
 
 
-def _publish_say_speaking(text, done):
+def _publish_say_speaking(text, done, wav=None, dur=None, play_ts=None):
     """Mirror the app's /dev/shm/cj_speaking.json feed for typed say-text
-    lines so the /face and /audience pages animate them too (fails open)."""
+    lines so the /face-avatar and /audience pages speak/animate them too
+    (fails open). wav = basename of the /dev/shm sentence copy."""
     try:
         tmp = "/dev/shm/cj_speaking.json.tmp"
+        doc = {"ts": time.time(), "spoken": [text],
+               "current": None if done else text, "done": done,
+               "interrupted": False, "emotion": None,
+               "wav": None if done else wav, "dur": dur}
+        if play_ts is not None:
+            doc["play_ts"] = play_ts
         with open(tmp, "w") as f:
-            json.dump({"ts": time.time(), "spoken": [text],
-                       "current": None if done else text, "done": done,
-                       "interrupted": False, "emotion": None}, f)
+            json.dump(doc, f)
         os.replace(tmp, "/dev/shm/cj_speaking.json")
     except OSError:
         pass
+
+
+def _publish_sentence_copy(wav):
+    """Same contract as stream_speak.publish_sentence_wav (kept in step by
+    hand — the dashboard runs on system python, not the app venv)."""
+    try:
+        import glob as _glob
+        name = f"cj_sent_{int(time.time()*1000)}.wav"
+        tmp = "/dev/shm/." + name
+        with open(wav, "rb") as src, open(tmp, "wb") as dst:
+            dst.write(src.read())
+        os.replace(tmp, "/dev/shm/" + name)
+        for p in sorted(_glob.glob("/dev/shm/cj_sent_*.wav"))[:-8]:
+            try:
+                os.unlink(p)
+            except OSError:
+                pass
+        return name
+    except OSError:
+        return None
+
+
+def _wav_duration(path):
+    try:
+        import wave
+        with wave.open(path, "rb") as w:
+            return round(w.getnframes() / float(w.getframerate()), 2)
+    except Exception:
+        return None
+
+
+def _avatar_mode():
+    try:
+        if time.time() - os.path.getmtime("/dev/shm/cj_avatar_audio") > 15:
+            return None   # avatar page stopped heart-beating
+        with open("/dev/shm/cj_avatar_audio") as f:
+            return f.read().strip() or "solo"
+    except OSError:
+        return None
+
+
+def _avatar_lag():
+    try:
+        return max(0.0, min(4.0, float(open("/dev/shm/cj_avatar_lag").read())))
+    except (OSError, ValueError):
+        return 0.8
 
 
 def play_phone_audio(blob):
@@ -988,7 +1050,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if supervaise_ui and self.path.partition("?")[0] in (
                 "/api/ctl", "/api/entities", "/api/avatar-session",
-                "/api/avatar-stop", "/api/avatar-lag"):
+                "/api/avatar-stop", "/api/avatar-lag", "/api/ask"):
             try:
                 n = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(n) or b"{}")

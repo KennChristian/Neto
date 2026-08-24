@@ -40,6 +40,12 @@ SPEAKING = "/dev/shm/cj_speaking.json"   # live per-sentence caption feed
 MUTE_TRIGGER = "/dev/shm/cj_mute_trigger"
 WAKE_TRIGGER = "/dev/shm/cj_wake_trigger"
 ENTITY_OVERLAY = os.path.join(MAIN, "data", "entities", "entity_overrides.json")
+CANNED_PATH = os.path.join(MAIN, "data", "entities", "canned_answers.json")
+ASK_TRIGGER = "/dev/shm/cj_ask_trigger"   # /event buttons -> cj_voice_cloud
+# Event mode: while this flag exists, spoken questions can match the
+# scripted event_* canned entries (canned_answers.event_mode()). Persistent
+# (survives reboot); toggled from the /event page. Buttons work regardless.
+EVENT_FLAG = os.path.join(MAIN, "data", "entities", "event_mode.on")
 
 ASSETS = os.path.join(HOME, "pi_dashboard", "assets")
 LIVEAVATAR_CONF = os.path.join(ASSETS, "liveavatar.json")  # api_key etc.
@@ -179,10 +185,13 @@ def state():
         "metas": metas,   # full recent-turn history for the tracking table
         "wake": _read_json(WAKE_LIVE),
         "speaking": _read_json(SPEAKING),
+        "aside": _read_json("/dev/shm/cj_aside.json"),
+        "stage": _read_json("/dev/shm/cj_stage.json"),
         "wake_events": _tail_jsonl(WAKE_EVENTS, 12),
         "corrections": _tail_jsonl(POSTPROC_LOG, 20),
         "health": _health(),
         "has_last_answer": os.path.exists(LAST_ANSWER),
+        "event_mode": os.path.exists(EVENT_FLAG),
     }
 
 
@@ -202,6 +211,13 @@ def control(action):
         with open("/dev/shm/cj_avatar_audio", "w") as f:
             f.write("sync")
         return True, "both voices — robot delayed to match the avatar"
+    if action == "avatar-voice-lips":
+        # page open, avatar muted: robot keeps its voice but still holds the
+        # head start so the avatar's mouth tracks it. Re-posted every 5s by
+        # the page — the robot treats a stale flag (>15s) as "page gone".
+        with open("/dev/shm/cj_avatar_audio", "w") as f:
+            f.write("lips")
+        return True, "avatar mouths along — robot voice"
     if action == "avatar-voice-off":
         try:
             os.unlink("/dev/shm/cj_avatar_audio")
@@ -211,6 +227,16 @@ def control(action):
     if action == "force-listen":
         open(WAKE_TRIGGER, "w").close()
         return True, "listening activated"
+    if action == "event-on":
+        with open(EVENT_FLAG, "w") as f:
+            f.write(time.strftime("%Y-%m-%d %H:%M:%S"))
+        return True, "event mode ON — spoken event questions get the script"
+    if action == "event-off":
+        try:
+            os.unlink(EVENT_FLAG)
+        except OSError:
+            pass
+        return True, "event mode OFF — normal conversation (buttons still work)"
     if action == "replay":
         if not os.path.exists(LAST_ANSWER):
             return False, "no stored answer yet"
@@ -259,57 +285,193 @@ def entities_put(text):
 # pages
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# /event — phone page with one button per scripted event question
+# ---------------------------------------------------------------------------
+
+def _event_entries():
+    """The event_* entries from canned_answers.json: scripted question +
+    single verbatim answer each. Re-read per request (hot-editable)."""
+    try:
+        with open(CANNED_PATH, encoding="utf-8") as f:
+            raw = json.load(f)
+        return [{"id": e["id"], "q": (e.get("ask") or [e["id"]])[0],
+                 "a": e["answers"][0]}
+                for e in raw.get("entries", [])
+                if str(e.get("id", "")).startswith("event_") and e.get("answers")]
+    except (OSError, ValueError, KeyError) as e:
+        print(f"[event] canned_answers.json unreadable: {e}")
+        return []
+
+
+def ask_event(entry_id):
+    """Queue one scripted answer for the robot: write the ask trigger the
+    wake loop polls (30 s freshness on the robot side)."""
+    for e in _event_entries():
+        if e["id"] == entry_id:
+            try:
+                tmp = ASK_TRIGGER + ".tmp"
+                with open(tmp, "w") as f:
+                    json.dump({"q": e["q"], "a": e["a"], "id": e["id"]}, f)
+                os.replace(tmp, ASK_TRIGGER)
+                return True, "queued"
+            except OSError as err:
+                return False, str(err)
+    return False, f"unknown question id: {entry_id!r}"
+
+
+def event_page():
+    def esc(t):
+        return (t.replace("&", "&amp;").replace("<", "&lt;")
+                 .replace(">", "&gt;").replace('"', "&quot;"))
+    entries = _event_entries()
+    btns = "\n".join(
+        f'<button class="q" onclick="ask(\'{esc(e["id"])}\',this)">'
+        f'<b>{i + 1}.</b> {esc(e["q"])}</button>'
+        for i, e in enumerate(entries)) or \
+        '<p class="sub">No event_* entries found in canned_answers.json.</p>'
+    return EVENT_PAGE.replace("%BUTTONS%", btns)
+
+
 AUDIENCE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chief Justice Artemio V. Panganiban</title><style>
-:root{--bg:#0d1117;--panel:#161b22;--ink:#e6edf3;--dim:#8b949e;--gold:#c9a227}
+:root{--ink:#f2f6fa;--dim:#aab4c0;--mute:#6f7a88;--gold:#e6c352;--gold2:#b8952a;
+  --ok:#7fd8a4;--warn:#f0a050;--blue:#7fc2ff;--panel:13,17,23}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;background:var(--bg);color:var(--ink);
-  font-family:Georgia,'Times New Roman',serif;overflow:hidden}
-#wrap{display:flex;flex-direction:column;height:100vh;padding:1.6vh 1.6vw;gap:1.6vh;
-  align-items:center}
-#cam{flex:0 0 62%;width:auto;max-width:96vw;aspect-ratio:16/9;display:flex;
-  align-items:center;justify-content:center;background:#000;border-radius:14px;
-  border:1px solid #21262d;overflow:hidden;position:relative}
-#cam img{width:100%;height:100%;object-fit:contain}
-#cam .idle{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;color:var(--dim);font-size:3vh;
-  background:var(--panel)}
-#cam .idle b{color:var(--gold);font-size:5vh;letter-spacing:.2em}
-#say{flex:1;width:96vw;background:var(--panel);border-radius:14px;
-  padding:2.4vh 3vw;display:flex;flex-direction:column;min-height:0;overflow:hidden}
-#q{font-size:2.8vh;line-height:1.35;color:var(--dim);text-align:center;
-  flex:0 0 auto;margin-bottom:1.2vh}
-#q b{color:var(--ink);font-weight:normal}
-#a{font-size:4.4vh;line-height:1.55;text-align:center;overflow-y:auto;
-  flex:1;min-height:0;scrollbar-width:none}
+html,body{height:100%;color:var(--ink);overflow:hidden;
+  font-family:Georgia,'Times New Roman',serif;
+  background:#05080c radial-gradient(ellipse 70% 60% at 50% 38%,#151c26 0%,#0a0e14 55%,#05080c 100%)}
+@keyframes blink{50%{opacity:.25}}
+/* camera: a framed tile centred on the stage; knobs ?cam=<vw> ?pos=tr|tl */
+#cam{position:fixed;top:5vh;left:50%;transform:translateX(-50%);
+  width:min(44vw,calc(58vh * 16 / 9));aspect-ratio:16/9;background:#000;overflow:hidden;
+  border-radius:1.6vh;border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 2.4vh 7vh rgba(0,0,0,.75),0 0 0 0 rgba(230,195,82,0);
+  transition:box-shadow .8s ease,border-color .8s ease}
+#cam.live{border-color:rgba(230,195,82,.55);
+  box-shadow:0 2.4vh 7vh rgba(0,0,0,.75),0 0 4vh .3vh rgba(230,195,82,.18)}
+#cam.tr,#cam.tl{transform:none;left:auto;top:6.5vh;width:min(30vw,calc(34vh * 16 / 9))}
+#cam.tr{right:2vw}  #cam.tl{left:2vw}
+#cam img{width:100%;height:100%;object-fit:cover;object-position:center}
+#cam .idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;color:var(--dim);font-size:2.6vh;gap:1.4vh;
+  background:radial-gradient(ellipse at 50% 40%,#161b22,#06090d 70%)}
+#cam .idle b{color:var(--gold);font-size:6vh;letter-spacing:.22em}
+/* bottom scrim keeps text legible; the centre stays clear for the tile */
+#scrim{position:fixed;left:0;right:0;bottom:0;height:36vh;pointer-events:none;
+  background:linear-gradient(to top,rgba(4,7,10,.9) 0%,rgba(4,7,10,.4) 55%,rgba(4,7,10,0) 100%)}
+/* the two floating cards: question intake left, answer right, levelled */
+#bar{position:fixed;left:2vw;right:2vw;bottom:2.6vh;display:flex;justify-content:space-between;
+  align-items:stretch;gap:2vw;pointer-events:none}
+.card{min-width:0;min-height:22vh;max-height:42vh;display:flex;flex-direction:column;
+  padding:1.7vh 1.6vw 1.6vh;border-radius:1.8vh;
+  background:linear-gradient(to bottom,rgba(var(--panel),.8) 0%,rgba(var(--panel),.48) 60%,rgba(var(--panel),.08) 100%);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
+  box-shadow:0 1.6vh 4vh rgba(0,0,0,.5);
+  transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+#qbox{flex:0 1 42%} #abox{flex:0 1 46%}
+.card.hide{opacity:0;transform:translateY(3vh);pointer-events:none}
+.card h3{flex:0 0 auto;display:flex;align-items:center;gap:1vw;margin-bottom:1.2vh;
+  font-family:-apple-system,Segoe UI,Arial,sans-serif;font-size:1.45vh;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:.9}
+.card h3::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(230,195,82,.45),transparent)}
+/* answer */
+#a{flex:1;min-height:9vh;overflow-y:auto;scrollbar-width:none;text-align:left;
+  font-size:3vh;line-height:1.5;text-shadow:0 .2vh .6vh rgba(0,0,0,.6)}
 #a::-webkit-scrollbar{display:none}
-#a .cur{color:var(--gold)}
-.idle-text{color:var(--dim);font-style:italic}
+#a span{color:rgba(242,246,250,.72);transition:color .5s}
+#a .cur{color:var(--gold);text-shadow:0 0 1.6vh rgba(230,195,82,.25);animation:rise .45s ease-out}
+#a.idle-text{display:flex;align-items:center;font-style:italic;color:var(--dim);font-size:2.6vh}
+#a.idle-text em{color:var(--gold);font-style:normal;padding:0 .4vw}
+.rise{animation:rise .45s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(1.2vh)}to{opacity:1;transform:none}}
 .think::after{content:'';animation:dots 1.5s steps(4,end) infinite}
 @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
-</style></head><body><div id="wrap">
+/* question intake rows */
+#rows{display:flex;flex-direction:column;gap:.8vh;overflow-y:auto;scrollbar-width:none;
+  font-family:-apple-system,Segoe UI,Arial,sans-serif}
+#rows::-webkit-scrollbar{display:none}
+.row{display:grid;grid-template-columns:2.4vh minmax(0,1fr) auto;gap:.2vh .8vw;align-items:start;
+  padding:1vh 1.1vw;border-radius:1.2vh;background:rgba(255,255,255,.035);animation:rise .45s ease-out}
+.row.done{background:rgba(127,216,164,.07)} .row.active{background:rgba(230,195,82,.08)}
+.row.flagged{background:rgba(240,160,80,.09)}
+.row .ck{font-size:1.9vh;line-height:1.35;text-align:center;color:var(--mute)}
+.row.done .ck{color:var(--ok)} .row.flagged .ck{color:var(--warn)}
+.row.active .ck{color:var(--gold);animation:blink 1.1s ease-in-out infinite}
+.row .b{min-width:0;font-size:1.85vh;line-height:1.4;color:var(--ink)}
+.row .lb{font-size:1.3vh;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);margin-right:.6vw;white-space:nowrap}
+.row.active .lb{color:var(--gold)} .row.done .lb{color:var(--ok)} .row.flagged .lb{color:var(--warn)}
+.row .t{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.35vh;color:var(--mute);
+  padding-top:.35vh;white-space:nowrap}
+.row code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.6vh;padding:.15vh .6vh;
+  border-radius:.6vh;background:rgba(127,216,164,.14);color:#b9f0cf}
+.row .conf{color:var(--blue);font-size:1.6vh}
+.row .rs{display:-webkit-box;color:var(--dim);font-size:1.55vh;line-height:1.35;margin-top:.3vh;
+  overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.row .qt{font-weight:bold;font-family:Georgia,'Times New Roman',serif;font-size:2.1vh;color:var(--ink)}
+</style></head><body>
 <div id="cam"><img id="camimg" alt="">
-  <div class="idle" id="camidle"><b>CJAP</b><span>Chief Justice Artemio V. Panganiban</span></div></div>
-<div id="say"><div id="q"></div>
-  <div class="idle-text" id="a">Say &ldquo;Hey Cee-Jap&rdquo; to ask a question</div></div>
+  <div class="idle" id="camidle"><b>CJAP</b>
+    <span>Chief Justice Artemio V. Panganiban</span></div>
+</div>
+<div id="scrim"></div>
+<div id="bar">
+  <div class="card hide" id="qbox"><h3>Question intake</h3><div id="rows"></div></div>
+  <div class="card" id="abox"><h3>Answer</h3><div id="a" class="idle-text"></div></div>
 </div><script>
 const esc=s=>{const d=document.createElement('div');d.innerText=s||'';return d.innerHTML};
+const IDLE='Say <em>&ldquo;Hey Cee-Jap&rdquo;</em> to ask a question';
+const qs=new URLSearchParams(location.search),camW=parseFloat(qs.get('cam'));
+if(camW>10&&camW<=100)document.getElementById('cam').style.width=camW+'vw';
+if(['tr','tl'].includes(qs.get('pos')))document.getElementById('cam').classList.add(qs.get('pos'));
 let camOK=false;
 function camTick(){
-  const img=document.getElementById('camimg');
-  const probe=new Image();
-  probe.onload=()=>{img.src=probe.src;camOK=true;
-    document.getElementById('camidle').style.display='none';};
+  const img=document.getElementById('camimg'),probe=new Image();
+  probe.onload=()=>{img.src=probe.src;camOK=true;document.getElementById('camidle').style.display='none';};
   probe.onerror=()=>{if(!camOK)document.getElementById('camidle').style.display='flex';};
   probe.src='/api/camera.jpg?t='+Date.now();
 }
+let curState='';
+function setState(st){
+  if(st===curState)return;curState=st;
+  document.getElementById('cam').classList.toggle('live',st==='speaking');
+}
+let lastRows='';
+function rowHtml(state,label,body,t){
+  const ck=state==='done'?'&#10003;':state==='flagged'?'&#9888;':state==='active'?'&#9679;':'&#9675;';
+  const ts=(t!=null&&state!=='active')?t.toFixed(1)+'s':'';
+  return '<div class="row '+state+'"><span class="ck">'+ck+'</span><div class="b">'+
+    '<span class="lb">'+label+'</span>'+body+'</div><span class="t">'+ts+'</span></div>';
+}
+function renderRows(stage,qText){
+  const st=(stage&&stage.steps)||{};
+  const tr=st.transcribe||{},rt=st.route||{},cp=st.compose||{},fd=st.fidelity||{};
+  const parts=[];
+  if(qText)parts.push(rowHtml('done','Transcribed','<span class="qt">'+esc(qText)+'</span>',tr.state==='done'?tr.t:null));
+  else if(tr.state==='active')parts.push(rowHtml('active','Transcribed','<span class="think">'+esc(tr.detail||'listening')+'</span>'));
+  if(rt.scope)parts.push(rowHtml('done','Scope','<code>'+esc(rt.scope)+'</code>'+
+    (rt.scope_reason?'<span class="rs">'+esc(rt.scope_reason)+'</span>':''),rt.t));
+  if(rt.state==='active')parts.push(rowHtml('active','Routed','<span class="think">'+esc(rt.detail||'choosing the topic')+'</span>'));
+  else if(rt.state==='done')parts.push(rowHtml('done','Routed','<code>'+esc(rt.topic||rt.detail||'')+'</code>'+
+    (rt.confidence?' <span class="conf">('+esc(rt.confidence)+')</span>':'')+
+    (rt.route_reason?'<span class="rs">'+esc(rt.route_reason)+'</span>':''),rt.t));
+  if(cp.state==='active')parts.push(rowHtml('active','Composed','<span class="think">'+esc(cp.detail||'writing')+'</span>'));
+  else if(cp.state==='done')parts.push(rowHtml('done','Composed',esc(cp.detail||''),cp.t));
+  if(fd.state==='active')parts.push(rowHtml('active','Fidelity','<span class="think">'+esc(fd.detail||'checking')+'</span>'));
+  else if(fd.state==='done'||fd.state==='flagged')parts.push(rowHtml(fd.state,'Fidelity',esc(fd.detail||'')+
+    (fd.state==='flagged'&&fd.reason?'<span class="rs">'+esc(fd.reason)+'</span>':''),fd.t));
+  const html=parts.join('');
+  if(html===lastRows)return;lastRows=html;
+  const el=document.getElementById('rows');el.innerHTML=html;el.scrollTop=el.scrollHeight;
+}
 let lastRender='';
-function render(qText,html,idle){
-  const q=document.getElementById('q'),a=document.getElementById('a');
-  const key=qText+'\\u0000'+html;
+function render(html,idle,showQ){
+  const a=document.getElementById('a');
+  const key=html+(showQ?1:0);
   if(key===lastRender)return;lastRender=key;
-  q.innerHTML=qText?'<b>&ldquo;'+esc(qText)+'&rdquo;</b>':'';
+  document.getElementById('qbox').classList.toggle('hide',!showQ);
   a.classList.toggle('idle-text',!!idle);
   a.innerHTML=html;
   const cur=a.querySelector('.cur');
@@ -322,26 +484,30 @@ async function poll(){
     const turns=s.turns||[];
     const lastU=turns.filter(t=>t.role==='user').slice(-1)[0];
     const lastC=turns.filter(t=>t.role==='cj').slice(-1)[0];
-    const sp=s.speaking;
-    // 1. speaking RIGHT NOW: trace sentence-by-sentence, current in gold
+    const sp=s.speaking,stg=s.stage;
+    const turnTs=stg?stg.turn_ts:0;
+    const qNow=(lastU&&lastU.ts>=turnTs-1)?lastU.text:'';
+    const listening=stg&&stg.steps&&stg.steps.transcribe&&
+      stg.steps.transcribe.state==='active'&&(s.ts-stg.ts)<60;
+    renderRows(stg,qNow||(lastU?lastU.text:''));
+    // 1. speaking right now: sentence-by-sentence, current in gold
     if(sp&&!sp.done&&(sp.spoken||[]).length){
-      render(lastU?lastU.text:'',
-        sp.spoken.map((t,i)=>'<span'+(i===sp.spoken.length-1?' class="cur"':'')+
-          '>'+esc(t)+'</span>').join(' '),false);
+      setState('speaking');
+      render(sp.spoken.map((t,i)=>'<span'+(i===sp.spoken.length-1?' class="cur"':'')+
+          '>'+esc(t)+'</span>').join(' '),false,true);
       return;
     }
-    // 2. question heard, answer not yet speaking: show it immediately
-    if(lastU&&(!sp||lastU.ts>sp.ts)&&(!lastC||lastU.ts>lastC.ts)){
-      render(lastU.text,'<span class="think">Allow me a moment</span>',true);
-      return;
-    }
-    // 3. finished: keep the full answer on screen
-    if(sp&&sp.done&&(sp.spoken||[]).length){
-      render(lastU?lastU.text:'',esc(sp.spoken.join(' ')),false);
-      return;
-    }
-    if(lastC){render(lastU?lastU.text:'',esc(lastC.text),false);return;}
-    render('','Say &ldquo;Hey Cee-Jap&rdquo; to ask a question',true);
+    // 2. mic open / transcribing
+    if(listening&&!qNow){setState('listening');
+      render('<span class="think">Listening</span>',true,true);return;}
+    // 3. question heard, answer being prepared
+    if(lastU&&(!sp||lastU.ts>sp.ts)&&(!lastC||lastU.ts>lastC.ts)){setState('thinking');
+      render('<span class="think">Allow me a moment</span>',true,true);return;}
+    // 4. finished: keep the full answer and its intake on screen
+    setState('idle');
+    if(sp&&sp.done&&(sp.spoken||[]).length){render(esc(sp.spoken.join(' ')),false,!!lastU);return;}
+    if(lastC){render(esc(lastC.text),false,!!lastU);return;}
+    render(IDLE,true,false);
   }catch(e){/* audience view never shows errors */}
 }
 setInterval(poll,300);poll();
@@ -555,6 +721,92 @@ background:#21262d;color:#e6edf3;font-size:16px}</style></head><body>
 <input id="k" type="password" autofocus><button>Enter</button></form></body></html>"""
 
 
+EVENT_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CJAP Event Questions</title><style>
+body{background:#0d1117;color:#e6edf3;font-family:Arial;margin:0;padding:16px;
+ max-width:560px;margin-left:auto;margin-right:auto}
+h1{font-size:18px;color:#c9a227;margin:4px 0 2px}
+p.sub{color:#8b949e;font-size:13px;margin:0 0 14px}
+button.q{display:block;width:100%;text-align:left;margin:10px 0;padding:15px 16px;
+ border-radius:12px;border:1px solid #30363d;background:#161b22;color:#e6edf3;
+ font-size:16px;line-height:1.35;cursor:pointer}
+button.q:active{background:#21262d;border-color:#c9a227}
+button.q:disabled{opacity:.45}
+button.q b{color:#c9a227;margin-right:6px}
+#status{margin-top:14px;padding:10px 12px;border-radius:10px;background:#161b22;
+ border:1px solid #30363d;font-size:14px;color:#8b949e;min-height:20px}
+.ok{color:#3fb950}.warn{color:#d29922}
+#mode{display:flex;align-items:center;justify-content:space-between;gap:12px;
+ margin:12px 0;padding:12px 14px;border-radius:12px;background:#161b22;
+ border:1px solid #30363d}
+#modeTxt{font-size:14px;color:#8b949e;line-height:1.35}
+#modeTxt b{display:block;font-size:15px;color:#e6edf3}
+#modeBtn{flex-shrink:0;width:64px;height:34px;border-radius:17px;border:1px solid
+ #30363d;background:#21262d;position:relative;cursor:pointer;transition:background .15s}
+#modeBtn span{position:absolute;top:3px;left:4px;width:26px;height:26px;
+ border-radius:13px;background:#8b949e;transition:left .15s,background .15s}
+#modeBtn.on{background:#1f3524;border-color:#3fb950}
+#modeBtn.on span{left:32px;background:#3fb950}
+</style></head><body>
+<h1>CJAP &mdash; Event Questions</h1>
+<p class="sub">Backup buttons: if the robot mishears the emcee, tap the question
+and it speaks the exact scripted answer.</p>
+<div id="mode"><div id="modeTxt"><b>Event mode: &hellip;</b>&hellip;</div>
+<div id="modeBtn" onclick="toggleMode()"><span></span></div></div>
+%BUTTONS%
+<div id="status">&hellip;</div>
+<script>
+const KEY=new URLSearchParams(location.search).get('key')||'';
+const st=document.getElementById('status');
+let queuedAt=0, evMode=null;
+function paintMode(on){
+  evMode=on;
+  document.getElementById('modeBtn').className=on?'on':'';
+  document.getElementById('modeTxt').innerHTML=on
+    ?'<b>Event mode: ON</b>Spoken event questions are answered with the script.'
+    :'<b>Event mode: OFF</b>Normal conversation \\u2014 the buttons below still work.';
+}
+async function toggleMode(){
+  const action=evMode?'event-off':'event-on';
+  try{
+    const r=await fetch('/api/ctl',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key:KEY,action})});
+    const j=await r.json();
+    if(j.ok) paintMode(!evMode);
+    else st.innerHTML='<span class="warn">Toggle failed:</span> '+String(j.output||'error').replace(/</g,'&lt;');
+  }catch(e){st.innerHTML='<span class="warn">Network error &mdash; try again.</span>';}
+}
+async function ask(id,btn){
+  btn.disabled=true; setTimeout(()=>btn.disabled=false,4000);
+  try{
+    const r=await fetch('/api/ask',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key:KEY,id})});
+    const j=await r.json();
+    if(j.ok){queuedAt=Date.now();
+      st.innerHTML='<span class="ok">Queued.</span> The robot answers as soon as it is idle (a tap expires after 30s).';}
+    else st.innerHTML='<span class="warn">Failed:</span> '+String(j.output||'error').replace(/</g,'&lt;');
+  }catch(e){st.innerHTML='<span class="warn">Network error &mdash; try again.</span>';}
+}
+async function poll(){
+  try{
+    const s=await(await fetch('/api/state')).json();
+    if(s.event_mode!==evMode) paintMode(!!s.event_mode);
+    const sp=s.speaking||{};
+    if(sp.current && !sp.done){
+      st.innerHTML='<b class="ok">Speaking:</b> '+String(sp.current).replace(/</g,'&lt;');
+      queuedAt=0;
+    }else if(!(queuedAt && Date.now()-queuedAt<30000)){
+      st.textContent='Robot idle \\u2014 listening for the wake word.';
+    }
+  }catch(e){}
+}
+setInterval(poll,1000);poll();
+</script></body></html>"""
+
+
 FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CJAP LiveAvatar</title>
@@ -590,10 +842,11 @@ button:hover{border-color:var(--gold)}
 <div id="st">idle</div><div id="cap"></div></div><script>
 const $ = id => document.getElementById(id);
 const KEY = new URLSearchParams(location.search).get("key") || "";
-let room = null, ws = null, ready = false, sessTok = null;
+let room = null, ws = null, ready = false, sessTok = null, startP = null;
 let avatarMuted = true, lastStart = 0, keepTimer = null;
-let pendingLagT0 = null, lagEma = null;
+let pendingLagT0 = null, lagEma = null, skew = 0;
 $("aud").muted = true;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function st(msg){ $("st").textContent = msg; }
 
@@ -604,9 +857,17 @@ async function post(path, doc){
   return r.json();
 }
 
-async function start(){
-  if (ready || Date.now() - lastStart < 8000) return;
+// ---- session ------------------------------------------------------------
+function start(){
+  if (ready) return Promise.resolve();
+  if (startP) return startP;                // one start in flight at a time
+  if (Date.now() - lastStart < 8000) return Promise.resolve();
   lastStart = Date.now();
+  startP = _start().catch(e => st("start failed: " + e.message))
+                   .finally(() => { startP = null; });
+  return startP;
+}
+async function _start(){
   st("creating session…");
   const out = await post("/api/avatar-session", {});
   if (!out.ok){ st("session failed: " + JSON.stringify(out.output)); return; }
@@ -624,8 +885,17 @@ async function start(){
     await room.connect(s.livekit_url, s.livekit_client_token);
   }catch(e){ st("LiveKit connect failed: " + e.message); return; }
   st("opening control socket…");
-  ws = new WebSocket(s.ws_url);
-  ws.onmessage = ev => {
+  const sock = new WebSocket(s.ws_url);
+  ws = sock;
+  const connected = new Promise(res => {
+    sock.addEventListener("message", ev => {
+      let m = {}; try{ m = JSON.parse(ev.data); }catch(e){ return; }
+      if (m.type === "session.state_updated" && m.state === "connected") res(true);
+    });
+    sock.addEventListener("close", () => res(false));
+    setTimeout(() => res(false), 15000);
+  });
+  sock.onmessage = ev => {
     let m = {};
     try{ m = JSON.parse(ev.data); }catch(e){ return; }
     if (m.type === "session.state_updated"){
@@ -633,61 +903,81 @@ async function start(){
          (m.state === "connected" ? " — ask the robot something" : ""));
       const was = ready;
       ready = (m.state === "connected");
-      // default once connected: both voices, robot delayed to coincide
-      if (ready && !was) setVoice("sync");
+      if (ready && !was) setVoice(voiceMode === "robot" ? "sync" : voiceMode);
     }
-    if (m.type === "agent.speak_started" && pendingLagT0){
-      // closed-loop sync: how long after the feed publish did the avatar
-      // actually start speaking? Report the smoothed value to the Pi —
-      // the robot delays its own audio by exactly this much.
-      const lag = Date.now()/1000 - pendingLagT0;
-      pendingLagT0 = null;
-      if (lag > 0 && lag < 5){
-        lagEma = lagEma === null ? lag : lagEma*.6 + lag*.4;
-        post("/api/avatar-lag", {lag: +lagEma.toFixed(2)});
-        st("speaking — avatar start lag " + lagEma.toFixed(2) + "s (auto-sync)");
+    if (m.type === "agent.speak_started"){
+      const name = sentOrder.shift();          // attribute to the oldest queued clip
+      if (name) avatarStart[name] = Date.now()/1000;
+      if (pendingLagT0){
+        // closed-loop sync: how long after the feed publish did the avatar
+        // actually start speaking? The robot delays its audio by this much.
+        const lag = Date.now()/1000 - pendingLagT0;
+        pendingLagT0 = null;
+        if (lag > 0 && lag < 5){
+          lagEma = lagEma === null ? lag : lagEma*.6 + lag*.4;
+          post("/api/avatar-lag", {lag: +lagEma.toFixed(2)});
+          st("speaking — avatar start lag " + lagEma.toFixed(2) + "s (auto-sync)");
+        }
       }
     }
   };
-  ws.onclose = () => { ready = false;
-    st("session ended (sandbox caps at ~1 min) — restarts on next answer");
-    stopKeep(); };
-  ws.onerror = () => { ready = false; };
+  sock.onclose = () => {
+    if (ws !== sock) return;
+    ready = false; stopKeep();
+    st("session ended (sandbox caps at ~1 min)" +
+       (speakingNow ? " — reconnecting mid-answer…" : " — restarts on next answer"));
+    if (speakingNow) setTimeout(start, 300);   // pick the answer back up
+  };
+  sock.onerror = () => { ready = false; };
   keepTimer = setInterval(() => {
     if (ws && ws.readyState === 1)
       ws.send(JSON.stringify({type:"session.keep_alive",
                               event_id:String(Date.now())}));
   }, 25000);
+  await connected;
 }
 function stopKeep(){ if (keepTimer){ clearInterval(keepTimer);
   keepTimer = null; } }
 
 async function stop(){
   stopKeep(); ready = false;
-  await setVoice("robot");        // hand the voice back to the robot
   try{ if (ws) ws.close(); }catch(e){}
   try{ if (room) room.disconnect(); }catch(e){}
   if (sessTok) await post("/api/avatar-stop", {session_token: sessTok});
-  sessTok = null; st("stopped");
+  sessTok = null; sent.clear(); sentOrder.length = 0;
+  await post("/api/ctl", {action: "avatar-voice-off"});   // robot: no holds
+  st("stopped — press Start to resume mouthing along");
+  stopped = true;
 }
-$("btnStart").onclick = start;
+let stopped = false;
+$("btnStart").onclick = () => { stopped = false; heartbeat(); start(); };
 $("btnStop").onclick = stop;
+
+// ---- voice mode -----------------------------------------------------------
+// robot = avatar muted here but its mouth still tracks the robot ("lips");
+// avatar = avatar is the only voice; sync = both, robot delayed to coincide
 const MODES = ["sync", "avatar", "robot"];
 let voiceMode = "robot";
+function modeAction(){
+  return voiceMode === "avatar" ? "avatar-voice-on"
+       : voiceMode === "sync"   ? "avatar-voice-sync" : "avatar-voice-lips";
+}
 async function setVoice(mode){
   voiceMode = mode;
   avatarMuted = (mode === "robot");
   $("aud").muted = avatarMuted;
-  const act = mode === "robot" ? "avatar-voice-off"
-            : mode === "avatar" ? "avatar-voice-on" : "avatar-voice-sync";
-  await post("/api/ctl", {action: act});
-  $("btnMute").textContent = "voice: " + (mode === "robot" ? "robot"
+  await post("/api/ctl", {action: modeAction()});
+  $("btnMute").textContent = "voice: " + (mode === "robot" ? "robot (avatar mouths along)"
     : mode === "avatar" ? "AVATAR only" : "BOTH synced");
 }
 $("btnMute").onclick = () => setVoice(
   MODES[(MODES.indexOf(voiceMode) + 1) % MODES.length]);
+// the robot only holds its head start while this page is alive: re-assert
+// the mode every 5s (flag older than 15s = page gone)
+function heartbeat(){ if (!stopped) post("/api/ctl", {action: modeAction()}); }
+setInterval(heartbeat, 5000); heartbeat();
 addEventListener("beforeunload", () => {
-  if (!avatarMuted) navigator.sendBeacon("/api/ctl",
+  navigator.sendBeacon("/api/ctl",
     new Blob([JSON.stringify({key:KEY, action:"avatar-voice-off"})],
              {type:"application/json"}));
 });
@@ -710,48 +1000,76 @@ function wavPcm(buf){          // RIFF walk → the data chunk's bytes
   }
   return null;
 }
-async function speakWav(name){
+// Everything the robot voices goes through ONE ordered queue: answer
+// sentences (current + the pre-fed next one), plus ack/filler asides. The
+// avatar plays them back-to-back in exactly the robot's order.
+const sent = new Set(), sentOrder = [], avatarStart = {};
+let chain = Promise.resolve();
+function enqueue(name){
+  if (!name || sent.has(name)) return;
+  sent.add(name);
+  chain = chain.then(() => sendWav(name)).catch(() => {});
+}
+async function sendWav(name){
+  if (stopped) return;
   if (!ready) await start();
-  for (let w = 0; w < 40 && !ready; w++)
-    await new Promise(r => setTimeout(r, 250));
-  if (!ready){ st("session not ready — sentence skipped"); return; }
+  for (let w = 0; w < 40 && !ready && !stopped; w++) await sleep(250);
+  if (!ready){ st("session not ready — clip skipped"); sent.delete(name); return; }
   try{
-    const buf = await (await fetch("/api/sentence.wav?name=" + name))
-      .arrayBuffer();
-    const pcm = wavPcm(buf);
+    const r = await fetch("/api/sentence.wav?name=" + name);
+    if (!r.ok){ st("clip gone: " + name); return; }
+    const pcm = wavPcm(await r.arrayBuffer());
     if (!pcm){ st("bad wav"); return; }
     for (let i = 0; i < pcm.length; i += 48000)     // 1s @ 24kHz 16-bit
       ws.send(JSON.stringify({type:"agent.speak",
                               audio: b64(pcm.subarray(i, i + 48000))}));
     ws.send(JSON.stringify({type:"agent.speak_end",
                             event_id:String(Date.now())}));
+    sentOrder.push(name);
   }catch(e){ st("audio feed failed: " + e.message); }
 }
 
 // ---- state poll ----------------------------------------------------------
-let sentKey = "";
+let curKey = "", speakingNow = false, lastAsideTs = 0, driftShown = "";
 async function poll(){
   try{
     const stt = await (await fetch("/api/state")).json();
-    const sp = stt.speaking || {};
+    if (stt.ts) skew = Date.now()/1000 - stt.ts;   // Pi clock → browser clock
+    const sp = stt.speaking || {}, as = stt.aside || {};
+    // ack / filler clips ("Hmm.", "let me think…") — mouth them, no caption
+    if (as.wav && as.ts && as.ts !== lastAsideTs && (Date.now()/1000 - (as.ts + skew)) < 6){
+      lastAsideTs = as.ts; enqueue(as.wav);
+    }
     if (sp.current && !sp.done){
-      const key = sp.ts + "|" + sp.current;
-      if (key !== sentKey){
-        const wasIdle = sentKey === "";
-        sentKey = key;
+      const key = sp.wav || (sp.ts + "|" + sp.current);
+      if (key !== curKey){
+        const wasIdle = !speakingNow;
+        curKey = key; speakingNow = true;
         $("cap").textContent = sp.current;
         if (sp.wav){
           // measure start lag only on an answer's FIRST sentence with the
           // session already live (a cold session start isn't speak lag)
-          if (wasIdle && ready && stt.ts)
-            pendingLagT0 = sp.ts + (Date.now()/1000 - stt.ts);
-          speakWav(sp.wav);
+          if (wasIdle && ready && !sent.has(sp.wav))
+            pendingLagT0 = sp.ts + skew;
+          enqueue(sp.wav);
         }
       }
+      if (sp.next && sp.next.wav) enqueue(sp.next.wav);   // queue ahead
+      // drift readout: avatar start vs the robot's real audio start
+      if (sp.wav && sp.play_ts && avatarStart[sp.wav] && driftShown !== sp.wav){
+        driftShown = sp.wav;
+        const d = avatarStart[sp.wav] - (sp.play_ts + skew);
+        st("speaking — avatar " + (d >= 0 ? "+" : "") + d.toFixed(2) + "s vs robot" +
+           (lagEma !== null ? " (lag " + lagEma.toFixed(2) + "s)" : ""));
+      }
     } else if (sp.done){
-      if (sp.interrupted && ws && ws.readyState === 1)
-        ws.send(JSON.stringify({type:"agent.interrupt"}));
-      sentKey = "";
+      if (speakingNow){
+        if (sp.interrupted && ws && ws.readyState === 1)
+          ws.send(JSON.stringify({type:"agent.interrupt"}));
+        speakingNow = false; curKey = "";
+        sentOrder.length = 0;
+        if (sent.size > 64) sent.clear();
+      }
     }
   }catch(e){}
   setTimeout(poll, 120);
@@ -811,6 +1129,16 @@ def handle_get(h, path, params):
             h._send(200, MAINTAIN_PAGE, "text/html; charset=utf-8")
         else:
             h._send(200, GATE_PAGE, "text/html; charset=utf-8")
+    elif path == "/event":
+        if _authed(params):
+            h._send(200, event_page(), "text/html; charset=utf-8")
+        else:
+            h._send(200, GATE_PAGE.replace("/maintain?key=", "/event?key="),
+                    "text/html; charset=utf-8")
+    elif path == "/phone":   # easy-to-type alias for the event page
+        h.send_response(302)
+        h.send_header("Location", "/event?key=" + DASH_KEY)
+        h.end_headers()
     elif path == "/api/state":
         h._send(200, json.dumps(state()))
     elif path == "/api/camera.jpg":
@@ -831,8 +1159,7 @@ def handle_get(h, path, params):
             h._send(400, json.dumps({"error": "bad name"}))
         else:
             try:
-                h._send(200, open("/dev/shm/" + name, "rb").read(),
-                        "audio/wav")
+                h._send(200, _sentence_pcm24k("/dev/shm/" + name), "audio/wav")
             except OSError:
                 h._send(404, json.dumps({"error": "gone"}))
     elif path == "/api/camera.mjpg":
@@ -873,6 +1200,13 @@ def handle_post(h, path, body):
         else:
             ok, out = avatar_stop(body.get("session_token"))
             h._send(200, json.dumps({"ok": ok, "output": out}))
+    elif path == "/api/ask":
+        # /event question button: queue one scripted canned answer
+        if not _authed({}, body):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            ok, out = ask_event(body.get("id", ""))
+            h._send(200, json.dumps({"ok": ok, "output": out}))
     elif path == "/api/avatar-lag":
         # measured publish→speak_started delay from the /face-avatar page;
         # the robot delays its own audio by this much in "sync" voice mode
@@ -889,6 +1223,25 @@ def handle_post(h, path, body):
     else:
         return False
     return True
+
+
+def _sentence_pcm24k(path):
+    """The avatar page streams the wav's raw PCM as 24 kHz/16-bit/mono. Every
+    clip we produce already is; anything else is converted once (ffmpeg)."""
+    import wave
+    try:
+        with wave.open(path, "rb") as w:
+            ok = (w.getframerate(), w.getnchannels(), w.getsampwidth()) == (24000, 1, 2)
+    except Exception:
+        ok = False
+    if ok:
+        return open(path, "rb").read()
+    out = path + ".24k.wav"
+    if not os.path.exists(out):
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "quiet", "-i", path,
+                        "-ar", "24000", "-ac", "1", "-sample_fmt", "s16", out],
+                       timeout=20)
+    return open(out, "rb").read()
 
 
 def _liveavatar_request(path, payload, auth_header):

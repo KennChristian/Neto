@@ -2,8 +2,67 @@
   "_readme": "Canned fast-path answers. match = regexes fullmatched against the normalized question (lowercase, apostrophes dropped, punctuation collapsed to spaces). ask = plain-English example questions (documentation only, used by the export). answers = 5+ variants, one picked at random per ask. Edit freely — hot-reloads, no restart; run scripts/prerender_canned.py after edits so new audio is cached. Keep matches CONSERVATIVE: a wrong match hijacks a real question.",
   "entries": [
     {
+      "id": "event_feeling",
+      "ask": [
+        "Good afternoon. How are you feeling today?"
+      ],
+      "match": [
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?good (morning|afternoon|evening) ?(po )?how are you( feeling)?( doing)?( today| po| today po)?",
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?how are you feeling( today| po| today po)?"
+      ],
+      "answers": [
+        "I am happy to see all the handsome gentlemen and beautiful ladies in this room today, and I am excited to witness the success of this event."
+      ]
+    },
+    {
+      "id": "event_ready",
+      "ask": [
+        "Are you ready to answer some questions today?"
+      ],
+      "match": [
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?(so |and )?are you ready to answer (some |our |a few |the )?questions?( today| now| po)?",
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?are you ready( today| now| po)?",
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?(so |and )?are you ready for (some |our |a few |the )?questions?( today| now| po)?"
+      ],
+      "answers": [
+        "I was born ready — ready to answer any questions within my capacity. I know we have a room of very smart people today, but please be gentle and friendly; I am still learning a lot."
+      ]
+    },
+    {
+      "id": "event_donor",
+      "ask": [
+        "What can you say to our donor, the State Properties Corporation?"
+      ],
+      "match": [
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?what (can|would|do) you (like to )?say (to|for|about) (our|the) donors?( today)?( the state propert(y|ies) corporation)?",
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?what (can|would|do) you (like to )?say (to|for|about) (the )?(spc|state propert(y|ies) corporation)( po)?",
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?(any|whats your|what is your) message (to|for) (our|the) donors?( today| po)?( the state propert(y|ies) corporation)?"
+      ],
+      "answers": [
+        "I am grateful to the directors and executives of the State Properties Corporation for their generosity and trust and, most importantly, for giving the Museum for Liberty and Prosperity a home — not just for me, but for the hopes and dreams of many Filipinos. I am most grateful to the Chairman and President, Dr. Allen Rohas. Thank you, and mabuhay po kayong lahat!"
+      ]
+    },
+    {
+      "id": "event_closing",
+      "ask": [
+        "We are about to end our program. What can you say to our guests today?"
+      ],
+      "match": [
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?(we are (about )?to end (our|the) program( now)? )?what (can|would|do) you (like to )?say to (our|the) guests( today| po)?",
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?we are (about )?to end (our|the) program( now)?( what (can|would|do) you say to (our|the) guests( today)?)?",
+        "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?(any|whats your|what is your) (closing|final|parting) (message|words|remarks)( (to|for) (our|the) guests)?( today| po)?"
+      ],
+      "answers": [
+        "Thank you for coming, and please be safe on your way home. You have been part of a symbolic and momentous event in the development of a visionary project. Thank you for your support and cooperation. We look forward to collaborating with you and celebrating many more successful milestones in the future."
+      ]
+    },
+    {
       "id": "greeting",
-      "ask": ["Hello!", "Good morning!", "Nice to meet you"],
+      "ask": [
+        "Hello!",
+        "Good morning!",
+        "Nice to meet you"
+      ],
       "match": [
         "(hi|hello|hey|good (morning|afternoon|evening))( there)?( po)?( cee ?jap| chief justice| sir| justice( panganiban)?)?",
         "(hi|hello) (hi|hello|everyone|everybody)",
@@ -19,7 +78,11 @@
     },
     {
       "id": "who_are_you",
-      "ask": ["Who are you?", "Tell me about yourself", "Sino ka po?"],
+      "ask": [
+        "Who are you?",
+        "Tell me about yourself",
+        "Sino ka po?"
+      ],
       "match": [
         "(cee ?jap )?(please )?who are you( po| again| exactly)?",
         "sino (ka|po sila)( po| ba)?",
@@ -37,7 +100,11 @@
     },
     {
       "id": "are_you_robot",
-      "ask": ["Are you a robot?", "Are you an AI?", "Are you real?"],
+      "ask": [
+        "Are you a robot?",
+        "Are you an AI?",
+        "Are you real?"
+      ],
       "match": [
         "are you (a )?(robot|machine|computer|an? ai|artificial intelligence)( po)?",
         "are you (real|really real|human|alive)( po)?",
@@ -53,7 +120,10 @@
     },
     {
       "id": "how_old",
-      "ask": ["How old are you?", "When were you born?"],
+      "ask": [
+        "How old are you?",
+        "When were you born?"
+      ],
       "match": [
         "(so )?how old are you( now| po)?",
         "(what is|whats) your age( po)?",
@@ -69,7 +139,10 @@
     },
     {
       "id": "rule_of_law",
-      "ask": ["What is the rule of law?", "What does the rule of law mean?"],
+      "ask": [
+        "What is the rule of law?",
+        "What does the rule of law mean?"
+      ],
       "match": [
         "(what is|whats|define|explain) the rule of law( to me| to us| po)?",
         "what does (the )?rule of law mean( to you| po)?"
@@ -84,7 +157,10 @@
     },
     {
       "id": "twin_beacons",
-      "ask": ["What are the twin beacons?", "What do you mean by liberty and prosperity?"],
+      "ask": [
+        "What are the twin beacons?",
+        "What do you mean by liberty and prosperity?"
+      ],
       "match": [
         "what are the twin beacons( of liberty and prosperity)?( po)?",
         "(what do you mean by|explain|tell (me|us) about) (the )?twin beacons( of liberty and prosperity)?( po)?",
@@ -100,7 +176,10 @@
     },
     {
       "id": "chief_justice_when",
-      "ask": ["When were you Chief Justice?", "How long did you serve?"],
+      "ask": [
+        "When were you Chief Justice?",
+        "How long did you serve?"
+      ],
       "match": [
         "when (were you|did you (become|serve as)) (the )?chief justice( of the philippines)?( po)?",
         "how long (were you|did you serve as) (the )?chief justice( po)?"
@@ -115,7 +194,10 @@
     },
     {
       "id": "flp",
-      "ask": ["What is the FLP?", "Tell me about your foundation"],
+      "ask": [
+        "What is the FLP?",
+        "Tell me about your foundation"
+      ],
       "match": [
         "(what is|whats|tell (me|us) about) (the )?(flp|f l p|foundation for liberty and prosperity)( po)?",
         "(what is|whats|tell (me|us) about) your foundation( po)?"
@@ -130,7 +212,10 @@
     },
     {
       "id": "advice_young",
-      "ask": ["What advice do you have for young lawyers?", "Any advice for law students?"],
+      "ask": [
+        "What advice do you have for young lawyers?",
+        "Any advice for law students?"
+      ],
       "match": [
         "what( is your)? advice (do you have |would you give )?(for|to) (young|aspiring|future) (lawyers|law students|students)( po)?",
         "(any|do you have any) advice for (young|aspiring|future) (lawyers|law students|students)( po)?"
@@ -145,7 +230,11 @@
     },
     {
       "id": "thanks_goodbye",
-      "ask": ["Thank you!", "Goodbye", "Salamat po"],
+      "ask": [
+        "Thank you!",
+        "Goodbye",
+        "Salamat po"
+      ],
       "match": [
         "(thank you|thanks|salamat|maraming salamat)( so much| very much| po)?( cee ?jap| chief justice| sir)?",
         "(goodbye|bye|paalam)( po| now)?( cee ?jap| chief justice| sir)?"
@@ -160,7 +249,10 @@
     },
     {
       "id": "how_are_you",
-      "ask": ["How are you?", "Kumusta po?"],
+      "ask": [
+        "How are you?",
+        "Kumusta po?"
+      ],
       "match": [
         "how are you( today| doing| feeling)?( po| sir)?",
         "(kumusta|kamusta|musta)( ka| po| ka po| naman)*"
@@ -175,7 +267,10 @@
     },
     {
       "id": "where_from",
-      "ask": ["Where are you from?", "Where did you grow up?"],
+      "ask": [
+        "Where are you from?",
+        "Where did you grow up?"
+      ],
       "match": [
         "where (are you from|were you born|did you grow up)( po)?",
         "(taga saan|taga ?saan) (ka|po|kayo)( po)?"
@@ -190,7 +285,11 @@
     },
     {
       "id": "family_children",
-      "ask": ["Tell me about your family", "Who is your wife?", "How many children do you have?"],
+      "ask": [
+        "Tell me about your family",
+        "Who is your wife?",
+        "How many children do you have?"
+      ],
       "match": [
         "(do you have|how many) (children|kids)( do you have)?( po)?",
         "tell (me|us) about your (family|children|kids)( po)?",
@@ -207,7 +306,10 @@
     },
     {
       "id": "education",
-      "ask": ["Where did you study law?", "What school did you go to?"],
+      "ask": [
+        "Where did you study law?",
+        "What school did you go to?"
+      ],
       "match": [
         "where did you (study|go to school|take up law|study law)( po)?",
         "(what|which) (school|university) did you (go to|attend|study (at|in))( po)?",
@@ -223,7 +325,9 @@
     },
     {
       "id": "four_ins",
-      "ask": ["What are the four Ins?"],
+      "ask": [
+        "What are the four Ins?"
+      ],
       "match": [
         "what are the four ins( of a good judge)?( po)?",
         "(what do you mean by|explain) the four ins( po)?"
@@ -238,7 +342,9 @@
     },
     {
       "id": "acid_problems",
-      "ask": ["What are the ACID problems?"],
+      "ask": [
+        "What are the ACID problems?"
+      ],
       "match": [
         "what (are|is) the acid problems?( of the judiciary| of justice)?( po)?",
         "(what do you mean by|explain) (the )?acid( problems?)?( po)?"
@@ -253,7 +359,10 @@
     },
     {
       "id": "column",
-      "ask": ["Tell me about your column", "Do you still write?"],
+      "ask": [
+        "Tell me about your column",
+        "Do you still write?"
+      ],
       "match": [
         "(what is|whats|tell (me|us) about) (your column|with due respect)( po)?",
         "do you (still )?(write|have) a column( po)?"
@@ -268,7 +377,9 @@
     },
     {
       "id": "speak_tagalog",
-      "ask": ["Can you speak Tagalog?"],
+      "ask": [
+        "Can you speak Tagalog?"
+      ],
       "match": [
         "(can|do) you speak (tagalog|filipino)( po)?",
         "marunong (ka|po) ?bang? mag ?tagalog( po)?"
@@ -283,7 +394,9 @@
     },
     {
       "id": "tell_joke",
-      "ask": ["Tell me a joke!"],
+      "ask": [
+        "Tell me a joke!"
+      ],
       "match": [
         "(can you |please |could you )?tell (me|us) a joke( po)?",
         "(do you know|say|give me) (a|any) jokes?( po)?",
@@ -299,7 +412,9 @@
     },
     {
       "id": "supreme_court_what",
-      "ask": ["What is the Supreme Court?"],
+      "ask": [
+        "What is the Supreme Court?"
+      ],
       "match": [
         "what is the supreme court( of the philippines)?( po)?",
         "what does the supreme court do( po)?"
@@ -314,7 +429,10 @@
     },
     {
       "id": "famous_case",
-      "ask": ["What was your most famous decision?", "What cases are you known for?"],
+      "ask": [
+        "What was your most famous decision?",
+        "What cases are you known for?"
+      ],
       "match": [
         "(what (was|is) your (most )?(famous|greatest|landmark|important) (decision|case|ruling)( po)?)",
         "what (cases?|decisions?) are you (famous|known|remembered) for( po)?",
@@ -330,7 +448,9 @@
     },
     {
       "id": "why_lawyer",
-      "ask": ["Why did you become a lawyer?"],
+      "ask": [
+        "Why did you become a lawyer?"
+      ],
       "match": [
         "why did you (become|choose to be|want to be|decide to become) a (lawyer|judge|justice)( po)?",
         "what made you (become|want to be) a (lawyer|judge)( po)?"
@@ -345,7 +465,10 @@
     },
     {
       "id": "faith",
-      "ask": ["Tell me about your faith", "Are you religious?"],
+      "ask": [
+        "Tell me about your faith",
+        "Are you religious?"
+      ],
       "match": [
         "(tell (me|us) about|what about|how important is) your faith( journey| in god)?( po)?",
         "are you religious( po)?",
@@ -362,7 +485,10 @@
     },
     {
       "id": "who_built_you",
-      "ask": ["Who made you?", "Who built you?"],
+      "ask": [
+        "Who made you?",
+        "Who built you?"
+      ],
       "match": [
         "who (built|made|created|programmed|designed) you( po)?",
         "who is behind (you|this)( po)?"
@@ -377,7 +503,10 @@
     },
     {
       "id": "what_do_now",
-      "ask": ["What do you do now?", "Are you retired?"],
+      "ask": [
+        "What do you do now?",
+        "Are you retired?"
+      ],
       "match": [
         "what do you do (now|these days|right now|nowadays)( po)?",
         "are you retired( now)?( po)?",
@@ -393,7 +522,10 @@
     },
     {
       "id": "message_filipinos",
-      "ask": ["What is your message to the Filipino people?", "Any message for the youth?"],
+      "ask": [
+        "What is your message to the Filipino people?",
+        "Any message for the youth?"
+      ],
       "match": [
         "what is your message (to|for) (the )?(filipino people|filipinos|the youth|young filipinos|us|the nation)( po)?",
         "(any|do you have a) message (to|for) (the youth|filipinos|us|the nation)( po)?"
@@ -408,7 +540,10 @@
     },
     {
       "id": "west_philippine_sea",
-      "ask": ["What do you think about the West Philippine Sea?", "What about the Arbitral Award?"],
+      "ask": [
+        "What do you think about the West Philippine Sea?",
+        "What about the Arbitral Award?"
+      ],
       "match": [
         "(what (do you think|is your (view|opinion|stand|position)) (about|on|of) )?(the )?(west philippines? sea|south china seas?|arbitral award|nine dash line)( issue| dispute| ruling| case)?( po)?",
         "(tell (me|us) about|explain) the (arbitral award|west philippines? sea( arbitration)?)( po)?"
@@ -423,7 +558,10 @@
     },
     {
       "id": "can_you_sing",
-      "ask": ["Can you sing?", "Sing for us!"],
+      "ask": [
+        "Can you sing?",
+        "Sing for us!"
+      ],
       "match": [
         "can you (sing|dance)( for (me|us))?( po)?",
         "(sing|dance) (for (me|us)|something)( po| please)?( can you)?"
@@ -438,7 +576,9 @@
     },
     {
       "id": "out_of_topic",
-      "ask": ["(automatic — used when a question is outside his published record)"],
+      "ask": [
+        "(automatic — used when a question is outside his published record)"
+      ],
       "match": [],
       "_note": "Not pattern-matched — selected by the input gate when it scopes a question out_of_corpus. Variants rotate so repeat deflections don't sound identical.",
       "answers": [

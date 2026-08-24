@@ -32,6 +32,13 @@ def hits(q):
 check("normalize punctuation", canned_answers.normalize("What's the Rule of Law?")
       == "whats the rule of law")
 
+# event mode ON for the hit cases below — scripted event_* entries only
+# voice-match while the flag file exists (toggled from the /event page)
+EVENT_FLAG = os.path.join(os.path.dirname(canned_answers._DEFAULT_PATH),
+                          "event_mode.on")
+_had_event_flag = os.path.exists(EVENT_FLAG)
+open(EVENT_FLAG, "w").close()
+
 # --- common questions HIT (incl. ASR-ish variants) ---
 for q, want in [
     ("Who are you?", "who_are_you"),
@@ -78,6 +85,21 @@ for q, want in [
     ("Tell me about the Arbitral Award.", "west_philippine_sea"),
     ("Can you sing?", "can_you_sing"),
     ("Did you top the bar exam?", "education"),
+    # event-day scripted questions (2026-08-24, single verbatim answers)
+    ("Good afternoon. How are you feeling today?", "event_feeling"),
+    ("Hi CJAP, good afternoon! How are you feeling today?", "event_feeling"),
+    ("How are you feeling today?", "event_feeling"),
+    ("Are you ready to answer some questions today?", "event_ready"),
+    ("Hi CJAP, are you ready to answer a few questions?", "event_ready"),
+    ("What can you say to our donor, the State Properties Corporation?", "event_donor"),
+    ("What can you say to the State Properties Corporation?", "event_donor"),
+    ("Any message for our donors?", "event_donor"),
+    ("We are about to end our program. What can you say to our guests today?", "event_closing"),
+    ("What can you say to our guests today?", "event_closing"),
+    # the generic entries must survive the event entries sitting above them
+    ("How are you today?", "how_are_you"),
+    ("Kumusta po?", "how_are_you"),
+    ("Good morning po!", "greeting"),
 ]:
     check(f"hit: {q!r} -> {want}", hits(q) == want)
 
@@ -96,8 +118,28 @@ for q in [
     "How are you going to fix the judiciary?",
     "Tell me about your family's political connections.",
     "Where did you study the death penalty issue?",
+    "What can you say about the rule of law?",
+    "What can you say to the Supreme Court about corruption?",
+    "Are you ready to rule on the ICC case?",
 ]:
     check(f"miss: {q!r}", hits(q) is None)
+
+# --- event mode gating: flag off -> event_* voice-inert, generics intact ---
+os.unlink(EVENT_FLAG)
+check("event off: scripted question falls through",
+      hits("Good afternoon. How are you feeling today?") is None)
+check("event off: donor question falls through",
+      hits("What can you say to our donor, the State Properties Corporation?")
+      is None)
+check("event off: generic how_are_you unaffected",
+      hits("How are you today?") == "how_are_you")
+check("event off: get-by-id still works (button path)",
+      isinstance(canned_answers.get("event_ready"), str))
+open(EVENT_FLAG, "w").close()
+check("event on: scripted question matches again",
+      hits("Good afternoon. How are you feeling today?") == "event_feeling")
+if not _had_event_flag:
+    os.unlink(EVENT_FLAG)
 
 # --- out_of_topic: selected by id (gate scope), never by transcript ---
 ooc = canned_answers.get("out_of_topic")
@@ -121,8 +163,9 @@ entries = canned_answers._load()
 check("entries loaded", len(entries) >= 25)
 check("all answers non-empty",
       all(isinstance(a, str) and a.strip() for e in entries for a in e["answers"]))
-check("every entry has >=5 variants",
-      all(len(e["answers"]) >= 5 for e in entries))
+check("every entry has >=5 variants",   # event_* = verbatim scripts, 1 answer
+      all(len(e["answers"]) >= 5 for e in entries
+          if not e["id"].startswith("event_")))
 variants2 = {canned_answers.match("Who are you?")["answer"] for _ in range(40)}
 check("pattern entries rotate variants", len(variants2) >= 3)
 

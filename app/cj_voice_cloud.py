@@ -56,9 +56,24 @@ WAKE_TRIGGER = "/dev/shm/cj_wake_trigger"
 # Touched by the dashboard's "Enroll voice" button — next wake-loop iteration
 # records ~10 s and enrolls it as the reference speaker (speaker_id.py).
 ENROLL_TRIGGER = "/dev/shm/cj_enroll_trigger"
+# Written by the /event page's question buttons (JSON {"q","a","id"}): the
+# next wake-loop iteration speaks the scripted answer as if the question had
+# been asked aloud — no mic, no STT, no composer. 30 s freshness so a tap
+# while an answer is still playing queues the next question instead of dying.
+ASK_TRIGGER = "/dev/shm/cj_ask_trigger"
+_pending_ask = {"ask": None}   # handoff from _wake_stream to wake_loop
 ENROLL_PROMPT_WAV = os.path.expanduser("~/fillers_bail/enroll_prompt.wav")
 ENROLL_DONE_WAV = os.path.expanduser("~/fillers_bail/enroll_done.wav")
 TRANSCRIPT = "/dev/shm/cj_transcript.jsonl"
+
+
+def _stage(step=None, state=None, detail=None, reset=False, extra=None):
+    """Audience-page pipeline tracker (stream_speak.publish_stage; fails open)."""
+    try:
+        from stream_speak import publish_stage
+        publish_stage(step, state, detail, reset=reset, extra=extra)
+    except Exception:
+        pass
 
 
 def _publish_transcript(role, text):
@@ -537,8 +552,10 @@ class FillerLoop:
             clip = nxt or pool.pop()
             if not nxt:
                 _RECENT_FILLERS.append(clip)
-            subprocess.run(["aplay", "-q", clip],
-                           stderr=subprocess.DEVNULL)
+            # once announced to the avatar the clip is "current": play it
+            # even if stop() lands during the head-start hold (stop() never
+            # cuts a current clip — same rule, applied from the announce)
+            _play_aside(clip)
             if nxt:
                 try:
                     os.unlink(nxt)   # injected clips are /dev/shm temps
@@ -691,6 +708,8 @@ def _avatar_mode():
     """None (robot voice), "solo" (avatar only), or "sync" (both voices,
     robot delayed to coincide with the avatar's measured start lag)."""
     try:
+        if time.time() - os.path.getmtime(AVATAR_AUDIO_FLAG) > 15:
+            return None   # page stopped heart-beating: it is gone
         with open(AVATAR_AUDIO_FLAG) as f:
             return f.read().strip() or "solo"
     except OSError:
@@ -706,7 +725,61 @@ def _avatar_lag():
         return float(os.environ.get("CJ_AVATAR_LAG_S", "0.8"))
 
 
-def _play_wav_listener(wav_path, listener):
+def _avatar_head_start(prefed_age=None):
+    """Seconds the robot holds before a sentence so the avatar's mouth and
+    the robot's audio coincide. A sentence the page has NOT seen yet needs
+    the full measured idle-start lag (fetch + upload + HeyGen start). One the
+    page already queued `prefed_age` s ago (see SentenceSpeaker._prefeed)
+    only needs the remainder of the much shorter queued-start latency."""
+    if prefed_age is None:
+        return _avatar_lag()
+    try:
+        q = float(os.environ.get("CJ_AVATAR_QUEUE_LAG_S", "0.4"))
+    except ValueError:
+        q = 0.4
+    return max(0.0, min(_avatar_lag(), q) - prefed_age)
+
+
+def _mark_play_start():
+    try:
+        from stream_speak import mark_play_start
+        mark_play_start()
+    except Exception:
+        pass
+
+
+def _asides_enabled():
+    return os.environ.get("CJ_AVATAR_ASIDES", "1").strip().lower() not in {
+        "0", "false", "no", "off"}
+
+
+def _play_aside(clip, stop=None):
+    """Play a non-answer clip (ack / filler). With the avatar page live the
+    clip is mirrored to it (cj_aside.json) and, in "sync" mode, the robot
+    holds the measured lag so both mouths move together; in "solo" mode the
+    robot stays silent for the clip's length. `stop` (Event) cuts the hold."""
+    mode = _avatar_mode()
+    if mode and _asides_enabled():
+        try:
+            from stream_speak import publish_aside, wav_duration
+            publish_aside(clip)
+        except Exception:
+            mode = None
+    if mode and _asides_enabled():
+        hold = _avatar_lag()
+        if mode == "solo":
+            hold += wav_duration(clip) or 1.0
+        end = time.monotonic() + hold
+        while time.monotonic() < end:
+            if stop is not None and stop.is_set():
+                return
+            time.sleep(0.05)
+        if mode == "solo":
+            return
+    subprocess.run(["aplay", "-q", clip], stderr=subprocess.DEVNULL)
+
+
+def _play_wav_listener(wav_path, listener, prefed_age=None):
     """aplay one streamed sentence while the answer-spanning StopListener
     watches the mic. Returns True if the stop word (or dashboard mute) cut
     the answer — including a fire in the gap BEFORE this sentence started."""
@@ -714,20 +787,15 @@ def _play_wav_listener(wav_path, listener):
         return True
     mode = _avatar_mode()
     if mode:
-        # The avatar speaks this audio too. It starts ~lag after the feed
-        # publish (fetch + upload + HeyGen buffering), so the FIRST sentence
-        # of an answer waits that long here — the robot's pacing (and in
-        # "sync" mode its own audio) then coincides with the avatar; later
-        # sentences chain in the avatar's playback buffer.
-        lag = 0.0
-        if not getattr(listener, "avatar_lagged", False):
-            listener.avatar_lagged = True
-            lag = _avatar_lag()
-        end = time.monotonic() + lag
+        # The avatar speaks this audio too: hold so its mouth and our audio
+        # start together (every sentence — the old first-sentence-only hold
+        # let the avatar slip a full lag further behind on each boundary).
+        end = time.monotonic() + _avatar_head_start(prefed_age)
         while time.monotonic() < end:
             if listener.fired:
                 return True
             time.sleep(0.05)
+    _mark_play_start()
     if mode == "solo":
         # avatar is the only voice: silent hold for the sentence's duration
         from stream_speak import wav_duration
@@ -801,8 +869,9 @@ def speak(text, filler=None, stop=None):
                              wav=publish_sentence_wav(wav_path),
                              dur=wav_duration(wav_path))
         _amode = _avatar_mode()
-        if _amode == "sync":
+        if _amode in ("sync", "lips"):
             time.sleep(_avatar_lag())   # let the avatar catch up, then BOTH speak
+        _mark_play_start()
         if _amode == "solo":
             from stream_speak import wav_duration
             end = time.monotonic() + (wav_duration(wav_path) or 2.0) \
@@ -842,10 +911,10 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
     result, done = {}, threading.Event()
     listener_box = {}   # holds the answer-spanning StopListener once armed
 
-    def _play(wav):
+    def _play(wav, prefed_age=None):
         listener = listener_box.get("l")
         if listener is not None:
-            return _play_wav_listener(wav, listener)
+            return _play_wav_listener(wav, listener, prefed_age)
         r = subprocess.run(["aplay", "-q", wav])
         if r.returncode != 0:
             print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
@@ -977,8 +1046,15 @@ def _play_ack():
         return
     clips = glob.glob(_ACK_DIR + "/*.wav")
     if clips:
-        subprocess.Popen(["aplay", "-q", random.choice(clips)],
-                         stderr=subprocess.DEVNULL)
+        clip = random.choice(clips)
+        if _avatar_mode() and _asides_enabled():
+            # avatar mirrors the ack too; the hold makes it non-instant, so
+            # do it off-thread to keep the STT call moving
+            threading.Thread(target=_play_aside, args=(clip,),
+                             daemon=True).start()
+        else:
+            subprocess.Popen(["aplay", "-q", clip],
+                             stderr=subprocess.DEVNULL)
 
 
 def _followup_window():
@@ -998,11 +1074,15 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
     followup=True shortens the no-speech timeout to the follow-up window, so
     silence hands control back to the caller quickly."""
     gestures.start("listen")
+    _stage(reset=True)
+    _stage("transcribe", "active", "listening…")
     path = record_with_meter(
         no_speech_timeout_s=(_followup_window() if followup else 12))
     if not path:
         _publish_transcript("note", "(mic timeout — no speech captured)")
+        _stage("transcribe", "pending", "no speech captured")
         return False
+    _stage("transcribe", "active", "transcribing (gpt-4o-mini-transcribe)…")
     _play_ack()   # sub-second "Ah."/"Hmm." NOW — sound before the STT wait
     try:
         import speaker_id
@@ -1034,6 +1114,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
             raise
         print(f"[net] offline during STT ({type(e).__name__}) — voicing the offline notice")
         _publish_transcript("note", "(offline — spoke the no-internet notice)")
+        _stage("transcribe", "pending", "offline")
         gestures.start("talk")
         say_offline()
         return True
@@ -1042,6 +1123,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
     if not question.strip():
         print("[stt] empty transcript")
         _publish_transcript("note", "(empty transcript — STT heard nothing)")
+        _stage("transcribe", "pending", "heard nothing")
         return False
     non_latin = sum(ord(c) > 127 for c in question) / len(question)
     if non_latin > 0.3:   # EN/Filipino are Latin-script; this is a hallucination
@@ -1050,6 +1132,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
         return False
     stt_s = round(time.monotonic() - t0, 2)
     print(f"[stt] heard: \"{question}\"  ({stt_s:.1f}s)")
+    _stage("transcribe", "done", f"heard in {stt_s:.1f}s")
     raw_asr = question
     try:  # P0 entity correction on the transcript (fails open; DARK unless enabled)
         from postprocess import process_transcript
@@ -1073,6 +1156,11 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
         # captions, and stop-word interruptible playback.
         print(f"[canned] fast path hit: {hit['id']}")
         _publish_transcript("note", f"(canned answer: {hit['id']})")
+        _stage("route", "done", "matched a curated answer",
+               extra={"scope": "canned", "topic": hit["id"], "confidence": "curated",
+                      "scope_reason": "a question he has answered before — curated reply"})
+        _stage("compose", "done", "curated text — no composer")
+        _stage("fidelity", "done", "curated — pre-verified")
         response = hit["answer"]
         t0 = time.monotonic()
         gestures.start("talk")
@@ -1244,6 +1332,22 @@ def _wake_stream(det):
     with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
                         blocksize=frame_len) as stream:
         while True:
+            if os.path.exists(ASK_TRIGGER):
+                ask = None
+                try:
+                    fresh = (time.time() - os.path.getmtime(ASK_TRIGGER)) < 30
+                    raw = open(ASK_TRIGGER).read() if fresh else ""
+                    os.unlink(ASK_TRIGGER)
+                    if raw:
+                        ask = json.loads(raw)
+                except (OSError, ValueError) as e:
+                    print(f"[ask] bad trigger ignored: {e}")
+                if ask and ask.get("a"):
+                    _pending_ask["ask"] = ask
+                    print(f"[ask] question button: {ask.get('id')}")
+                    _publish_wake(1.0, fired=True)
+                    model.reset()
+                    return 1.0
             for trig, ret in ((WAKE_TRIGGER, 1.0), (ENROLL_TRIGGER, -1.0)):
                 if os.path.exists(trig):
                     try:
@@ -1297,6 +1401,50 @@ def _run_enrollment(gestures):
     finally:
         os.unlink(path)
         gestures.neutral()
+
+
+def _ask_turn(gestures, history, ask, stop=None):
+    """Speak a scripted answer queued by an /event question button. Mirrors the
+    canned fast-path block in handle_turn — same captions, avatar feed, turn
+    meta, history, and stop-word interruptible playback — but with no mic, no
+    STT, and no composer: the question AND answer both come from the trigger
+    (sourced from canned_answers.json by the dashboard), so the delivery is
+    deterministic even if STT would have misheard the emcee."""
+    question, response = ask.get("q") or "(question button)", ask["a"]
+    entry_id = ask.get("id", "?")
+    print(f"[ask] speaking scripted answer: {entry_id}")
+    _publish_transcript("user", question)
+    _publish_transcript("note", f"(question button: {entry_id})")
+    _stage(reset=True)
+    _stage("transcribe", "done", "typed question (event button)")
+    _stage("route", "done", "scripted event answer",
+           extra={"scope": "event", "topic": entry_id, "confidence": "curated",
+                  "scope_reason": "scripted question for today's event"})
+    _stage("compose", "done", "curated text — no composer")
+    _stage("fidelity", "done", "curated — pre-verified")
+    t0 = time.monotonic()
+    gestures.start("talk")
+    interrupted = speak(response, None, stop=stop)
+    _publish_transcript("cj", response)
+    _publish_turn_meta({
+        "phase": "composed", "raw_asr": question, "question": question,
+        "answer": response, "topic": f"canned:{entry_id}", "theme": "",
+        "confidence": "button", "token_budget": 0, "dynamic_tokens": False,
+        "stt_s": 0.0, "compose_s": 0.0,
+        "cost_usd": 0.0, "cost_total_usd": _cost_meta(None).get("cost_total_usd"),
+    })
+    _publish_turn_meta({
+        "phase": "spoken", "question": question,
+        "synth_s": round(time.monotonic() - t0, 2), "play_s": None,
+        "interrupted": bool(interrupted),
+    })
+    history += [{"role": "user", "content": question},
+                {"role": "assistant", "content": response}]
+    del history[:-20]
+    if interrupted:
+        _publish_transcript("note", "(answer interrupted by wake phrase)")
+        return "interrupted"
+    return True
 
 
 def wake_loop(client, artifacts, gestures):
@@ -1357,6 +1505,14 @@ def wake_loop(client, artifacts, gestures):
             res = wake_word.wait_for_wake(
                 detector, windows=_wake_windows(), on_listen=_on_listen)
             print(f"[wake] FIRED on {res.variant!r} (score {res.score}, heard: {res.heard!r})")
+        ask, _pending_ask["ask"] = _pending_ask["ask"], None
+        if ask:   # /event question button: cached clip, works even offline
+            gestures.perk()
+            r = _ask_turn(gestures, history, ask, stop=stop)
+            gestures.neutral()
+            time.sleep(grace)
+            print(f"[wake] re-armed — say \"{phrase}\"")
+            continue
         prewarm_connections(client)   # warm OpenAI/Anthropic/ElevenLabs while the user speaks
         gestures.perk()
         if not internet_up(1.2):   # short probe: don't hold the mic open on a slow LAN
