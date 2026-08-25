@@ -379,14 +379,18 @@ html,body{height:100%;color:var(--ink);overflow:hidden;
 #cam .idle b{font-family:'Playfair Display',Georgia,serif;color:var(--brass);font-size:5.5vh;letter-spacing:.24em;font-weight:500}
 /* floor shadow under the plaques */
 #scrim{position:fixed;left:0;right:0;bottom:0;height:30vh;pointer-events:none;
-  background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,0))}
+  background:linear-gradient(to top,rgba(0,0,0,.3),rgba(0,0,0,0))}
 /* the two exhibit plaques: question left, answer right, levelled */
 #bar{position:fixed;left:2vw;right:2vw;bottom:2.6vh;display:flex;justify-content:space-between;
   align-items:stretch;gap:2vw;pointer-events:none}
+/* plaques (2026-08-25, user): no outline/ring, ivory fades top -> bottom.
+   Bottom stop stays ~.45 so the dark ink is still readable over the wall;
+   fading to 0 would need light ink. */
 .card{min-width:0;min-height:22vh;max-height:42vh;display:flex;flex-direction:column;
-  padding:2vh 1.8vw 1.8vh;border-radius:.6vh;color:var(--ink);
-  background:linear-gradient(180deg,#f7f1e3 0%,var(--ivory) 55%,var(--ivory2) 100%);
-  box-shadow:0 .2vh 0 #fff8 inset,0 2vh 5vh rgba(0,0,0,.55),0 0 0 .25vh #cdb98a;
+  padding:2vh 1.8vw 3vh;border-radius:.6vh;color:var(--ink);
+  background:linear-gradient(180deg,rgba(247,241,227,.97) 0%,rgba(244,237,220,.9) 35%,
+    rgba(234,223,198,.7) 70%,rgba(234,223,198,.45) 100%);
+  box-shadow:none;border:0;
   transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
 #qbox{flex:0 1 42%} #abox{flex:0 1 46%}
 .card.hide{opacity:0;transform:translateY(3vh);pointer-events:none}
