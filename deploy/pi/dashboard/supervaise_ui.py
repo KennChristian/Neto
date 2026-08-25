@@ -942,7 +942,8 @@ pre{max-height:280px;overflow:auto;white-space:pre-wrap;background:#0d1117;borde
   <div class="btns"><span class="lbl">App</span>
     <button onclick="act('restart-app')">&#8635; Restart app</button>
     <button onclick="act('test-sound')">&#128266; Test sound</button>
-    <button onclick="act('tagalog-sample')">&#127908; Tagalog sample</button></div>
+    <button onclick="act('tagalog-sample')">&#127908; Tagalog sample</button>
+    <button onclick="rebootPi()" style="border-color:var(--bad)">&#9211; Reboot Pi</button></div>
   <div class="btns"><span class="lbl">Event</span>
     <button id="btn-ev-on" onclick="ctl('event-on')">&#127915; Event mode ON</button>
     <button id="btn-ev-off" onclick="ctl('event-off')" style="display:none;border-color:var(--gold)">&#127915; Event mode OFF</button>
@@ -1045,6 +1046,15 @@ async function act(a){$('msg').innerText=a+'\\u2026';
   const r=await(await fetch('/api/action',{method:'POST',
     body:JSON.stringify({action:a})})).json();
   $('msg').innerText=r.ok?a+' ok':'FAILED: '+(r.output||'');}
+async function rebootPi(){
+  if(!confirm('Reboot the Pi? The robot goes quiet for about a minute.'))return;
+  $('msg').innerText='rebooting\u2026 this page reconnects on its own';
+  try{await fetch('/api/action',{method:'POST',body:JSON.stringify({action:'reboot'})});}catch(e){}
+  // server dies mid-reboot; wait, then probe until it answers and reload
+  await new Promise(r=>setTimeout(r,40000));
+  for(let i=0;i<60;i++){try{const r=await fetch('/api/state',{cache:'no-store'});if(r.ok){location.reload();return;}}catch(e){}
+    await new Promise(r=>setTimeout(r,5000));}
+  $('msg').innerText='still offline after 5 min \u2014 reload manually';}
 async function loadOv(){const r=await(await fetch('/api/entities?key='+KEY)).json();
   if(r.ok)$('ov').value=r.content;}
 async function saveOv(){const r=await(await fetch('/api/entities?key='+KEY,{method:'POST',
