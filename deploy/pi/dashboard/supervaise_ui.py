@@ -876,7 +876,8 @@ button:hover{border-color:var(--gold)}
 </div>
 <div id="st">idle</div><div id="cap"></div></div><script>
 const $ = id => document.getElementById(id);
-const KEY = new URLSearchParams(location.search).get("key") || "";
+const KEY = new URLSearchParams(location.search).get("key") || localStorage.getItem("cjkey") || "";
+if (KEY) try { localStorage.setItem("cjkey", KEY); } catch (e) {}
 let room = null, ws = null, ready = false, sessTok = null, startP = null;
 let avatarMuted = true, lastStart = 0, keepTimer = null;
 let pendingLagT0 = null, lagEma = null, skew = 0;
@@ -905,7 +906,10 @@ function start(){
 async function _start(){
   st("creating session…");
   const out = await post("/api/avatar-session", {});
-  if (!out.ok){ st("session failed: " + JSON.stringify(out.output)); return; }
+  if (!out.ok){
+    st("session failed: " + JSON.stringify(out.output) +
+       (String(out.output) === "bad key" ? " — open this page as /face?key=cjap (the dashboard key)" : ""));
+    return; }
   const s = out.output;
   sessTok = s.session_token;
   st("connecting to room…");
@@ -1183,8 +1187,11 @@ def handle_get(h, path, params):
         else:
             h._send(503, json.dumps({"error": "camera unavailable"}))
     elif path == "/face":   # retired drawn-face page → the avatar is the face
+        # keep the query string (2026-08-25 fix: "/face?key=cjap" used to land on
+        # /face-avatar WITHOUT the key -> "session failed: bad key")
+        qs = h.path.split("?", 1)[1] if "?" in h.path else ""
         h.send_response(302)
-        h.send_header("Location", "/face-avatar")
+        h.send_header("Location", "/face-avatar" + ("?" + qs if qs else ""))
         h.end_headers()
     elif path == "/face-avatar":
         h._send(200, FACE_AVATAR_PAGE, "text/html; charset=utf-8")
