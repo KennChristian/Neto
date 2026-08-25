@@ -349,12 +349,10 @@ def event_page():
     return EVENT_PAGE.replace("%BUTTONS%", btns)
 
 
-AUDIENCE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chief Justice Artemio V. Panganiban</title><link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<style>
-:root{--wall:#1c1916;--ink:#2b2418;--ink2:#5a4d3a;--faint:#8a7b64;--ivory:#f4eddc;--ivory2:#eadfc6;
+# Shared "gallery exhibit" look (2026-08-25): /audience and /face-avatar render
+# the same gilt frame + two ivory plaques; only the framed content differs
+# (live camera vs the HeyGen avatar video).
+EXHIBIT_CSS = """:root{--wall:#1c1916;--ink:#2b2418;--ink2:#5a4d3a;--faint:#8a7b64;--ivory:#f4eddc;--ivory2:#eadfc6;
   --maroon:#6e1f2b;--maroon2:#8b2a38;--brass:#c9a961;--brass2:#8f7332;--ok:#4f7d4a;--warn:#a8642a;--blue:#3b5b8a}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;color:var(--ink);overflow:hidden;
@@ -439,28 +437,16 @@ html,body{height:100%;color:var(--ink);overflow:hidden;
 .row .rs{display:-webkit-box;color:var(--ink2);font-size:1.65vh;line-height:1.35;margin-top:.3vh;
   overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical}
 .row .qt{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:2.1vh;color:var(--ink)}
-</style></head><body>
-<div id="cam"><img id="camimg" alt="">
-  <div class="idle" id="camidle"><b>CJAP</b>
-    <span>Chief Justice Artemio V. Panganiban</span></div>
-</div>
-<div id="scrim"></div>
+"""
+
+EXHIBIT_PLAQUES = """<div id="scrim"></div>
 <div id="bar">
   <div class="card hide" id="qbox"><h3 class="big">The Question</h3><div id="qtext"></div><div id="rows"></div></div>
   <div class="card" id="abox"><h3>The Chief Justice Answers</h3><div id="a" class="idle-text"></div></div>
-</div><script>
-const esc=s=>{const d=document.createElement('div');d.innerText=s||'';return d.innerHTML};
+</div>"""
+
+EXHIBIT_JS = """const esc=s=>{const d=document.createElement('div');d.innerText=s||'';return d.innerHTML};
 const IDLE='Approach and say <em>&ldquo;Hi Cee-Jap&rdquo;</em> to begin';
-const qs=new URLSearchParams(location.search),camW=parseFloat(qs.get('cam'));
-if(camW>10&&camW<=100)document.getElementById('cam').style.width=camW+'vw';
-if(['tr','tl'].includes(qs.get('pos')))document.getElementById('cam').classList.add(qs.get('pos'));
-let camOK=false;
-function camTick(){
-  const img=document.getElementById('camimg'),probe=new Image();
-  probe.onload=()=>{img.src=probe.src;camOK=true;document.getElementById('camidle').style.display='none';};
-  probe.onerror=()=>{if(!camOK)document.getElementById('camidle').style.display='flex';};
-  probe.src='/api/camera.jpg?t='+Date.now();
-}
 let curState='';
 function setState(st){
   if(st===curState)return;curState=st;
@@ -508,9 +494,7 @@ function render(html,idle,showQ){
   if(cur)cur.scrollIntoView({block:'center',behavior:'smooth'});
   else a.scrollTop=a.scrollHeight;
 }
-async function poll(){
-  try{
-    const s=await (await fetch('/api/state')).json();
+function renderExhibit(s){
     const turns=s.turns||[];
     const lastU=turns.filter(t=>t.role==='user').slice(-1)[0];
     const lastC=turns.filter(t=>t.role==='cj').slice(-1)[0];
@@ -538,6 +522,34 @@ async function poll(){
     if(sp&&sp.done&&(sp.spoken||[]).length){render(esc(sp.spoken.join(' ')),false,!!lastU);return;}
     if(lastC){render(esc(lastC.text),false,!!lastU);return;}
     render(IDLE,true,false);
+}
+"""
+
+AUDIENCE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chief Justice Artemio V. Panganiban</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+""" + EXHIBIT_CSS + """</style></head><body>
+<div id="cam"><img id="camimg" alt="">
+  <div class="idle" id="camidle"><b>CJAP</b>
+    <span>Chief Justice Artemio V. Panganiban</span></div>
+</div>
+""" + EXHIBIT_PLAQUES + """<script>
+""" + EXHIBIT_JS + """const qs=new URLSearchParams(location.search),camW=parseFloat(qs.get('cam'));
+if(camW>10&&camW<=100)document.getElementById('cam').style.width=camW+'vw';
+if(['tr','tl'].includes(qs.get('pos')))document.getElementById('cam').classList.add(qs.get('pos'));
+let camOK=false;
+function camTick(){
+  const img=document.getElementById('camimg'),probe=new Image();
+  probe.onload=()=>{img.src=probe.src;camOK=true;document.getElementById('camidle').style.display='none';};
+  probe.onerror=()=>{if(!camOK)document.getElementById('camidle').style.display='flex';};
+  probe.src='/api/camera.jpg?t='+Date.now();
+}
+async function poll(){
+  try{
+    const s=await (await fetch('/api/state')).json();
+    renderExhibit(s);
   }catch(e){/* audience view never shows errors */}
 }
 setInterval(poll,300);poll();
@@ -844,38 +856,32 @@ setInterval(poll,1000);poll();
 
 FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CJAP LiveAvatar</title>
+<title>CJAP LiveAvatar</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js"></script>
 <style>
-:root{--bg:#0d1117;--ink:#e6edf3;--gold:#c9a227;--dim:#8b949e}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
-  font-family:Georgia,'Times New Roman',serif}
-#stage{display:flex;flex-direction:column;align-items:center;
-  justify-content:center;height:100vh;gap:1.2vh}
-#vidbox{position:relative;width:min(64vw,74vh);aspect-ratio:9/10;
-  background:#161b22;border-radius:1.5vh;overflow:hidden;
-  display:flex;align-items:center;justify-content:center}
-video{width:100%;height:100%;object-fit:cover}
-#bar{display:flex;gap:1.2vw;align-items:center;font-size:2.2vh}
-button{background:#21262d;color:var(--ink);border:1px solid #30363d;
-  border-radius:.8vh;padding:.8vh 1.6vw;font-size:2.2vh;cursor:pointer}
-button:hover{border-color:var(--gold)}
-#st{color:var(--dim);font-size:2vh;max-width:88vw;text-align:center}
-#cap{min-height:10vh;max-width:90vw;text-align:center;font-size:3.6vh;
-  line-height:1.35;color:var(--gold)}
-</style></head><body><div id="stage">
-<div id="vidbox"><span id="hint" style="color:var(--dim)">
-  press Start to open the sandbox avatar session</span>
-<video id="vid" autoplay playsinline></video>
-<audio id="aud" autoplay></audio></div>
-<div id="bar">
-  <button id="btnStart">Start</button>
-  <button id="btnStop">Stop</button>
-  <button id="btnMute">voice: robot</button>
+""" + EXHIBIT_CSS + """
+/* avatar page: the HeyGen portrait (9:10) hangs in the frame instead of the camera */
+#cam{width:min(36vw,calc(58vh * 9 / 10));aspect-ratio:9/10;top:4vh}
+#cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
+#cam .idle{z-index:1}
+/* operator strip: discreet, brightens on hover */
+#ops{position:fixed;top:1.2vh;left:1.2vw;z-index:5;display:flex;gap:.8vw;align-items:center;
+  opacity:.32;transition:opacity .3s;font-size:1.7vh;color:#cbb98f}
+#ops:hover{opacity:1}
+#ops button{background:rgba(20,16,12,.75);color:#e8dcc0;border:1px solid #6b5323;border-radius:.6vh;
+  padding:.5vh 1vw;font:inherit;cursor:pointer}
+#ops button:hover{border-color:var(--brass)}
+#st{max-width:42vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+</style></head><body>
+<div id="cam"><video id="vid" autoplay playsinline></video><audio id="aud" autoplay></audio>
+  <div class="idle" id="camidle"><b>CJAP</b>
+    <span>Chief Justice Artemio V. Panganiban</span></div>
 </div>
-<div id="st">idle</div><div id="cap"></div></div><script>
-const $ = id => document.getElementById(id);
+<div id="ops"><button id="btnStart">Start</button><button id="btnStop">Stop</button>
+  <button id="btnMute">voice: robot</button><span id="st">idle</span></div>
+""" + EXHIBIT_PLAQUES + """<script>
+""" + EXHIBIT_JS + """const $ = id => document.getElementById(id);
 const KEY = new URLSearchParams(location.search).get("key") || localStorage.getItem("cjkey") || "";
 if (KEY) try { localStorage.setItem("cjkey", KEY); } catch (e) {}
 let room = null, ws = null, ready = false, sessTok = null, startP = null;
@@ -917,7 +923,7 @@ async function _start(){
     room = new LivekitClient.Room();
     room.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {
       if (track.kind === "video"){ track.attach($("vid"));
-        $("hint").style.display = "none"; }
+        $("camidle").style.display = "none"; }
       if (track.kind === "audio"){ track.attach($("aud"));
         $("aud").muted = avatarMuted; }
     });
@@ -1074,6 +1080,7 @@ async function poll(){
   try{
     const stt = await (await fetch("/api/state")).json();
     if (stt.ts) skew = Date.now()/1000 - stt.ts;   // Pi clock → browser clock
+    renderExhibit(stt);                              // same plaques as /audience
     const sp = stt.speaking || {}, as = stt.aside || {};
     // ack / filler clips ("Hmm.", "let me think…") — mouth them, no caption
     if (as.wav && as.ts && as.ts !== lastAsideTs && (Date.now()/1000 - (as.ts + skew)) < 6){
@@ -1084,7 +1091,6 @@ async function poll(){
       if (key !== curKey){
         const wasIdle = !speakingNow;
         curKey = key; speakingNow = true;
-        $("cap").textContent = sp.current;
         if (sp.wav){
           // measure start lag only on an answer's FIRST sentence with the
           // session already live (a cold session start isn't speak lag)
