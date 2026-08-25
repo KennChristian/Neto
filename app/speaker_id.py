@@ -61,6 +61,12 @@ def embed_samples(sr, data):
     st.accept_waveform(sr, data.astype(np.float32) / 32768.0)
     st.input_finished()
     emb = np.array(ex.compute(st), dtype=np.float32)
+    # Guard (2026-08-25): sherpa returns [] for empty audio and NaNs for a few
+    # ms of audio; a bad reference then makes every later check raise
+    # ("matmul: Input operand 0 does not have enough dimensions") and the lock
+    # silently fails open for the whole conversation.
+    if emb.ndim != 1 or emb.size == 0 or not np.isfinite(emb).all():
+        raise ValueError(f"no usable embedding (audio too short: {len(data) / float(sr or 1):.2f}s)")
     return emb / (np.linalg.norm(emb) + 1e-9)
 
 
@@ -173,10 +179,11 @@ class VoiceLock:
         if self._pending is not None:
             self._pending.join(timeout=8)
             self._pending = None
-        if self.ref is None:
-            return True, None            # no reference: fail open
+        ref = self.ref
+        if ref is None or np.ndim(ref) != 1 or ref.size == 0:
+            return True, None            # no (usable) reference: fail open
         emb = embed_samples(sr, data)
-        sim = float(self.ref @ emb)
+        sim = float(ref @ emb)
         thr = lock_threshold()
         if len(data) / float(sr or 1) < 2.5:
             thr -= 0.07

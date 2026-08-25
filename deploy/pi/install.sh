@@ -51,8 +51,12 @@ fi
 
 # ---------------------------------------------------------------- 1. apt
 log "apt packages"
+sudo apt-get update -qq || true
+# build deps: pycairo/PyGObject in requirements-pi.txt have no aarch64 wheel
+# and are compiled from sdist by pip (--no-deps)
 sudo apt-get install -y --no-install-recommends \
-  ffmpeg alsa-utils python3-venv portaudio19-dev libportaudio2 libsndfile1 \
+  ffmpeg alsa-utils python3-venv python3-dev gcc pkg-config libcairo2-dev \
+  libgirepository1.0-dev portaudio19-dev libportaudio2 libsndfile1 \
   openssl curl network-manager rpicam-apps-lite >/dev/null
 # bluez-alsa-utils (BlueALSA) ships enabled on the Reachy Mini image; only
 # needed for Bluetooth speakers.
@@ -104,6 +108,8 @@ mkdir -p "$HOME/bin"
 sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/.asoundrc" > "$HOME/.asoundrc"
 [ -f "$HOME/.asoundrc.route" ] || cp "$DP/dotfiles/.asoundrc.route" "$HOME/.asoundrc.route"
 sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/bin/audio-out" > "$HOME/bin/audio-out"
+# robot-specific speaker MACs: keep them in ~/bin/audio-out.local (sourced
+# by audio-out if present) so a re-run never clobbers them
 sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/speaker-watchdog.sh" > "$HOME/speaker-watchdog.sh"
 chmod +x "$HOME/bin/audio-out" "$HOME/speaker-watchdog.sh"
 for t in verify.sh export-private.sh import-private.sh snapshot-push.sh; do
@@ -183,8 +189,10 @@ fi
 echo "      sudo reboot        # once, so the PipeWire realtime limits apply"
 echo "      # then http://$(hostname).local:8080  (maintain page: /maintain?key=cjap)"
 echo " >> Moving from another robot? restore its secrets bundle first:"
-echo "      import-private.sh ~/private-<host>-<ts>.tar.gz.enc --restart   (see deploy/pi/TRANSFER.md)"
-echo " >> Check everything:  verify.sh"
+echo "      ~/bin/import-private.sh ~/private-<host>-<ts>.tar.gz.enc --restart   (see deploy/pi/TRANSFER.md)"
+echo " >> Check everything:  ~/bin/verify.sh   (~/bin joins PATH at next login)"
+echo " >> Robot-specific tuning goes in /etc/systemd/system/supervaise.service.d/local.conf"
+echo "    (e.g. Environment=CJ_DOA_FLIP=1) — install.sh only ever rewrites wakeword.conf"
 echo " >> Pre-warm the canned answers (ElevenLabs credits, ~150 clips):"
 echo "      cd $REPO && app/.venv/bin/python scripts/prerender_canned.py"
 echo "================================================================"

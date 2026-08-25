@@ -31,6 +31,9 @@ TEST_WAV="/usr/share/sounds/alsa/Front_Center.wav"
 
 SONY_MAC="50:1B:6A:8B:16:F2"       # Sony ULT FIELD 1
 MARSHALL_MAC="04:21:44:84:1F:C1"   # Marshall EMBERTON
+# Robot-specific overrides (other speakers' MACs): ~/bin/audio-out.local is
+# sourced here and never touched by deploy/pi/install.sh (2026-08-25).
+[ -f "$HOME/bin/audio-out.local" ] && . "$HOME/bin/audio-out.local"
 
 bt_connected() { bluetoothctl info "$1" 2>/dev/null | grep -q "Connected: yes"; }
 

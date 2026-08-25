@@ -22,7 +22,7 @@ nano app/.env                        # ANTHROPIC_API_KEY, OPENAI_API_KEY, ELEVEN
 
 # 4. reboot once (PipeWire realtime limits), then check
 sudo reboot
-verify.sh                            # 23 PASS/FAIL checks; services start at boot
+~/bin/verify.sh                      # 24 PASS/FAIL checks; services start at boot
 #    http://reachy-mini.local:8080          troubleshooting dashboard
 #    http://reachy-mini.local:8080/maintain?key=cjap
 #    http://reachy-mini.local:8080/audience  /avatar  /event
@@ -39,7 +39,7 @@ Say **"Hey Cee-Jap"** → the robot listens → ask a question.
 |---|---|---|
 | `requirements-pi.txt` | `app/.venv` | exact `pip freeze` of the live venv (Py 3.13, aarch64); installed `--no-deps` |
 | `audio/fillers/` (40) | `~/fillers` | thinking-aloud clips, accent voice |
-| `audio/fillers_ack/` (3) | `~/fillers_ack` | sub-second "Ah." acknowledgments |
+| `audio/fillers_ack/` (5) | `~/fillers_ack` | sub-second "Ah." acknowledgments |
 | `audio/fillers_bail/` (4) | `~/fillers_bail` | not-connected / be-specific / enroll prompts — must exist offline |
 | `audio/demo_clips/` | `~/demo_clips` | Tagalog pronunciation sample (dashboard button) |
 | `dotfiles/` | `~/.asoundrc`, `~/.asoundrc.route`, `~/bin/audio-out`, `~/speaker-watchdog.sh` | audio routing: internal XMOS via PipeWire, BT via BlueALSA |

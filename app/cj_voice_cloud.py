@@ -1558,6 +1558,8 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             print(f"[wake] heard only the wake phrase again ({_nwake}x) — listening for the question")
             _publish_transcript("note", "(heard the wake phrase again — still listening)")
             _stage("transcribe", "active", "listening again…")
+            if lock is not None and not followup:
+                lock.release()   # don't lock onto a 1 s "CJAP" clip; the retry re-locks on the real question
             return "rewake"
         print(f"[stt] wake phrase inside the question stripped ({_nwake}x) -> {question!r}")
     non_latin = sum(ord(c) > 127 for c in question) / len(question)

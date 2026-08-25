@@ -1038,6 +1038,13 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # journald picks up real errors; skip access noise
         pass
 
+    def handle_error(self, *a):  # a phone closing a page mid-response is not an error
+        import sys
+        exc = sys.exc_info()[1]
+        if isinstance(exc, (BrokenPipeError, ConnectionResetError, TimeoutError)):
+            return
+        super().handle_error(*a)
+
     def _send(self, code, body, ctype="application/json"):
         data = body.encode() if isinstance(body, str) else body
         self.send_response(code)

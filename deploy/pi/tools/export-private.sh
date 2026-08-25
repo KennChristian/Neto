@@ -20,7 +20,8 @@ done
 [ -n "$OUT" ] || { mkdir -p "$HOME/backups"; OUT="$HOME/backups/private-$(hostname)-$(date +%Y%m%d-%H%M).tar.gz.enc"; }
 M="Supervaise-Reachy-Mini-Project-main"
 ITEMS=( "$M/app/.env" "$M/voice/config.py" "pi_dashboard/certs" "pi_dashboard/assets"
-        "speaker_id/enrolled.npz" ".asoundrc.route" )
+        "speaker_id/enrolled.npz" "speaker_id/enabled" ".asoundrc.route"
+        ".config/supervaise" "bin/audio-out.local" )
 [ "$WITH_CACHE" = 1 ] && ITEMS+=( ".voice_cache" )
 cd "$HOME"
 present=(); for i in "${ITEMS[@]}"; do [ -e "$i" ] && present+=("$i") || echo "  (skip, not present: $i)"; done

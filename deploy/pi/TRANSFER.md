@@ -26,7 +26,7 @@ snapshot-push.sh                       # live system -> repo branch snapshot/<ts
 export-private.sh --with-cache         # asks for a passphrase; writes ~/backups/private-<host>-<ts>.tar.gz.enc
 #   drop --with-cache for a ~10 KB bundle (keys only); with it, ~400 MB and the
 #   ~150 canned/event answers play instantly on the new robot with no ElevenLabs spend
-scp ~/backups/private-*.tar.gz.enc pollen@<new-robot>.local:~/
+scp "$(ls -t ~/backups/private-*.tar.gz.enc | head -1)" pollen@<new-robot>.local:~/   # newest bundle only
 ```
 
 ## 2. On the NEW robot — install
@@ -37,16 +37,18 @@ git clone -b pi/deployment-snapshots https://github.com/Supervaise-Inc/CJAP.git 
 cd ~/Supervaise-Reachy-Mini-Project-main
 bash deploy/pi/install.sh              # apt, venv (exact pins), models, clips, dotfiles,
                                        # PipeWire realtime fix, dashboard + cert, units, hotspot
-import-private.sh ~/private-*.tar.gz.enc        # same passphrase; restores .env, voice/config.py,
-                                                # certs, liveavatar.json, enrolled.npz, (.voice_cache)
-sudo hostnamectl set-hostname reachy-cjap      # optional: keep the same name/URLs as the old robot
+~/bin/import-private.sh "$(ls -t ~/private-*.tar.gz.enc | head -1)"   # same passphrase; restores .env,
+                                                # voice/config.py, certs, liveavatar.json, enrolled.npz, (.voice_cache)
+# optional: keep the old robot's name/URLs (only if the old robot is OFF or renamed —
+# two "reachy-cjap" on one LAN makes mDNS call the second one reachy-cjap-2.local)
+sudo hostnamectl set-hostname reachy-cjap && sudo sed -i 's/^127\.0\.1\.1.*/127.0.1.1\treachy-cjap/' /etc/hosts
 sudo reboot                                     # once — the PipeWire realtime limits need a fresh session
 ```
 
 ## 3. After the reboot — verify
 
 ```bash
-verify.sh          # 23 checks: services, keys, models, clips, PipeWire fix, XMOS fw, DoA, venv, 3 APIs, journal
+verify.sh          # 24 checks: services, keys, models, clips, PipeWire fix, XMOS fw, DoA, venv, 3 APIs, journal
 ```
 All PASS → say **"Hi Cee-Jap"** and ask a question. Then open
 `http://<hostname>.local:8080/maintain?key=cjap` and check the Providers
@@ -56,12 +58,12 @@ chips are green and the wake meter moves when you talk.
 
 | What | Why | How |
 |---|---|---|
-| Bluetooth speakers | pairings live in the OS, and `audio-out sony/marshall` are pinned to the reference speakers' MACs | pair from `/maintain` → Bluetooth card; then `audio-out sony` (or edit `~/bin/audio-out` MACs) |
+| Bluetooth speakers | pairings live in the OS, and `audio-out sony/marshall` are pinned to the reference speakers' MACs | pair from `/maintain` → Bluetooth card; then `audio-out sony`. Different speakers: put the MACs in `~/bin/audio-out.local` (survives `install.sh` re-runs; `~/bin/audio-out` itself is regenerated) |
 | WiFi networks | NetworkManager profiles are not exported | Reachy setup flow or `/maintain` → WiFi card; the `ReachySetup` fallback hotspot is created by install.sh |
 | Voice lock enrolment | `enrolled.npz` is restored by the bundle; re-enrol if a different person will host | `/maintain` → Enroll |
-| Speaker turn direction (DoA) | head yaw sign is assumed | stand to the robot's LEFT, say "Cee-Jap"; if it turns right add `Environment=CJ_DOA_FLIP=1` to `/etc/systemd/system/supervaise.service.d/wakeword.conf`, `sudo systemctl daemon-reload && sudo systemctl restart supervaise` |
+| Speaker turn direction (DoA) | head yaw sign is assumed | stand to the robot's LEFT, say "Cee-Jap"; if it turns right: `printf '[Service]\nEnvironment=CJ_DOA_FLIP=1\n' \| sudo tee /etc/systemd/system/supervaise.service.d/local.conf && sudo systemctl daemon-reload && sudo systemctl restart supervaise`. Any robot-specific tuning goes in that `local.conf` — `install.sh` re-runs rewrite `wakeword.conf` but never `local.conf` |
 | XMOS chip tuning | AEC/NS values are chip-runtime and reset on power cycle (both robots run stock values) | nothing to do |
-| Event mode | flag file `data/entities/event_mode.on` is in the repo state at snapshot time | toggle on `/event` or `/maintain` |
+| Event mode | the flag file `data/entities/event_mode.on` is runtime state, not in the repo — a new robot starts with event mode OFF | turn it on from `/event` or `/maintain` before the event |
 
 ## 5. Rollback / restore points
 
