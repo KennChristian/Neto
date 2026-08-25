@@ -386,6 +386,12 @@ def _log_cache_usage(label: str, usage) -> None:
         s["regular_input"] += regular
         s["output"]        += output
         s["calls"]         += 1
+    try:  # persistent tally for the maintenance page (fails open)
+        import usage_meter
+        usage_meter.anthropic(label, regular, creation, read, output,
+                              model=INFERENCE_MODEL if label == "inference" else ROUTER_MODEL)
+    except Exception:
+        pass
     if creation or read:
         marker = "WRITE" if creation else "HIT  "
         print(f"   cache[{label}] {marker}  read={read}  write={creation}  "
@@ -1027,19 +1033,32 @@ def generate_response_stream(
         messages=messages,
         **_composer_speed_kwargs(),
     ) as stream:
-        for text in stream.text_stream:
-            yield text
-        # Log cache usage once the stream ends (usage is finalised
-        # only on the closing event). Also expose stop_reason to the caller
-        # (via the `info` out-param) so the streaming speaker can drop a
-        # cap-truncated final fragment instead of voicing it.
+        logged = False
         try:
-            final = stream.get_final_message()
-            _log_cache_usage("inference", final.usage)
-            if info is not None:
-                info["stop_reason"] = final.stop_reason
-        except Exception:
-            pass
+            for text in stream.text_stream:
+                yield text
+            # Log cache usage once the stream ends (usage is finalised
+            # only on the closing event). Also expose stop_reason to the caller
+            # (via the `info` out-param) so the streaming speaker can drop a
+            # cap-truncated final fragment instead of voicing it.
+            try:
+                final = stream.get_final_message()
+                _log_cache_usage("inference", final.usage)
+                logged = True
+                if info is not None:
+                    info["stop_reason"] = final.stop_reason
+            except Exception:
+                pass
+        finally:
+            if not logged:
+                # Answer cut mid-stream (stop word / mute): the API still bills
+                # what was generated but never reports it — record the call
+                # so the maintenance page shows the undercount (2026-08-25).
+                try:
+                    import usage_meter
+                    usage_meter.anthropic("inference", model=INFERENCE_MODEL, aborted=True)
+                except Exception:
+                    pass
 
 
 # ============================================================

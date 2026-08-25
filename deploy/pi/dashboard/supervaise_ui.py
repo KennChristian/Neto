@@ -207,6 +207,177 @@ def state():
 # ---------------------------------------------------------------------------
 
 UI_REV = str(int(os.path.getmtime(__file__)))   # pages reload when this changes
+USAGE_PATH = os.path.expanduser("~/cj_usage.json")   # written by app/usage_meter.py
+_eleven_cache = {"ts": 0.0, "data": None}
+ERROR_RE = re.compile(
+    r"Traceback|Error|error|FAILED|failed|refused|offline|exception|timed out|"
+    r"Timeout|denied|\[ctl\]|\[action\]|\[ask\] (bad|question)|muted from|— answer cut|"
+    r"fidelity\] AUDIT flagged|no speech heard|empty transcript|PLAYBACK|discarded", re.I)
+ERROR_SKIP_RE = re.compile(r"fails? open|failed open|Pending kernel|Consumed .* CPU|onnxruntime|"
+                           r"GetGpuDevices|stop word armed|avatar-voice-", re.I)
+
+
+def _env_value(name):
+    """Read one key from the app's .env (server-side only, never sent out)."""
+    try:
+        with open(os.path.join(MAIN, "app", ".env"), encoding="utf-8") as f:
+            for line in f:
+                if line.startswith(name + "="):
+                    return line.split("=", 1)[1].strip().strip('"').strip("'")
+    except OSError:
+        pass
+    return None
+
+
+def _eleven_quota():
+    """ElevenLabs subscription quota, cached 5 min (one call per refresh)."""
+    if time.time() - _eleven_cache["ts"] < 300 and _eleven_cache["data"] is not None:
+        return _eleven_cache["data"]
+    key = _env_value("ELEVEN_API_KEY")
+    data = {"error": "no ELEVEN_API_KEY in app/.env"} if not key else None
+    if key:
+        try:
+            import urllib.request
+            req = urllib.request.Request("https://api.elevenlabs.io/v1/user/subscription",
+                                         headers={"xi-api-key": key})
+            with urllib.request.urlopen(req, timeout=8) as r:
+                d = json.load(r)
+            data = {k: d.get(k) for k in ("tier", "character_count", "character_limit",
+                                          "next_character_count_reset_unix", "status")}
+        except Exception as e:
+            data = {"error": f"{type(e).__name__}: {e}"[:120]}
+    _eleven_cache.update(ts=time.time(), data=data)
+    return data
+
+
+_prov_cache = {"ts": 0.0, "data": None}
+_status_cache = {}
+
+
+def _http_probe(url, headers, timeout=3):
+    """(http_status_or_None, seconds, error_text)."""
+    import urllib.request, urllib.error
+    t0 = time.time()
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            r.read(2048)
+            return r.status, round(time.time() - t0, 2), None
+    except urllib.error.HTTPError as e:
+        return e.code, round(time.time() - t0, 2), f"HTTP {e.code} {e.reason}"
+    except Exception as e:
+        return None, round(time.time() - t0, 2), f"{type(e).__name__}: {e}"[:100]
+
+
+def _statuspage(name, urls):
+    """Vendor public status page (Statuspage-style JSON), cached 5 min."""
+    c = _status_cache.get(name)
+    if c and time.time() - c["ts"] < 300:
+        return c["data"]
+    import urllib.request
+    data = {"description": "unavailable", "indicator": "unknown"}
+    for url in urls:
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 cjap-kiosk"})
+            with urllib.request.urlopen(req, timeout=3) as r:
+                d = json.load(r)
+            st = d.get("status") or {}
+            if st:
+                data = {"description": st.get("description"), "indicator": st.get("indicator"),
+                        "url": url.split("/api/")[0]}
+                break
+        except Exception:
+            continue
+    _status_cache[name] = {"ts": time.time(), "data": data}
+    return data
+
+
+_prov_lock = threading.Lock()
+
+
+def provider_status():
+    """Live reachability of each API we depend on (one cheap authenticated
+    call each, cached 60 s) + the vendor status pages (cached 5 min).
+    Serialized: with several /maintain tabs open, one probes and the rest
+    get the cache instead of each stalling the handler (2026-08-25 review)."""
+    with _prov_lock:
+        return _provider_status_locked()
+
+
+def _provider_status_locked():
+    if _prov_cache["data"] is not None and time.time() - _prov_cache["ts"] < 60:
+        return _prov_cache["data"]
+    ak, ek, ok = (_env_value("ANTHROPIC_API_KEY"), _env_value("ELEVEN_API_KEY"),
+                  _env_value("OPENAI_API_KEY"))
+    checks = {
+        "claude": ("https://api.anthropic.com/v1/models",
+                   {"x-api-key": ak or "", "anthropic-version": "2023-06-01"}, bool(ak)),
+        "elevenlabs": ("https://api.elevenlabs.io/v1/user/subscription",
+                       {"xi-api-key": ek or ""}, bool(ek)),
+        "openai": ("https://api.openai.com/v1/models",
+                   {"Authorization": "Bearer " + (ok or "")}, bool(ok)),
+    }
+    out = {}
+    for name, (url, hdrs, has_key) in checks.items():
+        if not has_key:
+            out[name] = {"ok": False, "code": None, "s": None, "error": "no API key in app/.env"}
+            continue
+        code, secs, err = _http_probe(url, hdrs)
+        out[name] = {"ok": code == 200, "code": code, "s": secs, "error": err}
+    out["claude"]["page"] = _statuspage("claude", [
+        "https://status.anthropic.com/api/v2/status.json",
+        "https://status.claude.com/api/v2/status.json"])
+    out["elevenlabs"]["page"] = _statuspage("elevenlabs", [
+        "https://status.elevenlabs.io/api/v2/status.json"])
+    out["openai"]["page"] = _statuspage("openai", [
+        "https://status.openai.com/api/v2/status.json"])
+    out["ts"] = time.time()
+    _prov_cache.update(ts=time.time(), data=out)
+    return out
+
+
+def usage():
+    return {"ts": time.time(), "usage": _read_json(USAGE_PATH) or {},
+            "eleven": _eleven_quota()}
+
+
+_err_cache = {"ts": 0.0, "rows": None}
+
+
+def recent_errors(limit=25):
+    """Error-ish lines + operator actions from the robot and dashboard
+    journals (this boot), newest last — the fast path to a diagnosis.
+    journalctl is cached 10 s (each open /maintain tab polls every 10 s)."""
+    if _err_cache["rows"] is not None and time.time() - _err_cache["ts"] < 10:
+        return _err_cache["rows"][-limit:]
+    rows = _recent_errors_uncached()
+    _err_cache.update(ts=time.time(), rows=rows)
+    return rows[-limit:]
+
+
+def _recent_errors_uncached(limit=25):
+    try:
+        out = subprocess.run(
+            ["journalctl", "-u", "supervaise.service", "-u", "pi-dashboard.service",
+             "-b", "-n", "1500", "-o", "short-iso", "--no-pager"],
+            capture_output=True, text=True, timeout=10).stdout
+    except Exception as e:
+        return [{"t": "", "unit": "", "msg": f"journalctl failed: {e}"}]
+    rows = []
+    for line in out.splitlines():
+        if not ERROR_RE.search(line) or ERROR_SKIP_RE.search(line):
+            continue
+        # 2026-08-25T12:05:20+0100 host python[1234]: message
+        m = re.match(r"(\S+) \S+ (\S+?)\[\d+\]: (.*)", line)
+        if not m:
+            continue
+        t, proc, msg = m.groups()
+        if msg.strip().startswith(("File ", "~", "^", "self.", "return ", "raise ")):
+            continue   # traceback body lines; the header + final line are enough
+        rows.append({"t": t[11:19], "unit": "dash" if proc == "python3" else "robot",
+                     "msg": msg.strip()[:220]})
+    return rows[-limit:]
+
 AVATAR_PAGE_STATUS = "/dev/shm/cj_avatar_page.json"   # page → /maintain
 AVATAR_PAGE_CMD = "/dev/shm/cj_avatar_cmd.json"       # /maintain → page
 AVATAR_VOICE_MODES = ("robot", "avatar", "sync")
@@ -218,7 +389,7 @@ def _avatar_page_cmd(cmd, mode=None):
     doc = {"ts": time.time(), "cmd": cmd}
     if mode:
         doc["mode"] = mode
-    tmp = AVATAR_PAGE_CMD + ".tmp"
+    tmp = f"{AVATAR_PAGE_CMD}.{threading.get_ident()}.tmp"   # per-thread: two ctl posts may overlap
     with open(tmp, "w") as f:
         json.dump(doc, f)
     os.replace(tmp, AVATAR_PAGE_CMD)
@@ -582,15 +753,98 @@ AUDIENCE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <title>Chief Justice Artemio V. Panganiban</title><link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-""" + EXHIBIT_CSS + """</style></head><body>
+""" + EXHIBIT_CSS + """
+/* robot status pill, top-left (2026-08-25, user): green = listening, red
+   waveform = speaking (follows the sentence audio), gray = idle, red = muted */
+#rs{position:fixed;top:2.4vh;left:2vw;z-index:5;display:flex;align-items:center;gap:1vw;
+  padding:1vh 1.5vw;border-radius:999px;background:rgba(20,16,12,.74);
+  border:1px solid rgba(201,169,97,.45);box-shadow:0 .6vh 2vh rgba(0,0,0,.5);pointer-events:none;
+  font-family:'Playfair Display',Georgia,serif;letter-spacing:.2em;text-transform:uppercase;
+  font-size:1.6vh;color:#e8dcc0;transition:border-color .3s}
+#rs.tr{left:auto;right:2vw}
+#rs .dot{width:2.2vh;height:2.2vh;border-radius:50%;background:#7a7368;flex:0 0 auto;
+  box-shadow:0 0 0 .3vh rgba(255,255,255,.08);transition:background .3s,box-shadow .3s}
+#rs.listening .dot{background:#3fb950;box-shadow:0 0 1.6vh .2vh rgba(63,185,80,.55);animation:rspulse 1.2s ease-in-out infinite}
+#rs.listening{border-color:rgba(63,185,80,.6)}
+#rs.thinking .dot{background:#c9a961;box-shadow:0 0 1.2vh .1vh rgba(201,169,97,.5);animation:rspulse 1.2s ease-in-out infinite}
+#rs.muted .dot{background:#e5484d;box-shadow:0 0 1.6vh .2vh rgba(229,72,77,.55)}
+#rs.muted{border-color:rgba(229,72,77,.6)}
+#rs.talking .dot{display:none}
+#rs canvas{display:none;height:3.2vh;width:13vh}
+#rs.talking canvas{display:block}
+#rs.talking{border-color:rgba(229,72,77,.6)}
+@keyframes rspulse{50%{transform:scale(.78);opacity:.65}}
+</style></head><body>
 <div id="cam"><img id="camimg" alt="">
   <div class="idle" id="camidle"><b>CJAP</b>
     <span>Chief Justice Artemio V. Panganiban</span></div>
 </div>
+<div id="rs" class="idle"><span class="dot"></span><canvas id="rsw" width="160" height="40"></canvas><span class="lbl">Idle</span></div>
 """ + EXHIBIT_PLAQUES + """<script>
 """ + EXHIBIT_JS + """const qs=new URLSearchParams(location.search),camW=parseFloat(qs.get('cam'));
 if(camW>10&&camW<=100)document.getElementById('cam').style.width=camW+'vw';
 if(['tr','tl'].includes(qs.get('pos')))document.getElementById('cam').classList.add(qs.get('pos'));
+// ---- robot status pill ----------------------------------------------------
+const RS=document.getElementById('rs'),RSW=document.getElementById('rsw'),RSL=RS.querySelector('.lbl');
+if(qs.get('pos')==='tl')RS.classList.add('tr');   // portrait is top-left: pill moves right
+let rsState='',rsClock=0,rsClip=null;const rsEnv={};
+function setIndicator(st,label){
+  if(st!==rsState){rsState=st;RS.className=st;}
+  if(RSL.innerText!==label)RSL.innerText=label;
+}
+// loudness envelope (40 ms windows) of a sentence wav, parsed from the PCM
+// directly (24 kHz/16-bit/mono from /api/sentence.wav) — no AudioContext,
+// so it works without a user gesture on the kiosk browser
+async function loadEnv(name){
+  if(rsEnv[name]!==undefined)return;rsEnv[name]=null;
+  try{
+    const b=await(await fetch('/api/sentence.wav?name='+encodeURIComponent(name))).arrayBuffer();
+    const dv=new DataView(b);let off=12,sr=24000,data=null;
+    while(off+8<=b.byteLength){
+      const id=String.fromCharCode(dv.getUint8(off),dv.getUint8(off+1),dv.getUint8(off+2),dv.getUint8(off+3));
+      const sz=dv.getUint32(off+4,true);
+      if(id==='fmt ')sr=dv.getUint32(off+12,true);
+      if(id==='data'){const end=Math.min(b.byteLength,off+8+sz);data=new Int16Array(b.slice(off+8,end-((end-off-8)%2)));break;}
+      off+=8+sz+(sz&1);
+    }
+    if(!data||!data.length)return;
+    const win=Math.max(1,Math.round(sr*0.04)),env=[];
+    for(let i=0;i+win<=data.length;i+=win){let a=0;for(let j=i;j<i+win;j++){const v=data[j]/32768;a+=v*v;}env.push(Math.sqrt(a/win));}
+    const mx=Math.max(0.05,...env);
+    rsEnv[name]={sr:sr,win:win,env:env.map(v=>v/mx)};
+  }catch(e){}
+}
+function drawWave(){
+  requestAnimationFrame(drawWave);
+  if(rsState!=='talking')return;
+  const ctx=RSW.getContext('2d'),W=RSW.width,H=RSW.height;ctx.clearRect(0,0,W,H);
+  const n=18,bw=W/n,e=rsClip&&rsClip.wav?rsEnv[rsClip.wav]:null;
+  const t=Date.now()/1000-rsClock-(rsClip?rsClip.t0:0);   // seconds into the clip (robot clock)
+  ctx.fillStyle='#e5484d';
+  for(let i=0;i<n;i++){
+    let v;
+    if(e&&e.env.length){const k=Math.floor((t+(i-n/2)*0.04)*e.sr/e.win);v=(k>=0&&k<e.env.length)?e.env[k]:0.06;}
+    else v=0.2+0.55*Math.abs(Math.sin(Date.now()/95+i*0.8));   // no envelope: generic motion
+    const h=Math.max(3,v*H);ctx.fillRect(i*bw+1.5,(H-h)/2,bw-3,h);
+  }
+}
+drawWave();
+function updateIndicator(s){
+  rsClock=Date.now()/1000-s.ts;   // browser-vs-robot clock offset (refreshed every poll)
+  const sp=s.speaking,as=s.aside;
+  if(s.muted){rsClip=null;setIndicator('muted','Muted');return;}
+  const answer=sp&&!sp.done&&(sp.spoken||[]).length;
+  const aside=as&&as.wav&&(s.ts-as.ts)<((as.dur||1.5)+0.3);   // ack / filler clip on air
+  if(answer||aside){
+    const src=answer?sp:as,t0=src.play_ts||src.ts;
+    if(!rsClip||rsClip.wav!==src.wav||rsClip.t0!==t0){rsClip={wav:src.wav||null,t0:t0};if(src.wav)loadEnv(src.wav);}
+    setIndicator('talking','Speaking');return;
+  }
+  rsClip=null;
+  if(curState==='listening'){setIndicator('listening','Listening');return;}
+  if(curState==='thinking'){setIndicator('thinking','Thinking');return;}
+  setIndicator('idle','Idle');
+}
 let camOK=false;
 function camTick(){
   const img=document.getElementById('camimg'),probe=new Image();
@@ -603,6 +857,7 @@ async function poll(){
     const s=await (await fetch('/api/state')).json();
     if(window.__uiRev==null)window.__uiRev=s.ui_rev||null;else if(s.ui_rev&&s.ui_rev!==window.__uiRev){location.reload();return;}
     renderExhibit(s);
+    updateIndicator(s);
   }catch(e){/* audience view never shows errors */}
 }
 setInterval(poll,300);poll();
@@ -614,85 +869,161 @@ MAINTAIN_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CJAP — Maintenance</title><style>
 :root{--bg:#0d1117;--panel:#161b22;--ink:#e6edf3;--dim:#8b949e;--gold:#c9a227;
-  --ok:#3fb950;--bad:#f85149;--line:#21262d}
+  --ok:#3fb950;--bad:#f85149;--line:#21262d;--btn:#21262d;--btnline:#30363d}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,Segoe UI,Arial,sans-serif;padding:12px}
-h1{font-size:18px;margin-bottom:10px}h1 b{color:var(--gold)}
-h2{font-size:13px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
-.chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;margin:0 6px 6px 0;background:#21262d}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,Segoe UI,Arial,sans-serif;padding:0 16px 24px}
+.hdr{position:sticky;top:0;z-index:5;background:rgba(13,17,23,.96);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);margin:0 -16px 16px;padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 16px}
+h1{font-size:24px;font-weight:700;line-height:1.2}h1 b{color:var(--gold)}
+h1 small{display:block;font-size:14px;font-weight:400;color:var(--dim);margin-top:2px}
+h1 small a{color:var(--gold);text-decoration:none}h1 small a:hover{text-decoration:underline}
+.statuslinks{display:flex;gap:10px;flex-wrap:wrap}
+.statuslinks a{display:inline-flex;align-items:center;gap:9px;padding:11px 18px;border-radius:10px;
+  font-size:16px;font-weight:600;background:var(--btn);border:1px solid var(--btnline);
+  color:var(--ink);text-decoration:none;white-space:nowrap}
+.statuslinks a:hover{border-color:var(--gold);color:var(--gold)}
+.statuslinks a i{width:10px;height:10px;border-radius:50%;background:var(--ok);display:inline-block}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.sec{grid-column:1/-1;font-size:13px;color:var(--dim);text-transform:uppercase;letter-spacing:.14em;
+  margin-top:10px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.sec:first-child{margin-top:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0;grid-column:span 4}
+.c6{grid-column:span 6}.c8{grid-column:span 8}.c12{grid-column:1/-1}
+@media(max-width:1200px){.card,.c6,.c8{grid-column:span 6}.c12{grid-column:1/-1}}
+@media(max-width:760px){.card,.c6,.c8,.c12{grid-column:1/-1}body{padding:0 10px 20px}
+  .hdr{margin:0 -10px 12px;padding:10px}h1{font-size:20px}.statuslinks a{flex:1;justify-content:center}}
+h2{font-size:15px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h3{font-size:15px;margin:0 0 6px}
+.chip{display:inline-block;padding:4px 12px;border-radius:999px;font-size:13px;margin:0 6px 6px 0;background:#21262d}
 .chip.ok{color:var(--ok)}.chip.bad{color:var(--bad)}
-button{background:#21262d;border:1px solid #30363d;color:var(--ink);border-radius:8px;
-  padding:8px 14px;margin:0 8px 8px 0;font-size:14px;cursor:pointer}
-button:hover{border-color:var(--gold)}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-td,th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+button{background:var(--btn);border:1px solid var(--btnline);color:var(--ink);border-radius:10px;
+  padding:12px 18px;margin:0;font-size:16px;font-weight:600;cursor:pointer;min-height:46px}
+button:hover{border-color:var(--gold)}button:active{transform:translateY(1px)}
+button.sm{padding:6px 12px;font-size:14px;min-height:0;font-weight:500}
+.btns{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+.btns .lbl{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.1em;min-width:56px}
+input[type=text],input[type=password],input:not([type]){background:#0d1117;color:var(--ink);border:1px solid #30363d;border-radius:8px;padding:10px 12px;font-size:15px}
+select{background:#21262d;color:var(--ink);border:1px solid #30363d;border-radius:8px;padding:6px 10px;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 th{color:var(--dim);font-weight:600}
-.mono{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px}
 .bar{height:8px;background:#21262d;border-radius:4px;overflow:hidden;margin:2px 0 6px}
 .bar i{display:block;height:100%;background:var(--gold)}
-textarea{width:100%;height:220px;background:#0d1117;color:var(--ink);border:1px solid #30363d;
-  border-radius:8px;font-family:ui-monospace,Consolas,monospace;font-size:12px;padding:8px}
+textarea{width:100%;height:240px;background:#0d1117;color:var(--ink);border:1px solid #30363d;
+  border-radius:8px;font-family:ui-monospace,Consolas,monospace;font-size:13px;padding:10px;margin-bottom:10px}
 .raw{color:var(--bad)}.fix{color:var(--ok)}
-#msg{color:var(--dim);font-size:12px;margin-left:6px}
-img#cam{width:100%;border-radius:8px;background:#000;min-height:120px}
+#msg{color:var(--dim);font-size:13px;display:block;min-height:1.3em}
+.saybox{flex-wrap:nowrap}.saybox input{flex:1 1 auto;min-width:0;height:46px}
+@media(max-width:600px){.saybox{flex-wrap:wrap}.saybox input{flex-basis:100%}}
+img#cam{width:100%;border-radius:8px;background:#000;min-height:120px;display:block}
 .dim{color:var(--dim)}
+pre{max-height:280px;overflow:auto;white-space:pre-wrap;background:#0d1117;border-radius:8px;padding:10px}
 </style></head><body>
-<h1><b>CJAP</b> Maintenance — <span class="dim">audience view: <a style="color:var(--gold)" href="/audience" target="_blank">/audience</a> · ops: <a style="color:var(--gold)" href="/" target="_blank">/</a></span></h1>
-<div class="grid">
-<div class="card"><h2>Health</h2><div id="health"></div><div id="flags"></div>
-  <h2 style="margin-top:8px">Controls</h2>
-  <button id="btn-mute" onclick="ctl('mute')">&#128263; Mute</button>
-  <button id="btn-unmute" onclick="ctl('unmute')" style="display:none;background:var(--bad)">&#128266; UNMUTE</button>
-  <button onclick="ctl('interrupt')">&#9209; Interrupt</button>
-  <button onclick="ctl('force-listen')">&#127908; Force listen</button>
-  <button onclick="ctl('replay')">&#128260; Replay last</button>
-  <button onclick="act('restart-app')">&#8635; Restart app</button>
-  <button onclick="act('test-sound')">&#128266; Test sound</button>
-  <button onclick="act('tagalog-sample')">&#127908; Tagalog sample</button>
-  <span id="msg"></span>
-  <h2 style="margin-top:8px">Camera</h2><img id="cam" alt="(camera offline)">
+<div class="hdr">
+<h1><b>CJAP</b> Maintenance<small>audience view: <a href="/audience" target="_blank">/audience</a> &middot; ops: <a href="/" target="_blank">/</a></small></h1>
+<div class="statuslinks" title="Provider status pages (open in new tab)">
+  <a href="https://status.claude.com" target="_blank" rel="noopener"><i></i>Claude status</a>
+  <a href="https://status.elevenlabs.io" target="_blank" rel="noopener"><i></i>ElevenLabs status</a>
 </div>
-<div class="card"><h2>LiveAvatar page <span class="dim" id="avstate"></span></h2>
-  <div id="avstatus" class="dim">no /face-avatar page open</div>
-  <div style="margin-top:6px">
-    <button id="av-stop" onclick="ctl('avatar-page-stop')">&#9209; Stop</button>
-    <button id="av-resume" onclick="ctl('avatar-page-resume')">&#9654; Resume</button>
-    &nbsp;voice:
-    <button id="av-robot" onclick="ctl('avatar-page-voice-robot')">robot (avatar mouths along)</button>
-    <button id="av-avatar" onclick="ctl('avatar-page-voice-avatar')">avatar only</button>
-    <button id="av-sync" onclick="ctl('avatar-page-voice-sync')">both synced</button>
-    <a class="dim" href="/face?key=" id="avlink" target="_blank" style="margin-left:8px">open page &#8599;</a>
-  </div></div>
+</div>
+<div class="grid">
+<div class="sec">Live</div>
+<div class="card c8"><h2>Health</h2><div id="health"></div><div id="flags"></div>
+  <h2 style="margin-top:12px">Controls</h2>
+  <div class="btns"><span class="lbl">Speech</span>
+    <button id="btn-mute" onclick="ctl('mute')">&#128263; Mute</button>
+    <button id="btn-unmute" onclick="ctl('unmute')" style="display:none;background:var(--bad)">&#128266; UNMUTE</button>
+    <button onclick="ctl('interrupt')">&#9209; Interrupt</button>
+    <button onclick="ctl('force-listen')">&#127908; Force listen</button>
+    <button onclick="ctl('replay')">&#128260; Replay last</button></div>
+  <div class="btns"><span class="lbl">App</span>
+    <button onclick="act('restart-app')">&#8635; Restart app</button>
+    <button onclick="act('test-sound')">&#128266; Test sound</button>
+    <button onclick="act('tagalog-sample')">&#127908; Tagalog sample</button></div>
+  <div class="btns"><span class="lbl">Event</span>
+    <button id="btn-ev-on" onclick="ctl('event-on')">&#127915; Event mode ON</button>
+    <button id="btn-ev-off" onclick="ctl('event-off')" style="display:none;border-color:var(--gold)">&#127915; Event mode OFF</button>
+    <span class="dim" id="ev-hint">scripted event questions answer with the script (paraphrases too)</span></div>
+  <div class="btns saybox"><span class="lbl">Say</span>
+    <input type="text" id="say-text" maxlength="500" placeholder="Type what CJ should say, then press Enter or Speak" autocomplete="off">
+    <button id="say-btn" onclick="sayText()">&#128483; Speak</button></div>
+  <span id="msg"></span>
+</div>
+<div class="card"><h2>Camera</h2><img id="cam" alt="(camera offline)"></div>
 <div class="card"><h2>System</h2><div id="services"></div><div id="sys" class="dim">loading&hellip;</div></div>
 <div class="card"><h2>Wake meter <span class="dim" id="wakenow"></span></h2>
   <div class="bar" style="height:14px"><i id="wakebar" style="width:0%"></i></div>
   <canvas id="spark" style="width:100%;height:64px;background:#0d1117;border-radius:6px"></canvas>
   <table id="wake"><tr><th>time</th><th>score</th></tr></table></div>
+<div class="card"><h2>LiveAvatar page <span class="dim" id="avstate"></span></h2>
+  <div id="avstatus" class="dim" style="margin-bottom:10px">no /face-avatar page open</div>
+  <div class="btns"><span class="lbl">Page</span>
+    <button id="av-stop" onclick="ctl('avatar-page-stop')">&#9209; Stop</button>
+    <button id="av-resume" onclick="ctl('avatar-page-resume')">&#9654; Resume</button></div>
+  <div class="btns"><span class="lbl">Voice</span>
+    <button id="av-robot" onclick="ctl('avatar-page-voice-robot')">robot (avatar mouths along)</button>
+    <button id="av-avatar" onclick="ctl('avatar-page-voice-avatar')">avatar only</button>
+    <button id="av-sync" onclick="ctl('avatar-page-voice-sync')">both synced</button></div>
+  <a class="dim" href="/face?key=" id="avlink" target="_blank">open page &#8599;</a></div>
+<div class="sec">Connectivity</div>
+<div class="card c6"><h2>WiFi <span class="dim" id="wifinow"></span></h2>
+  <div id="wifi-list" class="dim" style="margin-bottom:10px">tap Scan to list networks (tap a network to switch)</div>
+  <div class="btns"><button onclick="wifiScan()">&#128246; Scan networks</button><span id="netmsg" class="dim"></span></div>
+  <div class="btns" style="margin-top:4px">
+    <input id="wm-ssid" placeholder="network name" style="flex:1;min-width:140px">
+    <input id="wm-pw" type="password" placeholder="password" style="flex:1;min-width:140px">
+    <button onclick="wifiManual()">Join</button></div>
+  <div class="dim" style="font-size:13px">Manual entry works in setup-hotspot mode and for hidden networks.
+    &#9888; Switching networks drops this page — rejoin the same WiFi on your phone.</div>
+</div>
+<div class="card c6"><h2>Bluetooth <span class="dim" id="btnow"></span></h2>
+  <div id="bt-list" class="dim" style="margin-bottom:10px">loading&hellip;</div>
+  <div class="btns"><button onclick="btScan(false)">&#8635; Refresh</button>
+    <button onclick="btScan(true)">&#128270; Scan (~10 s)</button><span id="btmsg" class="dim"></span></div>
+  <div class="btns"><span class="lbl">Speaker</span>
+    <button onclick="act('audio-internal')">&#129302; Internal</button>
+    <button onclick="act('audio-sony')">&#128266; Sony</button>
+    <button onclick="act('audio-marshall')">&#128266; Marshall</button></div>
+  <div class="dim" style="font-size:13px">Tap a device to connect / disconnect / pair. The speaker watchdog re-routes to the Sony within 15 s when it is connected.</div>
+</div>
+<div class="sec">Conversation</div>
 <div class="card"><h2>Current turn</h2><div id="turn" class="dim">no turn yet</div>
-  <h2 style="margin-top:10px">Stage latency</h2><div id="lat" class="dim">&mdash;</div></div>
-<div class="card"><h2>Grounding documents <span class="dim">(composer context, last turn)</span></h2>
-  <div id="docs" class="dim" style="max-height:260px;overflow:auto">no turn yet</div></div>
-<div class="card" style="grid-column:1/-1"><h2>Recent turns (tracking)</h2>
-  <div style="overflow-x:auto"><table id="hist"><tr><th>time</th><th>question</th><th>theme</th>
-  <th>docs</th><th>tokens</th><th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr></table></div></div>
-<div class="card"><h2>Conversation (raw vs corrected)</h2>
+  <h2 style="margin-top:12px">Stage latency</h2><div id="lat" class="dim">&mdash;</div></div>
+<div class="card c8"><h2>Grounding documents <span class="dim">(composer context, last turn)</span></h2>
+  <div id="docs" class="dim" style="max-height:280px;overflow:auto">no turn yet</div></div>
+<div class="card c8"><h2>Conversation (raw vs corrected)</h2>
   <table id="conv"><tr><th>who</th><th>text</th></tr></table></div>
 <div class="card"><h2>NER corrections (P0)</h2>
   <table id="ner"><tr><th>heard</th><th>&rarr; canonical</th><th>class</th><th>conf</th></tr></table></div>
-<div class="card"><h2>Logs
-  <select id="logunit" onchange="loadLogs()" style="background:#21262d;color:var(--ink);
-    border:1px solid #30363d;border-radius:6px;padding:2px 6px;margin-left:8px">
+<div class="card c12"><h2>Recent turns (tracking)</h2>
+  <div style="overflow-x:auto"><table id="hist"><tr><th>time</th><th>question</th><th>theme</th>
+  <th>docs</th><th>tokens</th><th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>wpm</th><th>flags</th></tr></table></div></div>
+<div class="sec">Providers</div>
+<div class="card c12"><h2>Usage &amp; errors <span class="dim" id="usagets"></span></h2>
+  <div id="prov" class="dim" style="margin-bottom:10px">checking providers&hellip;</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+    <div><h3>Claude (Anthropic)</h3><div id="u-claude" class="dim">loading&hellip;</div></div>
+    <div><h3>ElevenLabs (cloned voice)</h3><div id="u-eleven" class="dim">loading&hellip;</div></div>
+    <div><h3>OpenAI (speech-to-text)</h3><div id="u-openai" class="dim">loading&hellip;</div></div>
+  </div>
+  <h3 style="margin:14px 0 6px">Recent errors &amp; operator actions <span class="dim">(this boot, newest last)</span></h3>
+  <pre id="errs" class="mono">loading&hellip;</pre>
+</div>
+<div class="sec">Admin</div>
+<div class="card c6"><h2>Logs
+  <select id="logunit" onchange="loadLogs()">
     <option value="supervaise">supervaise</option>
     <option value="wifi-fallback">wifi-fallback</option>
     <option value="speaker-watchdog">speaker-watchdog</option>
   </select>
-  <button style="padding:2px 10px;margin-left:6px" onclick="loadLogs()">refresh</button></h2>
-  <pre id="logs" class="mono" style="max-height:240px;overflow:auto;white-space:pre-wrap"></pre></div>
-<div class="card"><h2>Entity dictionary overlay <span class="dim">(saves live, no restart)</span></h2>
+  <button class="sm" onclick="loadLogs()">refresh</button></h2>
+  <pre id="logs" class="mono"></pre></div>
+<div class="card c6"><h2>Entity dictionary overlay <span class="dim">(saves live, no restart)</span></h2>
   <textarea id="ov" spellcheck="false"></textarea>
-  <button onclick="saveOv()">Save overlay</button><span id="ovmsg"></span></div>
+  <div class="btns"><button onclick="saveOv()">&#128190; Save overlay</button><span id="ovmsg" class="dim"></span></div></div>
 </div><script>
 const KEY=new URLSearchParams(location.search).get('key')||localStorage.getItem('cjkey')||'';
 if(KEY)localStorage.setItem('cjkey',KEY);
@@ -701,6 +1032,15 @@ const $=id=>document.getElementById(id);
 async function ctl(a){const r=await(await fetch('/api/ctl',{method:'POST',
   body:JSON.stringify({action:a,key:KEY})})).json();
   $('msg').innerText=r.output||'';}
+async function sayText(){const t=$('say-text').value.trim();if(!t)return;
+  const b=$('say-btn');b.disabled=true;$('msg').innerText='speaking\\u2026';
+  try{const r=await(await fetch('/api/say-text',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({text:t,key:KEY})})).json();
+    $('msg').innerText=r.ok?'spoken: '+t.slice(0,80):'FAILED: '+(r.output||'');
+    if(r.ok)$('say-text').value='';}
+  catch(e){$('msg').innerText='FAILED: '+e.message}
+  b.disabled=false;}
+$('say-text').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sayText();}});
 async function act(a){$('msg').innerText=a+'\\u2026';
   const r=await(await fetch('/api/action',{method:'POST',
     body:JSON.stringify({action:a})})).json();
@@ -710,6 +1050,39 @@ async function loadOv(){const r=await(await fetch('/api/entities?key='+KEY)).jso
 async function saveOv(){const r=await(await fetch('/api/entities?key='+KEY,{method:'POST',
   body:JSON.stringify({content:$('ov').value,key:KEY})})).json();
   $('ovmsg').innerText=r.output;}
+function fmtTok(n){n=n||0;return n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'k':String(Math.round(n))}
+function claudeRow(name,s){if(!s)return '';const t=(s.input||0)+(s.cache_write||0)+(s.cache_read||0);
+  return '<b>'+name+'</b>: '+s.calls+' calls · in '+fmtTok(t)+' (cached '+fmtTok(s.cache_read)+') · out '+fmtTok(s.output)+' · $'+(s.cost_usd||0).toFixed(3)+'<br>'}
+async function loadUsage(){try{
+  const u=await(await fetch('/api/usage')).json();const L=u.usage.lifetime||{},S=u.usage.session||{};
+  const cost=o=>Object.values(o.anthropic||{}).reduce((a,s)=>a+(s.cost_usd||0),0);
+  let h='<span class="dim">session</span><br>';for(const k of ['router','inference'])h+=claudeRow(k==='router'?'Haiku router/gate/audit':'Sonnet composer',(S.anthropic||{})[k]);
+  h+='<b>session total $'+cost(S).toFixed(3)+'</b> · lifetime $'+cost(L).toFixed(2)+' ('+fmtTok(Object.values(L.anthropic||{}).reduce((a,s)=>a+(s.input||0)+(s.cache_write||0)+(s.cache_read||0)+(s.output||0),0))+' tok)';
+  $('u-claude').innerHTML=h;
+  const e=u.eleven||{},el=L.elevenlabs||{},es=S.elevenlabs||{};
+  let g='';
+  if(e.error){g+='<span class="raw">quota: '+esc(e.error)+'</span><br>'}else{const pct=e.character_limit?Math.round(100*e.character_count/e.character_limit):0;
+    g+='<b>'+fmtTok(e.character_count)+' / '+fmtTok(e.character_limit)+' chars</b> used this cycle ('+pct+'%) · '+esc(e.tier)+' · resets '+(e.next_character_count_reset_unix?new Date(e.next_character_count_reset_unix*1000).toLocaleDateString():'?')+bar(e.character_count||0,e.character_limit||1)}
+  g+='<span class="dim">session</span>: '+(es.requests||0)+' synth · '+fmtTok(es.chars)+' chars billed · '+(es.cache_hits||0)+' from cache<br><span class="dim">lifetime</span>: '+fmtTok(el.chars)+' billed · '+fmtTok(el.cache_chars)+' cached';
+  $('u-eleven').innerHTML=g;
+  const os_=S.openai||{},ol=L.openai||{};
+  $('u-openai').innerHTML='<span class="dim">session</span>: '+(os_.stt_calls||0)+' transcriptions · '+Math.round(os_.stt_seconds||0)+' s audio<br><span class="dim">lifetime</span>: '+(ol.stt_calls||0)+' · '+Math.round((ol.stt_seconds||0)/60)+' min';
+  $('usagets').innerText='updated '+new Date(u.ts*1000).toLocaleTimeString();
+}catch(err){for(const id of ['u-claude','u-eleven','u-openai'])$(id).innerText='usage fetch failed';}}
+async function loadErrors(){try{const r=await(await fetch('/api/errors')).json();
+  const rows=r.rows||[];$('errs').textContent=rows.length?rows.map(x=>x.t+'  '+x.unit.padEnd(5)+' '+x.msg).join('\\n'):'no errors this boot';
+  $('errs').scrollTop=$('errs').scrollHeight;}catch(e){$('errs').textContent='error fetch failed';}}
+function provChip(label,p){if(!p)return '';const api=p.ok?chip(label+' API',true,'OK '+(p.s!=null?p.s+'s':'')):chip(label+' API',false,p.error||('HTTP '+p.code));
+  const pg=p.page||{},ind=pg.indicator||'unknown',good=ind==='none';
+  const pageTxt=ind==='unknown'?'status page n/a':(pg.description||ind);
+  return '<span style="display:inline-block;margin:0 14px 6px 0">'+api+
+    '<span class="'+(good?'fix':(ind==='unknown'?'dim':'raw'))+'" style="font-size:12px">'+esc(pageTxt)+'</span></span>'}
+async function loadProviders(){try{const p=await(await fetch('/api/providers')).json();
+  $('prov').innerHTML=provChip('Claude',p.claude)+provChip('ElevenLabs',p.elevenlabs)+provChip('OpenAI',p.openai)+
+    '<span class="dim" style="font-size:11px">checked '+new Date(p.ts*1000).toLocaleTimeString()+'</span>';
+}catch(e){$('prov').innerText='provider check failed';}}
+setInterval(loadProviders,60000);loadProviders();
+setInterval(loadUsage,15000);setInterval(loadErrors,10000);loadUsage();loadErrors();
 async function loadLogs(){try{
   const t=await(await fetch('/api/logs?unit='+$('logunit').value+'&lines=80')).text();
   $('logs').textContent=t;
@@ -720,9 +1093,13 @@ async function poll(){try{
   const s=await(await fetch('/api/state')).json();
   if(window.__uiRev==null)window.__uiRev=s.ui_rev||null;else if(s.ui_rev&&s.ui_rev!==window.__uiRev){location.reload();return;}
   $('health').innerHTML=Object.entries(s.health||{}).map(([k,v])=>chip(k,v)).join('')
-    +chip('mute',!s.muted,s.muted?'MUTED':'off');
+    +chip('mute',!s.muted,s.muted?'MUTED':'off')
+    +chip('event mode',true,s.event_mode?'ON':'off');
   $('btn-mute').style.display=s.muted?'none':'';
   $('btn-unmute').style.display=s.muted?'':'none';
+  $('btn-ev-on').style.display=s.event_mode?'none':'';
+  $('btn-ev-off').style.display=s.event_mode?'':'none';
+  $('ev-hint').innerText=s.event_mode?'ON \u2014 spoken event questions (and paraphrases) get the scripted answers':'off \u2014 normal conversation; the /event buttons still work';
   const av=s.avatar_page||{},avAge=av.ts?(s.ts-av.ts):1e9,avOn=avAge<10;
   $('avstate').innerHTML=avOn?chip('page',true,av.stopped?'stopped':av.ready?'session live (credits ticking)':'parked — no credits')
     :chip('page',false,'not open');
@@ -758,12 +1135,13 @@ async function poll(){try{
     if(sp&&sp.question===m.question)
       lat+=(sp.streamed?'First audio '+(sp.first_audio_s!=null?sp.first_audio_s:'?')+'s'+bar(sp.first_audio_s||0,15)
         :'TTS synth '+sp.synth_s+'s'+bar(sp.synth_s,10)+'Playback '+sp.play_s+'s'+bar(sp.play_s,40))
+        +(sp.wpm?'Speech '+sp.wpm+' wpm <span class="dim">('+sp.words+' words / '+sp.audio_s+'s audio)</span>'+bar(sp.wpm,200):'')
         +(sp.interrupted?'<span class="raw">interrupted</span>':'');
     $('lat').innerHTML=lat;}
   const byQ={};
   (s.metas||[]).forEach(x=>{const k=x.question||'';byQ[k]=Object.assign(byQ[k]||{},x);});
   $('hist').innerHTML='<tr><th>time</th><th>question</th><th>theme</th><th>docs</th><th>tokens</th>'+
-    '<th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>flags</th></tr>'+
+    '<th>cost</th><th>STT s</th><th>compose s</th><th>speech</th><th>wpm</th><th>flags</th></tr>'+
     Object.values(byQ).sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,12).map(x=>{
       const sp2=x.streamed?('first audio '+(x.first_audio_s!=null?x.first_audio_s+'s':'?'))
         :(x.synth_s!=null?('synth '+x.synth_s+'s / play '+x.play_s+'s'):'');
@@ -776,7 +1154,8 @@ async function poll(){try{
         '</td><td>'+esc(x.token_budget||'')+
         '</td><td>'+(x.cost_usd!=null?(x.cost_usd?(100*x.cost_usd).toFixed(2)+'¢':'free'):'')+
         '</td><td>'+esc(x.stt_s!=null?x.stt_s:'')+'</td><td>'+esc(x.compose_s!=null?x.compose_s:'')+
-        '</td><td>'+esc(sp2)+'</td><td'+(x.interrupted?' class="raw"':'')+'>'+esc(fl)+'</td></tr>';}).join('');
+        '</td><td>'+esc(sp2)+'</td><td title="'+(x.words?x.words+' words / '+x.audio_s+'s':'')+'">'+(x.wpm||'')+
+        '</td><td'+(x.interrupted?' class="raw"':'')+'>'+esc(fl)+'</td></tr>';}).join('');
   $('conv').innerHTML='<tr><th>who</th><th>text</th></tr>'+
     (s.turns||[]).slice(-14).reverse().map(t=>'<tr><td>'+esc(t.role)+'</td><td>'+esc(t.text)+'</td></tr>').join('');
   $('ner').innerHTML='<tr><th>heard</th><th>&rarr; canonical</th><th>class</th><th>conf</th></tr>'+
@@ -818,6 +1197,7 @@ async function sysTick(){try{
     ' &nbsp;<b>throttle</b> '+esc(sy.throttled||'?')+
     '<br><b>WiFi</b> '+esc(wf.essid||'none')+' '+esc(wf.signal_dbm||'')+'dBm &nbsp;<b>IP</b> '+esc(wf.ip||'?')+
     '<br><b>Audio</b> '+esc((st.audio||{}).route||'?');
+  try{netFromStatus(st)}catch(e){}
   const env=((st.wake||{}).env)||{};
   $('flags').innerHTML=[['stream','CJ_STREAM_SPEECH'],['dyn-filler','CJ_DYNAMIC_FILLER'],
     ['dyn-tokens','CJ_DYNAMIC_TOKENS_ENABLED'],['postproc','CJ_POSTPROC_ENABLED'],
@@ -829,6 +1209,51 @@ setInterval(poll,1000);poll();
 setInterval(wakeTick,300);wakeTick();
 setInterval(sysTick,5000);sysTick();
 setInterval(camTick,200);camTick();loadOv();loadLogs();
+// ── Connectivity (WiFi / Bluetooth) — same endpoints as the ops page ──
+let _nets=[],_bts=[],_watchdog=false;
+function netFromStatus(st){const wf=st.wifi||{};
+  $('wifinow').innerHTML=wf.essid?chip(esc(wf.essid),true,esc(wf.signal_dbm||'?')+' dBm · '+esc(wf.ip||'?')):chip('no wifi',false,'');
+  _watchdog=((st.services||{})['speaker-watchdog']||{}).active==='active';
+  const sp=(st.audio||{}).speakers||{},route=(st.audio||{}).route||'?';
+  $('btnow').innerHTML=chip('route',true,esc(route))+Object.entries(sp).map(([n,c])=>chip(n,c,c?'connected':'off')).join('');}
+function netRow(left,right,onclick){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:8px 6px;border-bottom:1px solid var(--line);cursor:pointer" onclick="'+onclick+'"><span>'+left+'</span><span class="dim">'+right+'</span></div>'}
+async function wifiScan(){$('wifi-list').textContent='scanning…';
+  try{const w=await(await fetch('/api/wifi?rescan=1')).json();_nets=w.networks||[];
+    if(w.hotspot&&!_nets.length){$('wifi-list').textContent='setup hotspot active — scanning unavailable; type the network below';return}
+    if(!_nets.length){$('wifi-list').textContent='no networks found';return}
+    $('wifi-list').innerHTML=_nets.map((n,i)=>{const bars=n.signal>66?'▂▄▆':n.signal>33?'▂▄':'▂';
+      const tag=n.in_use?' — connected':(n.saved?' (saved)':'');const lock=n.security==='open'?'':' 🔒';
+      return netRow((n.in_use?'✅ ':'')+esc(n.ssid)+lock+'<span class="dim">'+tag+'</span>',bars+' '+n.signal+'%','wifiJoinIdx('+i+')')}).join('');
+  }catch(e){$('wifi-list').textContent='scan failed: '+e.message}}
+async function wifiSend(ssid,password){
+  if(!confirm('Switch the robot to "'+ssid+'"? This page will drop until your phone is on the same network.'))return;
+  $('netmsg').textContent='switching to '+ssid+'…';
+  try{const r=await(await fetch('/api/wifi/connect',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ssid,password})})).json();
+    $('netmsg').textContent=r.ok?(r.output||('now on '+ssid)):'FAILED — '+(r.output||'');
+  }catch(e){$('netmsg').textContent='dashboard dropped — rejoin '+ssid+' on your phone and reload'}}
+function wifiJoinIdx(i){const n=_nets[i];if(!n)return;let pw=null;
+  if(!(n.saved||n.security==='open')){pw=prompt('Password for "'+n.ssid+'" (leave empty if open):');if(pw===null)return}
+  wifiSend(n.ssid,pw)}
+function wifiManual(){const ssid=$('wm-ssid').value.trim(),pw=$('wm-pw').value;
+  if(!ssid){$('netmsg').textContent='enter a network name';return}wifiSend(ssid,pw||null)}
+async function btScan(rescan){$('bt-list').textContent=rescan?'scanning (~10 s)…':'loading…';
+  try{const b=await(await fetch('/api/bt'+(rescan?'?scan=1':''))).json();_bts=b.devices||[];
+    if(!_bts.length){$('bt-list').textContent='no devices known — tap Scan';return}
+    $('bt-list').innerHTML=_bts.map((d,i)=>{const state=d.connected?'<span style="color:var(--ok)">connected</span>':d.paired?'paired':'not paired';
+      return netRow((d.connected?'✅ ':'')+(d.audio?'🔊 ':'')+esc(d.name),state,'btTapIdx('+i+')')}).join('');
+  }catch(e){$('bt-list').textContent='bluetooth list failed: '+e.message}}
+async function btTapIdx(i){const d=_bts[i];if(!d)return;
+  const action=d.connected?'disconnect':d.paired?'connect':'pair';
+  const warn=(action==='disconnect'&&_watchdog)?' ⚠ The watchdog is running — Sony reconnects within 15 s.':'';
+  if(!confirm(action.charAt(0).toUpperCase()+action.slice(1)+' "'+d.name+'"?'+warn))return;
+  $('btmsg').textContent=action+'ing '+d.name+'…';
+  try{const r=await(await fetch('/api/bt/action',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mac:d.mac,action})})).json();
+    $('btmsg').textContent=d.name+': '+(r.ok?action+' ok ✓':'FAILED — '+(r.output||''));
+  }catch(e){$('btmsg').textContent=action+' failed: '+e.message}
+  setTimeout(()=>btScan(false),1500)}
+btScan(false);
 </script></body></html>"""
 
 GATE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8"><title>CJAP</title>
@@ -1000,6 +1425,7 @@ async function _start(){
     return; }
   const s = out.output;
   sessTok = s.session_token;
+  if (stopped){ await park(); return; }          // Stop landed during session creation
   st("connecting to room…");
   try{
     room = new LivekitClient.Room();
@@ -1011,6 +1437,7 @@ async function _start(){
     });
     await room.connect(s.livekit_url, s.livekit_client_token);
   }catch(e){ st("LiveKit connect failed: " + e.message); return; }
+  if (stopped){ await park(); return; }
   st("opening control socket…");
   const sock = new WebSocket(s.ws_url);
   ws = sock;
@@ -1064,6 +1491,7 @@ async function _start(){
                               event_id:String(Date.now())}));
   }, 25000);
   await connected;
+  if (stopped){ await park(); await post("/api/ctl", {action: "avatar-voice-off"}); }
 }
 function stopKeep(){ if (keepTimer){ clearInterval(keepTimer);
   keepTimer = null; } }
@@ -1114,7 +1542,8 @@ function touch(){ lastActivity = Date.now(); }
 function turnActive(){ return Date.now() < turnUntil; }
 setTimeout(() => { if (!restoreStill()) start(); }, 0);   // deferred past the lets below
 setInterval(() => {
-  if (stopped || !ready) return;
+  if (!ready) return;
+  if (stopped){ park(); return; }                  // a session that outlived Stop
   if (speakingNow || turnActive() || sentOrder.length || Date.now() < busyUntil) return;
   if (Date.now() - lastActivity > IDLE_PARK_MS) park();
 }, 1000);
@@ -1371,6 +1800,12 @@ def handle_get(h, path, params):
         h.send_response(302)
         h.send_header("Location", "/event?key=" + DASH_KEY)
         h.end_headers()
+    elif path == "/api/usage":
+        h._send(200, json.dumps(usage()))
+    elif path == "/api/providers":
+        h._send(200, json.dumps(provider_status()))
+    elif path == "/api/errors":
+        h._send(200, json.dumps({"ts": time.time(), "rows": recent_errors()}))
     elif path == "/api/state":
         h._send(200, json.dumps(state()))
     elif path == "/api/camera.jpg":
@@ -1416,6 +1851,9 @@ def handle_post(h, path, body):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
         else:
             ok, out = control(body.get("action", ""))
+            act = body.get("action", "")
+            if not act.startswith("avatar-voice-"):   # page heartbeats, not operator actions
+                print(f"[ctl] {h.client_address[0]} {act} -> {out}", flush=True)
             h._send(200, json.dumps({"ok": ok, "output": out}))
     elif path == "/api/entities":
         if not _authed({}, body):
@@ -1441,6 +1879,7 @@ def handle_post(h, path, body):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
         else:
             ok, out = ask_event(body.get("id", ""))
+            print(f"[ask] {h.client_address[0]} {body.get('id', '')} -> {out}", flush=True)
             h._send(200, json.dumps({"ok": ok, "output": out}))
     elif path == "/api/avatar-status":
         if not _authed({}, body):

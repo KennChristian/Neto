@@ -264,9 +264,11 @@ def tts_create_kwargs(model: str, voice: str, speed: float, text: str) -> dict:
 # slow down, playful lines pick up. Values are deltas on VOICE_SETTINGS
 # speed (0.9 base), clamped to ElevenLabs' 0.7–1.2. Disable with
 # CJ_DYNAMIC_SPEED=0 (every sentence then uses the base speed).
+# Kept small (2026-08-25, user: "his voice changes a bit"): a tempo jump
+# between adjacent sentences reads as a change of voice. Was -0.06..+0.05.
 _EMOTION_SPEED_DELTA = {
-    "solemn": -0.06, "warm": -0.02, "neutral": 0.0,
-    "question": 0.02, "emphatic": 0.04, "amused": 0.05,
+    "solemn": -0.02, "warm": -0.01, "neutral": 0.0,
+    "question": 0.01, "emphatic": 0.02, "amused": 0.02,
 }
 
 
@@ -288,7 +290,8 @@ def emotion_speed(emotion: str) -> float | None:
 
 
 def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
-                       speed: float | None = None) -> str:
+                       speed: float | None = None,
+                       previous_text: str | None = None) -> str:
     """Synthesize with the cloned voice (repo-root voice/ package) and return
     the path of a 24 kHz mono PCM_16 wav. Uses the local clip cache, so
     repeat lines are instant. Raises on any failure — callers keep the
@@ -318,6 +321,11 @@ def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
     words = None
     hit = v_cache.get(key)
     if hit is not None:
+        try:  # usage tally: cache hits are not billed by ElevenLabs
+            import usage_meter
+            usage_meter.elevenlabs(len(norm), cached=True)
+        except Exception:
+            pass
         pcm, sr = hit
         try:  # sidecar exists only for clips synthesized post-2026-08-22
             words = json.loads(align_path.read_text())
@@ -325,10 +333,16 @@ def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
             words = None
     else:
         align: dict = {}
-        pcm = v_audio.process(v_synthesize(norm, speed=speed, align_out=align),
+        pcm = v_audio.process(v_synthesize(norm, speed=speed, align_out=align,
+                                           previous_text=previous_text),
                               v_audio.SYNTH_SAMPLE_RATE)
         sr = v_audio.SYNTH_SAMPLE_RATE
         v_cache.put(key, pcm, sr)
+        try:  # usage tally: billed chars, counted only after synthesis succeeded
+            import usage_meter
+            usage_meter.elevenlabs(len(norm), cached=False)
+        except Exception:
+            pass
         words = _align_to_words(align)
         if words:
             try:
@@ -407,15 +421,67 @@ def transcribe_openai(
         }
         if language:
             kwargs["language"] = language
+        if prompt is None:   # steer the decoder toward Taglish + our names (2026-08-25)
+            prompt = os.environ.get("CJ_STT_PROMPT", _STT_PROMPT_DEFAULT).strip()
         if prompt:
             kwargs["prompt"] = prompt
         resp = client.audio.transcriptions.create(**kwargs)
+    try:  # usage tally (fails open)
+        import wave, usage_meter
+        with wave.open(str(audio_path), "rb") as w:
+            secs = w.getnframes() / float(w.getframerate())
+        usage_meter.openai_stt(secs)
+    except Exception:
+        pass
     # response_format="text" returns a plain string; defensively
     # handle the structured-response shape too.
-    if isinstance(resp, str):
-        return resp.strip()
-    text = getattr(resp, "text", "")
-    return str(text).strip()
+    text = resp.strip() if isinstance(resp, str) else str(getattr(resp, "text", "")).strip()
+    # Echo guard (2026-08-25 review): on noisy/short captures the model
+    # returns the steering prompt itself (journal 15:45-15:48: "Sige po. Ano
+    # po ang..." x5, the full prompt once) — treat that as silence.
+    if text and prompt and _echoes_stt_prompt(text, prompt):
+        print(f"[stt] discarded — transcript echoes the STT prompt: {text[:80]!r}")
+        return ""
+    return text
+
+
+# Default steering prompt: a DESCRIPTION, deliberately not ending in an
+# example utterance — a dangling "Sige po. Ano po ang…" was parroted back as
+# the transcript on noise and the robot answered it (2026-08-25).
+_STT_PROMPT_DEFAULT = (
+    "A conversation in English and Filipino (Tagalog, Taglish) with retired "
+    "Philippine Chief Justice Artemio Panganiban about law, liberty and "
+    "prosperity, the Supreme Court, and the Foundation for Liberty and Prosperity.")
+
+
+def _echoes_stt_prompt(text: str, prompt: str) -> bool:
+    """True if `text` is (a chunk of) the STT prompt rather than speech: a
+    >=3-word contiguous slice of the prompt, or a long transcript that is
+    mostly prompt vocabulary with a >=6-word contiguous overlap."""
+    import re as _re
+    tw = _re.findall(r"[^\W_]+", text.lower())
+    pw = _re.findall(r"[^\W_]+", prompt.lower())
+    if len(tw) < 3 or not pw:
+        return False
+    # common contiguous runs (DP); mark transcript words inside runs >= 4
+    best, prev, covered = 0, [0] * (len(pw) + 1), [False] * len(tw)
+    for i, a in enumerate(tw):
+        cur = [0] * (len(pw) + 1)
+        for j, b in enumerate(pw, 1):
+            if a == b:
+                cur[j] = prev[j - 1] + 1
+                best = max(best, cur[j])
+                if cur[j] >= 4:
+                    for k in range(i - cur[j] + 1, i + 1):
+                        covered[k] = True
+        prev = cur
+    if best >= len(tw):          # the whole transcript is a slice of the prompt
+        return True
+    if len(tw) >= 5 and tw[:5] == pw[:5]:   # paraphrased echo: opens like the prompt
+        return True
+    # a long transcript made mostly of prompt phrases (>= 4 words in a row):
+    # a real question reuses our names, not our sentence structure
+    return len(tw) >= 8 and sum(covered) / len(tw) >= 0.7
 
 
 # Wake-window STT prompt: the wake phrase AND its forbidden near-misses as

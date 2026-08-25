@@ -274,6 +274,8 @@ class SentenceSpeaker:
         self.interrupted = False
         self.first_audio_ts = None
         self.n_sentences = 0
+        self.audio_s = 0.0        # seconds of answer audio whose playback started
+        self.spoken_words = 0     # words in those sentences (maintain page: WPM)
         self._spoken_texts = []   # sentences whose audio has started (captions)
         # avatar pre-feed: idx -> (published wav name, publish time). The
         # /face-avatar page queues sentence i+1 while i still plays, so the
@@ -307,7 +309,7 @@ class SentenceSpeaker:
                     cls._oai = OpenAI()
         return cls._oai
 
-    def _synth(self, text):
+    def _synth(self, text, previous_text=None):
         import voice_io
         try:
             from postprocess import process_tts_sentence
@@ -322,7 +324,10 @@ class SentenceSpeaker:
                 # (solemn slower, amused quicker) — same classifier that
                 # styles the gestures, so motion and delivery agree.
                 spd = voice_io.emotion_speed(classify_emotion(text))
-                wav = voice_io.tts_elevenlabs_wav(text, speed=spd)
+                # previous sentence as context: keeps the delivery consistent
+                # across the answer's one-request-per-sentence synthesis
+                wav = voice_io.tts_elevenlabs_wav(text, speed=spd,
+                                                  previous_text=previous_text)
                 mp3_path = wav.replace(".wav", ".mp3")
                 subprocess.run(["ffmpeg", "-y", "-loglevel", "quiet",
                                 "-i", wav, mp3_path], check=True)
@@ -350,7 +355,8 @@ class SentenceSpeaker:
         self.n_sentences += 1
         with self._lock:
             idx = len(self._futures)
-            fut = self._pool.submit(self._synth, sentence)
+            prev = self._futures[-1][0] if self._futures else None
+            fut = self._pool.submit(self._synth, sentence, prev)
             self._futures.append((sentence, fut))
             if self._player is None:
                 self._player = threading.Thread(target=self._play_loop, daemon=True)
@@ -432,6 +438,8 @@ class SentenceSpeaker:
             except (OSError, ValueError):
                 pass
             self._spoken_texts.append(sentence)
+            self.audio_s += wav_duration(wav) or 0.0
+            self.spoken_words += len(sentence.split())
             with self._lock:
                 self._playing = i
                 pre = self._pub.get(i)
@@ -474,11 +482,38 @@ class SentenceSpeaker:
                 return
             i += 1
 
+    def _discard_synth(self, fut):
+        """Remove the files of a synthesized sentence that will never play
+        (answer cut). mp3s already handed to the replay concat are kept."""
+        try:
+            mp3_path, wav = fut.result(timeout=0)
+        except Exception:
+            return
+        victims = [wav, wav + ".align.json"]
+        if mp3_path not in self._mp3s:
+            victims.append(mp3_path)
+        for p in victims:
+            try:
+                os.unlink(p)
+            except OSError:
+                pass
+
     def finish(self, timeout=180):
         """No more sentences coming; wait for playback to drain."""
         self._done_feeding.set()
         if self._player:
             self._player.join(timeout=timeout)
+        # Sentences synthesized but never played (stop word / mute) used to
+        # leave mp3+wav+align triplets in /dev/shm (2026-08-25 review).
+        with self._lock:
+            rows = list(self._futures)
+        for _s, fut in rows:
+            if fut.cancel():
+                continue
+            if fut.done():
+                self._discard_synth(fut)
+            else:
+                fut.add_done_callback(self._discard_synth)
         self._pool.shutdown(wait=False)
         publish_speaking(self._spoken_texts, None, done=True,
                          interrupted=self.interrupted)
@@ -487,7 +522,10 @@ class SentenceSpeaker:
             if self._mp3s:
                 with open(LAST_ANSWER_MP3, "wb") as out:
                     for p in self._mp3s:
-                        out.write(open(p, "rb").read())
+                        try:
+                            out.write(open(p, "rb").read())
+                        except OSError:
+                            continue
         except OSError:
             pass
         for p in self._mp3s:
@@ -715,6 +753,8 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
                           if speaker.first_audio_ts else None),
         "compose_s": compose_s,
         "n_sentences": speaker.n_sentences,
+        "audio_s": round(speaker.audio_s, 2),
+        "spoken_words": speaker.spoken_words,
         "gate_blocked_sentences": gate_blocked,
         "gate_full": gate_full,
         "fidelity": fid_box or None,

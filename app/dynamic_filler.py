@@ -88,9 +88,10 @@ def _work(client, question, filler, note):
                     pass
         else:  # answer already speaking — filler no longer needed
             print(f"[dynfiller] ready in {secs}s but too late, discarded")
-            try:
-                os.unlink(wav)
-            except OSError:
-                pass
+            for p in (wav, wav + ".align.json"):
+                try:
+                    os.unlink(p)
+                except OSError:
+                    pass
     except Exception as e:
         print(f"[dynfiller] skipped ({type(e).__name__}: {e})")

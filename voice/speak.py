@@ -125,9 +125,16 @@ def _want_timestamps() -> bool:
 
 
 def synthesize(text: str, speed: Optional[float] = None,
-               align_out: Optional[dict] = None) -> np.ndarray:
+               align_out: Optional[dict] = None,
+               previous_text: Optional[str] = None) -> np.ndarray:
     """Text → float32 mono PCM at audio.SYNTH_SAMPLE_RATE via ElevenLabs.
     Raises SynthError (never leaks the API key in messages).
+
+    previous_text: the sentence spoken just before this one (request
+    stitching). Answers are synthesized one sentence per request; without
+    this context each request is delivered independently and the voice
+    drifts between sentences (2026-08-25, user: "his voice changes a bit").
+    Not part of the clip-cache key.
 
     align_out: pass a dict to receive the ElevenLabs character alignment
     (characters / character_start_times_seconds / character_end_times_seconds)
@@ -142,6 +149,8 @@ def synthesize(text: str, speed: Optional[float] = None,
                else "application/octet-stream"}
     body = {"text": text, "model_id": config.MODEL_ID,
             "voice_settings": effective_settings(speed)}
+    if previous_text:
+        body["previous_text"] = previous_text[-400:]
     params = {"output_format": config.OUTPUT_FORMAT}
 
     last_detail = "unknown"

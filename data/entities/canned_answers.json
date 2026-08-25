@@ -12,6 +12,31 @@
       ],
       "answers": [
         "I am happy to see all the handsome gentlemen and beautiful ladies in this room today, and I am excited to witness the success of this event."
+      ],
+      "gist": [
+        [
+          "how are you",
+          "how do you feel",
+          "how are you feeling",
+          "how you doing",
+          "how have you been",
+          "kumusta",
+          "kamusta",
+          "how is your day",
+          "hows your day"
+        ],
+        [
+          "feel",
+          "today",
+          "doing",
+          "kumusta",
+          "kamusta",
+          "afternoon",
+          "morning",
+          "evening",
+          "day",
+          "been"
+        ]
       ]
     },
     {
@@ -26,6 +51,27 @@
       ],
       "answers": [
         "I was born ready — ready to answer any questions within my capacity. I know we have a room of very smart people today, but please be gentle and friendly; I am still learning a lot."
+      ],
+      "gist": [
+        [
+          "ready",
+          "prepared",
+          "handa",
+          "up for",
+          "game for"
+        ],
+        [
+          "question",
+          "answer",
+          "ask",
+          "interview",
+          "interrogat",
+          "today",
+          "now",
+          "afternoon",
+          "session",
+          "tanong"
+        ]
       ]
     },
     {
@@ -40,6 +86,31 @@
       ],
       "answers": [
         "I am grateful to the directors and executives of the State Properties Corporation for their generosity and trust and, most importantly, for giving the Museum for Liberty and Prosperity a home — not just for me, but for the hopes and dreams of many Filipinos. I am most grateful to the Chairman and President, Dr. Allen Rohas. Thank you, and mabuhay po kayong lahat!"
+      ],
+      "gist": [
+        [
+          "donor",
+          "sponsor",
+          "state propert",
+          "spc",
+          "benefactor",
+          "patron",
+          "state property",
+          "estate propert"
+        ],
+        [
+          "say",
+          "message",
+          "tell",
+          "words",
+          "greet",
+          "mensahe",
+          "sabihin",
+          "address",
+          "acknowledge",
+          "remarks",
+          "regards"
+        ]
       ]
     },
     {
@@ -54,6 +125,45 @@
       ],
       "answers": [
         "Thank you for coming, and please be safe on your way home. You have been part of a symbolic and momentous event in the development of a visionary project. Thank you for your support and cooperation. We look forward to collaborating with you and celebrating many more successful milestones in the future."
+      ],
+      "gist": [
+        [
+          "end",
+          "ending",
+          "close",
+          "closing",
+          "final",
+          "parting",
+          "last",
+          "wrap",
+          "conclud",
+          "farewell",
+          "goodbye",
+          "before we go",
+          "before we leave",
+          "tapos",
+          "matatapos",
+          "pagtatapos",
+          "sign off",
+          "signing off"
+        ],
+        [
+          "guest",
+          "audience",
+          "everyone",
+          "everybody",
+          "program",
+          "message",
+          "say",
+          "words",
+          "remarks",
+          "tell",
+          "attendee",
+          "people",
+          "friends",
+          "bisita",
+          "sabihin"
+        ]
       ]
     },
     {

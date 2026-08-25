@@ -12,7 +12,7 @@ Modes:
              WHILE the answer plays cuts playback and goes straight back to
              listening — see StopWord / config.STOP_OWW_THRESHOLD.
 """
-import argparse, glob, json, os, random, re, socket, subprocess, sys, tempfile, threading, time
+import argparse, contextlib, glob, json, math, os, queue, random, re, socket, subprocess, sys, tempfile, threading, time
 from collections import deque
 import numpy as np
 import sounddevice as sd
@@ -61,6 +61,7 @@ ENROLL_TRIGGER = "/dev/shm/cj_enroll_trigger"
 # been asked aloud — no mic, no STT, no composer. 30 s freshness so a tap
 # while an answer is still playing queues the next question instead of dying.
 ASK_TRIGGER = "/dev/shm/cj_ask_trigger"
+_net_probe = {}   # wake-time reachability probe, filled by a daemon thread
 _pending_ask = {"ask": None}   # handoff from _wake_stream to wake_loop
 
 # Voice lock (see speaker_id.VoiceLock): one instance for the process.
@@ -229,6 +230,18 @@ def _api_cost_snapshot():
         return None
 
 
+def _wpm_meta(words, audio_s):
+    """Speaking-rate fields (2026-08-25, user: "word per minute in the
+    maintain UI"): words actually voiced / seconds of answer audio."""
+    try:
+        if words and audio_s and audio_s > 0:
+            return {"words": int(words), "audio_s": round(float(audio_s), 2),
+                    "wpm": int(round(60.0 * words / audio_s))}
+    except (TypeError, ValueError):
+        pass
+    return {"words": words or None, "audio_s": audio_s or None, "wpm": None}
+
+
 def _cost_meta(cost0):
     """Maintenance-feed cost fields: this turn's Anthropic spend (delta from
     the start-of-turn snapshot) + the running session total."""
@@ -299,6 +312,71 @@ except Exception as e:
     print(f"[mic] using system default input ({e})")
 
 
+class _SpeakerDoA:
+    """Where the person speaking is, from the XVF3800 mic array's direction-of-
+    arrival (2026-08-25, user: "turn to the person speaking"). A daemon thread
+    polls the ReSpeaker USB control endpoint at 10 Hz (safe alongside the
+    daemon's own handle — measured) and keeps a smoothed angle of the latest
+    SPEECH-flagged readings. SDK convention: 0 rad = left, pi/2 = front,
+    pi = right -> head yaw = 90 - angle (CJ_DOA_FLIP=1 mirrors it if the
+    head turns the wrong way). Off with CJ_FACE_SPEAKER=0."""
+
+    def __init__(self):
+        self.on = os.environ.get("CJ_FACE_SPEAKER", "1").strip().lower() not in {
+            "0", "false", "no", "off"}
+        self.flip = os.environ.get("CJ_DOA_FLIP", "0").strip() == "1"
+        try:
+            self.max_yaw = float(os.environ.get("CJ_FACE_MAX_YAW", "").strip() or 45)
+        except ValueError:
+            self.max_yaw = 45.0
+        self.angle, self.ts = None, 0.0
+        self._doa, self._started = None, False
+
+    def start(self):
+        if not self.on or self._started:
+            return
+        self._started = True
+        try:
+            from reachy_mini.media.audio_doa import AudioDoA
+            self._doa = AudioDoA()
+            if self._doa._respeaker is None:
+                raise RuntimeError("no ReSpeaker USB device")
+        except Exception as e:
+            print(f"[doa] speaker tracking disabled ({e})")
+            self.on = False
+            return
+        threading.Thread(target=self._run, daemon=True).start()
+        print(f"[doa] speaker tracking on (max yaw ±{self.max_yaw:.0f}°"
+              f"{', mirrored' if self.flip else ''})")
+
+    def _run(self):
+        while True:
+            try:
+                r = self._doa.get_DoA()
+                if r is not None and r[1]:            # speech-flagged reading
+                    deg = math.degrees(r[0])
+                    if self.angle is None or abs(deg - self.angle) > 40:
+                        self.angle = deg               # new speaker: jump
+                    else:
+                        self.angle = 0.7 * self.angle + 0.3 * deg
+                    self.ts = time.monotonic()
+            except Exception:
+                pass
+            time.sleep(0.1)
+
+    def yaw(self, max_age=1.5):
+        """Head yaw (deg, + = left) toward the latest speech, or None."""
+        if not self.on or self.angle is None or time.monotonic() - self.ts > max_age:
+            return None
+        y = 90.0 - self.angle
+        if self.flip:
+            y = -y
+        return max(-self.max_yaw, min(self.max_yaw, y))
+
+
+_speaker_doa = _SpeakerDoA()
+
+
 class Gestures:
     """Background head/antenna motion. Safe no-op if the SDK/daemon is absent."""
 
@@ -330,6 +408,16 @@ class Gestures:
             self.mini.enable_motors(); print("[gestures] connected, motors on")
         except Exception as e:
             print(f"[gestures] disabled ({e})")
+        if self.mini:
+            _speaker_doa.start()
+
+    def face_speaker(self, max_age=1.5, min_change=8.0):
+        """Point gaze_yaw at the latest speech direction; True if it moved."""
+        y = _speaker_doa.yaw(max_age)
+        if y is None or abs(y - self.gaze_yaw) < min_change:
+            return False
+        self.gaze_yaw = y
+        return True
 
     @property
     def talk_style(self):
@@ -356,12 +444,13 @@ class Gestures:
 
     def _run(self, mode):
         while not self._stop.is_set():
-            if mode == "listen":      # attentive, nearly still, head slightly raised
-                self._move(random.uniform(-6, 6), random.uniform(-12, -4),
-                           random.uniform(-3, 3), 0.9)
-                self._stop.wait(random.uniform(1.2, 2.2))
-            elif mode == "think":     # slow pondering sway, gaze wandering up
-                self._move(random.uniform(-25, 25), random.uniform(-18, -6),
+            if mode == "listen":      # attentive, head turned to whoever is speaking
+                moved = self.face_speaker(max_age=1.0)
+                self._move(self.gaze_yaw + random.uniform(-4, 4), random.uniform(-12, -4),
+                           random.uniform(-3, 3), 0.5 if moved else 0.9)
+                self._stop.wait(random.uniform(0.5, 0.9) if moved else random.uniform(1.0, 1.8))
+            elif mode == "think":     # slow pondering sway around the speaker, gaze up
+                self._move(self.gaze_yaw + random.uniform(-20, 20), random.uniform(-18, -6),
                            random.uniform(-8, 8), 1.3)
                 self._stop.wait(random.uniform(1.3, 2.4))
             elif mode == "sleep":     # armed idle: sway + periodic "alive" gesture
@@ -481,13 +570,17 @@ class Gestures:
 
     def neutral(self):
         self.stop()
+        self.gaze_yaw = 0.0
         self._move(0, 0, 0, 1.0, antennas=[0.15, -0.15])
 
     def perk(self):
         """Instant wake acknowledgment: antennas up + head raise, ~250ms —
-        visible feedback well before the STT confirmation lands."""
+        visible feedback well before the STT confirmation lands. Turns toward
+        the voice that woke it when the mic array knows where it came from."""
         self.stop()
-        self._move(0, -12, 0, 0.25, antennas=[0.5, -0.5])
+        if self.face_speaker(max_age=2.5, min_change=5.0):
+            print(f"[doa] speaker at {_speaker_doa.angle:.0f}° -> facing yaw {self.gaze_yaw:+.0f}°")
+        self._move(self.gaze_yaw, -12, 0, 0.3, antennas=[0.5, -0.5])
 
     def scan(self):
         """Boot/arm behavior: a deliberate look-around so bystanders see the
@@ -498,7 +591,145 @@ class Gestures:
         self._move(0, -5, 0, 0.6, antennas=[0.3, -0.3])
 
 
-def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12):
+class _MicTap:
+    """One always-open capture stream shared by the wake detector and the
+    question recorder (2026-08-25, user: "a bit late in listening"). Frames
+    land in a queue from the audio callback, so the ~0.3 s between the wake
+    word firing and the recorder starting is buffered as pre-roll instead of
+    lost — the question's first syllable used to fall in that gap. The mic is
+    a dsnoop device, so the stop-word listeners still open their own streams.
+    Also tracks the idle noise floor (30th percentile of recent frame RMS) so
+    the recorder can set its speech threshold without probing the pre-roll."""
+    FRAME = 1280   # 80 ms at 16 kHz
+
+    MAXQ = 7500    # ~10 min of frames; older audio is dropped rather than hoarded
+
+    def __init__(self):
+        self.q = queue.Queue()
+        self._rem = None
+        self.rms_hist = deque(maxlen=60)   # ~4.8 s
+        self.stream = sd.InputStream(samplerate=RATE, channels=1, dtype="int16",
+                                     blocksize=self.FRAME, callback=self._cb)
+        self.stream.start()
+
+    def _cb(self, indata, frames, t, status):
+        if self.q.qsize() > self.MAXQ:
+            try:
+                self.q.get_nowait()
+            except queue.Empty:
+                pass
+        self.q.put(indata[:, 0].copy())
+
+    def read(self, n):
+        parts, have = [], 0
+        if self._rem is not None and len(self._rem):
+            parts.append(self._rem); have = len(self._rem)
+        self._rem = None
+        while have < n:
+            try:
+                a = self.q.get(timeout=2.0)
+            except queue.Empty:
+                # No frames for 2 s: the USB mic went away / PortAudio stopped
+                # the callback. Raise (as the per-open stream.read() used to)
+                # so the caller's error path and systemd restart take over
+                # instead of hanging silently (2026-08-25 review).
+                if not self.stream.active:
+                    raise sd.PortAudioError("mic stream stopped")
+                continue
+            parts.append(a); have += len(a)
+        buf = np.concatenate(parts)
+        self._rem = buf[n:]
+        return buf[:n].reshape(-1, 1), False
+
+    def note_rms(self, frame):
+        self.rms_hist.append(float(np.sqrt(np.mean(frame.astype(np.float64) ** 2)) or 0.0))
+
+    def noise_rms(self):
+        return int(np.percentile(self.rms_hist, 30)) if len(self.rms_hist) >= 12 else None
+
+    def buffered_s(self):
+        return (self.q.qsize() * self.FRAME +
+                (len(self._rem) if self._rem is not None else 0)) / RATE
+
+    def flush(self):
+        self._rem = None
+        while True:
+            try:
+                self.q.get_nowait()
+            except queue.Empty:
+                return
+
+
+_mic_tap_box = {}
+
+
+def _mic_tap():
+    tap = _mic_tap_box.get("tap")
+    if tap is None or not tap.stream.active:
+        if tap is not None:
+            try:
+                tap.stream.close()
+            except Exception:
+                pass
+        tap = _MicTap()
+        _mic_tap_box["tap"] = tap
+    return tap
+
+
+def _env_num(name, default):
+    """Numeric env knob; a blank or malformed value falls back to the default
+    instead of taking down every turn (2026-08-25 review)."""
+    try:
+        return float(os.environ.get(name, "").strip() or default)
+    except ValueError:
+        print(f"[mic] ignoring bad {name}={os.environ.get(name)!r}, using {default}")
+        return float(default)
+
+
+def _speech_threshold(noise_rms):
+    """RMS above which a 30 ms frame counts as speech (CJ_MIC_RMS_* knobs;
+    lower floor/multiplier = more sensitive mic)."""
+    floor_ = int(_env_num("CJ_MIC_RMS_FLOOR", 350))
+    mult = _env_num("CJ_MIC_RMS_MULT", 3.5)
+    cap = int(_env_num("CJ_MIC_RMS_CAP", 2000))
+    return min(max(int(noise_rms * mult), floor_), cap)
+
+
+class _StopTrace:
+    """Stop-word diagnostics (2026-08-25, user: "it does not stop when saying
+    cjap"): keeps the mic audio the listener scored (<= 40 s) and the top
+    scores with offsets; written to /dev/shm/cj_stop_last.wav + the journal
+    when the answer ends. Off unless CJ_STOP_DEBUG_WAV=1."""
+    PATH = "/dev/shm/cj_stop_last.wav"
+
+    def __init__(self):
+        self.on = os.environ.get("CJ_STOP_DEBUG_WAV", "0").strip().lower() in {
+            "1", "true", "yes", "on"}
+        self.frames, self.scores, self.n = [], [], 0
+
+    def add(self, frame, score):
+        if not self.on:
+            return
+        if self.n < 40 * RATE:
+            self.frames.append(np.asarray(frame, dtype=np.int16).copy())
+        self.scores.append((score, self.n / RATE))
+        self.n += len(frame)
+
+    def dump(self):
+        if not self.on or not self.frames:
+            return
+        try:
+            wavfile.write(self.PATH, RATE, np.concatenate(self.frames))
+            top = sorted(self.scores, reverse=True)[:3]
+            print("[stop] trace: top scores " +
+                  " ".join(f"{sc:.3f}@{t:.1f}s" for sc, t in top) +
+                  f" — mic audio saved to {self.PATH}")
+        except Exception as e:
+            print(f"[stop] trace failed ({type(e).__name__})")
+
+
+def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12,
+                      keep_buffer=False):
     # Silence needed after speech before the mic stops (CJ_MIC_TRAILING_SILENCE_S,
     # default 4s). Longer = tolerant of mid-question pauses, but every answer
     # starts that much later — this wait is part of the response latency.
@@ -511,17 +742,44 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
     max_frames = int(max_s * 1000 / frame_ms)
     no_speech_frames = int(no_speech_timeout_s * 1000 / frame_ms)
     threshold, probe = None, []
-    with sd.InputStream(samplerate=RATE, channels=1, dtype="int16", blocksize=n) as stream:
-        print("SPEAK NOW  (auto-stops after you pause)")
+    stream = _mic_tap()
+    kept = 0.0
+    if keep_buffer and stream.buffered_s() > 3.0:
+        # Nobody drained the tap for seconds (press-Enter / --auto / stop-
+        # relisten callers, or a stalled turn): that is not a wake gap but
+        # the robot's own answer — drop it (2026-08-25 review).
+        stream.flush()
+    if keep_buffer:                      # right after a wake: the gap audio is the question's start
+        kept = stream.buffered_s()
+        noise = stream.noise_rms()       # idle floor from BEFORE the wake phrase
+        if noise is not None:
+            threshold = _speech_threshold(noise)
+            print(f"[mic] noise floor rms={noise} -> speech threshold {threshold}")
+    else:
+        stream.flush()                   # follow-up / enrollment: drop stale audio
+    # The pre-roll holds the wake phrase's tail (and the perk motor) followed
+    # by the user's pause: keep that audio, but only start speech/silence
+    # detection in its last 300 ms — otherwise the phrase counts as speech and
+    # the pause ends the recording before the question begins (seen 12:08).
+    # ...but never skip more than ~1 s: pre-rolls of 2 s were measured, and a
+    # short question spoken entirely inside a long pre-roll must still be
+    # seen as speech (2026-08-25 review).
+    skip_detect = min(max(0, int(kept * RATE / n) - 10), int(1.0 * RATE / n))
+    with contextlib.nullcontext(stream):
+        print("SPEAK NOW  (auto-stops after you pause)" +
+              (f"  [+{kept:.2f}s pre-roll]" if kept else ""))
         for i in range(max_frames):
             data, _ = stream.read(n)
             mono = data[:, 0]
             frames.append(mono.copy())
+            if i < skip_detect:
+                continue
             rms = int(np.sqrt(np.mean(mono.astype(np.float64) ** 2)) or 0)
             if threshold is None:
                 probe.append(rms)
                 if len(probe) >= 8:
-                    threshold = min(max(int(np.median(probe) * 3.5), 350), 2000)
+                    threshold = _speech_threshold(int(np.median(probe)))
+                    print(f"[mic] noise floor rms={int(np.median(probe))} -> speech threshold {threshold}")
                 continue
             bars = "#" * min(rms // 100, 40)
             tag = "SPEECH " if rms > threshold else "quiet  "
@@ -632,10 +890,11 @@ class FillerLoop:
             # cuts a current clip — same rule, applied from the announce)
             _play_aside(clip)
             if nxt:
-                try:
-                    os.unlink(nxt)   # injected clips are /dev/shm temps
-                except OSError:
-                    pass
+                for p in (nxt, nxt + ".align.json"):   # injected clips are /dev/shm temps
+                    try:
+                        os.unlink(p)
+                    except OSError:
+                        pass
             played += 1
             if self.max_clips and played >= self.max_clips:
                 self.exhausted.set()
@@ -652,10 +911,11 @@ class FillerLoop:
         if self._thread.is_alive():
             self._thread.join()
         if self._next:               # injected but never played
-            try:
-                os.unlink(self._next)
-            except OSError:
-                pass
+            for p in (self._next, self._next + ".align.json"):
+                try:
+                    os.unlink(p)
+                except OSError:
+                    pass
             self._next = None
 
 
@@ -681,6 +941,7 @@ def _play_wav_interruptible(wav_path, stop):
     Any listener failure degrades to normal (uninterruptible) playback."""
     proc = subprocess.Popen(["aplay", "-q", wav_path])
     fired = peak = 0.0
+    trace = _StopTrace()
     try:
         model = stop.detector._load()
         model.reset()
@@ -697,6 +958,7 @@ def _play_wav_interruptible(wav_path, stop):
                     break
                 frame, _ = stream.read(frame_len)
                 score = float(max(model.predict(frame[:, 0]).values()))
+                trace.add(frame[:, 0], score)
                 peak = max(peak, score)
                 _publish_wake(score, fired=score >= stop.threshold)
                 if score >= stop.threshold:
@@ -704,6 +966,7 @@ def _play_wav_interruptible(wav_path, stop):
                     proc.terminate()
                     break
         model.reset()   # don't leak playback audio into the next arming
+        trace.dump()
         if not fired:   # tuning evidence: what did the mic actually score?
             print(f"[stop] answer played out — peak mid-answer score "
                   f"{peak:.3f} (threshold {stop.threshold})")
@@ -733,6 +996,7 @@ class StopListener:
         self.fired = 0.0     # score on fire; -1.0 = dashboard mute
         self.peak = 0.0
         self.failed = False
+        self._trace = _StopTrace()
         self._closing = threading.Event()
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
@@ -755,6 +1019,7 @@ class StopListener:
                             return
                         frame, _ = stream.read(frame_len)
                         score = float(max(model.predict(frame[:, 0]).values()))
+                        self._trace.add(frame[:, 0], score)
                         self.peak = max(self.peak, score)
                         _publish_wake(score, fired=score >= self._stop.threshold)
                         if score >= self._stop.threshold:
@@ -772,6 +1037,7 @@ class StopListener:
     def close(self):
         self._closing.set()
         self._thread.join(timeout=2.0)
+        self._trace.dump()
         if not self.fired and not self.failed:
             print(f"[stop] answer played out — peak mid-answer score "
                   f"{self.peak:.3f} (threshold {self._stop.threshold})")
@@ -933,6 +1199,12 @@ def speak(text, filler=None, stop=None):
         if wav_from_eleven is None:  # elevenlabs path already produced the wav
             subprocess.run(["ffmpeg", "-y", "-loglevel", "quiet", "-i", mp3_path, wav_path], check=True)
         _speak_timing["synth_s"] = round(time.monotonic() - _t_synth, 2)
+        try:  # speaking-rate fields for the maintenance page
+            from stream_speak import wav_duration as _wd
+            _speak_timing["audio_s"] = _wd(wav_path)
+            _speak_timing["words"] = len(text.split())
+        except Exception:
+            _speak_timing["audio_s"] = None
         _t_play = time.monotonic()
         if filler is not None:
             filler.stop()  # let the current clip finish, then start the answer
@@ -965,7 +1237,7 @@ def speak(text, filler=None, stop=None):
             publish_speaking([text], None, done=True, interrupted=interrupted)
         _speak_timing["play_s"] = round(time.monotonic() - _t_play, 2)
     finally:
-        for p in (mp3_path, wav_path):
+        for p in (mp3_path, wav_path, wav_path + ".align.json"):
             if os.path.exists(p):
                 os.unlink(p)
     return interrupted
@@ -1094,6 +1366,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                 "phase": "spoken", "question": question,
                 "synth_s": out.get("first_audio_s"), "play_s": None,
                 "interrupted": bool(out.get("interrupted")),
+                **_wpm_meta(out.get("spoken_words"), out.get("audio_s")),
             })
         except Exception as e:
             print(f"[meta] publish skipped: {e}")
@@ -1146,6 +1419,26 @@ def _followup_window():
         return 6.0
 
 
+# "CJAP… CJAP?" (2026-08-25, user): when the robot does not react fast enough
+# the visitor repeats the wake phrase, and the repeat lands INSIDE the
+# recording. STT then returns "Cee-Jap, what is…" or just "CJAP?". The
+# leading wake phrase(s) are stripped from the question; a transcript that
+# was ONLY the wake phrase re-opens the mic ("rewake") instead of being
+# answered or ending the turn.
+_WAKE_TOKEN = (r"(?:(?:hi|hello|hey|okay|ok|oh)[\s,]+)?"
+               r"(?:(?:cee|see|si|sea|ci|ce|c|cj)[\s\-]*(?:jap|jab|yap|jep|app|ap)|cjap|cejap|siyap|cj)\b")
+_WAKE_PREFIX_RE = re.compile(r"^(?:\s*" + _WAKE_TOKEN + r"[\s,.!?;:\-]*)+", re.I)
+
+
+def _strip_wake_phrase(text):
+    """(question without leading wake phrases, how many were stripped)."""
+    m = _WAKE_PREFIX_RE.match(text or "")
+    if not m:
+        return text, 0
+    n = len(re.findall(_WAKE_TOKEN, m.group(0), re.I))
+    return text[m.end():].strip(), n
+
+
 def _safe_turn(*args, **kwargs):
     """handle_turn that cannot take the service down: any unexpected error is
     logged with its traceback, apologised for, and treated as a finished
@@ -1177,7 +1470,8 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
     _stage("transcribe", "active", "listening…")
     path = record_with_meter(
         no_speech_timeout_s=(listen_s if listen_s is not None else
-                             (_followup_window() if followup else 12)))
+                             (_followup_window() if followup else 12)),
+        keep_buffer=not followup)
     if not path:
         _publish_transcript("note", "(mic timeout — no speech captured)")
         _stage("transcribe", "pending", "no speech captured")
@@ -1233,6 +1527,8 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         # text on quiet/unclear windows (Ukrainian "thanks for watching",
         # Portuguese fragments — journal 2026-08-03 16:10-16:12). Set
         # CJ_STT_LANGUAGE= (empty) to restore auto-detect, or "tl" for Filipino.
+        if _net_probe.get("up") is False and not internet_up(0.6):
+            raise ConnectionError("offline at wake")   # -> offline notice below
         lang = os.environ.get("CJ_STT_LANGUAGE", "en").strip() or None
         question = transcribe_openai(path, language=lang)
     except Exception as e:
@@ -1251,10 +1547,28 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         _publish_transcript("note", "(empty transcript — STT heard nothing)")
         _stage("transcribe", "pending", "heard nothing")
         return False
+    question, _nwake = _strip_wake_phrase(question)
+    if _nwake:
+        if not question.strip():
+            print(f"[wake] heard only the wake phrase again ({_nwake}x) — listening for the question")
+            _publish_transcript("note", "(heard the wake phrase again — still listening)")
+            _stage("transcribe", "active", "listening again…")
+            return "rewake"
+        print(f"[stt] wake phrase inside the question stripped ({_nwake}x) -> {question!r}")
     non_latin = sum(ord(c) > 127 for c in question) / len(question)
     if non_latin > 0.3:   # EN/Filipino are Latin-script; this is a hallucination
         print(f"[stt] discarded non-Latin hallucination: {question!r}")
         _publish_transcript("note", f"(discarded non-Latin hallucination: {question})")
+        return False
+    try:  # Filipino/English only (2026-08-25, user) — lang_gate fails open
+        import lang_gate
+        _ok, _why = lang_gate.check(question)
+    except Exception as _e:
+        _ok, _why = True, f"gate unavailable ({type(_e).__name__})"
+    if not _ok:
+        print(f"[stt] discarded — not Filipino/English: {question!r} ({_why})")
+        _publish_transcript("note", f"(discarded — not Filipino/English: {question} · {_why})")
+        _stage("transcribe", "pending", "not Filipino/English — ignored")
         return False
     stt_s = round(time.monotonic() - t0, 2)
     if lock_box.get("thread") is not None:
@@ -1326,6 +1640,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             "phase": "spoken", "question": question,
             "synth_s": round(time.monotonic() - t0, 2), "play_s": None,
             "interrupted": bool(interrupted),
+            **_wpm_meta(_speak_timing.get("words"), _speak_timing.get("audio_s")),
         })
         history += [{"role": "user", "content": question},
                     {"role": "assistant", "content": response}]
@@ -1434,6 +1749,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
                     "synth_s": _speak_timing.get("synth_s"),
                     "play_s": _speak_timing.get("play_s"),
                     "interrupted": bool(interrupted),
+                    **_wpm_meta(_speak_timing.get("words"), _speak_timing.get("audio_s")),
                 })
             except Exception as e:
                 print(f"[meta] publish skipped: {e}")
@@ -1479,8 +1795,9 @@ def _wake_stream(det):
     frame_len = 1280  # 80 ms at 16 kHz — openWakeWord's expected frame
     near_miss_last = 0.0
     muted_logged = False
-    with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
-                        blocksize=frame_len) as stream:
+    tap = _mic_tap()
+    tap.flush()   # audio that piled up while the robot was busy is not a wake
+    with contextlib.nullcontext(tap) as stream:
         while True:
             if os.path.exists(ASK_TRIGGER):
                 ask = None
@@ -1516,6 +1833,7 @@ def _wake_stream(det):
                         model.reset()
                         return ret
             frame, _ = stream.read(frame_len)
+            tap.note_rms(frame[:, 0])
             score = float(max(model.predict(frame[:, 0]).values()))
             if score >= det.threshold and _muted():
                 if not muted_logged:
@@ -1599,6 +1917,7 @@ def _ask_turn(gestures, history, ask, stop=None):
         "phase": "spoken", "question": question,
         "synth_s": round(time.monotonic() - t0, 2), "play_s": None,
         "interrupted": bool(interrupted),
+        **_wpm_meta(_speak_timing.get("words"), _speak_timing.get("audio_s")),
     })
     history += [{"role": "user", "content": question},
                 {"role": "assistant", "content": response}]
@@ -1678,17 +1997,25 @@ def wake_loop(client, artifacts, gestures):
         prewarm_connections(client)   # warm OpenAI/Anthropic/ElevenLabs while the user speaks
         threading.Thread(target=_warm_voice_lock, daemon=True).start()
         gestures.perk()
-        if not internet_up(1.2):   # short probe: don't hold the mic open on a slow LAN
-            # Say so instead of recording a question no cloud call can answer.
-            print("[net] offline at wake — voicing the offline notice")
-            gestures.start("talk")
-            say_offline()
-            gestures.neutral()
-            time.sleep(grace)
-            print(f"[wake] re-armed — say \"{phrase}\"")
-            continue
+        # Listen IMMEDIATELY after the wake word (2026-08-25, user): the
+        # reachability probe used to block here for up to 1.2s (measured
+        # 0.9-1.8s fire->mic on a slow LAN). It now runs in a thread while
+        # the question is being recorded; handle_turn consults it before STT
+        # and voices the offline notice if the network was down.
+        _net_probe.clear()
+        threading.Thread(target=lambda: _net_probe.update(up=internet_up(1.2)),
+                         daemon=True).start()
         r = _safe_turn(client, artifacts, gestures, history, stop=stop)
+        for _ in range(2):   # "CJAP… CJAP?": the wake phrase alone re-opens the mic
+            if r != "rewake":
+                break
+            gestures.perk()
+            r = _safe_turn(client, artifacts, gestures, history, stop=stop)
         lock = _voice_lock_obj() if _lock_enabled() else None
+        if r is True and _net_probe.get("up") is False:
+            # the turn voiced the offline notice; a lock conversation would
+            # just repeat it for every utterance (2026-08-25 review)
+            r = "offline"
         if lock is not None and lock.active() and r is True:
             # Voice-locked conversation (2026-08-24): keep the mic open for the
             # speaker who woke us. Other voices are ignored and cannot take

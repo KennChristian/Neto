@@ -24,7 +24,12 @@ from voice_io import tts_concatenate_parallel  # noqa: E402
 text, out = sys.argv[1], sys.argv[2]
 if getattr(voice_io, "TTS_BACKEND", "openai") == "elevenlabs":
     try:
-        shutil.move(voice_io.tts_elevenlabs_wav(text), out)
+        src = voice_io.tts_elevenlabs_wav(text)
+        shutil.move(src, out)
+        try:   # alignment sidecar rides along (deleted with the wav)
+            shutil.move(src + ".align.json", out + ".align.json")
+        except OSError:
+            pass
         sys.exit(0)
     except Exception as e:
         print(f"[say-text] elevenlabs failed ({type(e).__name__}) — openai fallback")

@@ -42,6 +42,7 @@ itsdangerous==2.2.0
 Jinja2==3.1.6
 jiter==0.16.0
 joblib==1.5.3
+langdetect==1.0.9
 libusb-package==1.0.30.0
 log-throttling==0.0.3
 markdown-it-py==4.2.0

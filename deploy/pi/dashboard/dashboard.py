@@ -205,11 +205,31 @@ APP_VENV_PY = os.path.join(HOME, "Supervaise-Reachy-Mini-Project-main",
 SAY_HELPER = os.path.join(HOME, "pi_dashboard", "say_text_helper.py")
 
 
+def _robot_busy():
+    """'muted' / 'speaking' / None — typed speech must not play over the
+    app's own answer (it also clobbers cj_speaking.json and freezes the
+    avatar portrait mid-answer) or while the operator has muted the robot."""
+    if os.path.exists(supervaise_ui.MUTED_FLAG):
+        return "muted"
+    try:
+        with open("/dev/shm/cj_speaking.json") as f:
+            doc = json.load(f)
+        if (doc.get("current") and not doc.get("done")
+                and time.time() - float(doc.get("ts") or 0) < 120):
+            return "speaking"
+    except Exception:
+        pass
+    return None
+
+
 def say_text(text):
     """Speak typed text in the CJ voice (cloud TTS via the app venv)."""
     text = (text or "").strip()
     if not text or len(text) > 500:
         return False, "text empty or over 500 characters"
+    busy = _robot_busy()
+    if busy:
+        return False, f"robot is {busy} — try again when it is idle"
     wav = tempfile.mktemp(dir="/dev/shm", suffix=".wav")
     try:
         code, out = run([APP_VENV_PY, SAY_HELPER, text, wav], timeout=60)
@@ -232,8 +252,9 @@ def say_text(text):
             _publish_say_speaking(text, done=True)
         return code == 0, out[-200:]
     finally:
-        if os.path.exists(wav):
-            os.unlink(wav)
+        for p in (wav, wav + ".align.json"):
+            if os.path.exists(p):
+                os.unlink(p)
 
 
 def _publish_say_speaking(text, done, wav=None, dur=None, play_ts=None):
@@ -941,9 +962,10 @@ async function sayText() {
   if (!text) return;
   toast("synthesizing…");
   try {
+    const key = new URLSearchParams(location.search).get("key") || "";
     const r = await fetch("/api/say-text", { method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({text}) });
+      body: JSON.stringify({text, key}) });
     const out = await r.json();
     toast(out.ok ? "spoken ✓" : "FAILED — " + out.output);
     if (out.ok) $("say-text").value = "";
@@ -1078,10 +1100,21 @@ class Handler(BaseHTTPRequestHandler):
                 ok, out = False, str(e)
             self._send(200, json.dumps({"ok": ok, "output": out}))
             return
-        if self.path == "/api/say-text":
+        if self.path.partition("?")[0] == "/api/say-text":
             try:
                 n = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(n) or b"{}")
+                from urllib.parse import parse_qs
+                params = {k: v[0] for k, v in
+                          parse_qs(self.path.partition("?")[2]).items()}
+                if not supervaise_ui._authed(params, body):
+                    # anyone on the LAN could make the robot speak / spend
+                    # ElevenLabs credits (2026-08-25 review)
+                    self._send(403, json.dumps({
+                        "ok": False, "output": "bad key — open the page with ?key=cjap"}))
+                    return
+                print(f"[say] {self.client_address[0]} {body.get('text', '')[:80]!r}",
+                      flush=True)
                 ok, out = say_text(body.get("text", ""))
             except Exception as e:
                 ok, out = False, str(e)
@@ -1111,6 +1144,10 @@ class Handler(BaseHTTPRequestHandler):
             return
         # tagalog-sample is a ~45 s clip — the generic 30 s cap would cut it off
         code, out = run(ACTIONS[name], timeout=90 if name == "tagalog-sample" else 30)
+        try:
+            print(f"[action] {self.client_address[0]} {name} -> rc={code}", flush=True)
+        except Exception:
+            pass
         self._send(200, json.dumps({"ok": code == 0, "output": out[-500:]}))
 
 
