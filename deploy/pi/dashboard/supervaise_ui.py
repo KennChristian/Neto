@@ -187,6 +187,7 @@ def state():
         "speaking": _read_json(SPEAKING),
         "aside": _read_json("/dev/shm/cj_aside.json"),
         "stage": _read_json("/dev/shm/cj_stage.json"),
+        "voice_lock": _read_json("/dev/shm/cj_voice_lock.json"),
         "wake_events": _tail_jsonl(WAKE_EVENTS, 12),
         "corrections": _tail_jsonl(POSTPROC_LOG, 20),
         "health": _health(),
@@ -335,82 +336,89 @@ def event_page():
 
 AUDIENCE_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chief Justice Artemio V. Panganiban</title><style>
-:root{--ink:#f2f6fa;--dim:#aab4c0;--mute:#6f7a88;--gold:#e6c352;--gold2:#b8952a;
-  --ok:#7fd8a4;--warn:#f0a050;--blue:#7fc2ff;--panel:13,17,23}
+<title>Chief Justice Artemio V. Panganiban</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--wall:#1c1916;--ink:#2b2418;--ink2:#5a4d3a;--faint:#8a7b64;--ivory:#f4eddc;--ivory2:#eadfc6;
+  --maroon:#6e1f2b;--maroon2:#8b2a38;--brass:#c9a961;--brass2:#8f7332;--ok:#4f7d4a;--warn:#a8642a;--blue:#3b5b8a}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;color:var(--ink);overflow:hidden;
-  font-family:Georgia,'Times New Roman',serif;
-  background:#05080c radial-gradient(ellipse 70% 60% at 50% 38%,#151c26 0%,#0a0e14 55%,#05080c 100%)}
-@keyframes blink{50%{opacity:.25}}
-/* camera: a framed tile centred on the stage; knobs ?cam=<vw> ?pos=tr|tl */
-#cam{position:fixed;top:5vh;left:50%;transform:translateX(-50%);
+  font-family:'EB Garamond',Georgia,'Times New Roman',serif;
+  /* gallery wall: warm charcoal with a spotlight falling on the portrait */
+  background:var(--wall) radial-gradient(ellipse 58% 52% at 50% 34%,rgba(214,190,140,.22) 0%,rgba(214,190,140,.07) 45%,rgba(0,0,0,0) 72%)}
+/* the portrait: a gilt frame around the live camera. knobs ?cam=<vw> ?pos=tr|tl */
+#cam{position:fixed;top:5.5vh;left:50%;transform:translateX(-50%);
   width:min(44vw,calc(58vh * 16 / 9));aspect-ratio:16/9;background:#000;overflow:hidden;
-  border-radius:1.6vh;border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 2.4vh 7vh rgba(0,0,0,.75),0 0 0 0 rgba(230,195,82,0);
-  transition:box-shadow .8s ease,border-color .8s ease}
-#cam.live{border-color:rgba(230,195,82,.55);
-  box-shadow:0 2.4vh 7vh rgba(0,0,0,.75),0 0 4vh .3vh rgba(230,195,82,.18)}
-#cam.tr,#cam.tl{transform:none;left:auto;top:6.5vh;width:min(30vw,calc(34vh * 16 / 9))}
+  /* gallery frame: bevelled gilt moulding, ivory linen mat, dark liners */
+  border:1.3vh solid #b8944f;
+  border-image:linear-gradient(160deg,#f3e4b4 0%,#c8a55c 18%,#8f7332 34%,#e6cf8f 50%,#a5813f 66%,#f0dda6 84%,#8a6d2c 100%) 1;
+  box-shadow:0 0 0 .3vh #2a2115,0 0 0 1.6vh #efe4c8,0 0 0 1.9vh #6b5323,0 0 0 2.1vh #d9c07a,
+    0 3.5vh 9vh rgba(0,0,0,.8),inset 0 0 0 .45vh #12100c;
+  transition:box-shadow .8s ease}
+#cam.live{box-shadow:0 0 0 .3vh #2a2115,0 0 0 1.6vh #efe4c8,0 0 0 1.9vh #6b5323,0 0 0 2.1vh #d9c07a,
+    0 3.5vh 9vh rgba(0,0,0,.8),0 0 8vh 1.5vh rgba(230,200,130,.3),inset 0 0 0 .45vh #12100c}
+#cam.tr,#cam.tl{transform:none;left:auto;top:5vh;width:min(30vw,calc(34vh * 16 / 9))}
 #cam.tr{right:2vw}  #cam.tl{left:2vw}
-#cam img{width:100%;height:100%;object-fit:cover;object-position:center}
+#cam img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 #cam .idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;color:var(--dim);font-size:2.6vh;gap:1.4vh;
-  background:radial-gradient(ellipse at 50% 40%,#161b22,#06090d 70%)}
-#cam .idle b{color:var(--gold);font-size:6vh;letter-spacing:.22em}
-/* bottom scrim keeps text legible; the centre stays clear for the tile */
-#scrim{position:fixed;left:0;right:0;bottom:0;height:36vh;pointer-events:none;
-  background:linear-gradient(to top,rgba(4,7,10,.9) 0%,rgba(4,7,10,.4) 55%,rgba(4,7,10,0) 100%)}
-/* the two floating cards: question intake left, answer right, levelled */
+  justify-content:center;color:#cbb98f;font-size:2.4vh;gap:1.2vh;letter-spacing:.06em;
+  background:radial-gradient(ellipse at 50% 40%,#2a241b,#120f0b 75%)}
+#cam .idle b{font-family:'Playfair Display',Georgia,serif;color:var(--brass);font-size:5.5vh;letter-spacing:.24em;font-weight:500}
+/* floor shadow under the plaques */
+#scrim{position:fixed;left:0;right:0;bottom:0;height:30vh;pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,0))}
+/* the two exhibit plaques: question left, answer right, levelled */
 #bar{position:fixed;left:2vw;right:2vw;bottom:2.6vh;display:flex;justify-content:space-between;
   align-items:stretch;gap:2vw;pointer-events:none}
 .card{min-width:0;min-height:22vh;max-height:42vh;display:flex;flex-direction:column;
-  padding:1.7vh 1.6vw 1.6vh;border-radius:1.8vh;
-  background:linear-gradient(to bottom,rgba(var(--panel),.8) 0%,rgba(var(--panel),.48) 60%,rgba(var(--panel),.08) 100%);
-  -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
-  box-shadow:0 1.6vh 4vh rgba(0,0,0,.5);
+  padding:2vh 1.8vw 1.8vh;border-radius:.6vh;color:var(--ink);
+  background:linear-gradient(180deg,#f7f1e3 0%,var(--ivory) 55%,var(--ivory2) 100%);
+  box-shadow:0 .2vh 0 #fff8 inset,0 2vh 5vh rgba(0,0,0,.55),0 0 0 .25vh #cdb98a;
   transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
 #qbox{flex:0 1 42%} #abox{flex:0 1 46%}
 .card.hide{opacity:0;transform:translateY(3vh);pointer-events:none}
-.card h3{flex:0 0 auto;display:flex;align-items:center;gap:1vw;margin-bottom:1.2vh;
-  font-family:-apple-system,Segoe UI,Arial,sans-serif;font-size:1.45vh;font-weight:600;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:.9}
-.card h3::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(230,195,82,.45),transparent)}
+.card h3{flex:0 0 auto;display:flex;align-items:center;gap:1vw;margin-bottom:1.3vh;
+  font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:1.7vh;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--maroon)}
+.card h3::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--brass2),rgba(143,115,50,0))}
+.card h3.big{font-size:2.2vh;font-weight:600;color:#4f121c;letter-spacing:.26em}
+.row.q{background:none;padding:0 0 .6vh 0;grid-template-columns:minmax(0,1fr) auto}
+.row.q .qt{font-size:2.7vh;line-height:1.35;color:#1e1810;font-weight:600}
 /* answer */
 #a{flex:1;min-height:9vh;overflow-y:auto;scrollbar-width:none;text-align:left;
-  font-size:3vh;line-height:1.5;text-shadow:0 .2vh .6vh rgba(0,0,0,.6)}
+  font-size:3vh;line-height:1.5;color:var(--ink)}
 #a::-webkit-scrollbar{display:none}
-#a span{color:rgba(242,246,250,.72);transition:color .5s}
-#a .cur{color:var(--gold);text-shadow:0 0 1.6vh rgba(230,195,82,.25);animation:rise .45s ease-out}
-#a.idle-text{display:flex;align-items:center;font-style:italic;color:var(--dim);font-size:2.6vh}
-#a.idle-text em{color:var(--gold);font-style:normal;padding:0 .4vw}
+#a span{color:var(--ink2);transition:color .5s}
+#a .cur{color:var(--maroon);animation:rise .45s ease-out}
+#a.idle-text{display:flex;align-items:center;font-style:italic;color:var(--faint);font-size:2.6vh}
+#a.idle-text em{color:var(--maroon);font-style:normal;padding:0 .4vw}
 .rise{animation:rise .45s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(1.2vh)}to{opacity:1;transform:none}}
 .think::after{content:'';animation:dots 1.5s steps(4,end) infinite}
 @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
-/* question intake rows */
-#rows{display:flex;flex-direction:column;gap:.8vh;overflow-y:auto;scrollbar-width:none;
-  font-family:-apple-system,Segoe UI,Arial,sans-serif}
+@keyframes blink{50%{opacity:.25}}
+/* question intake rows — exhibit provenance lines */
+#rows{display:flex;flex-direction:column;gap:.7vh;overflow-y:auto;scrollbar-width:none}
 #rows::-webkit-scrollbar{display:none}
 .row{display:grid;grid-template-columns:2.4vh minmax(0,1fr) auto;gap:.2vh .8vw;align-items:start;
-  padding:1vh 1.1vw;border-radius:1.2vh;background:rgba(255,255,255,.035);animation:rise .45s ease-out}
-.row.done{background:rgba(127,216,164,.07)} .row.active{background:rgba(230,195,82,.08)}
-.row.flagged{background:rgba(240,160,80,.09)}
-.row .ck{font-size:1.9vh;line-height:1.35;text-align:center;color:var(--mute)}
+  padding:.9vh 1vw;border-radius:.4vh;background:rgba(120,95,50,.07);animation:rise .45s ease-out}
+.row.done{background:rgba(79,125,74,.09)} .row.active{background:rgba(201,169,97,.16)}
+.row.flagged{background:rgba(168,100,42,.14)}
+.row .ck{font-size:1.9vh;line-height:1.35;text-align:center;color:var(--faint)}
 .row.done .ck{color:var(--ok)} .row.flagged .ck{color:var(--warn)}
-.row.active .ck{color:var(--gold);animation:blink 1.1s ease-in-out infinite}
-.row .b{min-width:0;font-size:1.85vh;line-height:1.4;color:var(--ink)}
-.row .lb{font-size:1.3vh;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--dim);margin-right:.6vw;white-space:nowrap}
-.row.active .lb{color:var(--gold)} .row.done .lb{color:var(--ok)} .row.flagged .lb{color:var(--warn)}
-.row .t{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.35vh;color:var(--mute);
-  padding-top:.35vh;white-space:nowrap}
-.row code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.6vh;padding:.15vh .6vh;
-  border-radius:.6vh;background:rgba(127,216,164,.14);color:#b9f0cf}
+.row.active .ck{color:var(--brass2);animation:blink 1.1s ease-in-out infinite}
+.row .b{min-width:0;font-size:1.9vh;line-height:1.4;color:var(--ink)}
+.row .lb{font-family:'Playfair Display',Georgia,serif;font-size:1.3vh;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--maroon);margin-right:.6vw;white-space:nowrap}
+.row.active .lb{color:var(--brass2)} .row.done .lb{color:var(--maroon)} .row.flagged .lb{color:var(--warn)}
+.row .t{font-family:'EB Garamond',Georgia,serif;font-variant-numeric:tabular-nums;font-size:1.5vh;
+  color:var(--faint);padding-top:.3vh;white-space:nowrap}
+.row code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.55vh;padding:.15vh .6vh;
+  border-radius:.4vh;background:rgba(79,125,74,.14);color:#2f5a2b}
 .row .conf{color:var(--blue);font-size:1.6vh}
-.row .rs{display:-webkit-box;color:var(--dim);font-size:1.55vh;line-height:1.35;margin-top:.3vh;
+.row .rs{display:-webkit-box;color:var(--ink2);font-size:1.65vh;line-height:1.35;margin-top:.3vh;
   overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical}
-.row .qt{font-weight:bold;font-family:Georgia,'Times New Roman',serif;font-size:2.1vh;color:var(--ink)}
+.row .qt{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:2.1vh;color:var(--ink)}
 </style></head><body>
 <div id="cam"><img id="camimg" alt="">
   <div class="idle" id="camidle"><b>CJAP</b>
@@ -418,11 +426,11 @@ html,body{height:100%;color:var(--ink);overflow:hidden;
 </div>
 <div id="scrim"></div>
 <div id="bar">
-  <div class="card hide" id="qbox"><h3>Question intake</h3><div id="rows"></div></div>
-  <div class="card" id="abox"><h3>Answer</h3><div id="a" class="idle-text"></div></div>
+  <div class="card hide" id="qbox"><h3 class="big">The Question</h3><div id="rows"></div></div>
+  <div class="card" id="abox"><h3>The Chief Justice Answers</h3><div id="a" class="idle-text"></div></div>
 </div><script>
 const esc=s=>{const d=document.createElement('div');d.innerText=s||'';return d.innerHTML};
-const IDLE='Say <em>&ldquo;Hey Cee-Jap&rdquo;</em> to ask a question';
+const IDLE='Approach and say <em>&ldquo;Hey Cee-Jap&rdquo;</em> to begin';
 const qs=new URLSearchParams(location.search),camW=parseFloat(qs.get('cam'));
 if(camW>10&&camW<=100)document.getElementById('cam').style.width=camW+'vw';
 if(['tr','tl'].includes(qs.get('pos')))document.getElementById('cam').classList.add(qs.get('pos'));
@@ -449,7 +457,8 @@ function renderRows(stage,qText){
   const st=(stage&&stage.steps)||{};
   const tr=st.transcribe||{},rt=st.route||{},cp=st.compose||{},fd=st.fidelity||{};
   const parts=[];
-  if(qText)parts.push(rowHtml('done','Transcribed','<span class="qt">'+esc(qText)+'</span>',tr.state==='done'?tr.t:null));
+  if(qText)parts.push('<div class="row q"><div class="b"><span class="qt">&ldquo;'+esc(qText)+'&rdquo;</span></div>'+
+    '<span class="t">'+(tr.state==='done'&&tr.t!=null?tr.t.toFixed(1)+'s':'')+'</span></div>');
   else if(tr.state==='active')parts.push(rowHtml('active','Transcribed','<span class="think">'+esc(tr.detail||'listening')+'</span>'));
   if(rt.scope)parts.push(rowHtml('done','Scope','<code>'+esc(rt.scope)+'</code>'+
     (rt.scope_reason?'<span class="rs">'+esc(rt.scope_reason)+'</span>':''),rt.t));
@@ -502,7 +511,7 @@ async function poll(){
       render('<span class="think">Listening</span>',true,true);return;}
     // 3. question heard, answer being prepared
     if(lastU&&(!sp||lastU.ts>sp.ts)&&(!lastC||lastU.ts>lastC.ts)){setState('thinking');
-      render('<span class="think">Allow me a moment</span>',true,true);return;}
+      render('<span class="think">The Chief Justice is considering</span>',true,true);return;}
     // 4. finished: keep the full answer and its intake on screen
     setState('idle');
     if(sp&&sp.done&&(sp.spoken||[]).length){render(esc(sp.spoken.join(' ')),false,!!lastU);return;}

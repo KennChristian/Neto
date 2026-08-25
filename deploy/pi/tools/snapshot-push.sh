@@ -11,8 +11,9 @@
 # (or browse the branch on GitHub). The mainline branch
 # pi/deployment-snapshots always points at the newest snapshot.
 #
-# NEVER synced (secrets / large audio): app/.env, voice/config.py,
-# certs/, *.wav pools, ~/.voice_cache, speaker embeddings.
+# NEVER synced (secrets / large data): app/.env, voice/config.py, certs/,
+# pi_dashboard/assets (HeyGen key), ~/.voice_cache, speaker embeddings.
+# Clip pools (~/fillers*, ~/demo_clips) ARE synced to deploy/pi/audio/.
 
 set -euo pipefail
 W="$HOME/gitwork/pi-main"
@@ -59,6 +60,18 @@ for t in gen_voice_wavs_eleven.py gen_voice_wavs_accent.py \
   src="$HOME/$t"; [ -f "$HOME/bin/$t" ] && src="$HOME/bin/$t"
   [ -f "$src" ] && cp "$src" "deploy/pi/tools/$t" || true
 done
+
+# 3b. fresh-robot bundle (deploy/pi/README.md + install.sh consume these):
+#     audio clip pools (~13 MB, no secrets) + exact venv pins.
+for d in fillers fillers_ack fillers_bail demo_clips; do
+  mkdir -p "deploy/pi/audio/$d"
+  cp "$HOME/$d"/*.wav "deploy/pi/audio/$d/" 2>/dev/null || true
+done
+{ echo "# Frozen from the live Reachy Mini venv (app/.venv, Python 3.13.5, aarch64) on $(date +%F)."
+  echo "# Install with --no-deps (see deploy/pi/install.sh): openwakeword 0.6.0 declares"
+  echo "# tflite-runtime, which has no Python 3.13 wheel — we run its onnx path only."
+  echo "# pyarrow must stay >= 24 on the Pi 4/CM4 (21.0.0 wheels SIGILL on Cortex-A72)."
+  "$M/app/.venv/bin/pip" freeze; } > deploy/pi/requirements-pi.txt
 
 # 4. commit + timestamped branch + push
 git add -A

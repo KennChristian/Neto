@@ -12,7 +12,7 @@ Modes:
              WHILE the answer plays cuts playback and goes straight back to
              listening — see StopWord / config.STOP_OWW_THRESHOLD.
 """
-import argparse, glob, json, os, random, socket, subprocess, sys, tempfile, threading, time
+import argparse, glob, json, os, random, re, socket, subprocess, sys, tempfile, threading, time
 from collections import deque
 import numpy as np
 import sounddevice as sd
@@ -62,6 +62,73 @@ ENROLL_TRIGGER = "/dev/shm/cj_enroll_trigger"
 # while an answer is still playing queues the next question instead of dying.
 ASK_TRIGGER = "/dev/shm/cj_ask_trigger"
 _pending_ask = {"ask": None}   # handoff from _wake_stream to wake_loop
+
+# Voice lock (see speaker_id.VoiceLock): one instance for the process.
+_voice_lock = {"lock": None}
+FAREWELL_TEXT = "Thank you for the conversation. Goodbye, and God bless."
+APOLOGY_TEXT = ("I am sorry. I cannot reach my notes at the moment. "
+                "Please ask me again in a little while.")
+
+
+def _say_apology(err):
+    """Composer/API failure while ONLINE (e.g. Anthropic credit exhausted,
+    auth error): say so in his voice and carry on — never crash the service
+    (2026-08-24: a 400 'credit balance too low' killed the process on every
+    follow-up, and systemd's 30 s restart read as 'slow')."""
+    msg = str(err)
+    short = msg[:160]
+    print(f"[compose] API error — apologising and continuing: {type(err).__name__}: {short}")
+    _publish_transcript("note", f"(API error during compose — {type(err).__name__}: {short})")
+    try:
+        speak(APOLOGY_TEXT, None)
+    except Exception:
+        try:
+            subprocess.run(["aplay", "-q", NO_NET_WAV], stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
+_FAREWELL_RE = re.compile(
+    r"^(?:ok(?:ay)?|alright|well|so)?[\s,.!]*"
+    r"(?:thank(?:s| you)(?: so much| very much| sir| po)?[\s,.!]*)?"
+    r"(?:(?:good)?bye(?: bye)?(?: now)?|see you(?: later| soon)?|"
+    r"that(?:'s| is| was) all|i(?:'m| am) done|paalam|salamat(?: po)?|"
+    r"good ?night|good day|take care)"
+    r"(?:[\s,.!]*(?:sir|po|chief|justice|cjap|cee-jap|for now))*[\s,.!]*$",
+    re.I)
+_THANKS_RE = re.compile(
+    r"^(?:ok(?:ay)?[\s,.!]*)?(?:thank(?:s| you)(?: so much| very much| sir| po)?)[\s,.!]*$",
+    re.I)
+
+
+def _is_farewell(text):
+    """True when the (locked) speaker is closing the conversation."""
+    t = (text or "").strip()
+    return bool(_FAREWELL_RE.match(t) or _THANKS_RE.match(t))
+
+
+def _lock_enabled():
+    try:
+        import speaker_id
+        return speaker_id.lock_enabled()
+    except Exception:
+        return False
+
+
+def _voice_lock_obj():
+    if _voice_lock["lock"] is None:
+        import speaker_id
+        _voice_lock["lock"] = speaker_id.VoiceLock()
+    return _voice_lock["lock"]
+
+
+def _warm_voice_lock():
+    """Load the speaker-embedding model while the visitor is still speaking
+    (first load ~1 s) so the lock costs nothing on the turn itself."""
+    try:
+        if _lock_enabled():
+            import speaker_id
+            speaker_id._load()
+    except Exception as e:
+        print(f"[lock] model warm-up failed ({type(e).__name__}: {e})")
 ENROLL_PROMPT_WAV = os.path.expanduser("~/fillers_bail/enroll_prompt.wav")
 ENROLL_DONE_WAV = os.path.expanduser("~/fillers_bail/enroll_done.wav")
 TRANSCRIPT = "/dev/shm/cj_transcript.jsonl"
@@ -969,7 +1036,10 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                 gestures.start("talk")
                 say_offline()
                 return True
-            raise result["err"]
+            filler.stop()
+            gestures.start("talk")
+            _say_apology(result["err"])
+            return True
         out = result.get("out")
         if not out or not out.get("response"):
             return True
@@ -1066,7 +1136,26 @@ def _followup_window():
         return 6.0
 
 
-def handle_turn(client, artifacts, gestures, history, stop=None, followup=False):
+def _safe_turn(*args, **kwargs):
+    """handle_turn that cannot take the service down: any unexpected error is
+    logged with its traceback, apologised for, and treated as a finished
+    turn (True) so a locked conversation keeps going."""
+    try:
+        return handle_turn(*args, **kwargs)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        try:
+            gestures = args[2]
+            gestures.start("talk")
+        except Exception:
+            pass
+        _say_apology(e)
+        return True
+
+
+def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
+                listen_s=None):
     """Capture ONE question from the mic and answer it. Mutates `history` in
     place. Returns True if a full turn ran, False on mic timeout / empty STT,
     or "interrupted" (truthy) when the stop word cut the answer — the caller
@@ -1077,13 +1166,40 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
     _stage(reset=True)
     _stage("transcribe", "active", "listening…")
     path = record_with_meter(
-        no_speech_timeout_s=(_followup_window() if followup else 12))
+        no_speech_timeout_s=(listen_s if listen_s is not None else
+                             (_followup_window() if followup else 12)))
     if not path:
         _publish_transcript("note", "(mic timeout — no speech captured)")
         _stage("transcribe", "pending", "no speech captured")
         return False
+    lock = _voice_lock_obj() if _lock_enabled() else None
+    lock_box = {}
+    if lock is not None and followup and lock.active():
+        # In conversation: only the locked voice gets through. The ~1.5 s
+        # embedding runs in parallel with the STT call (joined below), so a
+        # follow-up costs no extra latency; a stranger gets no answer.
+        try:
+            import speaker_id
+            _sr, _data = speaker_id.read_wav(path)
+
+            def _chk():
+                try:
+                    lock_box["res"] = lock.check_samples(_sr, _data)
+                except Exception as e:   # never let the lock break the robot
+                    print(f"[lock] check failed ({type(e).__name__}: {e}) — letting turn through")
+                    lock_box["res"] = (True, None)
+            lock_box["thread"] = threading.Thread(target=_chk, daemon=True)
+            lock_box["thread"].start()
+        except Exception as e:
+            print(f"[lock] check skipped ({type(e).__name__}: {e})")
     _stage("transcribe", "active", "transcribing (gpt-4o-mini-transcribe)…")
     _play_ack()   # sub-second "Ah."/"Hmm." NOW — sound before the STT wait
+    if lock is not None and not followup:
+        try:   # first question after the wake word: THIS voice owns the session
+            lock.lock(path)
+            print("[lock] voice locked — conversing with this speaker only")
+        except Exception as e:
+            print(f"[lock] could not lock ({type(e).__name__}: {e}) — no conversation mode")
     try:
         import speaker_id
         if speaker_id.gate_active():
@@ -1131,6 +1247,18 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
         _publish_transcript("note", f"(discarded non-Latin hallucination: {question})")
         return False
     stt_s = round(time.monotonic() - t0, 2)
+    if lock_box.get("thread") is not None:
+        lock_box["thread"].join(timeout=10)
+        ok, sim = lock_box.get("res", (True, None))
+        if not ok:
+            print(f"[lock] ignored — not the voice in conversation "
+                  f"(similarity {sim:.2f}): {question!r}")
+            _publish_transcript("note", f"(ignored — another voice, similarity "
+                                        f"{sim:.2f}: {question})")
+            _stage("transcribe", "pending", "another voice — ignored")
+            return "ignored"
+        if sim is not None:
+            print(f"[lock] locked voice confirmed (similarity {sim:.2f})")
     print(f"[stt] heard: \"{question}\"  ({stt_s:.1f}s)")
     _stage("transcribe", "done", f"heard in {stt_s:.1f}s")
     raw_asr = question
@@ -1144,6 +1272,17 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False)
     except Exception as e:
         print(f"[postproc] transcript pass skipped: {e}")
     _publish_transcript("user", question)
+    if lock is not None and lock.active() and _is_farewell(question):
+        print("[lock] farewell heard — closing the conversation")
+        _stage("route", "done", "farewell — closing the conversation",
+               extra={"scope": "farewell", "topic": "goodbye", "confidence": "curated",
+                      "scope_reason": "the speaker said goodbye"})
+        _stage("compose", "done", "curated farewell")
+        _stage("fidelity", "done", "curated — pre-verified")
+        gestures.start("talk")
+        speak(FAREWELL_TEXT, None, stop=stop)
+        _publish_transcript("cj", FAREWELL_TEXT)
+        return "bye"
     try:  # canned fast path: curated answers for common questions (fails open)
         import canned_answers
         hit = canned_answers.match(question)
@@ -1514,6 +1653,7 @@ def wake_loop(client, artifacts, gestures):
             print(f"[wake] re-armed — say \"{phrase}\"")
             continue
         prewarm_connections(client)   # warm OpenAI/Anthropic/ElevenLabs while the user speaks
+        threading.Thread(target=_warm_voice_lock, daemon=True).start()
         gestures.perk()
         if not internet_up(1.2):   # short probe: don't hold the mic open on a slow LAN
             # Say so instead of recording a question no cloud call can answer.
@@ -1524,8 +1664,43 @@ def wake_loop(client, artifacts, gestures):
             time.sleep(grace)
             print(f"[wake] re-armed — say \"{phrase}\"")
             continue
-        r = handle_turn(client, artifacts, gestures, history, stop=stop)
-        while True:
+        r = _safe_turn(client, artifacts, gestures, history, stop=stop)
+        lock = _voice_lock_obj() if _lock_enabled() else None
+        if lock is not None and lock.active() and r is True:
+            # Voice-locked conversation (2026-08-24): keep the mic open for the
+            # speaker who woke us. Other voices are ignored and cannot take
+            # the lock (the wake detector is not even running in here). Ends
+            # on "bye", the stop word, or CJ_VOICE_LOCK_IDLE_S of silence
+            # from the locked voice after an answer.
+            import speaker_id
+            idle_s = speaker_id.lock_idle_s()
+            print(f"[lock] in conversation — no wake word needed "
+                  f"(ends on 'bye' or {idle_s:.0f}s of silence)")
+            _publish_transcript("note", "(in conversation — no wake word needed; "
+                                        "say goodbye or pause to end)")
+            time.sleep(grace)
+            deadline = time.monotonic() + idle_s
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0.3:
+                    print("[lock] quiet — conversation closed")
+                    break
+                gestures.perk()
+                r = _safe_turn(client, artifacts, gestures, history, stop=stop,
+                               followup=True, listen_s=remaining)
+                if r is True:                      # answered: idle clock restarts
+                    time.sleep(grace)
+                    deadline = time.monotonic() + idle_s
+                    continue
+                if r in ("bye", "interrupted"):
+                    break
+                # "ignored" (another voice), empty STT, mic timeout: keep
+                # listening until the deadline
+            lock.release()
+            _publish_transcript("note", "(conversation closed — say the wake word to start again)")
+        elif lock is not None:
+            lock.release()
+        while lock is None:   # legacy follow-up / stop-relisten loop (lock off)
             # Stop word fired mid-answer: just stop and go back to SLEEP — the
             # next question needs a fresh wake (user decision 2026-08-20;
             # CJ_STOP_RELISTEN=1 restores the old Alexa-style instant re-listen).
