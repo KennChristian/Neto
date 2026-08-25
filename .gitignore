@@ -67,3 +67,8 @@ desktop.ini
 voice/config.py
 voice/.voice_cache/
 .voice_cache/
+
+# Fresh-robot bundle: the small clip pools (~13 MB, no secrets) ARE shipped —
+# deploy/pi/install.sh copies them to ~/fillers, ~/fillers_ack, ~/fillers_bail,
+# ~/demo_clips. The *.wav rule above stays for everything else.
+!deploy/pi/audio/**/*.wav
