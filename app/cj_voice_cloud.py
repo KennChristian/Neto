@@ -442,8 +442,11 @@ class Gestures:
         except Exception:
             pass
 
-    def _run(self, mode):
-        while not self._stop.is_set():
+    def _run(self, mode, gen=None):
+        # goto_target blocks for its duration (up to ~1.8 s) while stop() joins
+        # for 1.5 s: a previous loop can still be inside _move when the next
+        # start() clears _stop. The generation token ends it (2026-08-25 review).
+        while not self._stop.is_set() and (gen is None or gen == getattr(self, "_gen", gen)):
             if mode == "listen":      # attentive, head turned to whoever is speaking
                 moved = self.face_speaker(max_age=1.0)
                 self._move(self.gaze_yaw + random.uniform(-4, 4), random.uniform(-12, -4),
@@ -559,7 +562,8 @@ class Gestures:
         if not self.mini:
             return
         self._stop.clear()
-        self._thread = threading.Thread(target=self._run, args=(mode,), daemon=True)
+        self._gen = getattr(self, "_gen", 0) + 1   # orphaned loops see a stale gen and exit
+        self._thread = threading.Thread(target=self._run, args=(mode, self._gen), daemon=True)
         self._thread.start()
 
     def stop(self):
@@ -1426,7 +1430,8 @@ def _followup_window():
 # was ONLY the wake phrase re-opens the mic ("rewake") instead of being
 # answered or ending the turn.
 _WAKE_TOKEN = (r"(?:(?:hi|hello|hey|okay|ok|oh)[\s,]+)?"
-               r"(?:(?:cee|see|si|sea|ci|ce|c|cj)[\s\-]*(?:jap|jab|yap|jep|app|ap)|cjap|cejap|siyap|cj)\b")
+               r"(?:(?:cee|see|si|sea|ci|ce|cj)[\s\-]*(?:jap|jab|yap|jep|app|ap)"
+               r"|c[\s\-]+(?:jap|jab|yap|jep|app|ap)|cjap|cejap|siyap|cj)\b")
 _WAKE_PREFIX_RE = re.compile(r"^(?:\s*" + _WAKE_TOKEN + r"[\s,.!?;:\-]*)+", re.I)
 
 
@@ -2065,7 +2070,7 @@ def wake_loop(client, artifacts, gestures):
             # Conversational follow-up (2026-08-21): after a COMPLETED answer
             # the mic re-opens for CJ_FOLLOWUP_WINDOW_S so the visitor can just
             # keep talking. Silence closes the window -> back to sleep.
-            if r is True and _followup_window() > 0:
+            if r in (True, "rewake") and _followup_window() > 0:
                 time.sleep(grace)       # speaker/room tail before the mic re-arms
                 gestures.perk()
                 print(f"[followup] listening {_followup_window():.0f}s for a "

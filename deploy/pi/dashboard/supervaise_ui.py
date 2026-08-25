@@ -789,7 +789,7 @@ const RS=document.getElementById('rs'),RSW=document.getElementById('rsw'),RSL=RS
 if(qs.get('pos')==='tl')RS.classList.add('tr');   // portrait is top-left: pill moves right
 let rsState='',rsClock=0,rsClip=null;const rsEnv={};
 function setIndicator(st,label){
-  if(st!==rsState){rsState=st;RS.className=st;}
+  if(st!==rsState){rsState=st;RS.className=st+(qs.get('pos')==='tl'?' tr':'');}   // keep the side class
   if(RSL.innerText!==label)RSL.innerText=label;
 }
 // loudness envelope (40 ms windows) of a sentence wav, parsed from the PCM

@@ -140,7 +140,7 @@ def test_http_pages_and_gating():
     srv, base = _serve()
     try:
         aud = urlopen(base + "/audience").read()
-        assert b'id="q"' in aud and b'id="a"' in aud   # Q left / A right
+        assert b'id="qtext"' in aud and b'id="a"' in aud   # pinned question / answer plaque
         assert b"object-fit:cover" in aud                # full-bleed camera
         assert b'id="bar"' in aud                       # floating caption band
         assert b"You asked" not in aud and b"Chief Justice says" not in aud

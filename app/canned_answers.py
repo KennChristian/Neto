@@ -41,6 +41,13 @@ from pathlib import Path
 
 EVENT_GIST_MAX_WORDS = 14
 EVENT_FUZZY_RATIO = 0.75
+# A scripted emcee question is addressed to the robot NOW and has no topic:
+# anything with these markers is a real question, never the script
+# (2026-08-25 review: "How do you feel about the death penalty?" was hijacked).
+_EVENT_NOT_RE = re.compile(
+    r"\b(?:about|were you|did you|was|when|why|which|where|who|whom|whose|"
+    r"tungkol|bakit|kailan|saan|sino|penalty|bill|law|court|election|senate|"
+    r"term|organ|patronage|press|decision|case|ruling)\b")
 # What an emcee says before the actual question: greetings, the wake phrase,
 # forms of address. Stripped before the flexible event tests only.
 _EVENT_PREFIX_RE = re.compile(
@@ -142,7 +149,10 @@ def _event_core(norm: str) -> str:
 def _gist_hit(core: str, gist) -> bool:
     if not gist or len(core.split()) > EVENT_GIST_MAX_WORDS:
         return False
-    return all(any(re.search(r"\b" + re.escape(alt), core) for alt in grp)
+    if _EVENT_NOT_RE.search(core):
+        return False
+    # whole words/phrases only (plural allowed): "end" must not hit "endorse"
+    return all(any(re.search(r"\b" + re.escape(alt) + r"s?\b", core) for alt in grp)
                for grp in gist)
 
 
@@ -165,7 +175,9 @@ def _event_flexible(norm: str, entries):
         if _gist_hit(core, e["gist"]):
             print(f"[canned] event paraphrase (gist) -> {e['id']}: {core!r}")
             return {"id": e["id"], "answer": random.choice(e["answers"])}
-        r = _fuzzy_hit(core, e["asks"])
+        if _EVENT_NOT_RE.search(core):
+            continue
+        r = _fuzzy_hit(core, [_event_core(a) for a in e["asks"]])
         if r > best_ratio:
             best, best_ratio = e, r
     if best is not None and best_ratio >= EVENT_FUZZY_RATIO:

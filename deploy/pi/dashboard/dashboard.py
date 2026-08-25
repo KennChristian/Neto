@@ -214,8 +214,12 @@ def _robot_busy():
     try:
         with open("/dev/shm/cj_speaking.json") as f:
             doc = json.load(f)
-        if (doc.get("current") and not doc.get("done")
-                and time.time() - float(doc.get("ts") or 0) < 120):
+        # "current" without "done" = a clip on air; but if the app was
+        # restarted/crashed mid-answer nobody writes done=true, so bound the
+        # staleness by that clip's length (+ grace) rather than a flat 2 min.
+        age = time.time() - float(doc.get("ts") or 0)
+        limit = min(120.0, float(doc.get("dur") or 30.0) + 8.0)
+        if doc.get("current") and not doc.get("done") and age < limit:
             return "speaking"
     except Exception:
         pass
@@ -236,6 +240,9 @@ def say_text(text):
         if code != 0:
             return False, out[-250:]
         with _play_lock:
+            busy = _robot_busy()      # re-check: an answer may have started during synthesis
+            if busy:
+                return False, f"robot is {busy} — try again when it is idle"
             name = _publish_sentence_copy(wav)
             _publish_say_speaking(text, done=False, wav=name,
                                   dur=_wav_duration(wav))

@@ -19,23 +19,29 @@
           "how do you feel",
           "how are you feeling",
           "how you doing",
+          "how are you doing",
           "how have you been",
-          "kumusta",
-          "kamusta",
+          "kumusta ka",
+          "kamusta ka",
+          "kumusta po",
+          "kamusta po",
+          "kumusta kayo",
+          "kamusta kayo",
           "how is your day",
           "hows your day"
         ],
         [
-          "feel",
           "today",
+          "this afternoon",
+          "this morning",
+          "this evening",
+          "tonight",
+          "ngayon",
+          "feeling",
           "doing",
-          "kumusta",
-          "kamusta",
-          "afternoon",
-          "morning",
-          "evening",
-          "day",
-          "been"
+          "po",
+          "sir",
+          "chief justice"
         ]
       ]
     },
@@ -54,23 +60,25 @@
       ],
       "gist": [
         [
-          "ready",
-          "prepared",
-          "handa",
-          "up for",
-          "game for"
+          "are you ready",
+          "you ready",
+          "ready ka",
+          "ready na",
+          "handa ka",
+          "handa na",
+          "are you prepared",
+          "you prepared"
         ],
         [
           "question",
           "answer",
           "ask",
           "interview",
-          "interrogat",
+          "tanong",
           "today",
           "now",
-          "afternoon",
-          "session",
-          "tanong"
+          "po",
+          "this afternoon"
         ]
       ]
     },
@@ -91,12 +99,12 @@
         [
           "donor",
           "sponsor",
+          "state properties",
+          "state property",
           "state propert",
           "spc",
           "benefactor",
-          "patron",
-          "state property",
-          "estate propert"
+          "estate properties"
         ],
         [
           "say",
@@ -106,7 +114,6 @@
           "greet",
           "mensahe",
           "sabihin",
-          "address",
           "acknowledge",
           "remarks",
           "regards"
@@ -128,24 +135,36 @@
       ],
       "gist": [
         [
-          "end",
-          "ending",
-          "close",
-          "closing",
-          "final",
-          "parting",
-          "last",
-          "wrap",
-          "conclud",
-          "farewell",
-          "goodbye",
+          "end of the program",
+          "end our program",
+          "end the program",
+          "ending the program",
+          "end of our program",
+          "about to end",
+          "wrap up",
+          "wrapping up",
+          "wrap things up",
+          "closing remarks",
+          "closing message",
+          "closing words",
+          "final words",
+          "final message",
+          "final remarks",
+          "parting words",
+          "parting message",
+          "last words",
+          "last message",
           "before we go",
           "before we leave",
-          "tapos",
-          "matatapos",
-          "pagtatapos",
+          "before we end",
+          "before we close",
           "sign off",
-          "signing off"
+          "signing off",
+          "farewell",
+          "goodbye",
+          "matatapos",
+          "tapos na",
+          "pagtatapos"
         ],
         [
           "guest",
@@ -154,15 +173,14 @@
           "everybody",
           "program",
           "message",
-          "say",
           "words",
           "remarks",
-          "tell",
           "attendee",
           "people",
           "friends",
           "bisita",
-          "sabihin"
+          "say",
+          "tell"
         ]
       ]
     },
