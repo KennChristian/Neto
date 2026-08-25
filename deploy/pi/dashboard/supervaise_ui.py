@@ -180,6 +180,7 @@ def state():
     spoken = [m for m in metas if m.get("phase") == "spoken"]
     return {
         "ts": time.time(),
+        "ui_rev": UI_REV,
         "turns": turns,
         "meta": composed[-1] if composed else None,
         "spoken": spoken[-1] if spoken else None,
@@ -189,6 +190,9 @@ def state():
         "aside": _read_json("/dev/shm/cj_aside.json"),
         "stage": _read_json("/dev/shm/cj_stage.json"),
         "voice_lock": _read_json("/dev/shm/cj_voice_lock.json"),
+        # /face-avatar page heartbeat + the pending command from /maintain
+        "avatar_page": _read_json(AVATAR_PAGE_STATUS),
+        "avatar_cmd": _read_json(AVATAR_PAGE_CMD),
         "wake_events": _tail_jsonl(WAKE_EVENTS, 12),
         "corrections": _tail_jsonl(POSTPROC_LOG, 20),
         "health": _health(),
@@ -202,7 +206,51 @@ def state():
 # controls + entity editor
 # ---------------------------------------------------------------------------
 
+UI_REV = str(int(os.path.getmtime(__file__)))   # pages reload when this changes
+AVATAR_PAGE_STATUS = "/dev/shm/cj_avatar_page.json"   # page → /maintain
+AVATAR_PAGE_CMD = "/dev/shm/cj_avatar_cmd.json"       # /maintain → page
+AVATAR_VOICE_MODES = ("robot", "avatar", "sync")
+
+
+def _avatar_page_cmd(cmd, mode=None):
+    """Queue a command for the /face-avatar page (it polls /api/state and
+    applies any command newer than the last one it saw)."""
+    doc = {"ts": time.time(), "cmd": cmd}
+    if mode:
+        doc["mode"] = mode
+    tmp = AVATAR_PAGE_CMD + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(doc, f)
+    os.replace(tmp, AVATAR_PAGE_CMD)
+
+
+def avatar_status_put(body):
+    """The /face-avatar page reports its state here every few seconds."""
+    doc = {"ts": time.time()}
+    for k in ("status", "mode", "ready", "stopped", "frozen", "lag", "parked"):
+        if k in body:
+            v = body[k]
+            doc[k] = v if isinstance(v, (bool, int, float)) else str(v)[:200]
+    tmp = f"{AVATAR_PAGE_STATUS}.{threading.get_ident()}.tmp"   # per-thread: posts overlap
+    with open(tmp, "w") as f:
+        json.dump(doc, f)
+    os.replace(tmp, AVATAR_PAGE_STATUS)
+    return True, "ok"
+
+
 def control(action):
+    if action == "avatar-page-stop":
+        _avatar_page_cmd("stop")
+        return True, "avatar page: stop sent (portrait held)"
+    if action == "avatar-page-resume":
+        _avatar_page_cmd("resume")
+        return True, "avatar page: resume sent"
+    if action.startswith("avatar-page-voice-"):
+        mode = action[len("avatar-page-voice-"):]
+        if mode not in AVATAR_VOICE_MODES:
+            return False, "unknown voice mode " + mode
+        _avatar_page_cmd("voice", mode)
+        return True, "avatar page: voice → " + mode
     if action == "mute":
         open(MUTED_FLAG, "w").close()      # stays muted until Unmute
         open(MUTE_TRIGGER, "w").close()    # cut whatever is playing right now
@@ -553,6 +601,7 @@ function camTick(){
 async function poll(){
   try{
     const s=await (await fetch('/api/state')).json();
+    if(window.__uiRev==null)window.__uiRev=s.ui_rev||null;else if(s.ui_rev&&s.ui_rev!==window.__uiRev){location.reload();return;}
     renderExhibit(s);
   }catch(e){/* audience view never shows errors */}
 }
@@ -605,6 +654,17 @@ img#cam{width:100%;border-radius:8px;background:#000;min-height:120px}
   <span id="msg"></span>
   <h2 style="margin-top:8px">Camera</h2><img id="cam" alt="(camera offline)">
 </div>
+<div class="card"><h2>LiveAvatar page <span class="dim" id="avstate"></span></h2>
+  <div id="avstatus" class="dim">no /face-avatar page open</div>
+  <div style="margin-top:6px">
+    <button id="av-stop" onclick="ctl('avatar-page-stop')">&#9209; Stop</button>
+    <button id="av-resume" onclick="ctl('avatar-page-resume')">&#9654; Resume</button>
+    &nbsp;voice:
+    <button id="av-robot" onclick="ctl('avatar-page-voice-robot')">robot (avatar mouths along)</button>
+    <button id="av-avatar" onclick="ctl('avatar-page-voice-avatar')">avatar only</button>
+    <button id="av-sync" onclick="ctl('avatar-page-voice-sync')">both synced</button>
+    <a class="dim" href="/face?key=" id="avlink" target="_blank" style="margin-left:8px">open page &#8599;</a>
+  </div></div>
 <div class="card"><h2>System</h2><div id="services"></div><div id="sys" class="dim">loading&hellip;</div></div>
 <div class="card"><h2>Wake meter <span class="dim" id="wakenow"></span></h2>
   <div class="bar" style="height:14px"><i id="wakebar" style="width:0%"></i></div>
@@ -658,10 +718,20 @@ function bar(v,max){return '<div class="bar"><i style="width:'+Math.min(100,100*
 function chip(k,ok,txt){return '<span class="chip '+(ok?'ok':'bad')+'">'+k+' '+(txt||(ok?'&#10003;':'&#10007;'))+'</span>'}
 async function poll(){try{
   const s=await(await fetch('/api/state')).json();
+  if(window.__uiRev==null)window.__uiRev=s.ui_rev||null;else if(s.ui_rev&&s.ui_rev!==window.__uiRev){location.reload();return;}
   $('health').innerHTML=Object.entries(s.health||{}).map(([k,v])=>chip(k,v)).join('')
     +chip('mute',!s.muted,s.muted?'MUTED':'off');
   $('btn-mute').style.display=s.muted?'none':'';
   $('btn-unmute').style.display=s.muted?'':'none';
+  const av=s.avatar_page||{},avAge=av.ts?(s.ts-av.ts):1e9,avOn=avAge<10;
+  $('avstate').innerHTML=avOn?chip('page',true,av.stopped?'stopped':av.ready?'session live (credits ticking)':'parked — no credits')
+    :chip('page',false,'not open');
+  $('avstatus').innerText=avOn?(av.status||'')+(av.lag!=null?'  ·  lag '+(+av.lag).toFixed(2)+'s':''):
+    'no /face-avatar page open (open it on the laptop: /face?key=…)';
+  for(const m of ['robot','avatar','sync'])$('av-'+m).style.borderColor=(avOn&&av.mode===m)?'var(--gold)':'';
+  $('av-stop').style.display=avOn&&av.stopped?'none':'';
+  $('av-resume').style.display=avOn&&!av.stopped?'none':'';
+  $('avlink').href='/face?key='+KEY;
   const m=s.meta,sp=s.spoken;
   if(m){$('turn').innerHTML=
     '<b>Q:</b> '+esc(m.question)+'<br><b>raw ASR:</b> <span class="mono raw">'+esc(m.raw_asr)+'</span>'+
@@ -870,22 +940,19 @@ FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 #cam,#cam.live{width:min(36vw,calc(58vh * 9 / 10));aspect-ratio:9/10;top:4vh;
   border:0;border-image:none;box-shadow:none;border-radius:.8vh}
 #cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
+/* picture-frame idle (2026-08-25, user): a frozen frame of the avatar sits
+   over the live video whenever it is not speaking — and stays up after the
+   sandbox session expires, so the portrait never goes black */
+#cam canvas#still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:2}
 #cam .idle{z-index:1}
-/* operator strip: discreet, brightens on hover */
-#ops{position:fixed;top:1.2vh;left:1.2vw;z-index:5;display:flex;gap:.8vw;align-items:center;
-  opacity:.32;transition:opacity .3s;font-size:1.7vh;color:#cbb98f}
-#ops:hover{opacity:1}
-#ops button{background:rgba(20,16,12,.75);color:#e8dcc0;border:1px solid #6b5323;border-radius:.6vh;
-  padding:.5vh 1vw;font:inherit;cursor:pointer}
-#ops button:hover{border-color:var(--brass)}
-#st{max-width:42vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* no on-page operator strip (2026-08-25, user): Stop/Resume, voice mode and
+   the status line live on /maintain ("LiveAvatar page" card) and reach this
+   page through /api/state (avatar_cmd) — status goes back via /api/avatar-status */
 </style></head><body>
-<div id="cam"><video id="vid" autoplay playsinline></video><audio id="aud" autoplay></audio>
+<div id="cam"><video id="vid" autoplay playsinline muted></video><canvas id="still"></canvas><audio id="aud" autoplay></audio>
   <div class="idle" id="camidle"><b>CJAP</b>
     <span>Chief Justice Artemio V. Panganiban</span></div>
 </div>
-<div id="ops"><button id="btnStart">Start</button><button id="btnStop">Stop</button>
-  <button id="btnMute">voice: robot</button><span id="st">idle</span></div>
 """ + EXHIBIT_PLAQUES + """<script>
 """ + EXHIBIT_JS + """const $ = id => document.getElementById(id);
 const KEY = new URLSearchParams(location.search).get("key") || localStorage.getItem("cjkey") || "";
@@ -896,7 +963,16 @@ let pendingLagT0 = null, lagEma = null, skew = 0;
 $("aud").muted = true;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-function st(msg){ $("st").textContent = msg; }
+// status line → /maintain (posted on change, plus a 3s heartbeat so the
+// card can tell "page open" from "page gone")
+let stText = "starting", stSentAt = 0;
+function report(){
+  stSentAt = Date.now();
+  post("/api/avatar-status", {status: stText, mode: voiceMode, ready: ready,
+    stopped: stopped, parked: !ready && !stopped, frozen: frozen, lag: lagEma}).catch(() => {});
+}
+function st(msg){ stText = msg; if (Date.now() - stSentAt > 700) report(); }
+setInterval(report, 3000);
 
 async function post(path, doc){
   doc.key = KEY;
@@ -907,7 +983,7 @@ async function post(path, doc){
 
 // ---- session ------------------------------------------------------------
 function start(){
-  if (ready) return Promise.resolve();
+  if (ready || stopped) return Promise.resolve();
   if (startP) return startP;                // one start in flight at a time
   if (Date.now() - lastStart < 8000) return Promise.resolve();
   lastStart = Date.now();
@@ -951,10 +1027,10 @@ async function _start(){
     try{ m = JSON.parse(ev.data); }catch(e){ return; }
     if (m.type === "session.state_updated"){
       st("session " + m.state +
-         (m.state === "connected" ? " — ask the robot something" : ""));
+         (m.state === "connected" ? " — portrait still until asked" : ""));
       const was = ready;
       ready = (m.state === "connected");
-      if (ready && !was) setVoice(voiceMode === "robot" ? "sync" : voiceMode);
+      if (ready && !was) setVoice(voiceMode);   // re-assert (default: robot voice, avatar mouths along)
     }
     if (m.type === "agent.speak_started"){
       const name = sentOrder.shift();          // attribute to the oldest queued clip
@@ -974,10 +1050,12 @@ async function _start(){
   };
   sock.onclose = () => {
     if (ws !== sock) return;
-    ready = false; stopKeep();
+    ready = false; stopKeep(); sentOrder.length = 0;   // nothing queued survives the session
+    if (parking){ parking = false; st("parked — portrait held, no credits while idle"); return; }
+    const busy = speakingNow || turnActive();
     st("session ended (sandbox caps at ~1 min)" +
-       (speakingNow ? " — reconnecting mid-answer…" : " — restarts on next answer"));
-    if (speakingNow) setTimeout(start, 300);   // pick the answer back up
+       (busy ? " — reconnecting…" : " — portrait held, restarts on next question"));
+    if (busy) setTimeout(start, 300);   // pick the answer back up
   };
   sock.onerror = () => { ready = false; };
   keepTimer = setInterval(() => {
@@ -990,19 +1068,105 @@ async function _start(){
 function stopKeep(){ if (keepTimer){ clearInterval(keepTimer);
   keepTimer = null; } }
 
-async function stop(){
-  stopKeep(); ready = false;
+// park = end the HeyGen session but stay armed: the still portrait covers
+// the gap and the next question pre-starts a fresh session (no idle credits)
+let parking = false;
+async function park(){
+  if (!ready && !sessTok) return;
+  parking = true; stopKeep(); ready = false;
   try{ if (ws) ws.close(); }catch(e){}
   try{ if (room) room.disconnect(); }catch(e){}
-  if (sessTok) await post("/api/avatar-stop", {session_token: sessTok});
-  sessTok = null; sent.clear(); sentOrder.length = 0;
+  const tok = sessTok; sessTok = null; sent.clear(); sentOrder.length = 0;
+  if (tok) await post("/api/avatar-stop", {session_token: tok});
+  setTimeout(() => { parking = false; }, 5000);   // onclose normally clears it first
+}
+async function stop(){
+  stopped = true;                                    // blocks every auto-start
+  await park();
   await post("/api/ctl", {action: "avatar-voice-off"});   // robot: no holds
-  st("stopped — press Start to resume mouthing along");
-  stopped = true;
+  st("stopped — portrait held; press Resume to mouth along again");
 }
 let stopped = false;
-$("btnStart").onclick = () => { stopped = false; heartbeat(); start(); };
-$("btnStop").onclick = stop;
+function resume(){ if (!stopped) return; stopped = false; heartbeat(); start(); }
+// commands from /maintain arrive in /api/state.avatar_cmd; anything already
+// queued before this page loaded is ignored (lastCmdTs primes on first poll)
+let lastCmdTs = null;
+function applyCmd(c){
+  if (!c || !c.ts) return;
+  if (lastCmdTs === null){ lastCmdTs = c.ts; return; }
+  if (c.ts <= lastCmdTs) return;
+  lastCmdTs = c.ts;
+  if (c.cmd === "stop") stop();
+  else if (c.cmd === "resume") resume();
+  else if (c.cmd === "voice" && MODES.includes(c.mode)) setVoice(c.mode);
+}
+// Session lifecycle (2026-08-25, user: "automatically start and stop so no
+// credits are lost while idle"):
+//  • page load: a cached portrait (localStorage) is shown at once and NO
+//    session is opened; without one, a session runs just long enough to
+//    capture the portrait, then parks
+//  • a question being transcribed pre-starts the session (~8-15s before the
+//    first sentence), answers/asides start it if it is not up yet
+//  • IDLE_PARK_MS after the last activity the session is parked
+const IDLE_PARK_MS = 45000;
+let lastActivity = Date.now(), turnUntil = 0, lastTurnKey = "";
+function touch(){ lastActivity = Date.now(); }
+function turnActive(){ return Date.now() < turnUntil; }
+setTimeout(() => { if (!restoreStill()) start(); }, 0);   // deferred past the lets below
+setInterval(() => {
+  if (stopped || !ready) return;
+  if (speakingNow || turnActive() || sentOrder.length || Date.now() < busyUntil) return;
+  if (Date.now() - lastActivity > IDLE_PARK_MS) park();
+}, 1000);
+
+// ---- picture-frame idle ---------------------------------------------------
+// The live video shows only while the avatar is mouthing something; the rest
+// of the time a frozen frame of it is displayed. The frame is re-taken a few
+// times right after freezing (the first decoded frames can be transitional)
+// and then held — through sandbox session expiry — until the next answer.
+let wantLive = false, liveUntil = 0, freezeAt = 0, frozen = false,
+    snaps = 0, lastSnap = 0, busyUntil = 0;   // busyUntil: avatar still mouthing a fed clip
+function restoreStill(){
+  let url = null;
+  try{ url = localStorage.getItem("cjap_still"); }catch(e){}
+  if (!url) return false;
+  const img = new Image();
+  img.onload = () => { const c = $("still"); c.width = img.width; c.height = img.height;
+    c.getContext("2d").drawImage(img, 0, 0); c.style.display = "block"; frozen = true;
+    $("camidle").style.display = "none"; st("portrait — starts on the next question"); };
+  img.onerror = () => { frozen = false; start(); };   // corrupt cache: capture a fresh one
+  img.src = url;
+  return true;
+}
+function videoLive(){
+  const v = $("vid");
+  return ready && v.videoWidth > 0 && v.readyState >= 2 && !v.paused;
+}
+function snap(){
+  const v = $("vid"), c = $("still");
+  if (!videoLive()) return false;
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  try{ c.getContext("2d").drawImage(v, 0, 0); }catch(e){ return false; }
+  $("camidle").style.display = "none";
+  return true;
+}
+function frameTick(){
+  const live = wantLive || Date.now() < liveUntil || Date.now() < busyUntil;
+  if (live){
+    if (frozen && videoLive()){ $("still").style.display = "none"; frozen = false; }
+  } else if (Date.now() >= freezeAt){
+    if (!frozen){
+      if (snap()){ $("still").style.display = "block"; frozen = true; snaps = 1; lastSnap = Date.now();
+        if (!speakingNow) st(ready ? "portrait — still until asked" : "portrait — starts on the next question"); }
+    } else if (snaps < 4 && Date.now() - lastSnap > 1000 && snap()){
+      snaps++; lastSnap = Date.now();
+      if (snaps === 4) try{ localStorage.setItem("cjap_still",
+        $("still").toDataURL("image/jpeg", 0.85)); }catch(e){}
+    }
+  }
+  setTimeout(frameTick, 150);
+}
+setTimeout(frameTick, 150);   // deferred: the poll section below declares speakingNow
 
 // ---- voice mode -----------------------------------------------------------
 // robot = avatar muted here but its mouth still tracks the robot ("lips");
@@ -1018,11 +1182,8 @@ async function setVoice(mode){
   avatarMuted = (mode === "robot");
   $("aud").muted = avatarMuted;
   await post("/api/ctl", {action: modeAction()});
-  $("btnMute").textContent = "voice: " + (mode === "robot" ? "robot (avatar mouths along)"
-    : mode === "avatar" ? "AVATAR only" : "BOTH synced");
+  report();
 }
-$("btnMute").onclick = () => setVoice(
-  MODES[(MODES.indexOf(voiceMode) + 1) % MODES.length]);
 // the robot only holds its head start while this page is alive: re-assert
 // the mode every 5s (flag older than 15s = page gone)
 function heartbeat(){ if (!stopped) post("/api/ctl", {action: modeAction()}); }
@@ -1077,26 +1238,43 @@ async function sendWav(name){
     ws.send(JSON.stringify({type:"agent.speak_end",
                             event_id:String(Date.now())}));
     sentOrder.push(name);
+    // the avatar mouths this clip from ~lag after now for its full length —
+    // keep the live video up (and the session unparked) until then
+    const durMs = pcm.length / 48 + (lagEma || 1.5) * 1000 + 800;
+    busyUntil = Math.max(busyUntil, Date.now() + durMs); touch();
   }catch(e){ st("audio feed failed: " + e.message); }
 }
 
 // ---- state poll ----------------------------------------------------------
-let curKey = "", speakingNow = false, lastAsideTs = 0, driftShown = "";
+let curKey = "", speakingNow = false, lastAsideTs = 0, driftShown = "", uiRev = null;
 async function poll(){
   try{
     const stt = await (await fetch("/api/state")).json();
     if (stt.ts) skew = Date.now()/1000 - stt.ts;   // Pi clock → browser clock
+    if (uiRev === null) uiRev = stt.ui_rev || null;
+    else if (stt.ui_rev && stt.ui_rev !== uiRev){ st("new version — reloading"); location.reload(); return; }
+    applyCmd(stt.avatar_cmd);                        // Stop/Resume/voice from /maintain
+    // a question is being transcribed → warm the session before the answer
+    const stg = stt.stage || {}, tr = (stg.steps || {}).transcribe || {};
+    const heard = tr.state === "done" || (tr.state === "active" && /transcrib/i.test(tr.detail || ""));
+    if (heard && stg.turn_ts && (Date.now()/1000 - (stg.turn_ts + skew)) < 60){
+      const tk = stg.turn_ts + "|" + tr.state;
+      if (tk !== lastTurnKey){ lastTurnKey = tk; touch(); turnUntil = Date.now() + 60000;
+        if (!ready) st("question heard — starting the avatar session…");
+        start(); }
+    }
     renderExhibit(stt);                              // same plaques as /audience
     const sp = stt.speaking || {}, as = stt.aside || {};
     // ack / filler clips ("Hmm.", "let me think…") — mouth them, no caption
     if (as.wav && as.ts && as.ts !== lastAsideTs && (Date.now()/1000 - (as.ts + skew)) < 6){
-      lastAsideTs = as.ts; enqueue(as.wav);
+      lastAsideTs = as.ts; enqueue(as.wav); touch();
+      liveUntil = Date.now() + 6000;          // mouth the aside, then still again
     }
     if (sp.current && !sp.done){
       const key = sp.wav || (sp.ts + "|" + sp.current);
       if (key !== curKey){
         const wasIdle = !speakingNow;
-        curKey = key; speakingNow = true;
+        curKey = key; speakingNow = true; wantLive = true; touch();
         if (sp.wav){
           // measure start lag only on an answer's FIRST sentence with the
           // session already live (a cold session start isn't speak lag)
@@ -1117,7 +1295,10 @@ async function poll(){
       if (speakingNow){
         if (sp.interrupted && ws && ws.readyState === 1)
           ws.send(JSON.stringify({type:"agent.interrupt"}));
-        speakingNow = false; curKey = "";
+        speakingNow = false; curKey = ""; wantLive = false; touch();
+        turnUntil = 0;                        // answer done: the turn is over
+        freezeAt = Date.now() + Math.round(((lagEma || 0.8) + 0.7) * 1000);
+        if (sp.interrupted) busyUntil = 0;    // cut short: freeze with the robot
         sentOrder.length = 0;
         if (sent.size > 64) sent.clear();
       }
@@ -1260,6 +1441,12 @@ def handle_post(h, path, body):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
         else:
             ok, out = ask_event(body.get("id", ""))
+            h._send(200, json.dumps({"ok": ok, "output": out}))
+    elif path == "/api/avatar-status":
+        if not _authed({}, body):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            ok, out = avatar_status_put(body)
             h._send(200, json.dumps({"ok": ok, "output": out}))
     elif path == "/api/avatar-lag":
         # measured publish→speak_started delay from the /face-avatar page;
