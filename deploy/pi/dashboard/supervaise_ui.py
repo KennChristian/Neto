@@ -865,8 +865,10 @@ FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js"></script>
 <style>
 """ + EXHIBIT_CSS + """
-/* avatar page: the HeyGen portrait (9:10) hangs in the frame instead of the camera */
-#cam{width:min(36vw,calc(58vh * 9 / 10));aspect-ratio:9/10;top:4vh}
+/* avatar page: the HeyGen portrait (9:10) where the camera sits on /audience —
+   frameless (2026-08-25, user): no gilt moulding, mat rings, or glow */
+#cam,#cam.live{width:min(36vw,calc(58vh * 9 / 10));aspect-ratio:9/10;top:4vh;
+  border:0;border-image:none;box-shadow:none;border-radius:.8vh}
 #cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
 #cam .idle{z-index:1}
 /* operator strip: discreet, brightens on hover */
