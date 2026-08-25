@@ -56,10 +56,23 @@ cp "$HOME/speaker-watchdog.sh" deploy/pi/dotfiles/speaker-watchdog.sh
 cp "$HOME/PROJECT_NOTES.txt" deploy/pi/PROJECT_NOTES.txt 2>/dev/null || true
 mkdir -p deploy/pi/tools
 for t in gen_voice_wavs_eleven.py gen_voice_wavs_accent.py \
-         snapshot-push.sh; do
+         snapshot-push.sh verify.sh export-private.sh import-private.sh; do
   src="$HOME/$t"; [ -f "$HOME/bin/$t" ] && src="$HOME/bin/$t"
   [ -f "$src" ] && cp "$src" "deploy/pi/tools/$t" || true
 done
+
+# 3a. PipeWire realtime/quantum tuning (choppy-audio fix 2026-07-21) — user
+#     configs + the system user@ drop-in; install.sh step 6b replays them.
+mkdir -p deploy/pi/dotfiles/config/pipewire/pipewire.conf.d \
+         deploy/pi/dotfiles/config/pipewire/pipewire-pulse.conf.d \
+         deploy/pi/systemd/user@.service.d
+cp "$HOME"/.config/pipewire/pipewire.conf.d/*.conf deploy/pi/dotfiles/config/pipewire/pipewire.conf.d/ 2>/dev/null || true
+cp "$HOME"/.config/pipewire/pipewire-pulse.conf.d/*.conf deploy/pi/dotfiles/config/pipewire/pipewire-pulse.conf.d/ 2>/dev/null || true
+for u in pipewire pipewire-pulse wireplumber filter-chain; do
+  mkdir -p "deploy/pi/dotfiles/config/systemd/user/$u.service.d"
+  cp "$HOME/.config/systemd/user/$u.service.d/rt.conf" "deploy/pi/dotfiles/config/systemd/user/$u.service.d/" 2>/dev/null || true
+done
+cp /etc/systemd/system/user@.service.d/99-reachy-rtprio.conf deploy/pi/systemd/user@.service.d/ 2>/dev/null || true
 
 # 3b. fresh-robot bundle (deploy/pi/README.md + install.sh consume these):
 #     audio clip pools (~13 MB, no secrets) + exact venv pins.

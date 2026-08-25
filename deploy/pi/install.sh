@@ -2,7 +2,7 @@
 # install.sh — bring a FRESH Reachy Mini (Pi CM4, Debian 13, user "pollen")
 # up to the same deployed state as the reference robot, from this repo alone.
 #
-#   git clone -b pi/deployment-snapshots https://github.com/KennChristian/Neto.git \
+#   git clone -b pi/deployment-snapshots https://github.com/Supervaise-Inc/CJAP.git \
 #       ~/Supervaise-Reachy-Mini-Project-main
 #   cd ~/Supervaise-Reachy-Mini-Project-main && bash deploy/pi/install.sh
 #   nano app/.env            # paste the three API keys (see app/.env.example)
@@ -15,7 +15,11 @@
 #   3. openWakeWord shared feature models + faster-whisper tiny (STT fallback)
 #   4. speaker-ID model (~26 MB from the sherpa-onnx release page)
 #   5. audio clip pools -> ~/fillers, ~/fillers_ack, ~/fillers_bail, ~/demo_clips
-#   6. dotfiles: ~/.asoundrc(.route), ~/bin/audio-out, ~/speaker-watchdog.sh
+#   6. dotfiles: ~/.asoundrc(.route), ~/bin/audio-out, ~/speaker-watchdog.sh,
+#      ~/bin/{verify,export-private,import-private,snapshot-push}.sh
+#   6b. PipeWire realtime + quantum tuning (the 2026-07-21 choppy-audio fix):
+#      ~/.config/pipewire/*.conf.d, ~/.config/systemd/user/*.service.d/rt.conf,
+#      /etc/systemd/system/user@.service.d/99-reachy-rtprio.conf
 #   7. ~/pi_dashboard (web UI on :8080/:8443) + self-signed cert
 #   8. systemd units (paths rewritten to this $HOME/$USER) + enable + linger
 #   9. ReachySetup WiFi hotspot profile (fallback when no known WiFi)
@@ -102,6 +106,23 @@ sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/.asoundrc" > "$HOME/.asoundrc"
 sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/bin/audio-out" > "$HOME/bin/audio-out"
 sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/speaker-watchdog.sh" > "$HOME/speaker-watchdog.sh"
 chmod +x "$HOME/bin/audio-out" "$HOME/speaker-watchdog.sh"
+for t in verify.sh export-private.sh import-private.sh snapshot-push.sh; do
+  [ -f "$DP/tools/$t" ] && install -m 755 "$DP/tools/$t" "$HOME/bin/$t"
+done
+sudo usermod -aG audio,plugdev,dialout,video "$ME" 2>/dev/null || true
+
+# ---------------------------------------------------------------- 6b. PipeWire tuning
+log "PipeWire realtime + quantum tuning (choppy-audio fix)"
+mkdir -p "$HOME/.config/pipewire/pipewire.conf.d" "$HOME/.config/pipewire/pipewire-pulse.conf.d"
+cp "$DP/dotfiles/config/pipewire/pipewire.conf.d/"*.conf "$HOME/.config/pipewire/pipewire.conf.d/"
+cp "$DP/dotfiles/config/pipewire/pipewire-pulse.conf.d/"*.conf "$HOME/.config/pipewire/pipewire-pulse.conf.d/"
+for u in pipewire pipewire-pulse wireplumber filter-chain; do
+  mkdir -p "$HOME/.config/systemd/user/$u.service.d"
+  cp "$DP/dotfiles/config/systemd/user/$u.service.d/rt.conf" "$HOME/.config/systemd/user/$u.service.d/rt.conf"
+done
+sudo mkdir -p /etc/systemd/system/user@.service.d
+sudo install -m 644 "$DP/systemd/user@.service.d/99-reachy-rtprio.conf"   /etc/systemd/system/user@.service.d/99-reachy-rtprio.conf
+# the user@ limits only apply to a NEW user session -> reboot at the end
 
 # ---------------------------------------------------------------- 7. dashboard
 log "pi_dashboard"
@@ -159,8 +180,11 @@ if grep -qE '^(ANTHROPIC|OPENAI|ELEVEN)_API_KEY=(sk-ant-\.\.\.|sk-\.\.\.|)$' "$R
 else
   echo " >> Keys look set. Start the robot with:"
 fi
-echo "      sudo systemctl start pi-dashboard supervaise"
-echo "      # then http://reachy-mini.local:8080  (maintain page: /maintain?key=cjap)"
+echo "      sudo reboot        # once, so the PipeWire realtime limits apply"
+echo "      # then http://$(hostname).local:8080  (maintain page: /maintain?key=cjap)"
+echo " >> Moving from another robot? restore its secrets bundle first:"
+echo "      import-private.sh ~/private-<host>-<ts>.tar.gz.enc --restart   (see deploy/pi/TRANSFER.md)"
+echo " >> Check everything:  verify.sh"
 echo " >> Pre-warm the canned answers (ElevenLabs credits, ~150 clips):"
 echo "      cd $REPO && app/.venv/bin/python scripts/prerender_canned.py"
 echo "================================================================"
