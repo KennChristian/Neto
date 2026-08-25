@@ -413,7 +413,12 @@ html,body{height:100%;color:var(--ink);overflow:hidden;
 @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
 @keyframes blink{50%{opacity:.25}}
 /* question intake rows — exhibit provenance lines */
-#rows{display:flex;flex-direction:column;gap:.7vh;overflow-y:auto;scrollbar-width:none}
+/* the transcribed question is PINNED above the scrolling pipeline rows (2026-08-25):
+   it used to be the first row of #rows and scrolled out of view once the
+   Scope/Routed/Composed/Fidelity rows pushed the container to its max height. */
+#qtext{flex:0 0 auto;max-height:16vh;overflow-y:auto;scrollbar-width:none}
+#qtext::-webkit-scrollbar{display:none}
+#rows{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:.7vh;overflow-y:auto;scrollbar-width:none}
 #rows::-webkit-scrollbar{display:none}
 .row{display:grid;grid-template-columns:2.4vh minmax(0,1fr) auto;gap:.2vh .8vw;align-items:start;
   padding:.9vh 1vw;border-radius:.4vh;background:rgba(120,95,50,.07);animation:rise .45s ease-out}
@@ -441,11 +446,11 @@ html,body{height:100%;color:var(--ink);overflow:hidden;
 </div>
 <div id="scrim"></div>
 <div id="bar">
-  <div class="card hide" id="qbox"><h3 class="big">The Question</h3><div id="rows"></div></div>
+  <div class="card hide" id="qbox"><h3 class="big">The Question</h3><div id="qtext"></div><div id="rows"></div></div>
   <div class="card" id="abox"><h3>The Chief Justice Answers</h3><div id="a" class="idle-text"></div></div>
 </div><script>
 const esc=s=>{const d=document.createElement('div');d.innerText=s||'';return d.innerHTML};
-const IDLE='Approach and say <em>&ldquo;Hey Cee-Jap&rdquo;</em> to begin';
+const IDLE='Approach and say <em>&ldquo;Hi Cee-Jap&rdquo;</em> to begin';
 const qs=new URLSearchParams(location.search),camW=parseFloat(qs.get('cam'));
 if(camW>10&&camW<=100)document.getElementById('cam').style.width=camW+'vw';
 if(['tr','tl'].includes(qs.get('pos')))document.getElementById('cam').classList.add(qs.get('pos'));
@@ -461,7 +466,7 @@ function setState(st){
   if(st===curState)return;curState=st;
   document.getElementById('cam').classList.toggle('live',st==='speaking');
 }
-let lastRows='';
+let lastRows='',lastQ='';
 function rowHtml(state,label,body,t){
   const ck=state==='done'?'&#10003;':state==='flagged'?'&#9888;':state==='active'?'&#9679;':'&#9675;';
   const ts=(t!=null&&state!=='active')?t.toFixed(1)+'s':'';
@@ -472,9 +477,10 @@ function renderRows(stage,qText){
   const st=(stage&&stage.steps)||{};
   const tr=st.transcribe||{},rt=st.route||{},cp=st.compose||{},fd=st.fidelity||{};
   const parts=[];
-  if(qText)parts.push('<div class="row q"><div class="b"><span class="qt">&ldquo;'+esc(qText)+'&rdquo;</span></div>'+
-    '<span class="t">'+(tr.state==='done'&&tr.t!=null?tr.t.toFixed(1)+'s':'')+'</span></div>');
-  else if(tr.state==='active')parts.push(rowHtml('active','Transcribed','<span class="think">'+esc(tr.detail||'listening')+'</span>'));
+  const qHtml=qText?'<div class="row q"><div class="b"><span class="qt">&ldquo;'+esc(qText)+'&rdquo;</span></div>'+
+    '<span class="t">'+(tr.state==='done'&&tr.t!=null?tr.t.toFixed(1)+'s':'')+'</span></div>':'';
+  if(qHtml!==lastQ){lastQ=qHtml;document.getElementById('qtext').innerHTML=qHtml;}
+  if(!qText&&tr.state==='active')parts.push(rowHtml('active','Transcribed','<span class="think">'+esc(tr.detail||'listening')+'</span>'));
   if(rt.scope)parts.push(rowHtml('done','Scope','<code>'+esc(rt.scope)+'</code>'+
     (rt.scope_reason?'<span class="rs">'+esc(rt.scope_reason)+'</span>':''),rt.t));
   if(rt.state==='active')parts.push(rowHtml('active','Routed','<span class="think">'+esc(rt.detail||'choosing the topic')+'</span>'));
