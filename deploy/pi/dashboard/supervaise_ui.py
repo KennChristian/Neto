@@ -14,7 +14,7 @@ Two views, one backend, one state feed:
     GET  /api/state         the single source of truth both views poll.
     GET  /api/camera.mjpg   MJPEG stream (rpicam-vid, lazy-started, auto-stops
                             ~90s after the last viewer leaves).
-    POST /api/ctl           {"action": mute|force-listen|replay, "key": K}
+    POST /api/ctl           {"action": mute|unmute|interrupt|force-listen|replay, "key": K}
     GET/POST /api/entities  entity_overrides.json read / validated atomic write
                             (takes effect immediately via P0 hot-reload).
 
@@ -38,6 +38,7 @@ POSTPROC_LOG = "/dev/shm/cj_postproc_corrections.jsonl"
 LAST_ANSWER = "/dev/shm/cj_last_answer.mp3"
 SPEAKING = "/dev/shm/cj_speaking.json"   # live per-sentence caption feed
 MUTE_TRIGGER = "/dev/shm/cj_mute_trigger"
+MUTED_FLAG = "/dev/shm/cj_muted"      # persistent mute state (Mute/Unmute buttons)
 WAKE_TRIGGER = "/dev/shm/cj_wake_trigger"
 ENTITY_OVERLAY = os.path.join(MAIN, "data", "entities", "entity_overrides.json")
 CANNED_PATH = os.path.join(MAIN, "data", "entities", "canned_answers.json")
@@ -193,6 +194,7 @@ def state():
         "health": _health(),
         "has_last_answer": os.path.exists(LAST_ANSWER),
         "event_mode": os.path.exists(EVENT_FLAG),
+        "muted": os.path.exists(MUTED_FLAG),
     }
 
 
@@ -202,8 +204,19 @@ def state():
 
 def control(action):
     if action == "mute":
+        open(MUTED_FLAG, "w").close()      # stays muted until Unmute
+        open(MUTE_TRIGGER, "w").close()    # cut whatever is playing right now
+        return True, "MUTED — playback cut; wake word and event buttons ignored until Unmute"
+    if action == "unmute":
+        for f in (MUTED_FLAG, MUTE_TRIGGER):
+            try:
+                os.unlink(f)
+            except OSError:
+                pass
+        return True, "unmuted — wake word armed again"
+    if action == "interrupt":
         open(MUTE_TRIGGER, "w").close()
-        return True, "mute trigger set (cuts current playback)"
+        return True, "interrupt: current playback cut (not muted)"
     if action == "avatar-voice-on":
         with open("/dev/shm/cj_avatar_audio", "w") as f:
             f.write("solo")
@@ -226,6 +239,8 @@ def control(action):
             pass
         return True, "robot speaker restored"
     if action == "force-listen":
+        if os.path.exists(MUTED_FLAG):
+            return False, "robot is MUTED — press Unmute first"
         open(WAKE_TRIGGER, "w").close()
         return True, "listening activated"
     if action == "event-on":
@@ -557,7 +572,9 @@ img#cam{width:100%;border-radius:8px;background:#000;min-height:120px}
 <div class="grid">
 <div class="card"><h2>Health</h2><div id="health"></div><div id="flags"></div>
   <h2 style="margin-top:8px">Controls</h2>
-  <button onclick="ctl('mute')">&#128263; Mute / interrupt</button>
+  <button id="btn-mute" onclick="ctl('mute')">&#128263; Mute</button>
+  <button id="btn-unmute" onclick="ctl('unmute')" style="display:none;background:var(--bad)">&#128266; UNMUTE</button>
+  <button onclick="ctl('interrupt')">&#9209; Interrupt</button>
   <button onclick="ctl('force-listen')">&#127908; Force listen</button>
   <button onclick="ctl('replay')">&#128260; Replay last</button>
   <button onclick="act('restart-app')">&#8635; Restart app</button>
@@ -619,7 +636,10 @@ function bar(v,max){return '<div class="bar"><i style="width:'+Math.min(100,100*
 function chip(k,ok,txt){return '<span class="chip '+(ok?'ok':'bad')+'">'+k+' '+(txt||(ok?'&#10003;':'&#10007;'))+'</span>'}
 async function poll(){try{
   const s=await(await fetch('/api/state')).json();
-  $('health').innerHTML=Object.entries(s.health||{}).map(([k,v])=>chip(k,v)).join('');
+  $('health').innerHTML=Object.entries(s.health||{}).map(([k,v])=>chip(k,v)).join('')
+    +chip('mute',!s.muted,s.muted?'MUTED':'off');
+  $('btn-mute').style.display=s.muted?'none':'';
+  $('btn-unmute').style.display=s.muted?'':'none';
   const m=s.meta,sp=s.spoken;
   if(m){$('turn').innerHTML=
     '<b>Q:</b> '+esc(m.question)+'<br><b>raw ASR:</b> <span class="mono raw">'+esc(m.raw_asr)+'</span>'+

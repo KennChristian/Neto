@@ -156,6 +156,14 @@ def _publish_transcript(role, text):
 TURN_META = "/dev/shm/cj_turn_meta.jsonl"
 LAST_ANSWER_MP3 = "/dev/shm/cj_last_answer.mp3"
 MUTE_TRIGGER = "/dev/shm/cj_mute_trigger"
+# Persistent mute (2026-08-25, /maintain Mute/Unmute): while this flag exists
+# the robot cuts any playback, ignores the wake word and event buttons, and
+# leaves a voice-locked conversation. Unmute = the dashboard removes the flag.
+MUTED_FLAG = "/dev/shm/cj_muted"
+
+
+def _muted():
+    return os.path.exists(MUTED_FLAG)
 _speak_timing = {}  # populated by speak(): synth_s, play_s
 
 
@@ -680,8 +688,9 @@ def _play_wav_interruptible(wav_path, stop):
         with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
                             blocksize=frame_len) as stream:
             while proc.poll() is None:
-                if os.path.exists(MUTE_TRIGGER):   # P2.5 operator mute button
-                    os.unlink(MUTE_TRIGGER)
+                if os.path.exists(MUTE_TRIGGER) or _muted():   # P2.5 operator mute button
+                    if os.path.exists(MUTE_TRIGGER):
+                        os.unlink(MUTE_TRIGGER)
                     print("[stop] muted from the maintenance dashboard — answer cut")
                     proc.terminate()
                     fired = -1.0
@@ -737,8 +746,9 @@ class StopListener:
                 with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
                                     blocksize=frame_len) as stream:
                     while not self._closing.is_set():
-                        if os.path.exists(MUTE_TRIGGER):  # P2.5 operator mute
-                            os.unlink(MUTE_TRIGGER)
+                        if os.path.exists(MUTE_TRIGGER) or _muted():  # P2.5 operator mute
+                            if os.path.exists(MUTE_TRIGGER):
+                                os.unlink(MUTE_TRIGGER)
                             print("[stop] muted from the maintenance dashboard "
                                   "— answer cut")
                             self.fired = -1.0
@@ -1468,6 +1478,7 @@ def _wake_stream(det):
     model.reset()
     frame_len = 1280  # 80 ms at 16 kHz — openWakeWord's expected frame
     near_miss_last = 0.0
+    muted_logged = False
     with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
                         blocksize=frame_len) as stream:
         while True:
@@ -1481,6 +1492,9 @@ def _wake_stream(det):
                         ask = json.loads(raw)
                 except (OSError, ValueError) as e:
                     print(f"[ask] bad trigger ignored: {e}")
+                if ask and ask.get("a") and _muted():
+                    print(f"[mute] question button {ask.get('id')} ignored — muted from the dashboard")
+                    ask = None
                 if ask and ask.get("a"):
                     _pending_ask["ask"] = ask
                     print(f"[ask] question button: {ask.get('id')}")
@@ -1503,6 +1517,15 @@ def _wake_stream(det):
                         return ret
             frame, _ = stream.read(frame_len)
             score = float(max(model.predict(frame[:, 0]).values()))
+            if score >= det.threshold and _muted():
+                if not muted_logged:
+                    print(f"[mute] wake phrase ignored (score {score:.3f}) — "
+                          "muted from the dashboard; press Unmute on /maintain")
+                    muted_logged = True
+                _publish_wake(score)
+                model.reset()
+                continue
+            muted_logged = False if not _muted() else muted_logged
             if score >= det.threshold:
                 _publish_wake(score, fired=True)
                 model.reset()   # clear the rolling buffer for the next arming
@@ -1684,6 +1707,9 @@ def wake_loop(client, artifacts, gestures):
                 remaining = deadline - time.monotonic()
                 if remaining <= 0.3:
                     print("[lock] quiet — conversation closed")
+                    break
+                if _muted():
+                    print("[lock] muted from the dashboard — conversation closed")
                     break
                 gestures.perk()
                 r = _safe_turn(client, artifacts, gestures, history, stop=stop,
