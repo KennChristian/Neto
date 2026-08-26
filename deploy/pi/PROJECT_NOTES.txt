@@ -687,3 +687,25 @@ blocks wrong keys. Fresh canned-qa file is up at /canned-qa.
   composer was given for the last turn (title, id, date, theme, summary,
   budget-dropped flag) + a docs column in Recent turns. Data flows from
   cj_chat.build_context via turn meta; older turns show "no doc data".
+
+2026-08-26 — Robot went mute after a reboot (fixed, root cause found)
+- Symptom: STT/composer/TTS all fine, but every answer logged
+  "aplay: Channels count non available" + "[audio] PLAYBACK FAILED" and
+  the stop word reported "Device unavailable". Silence from the robot.
+- Cause: after a boot where the two HDMI audio cards enumerated first,
+  the Reachy USB audio card moved from ALSA card 0 to card 2. The vendor
+  reachy-mini-daemon checks ~/.asoundrc for the literal text "card <N>"
+  and, not finding "card 2", OVERWROTE our file with its stock raw-hw
+  config (journal: "~/.asoundrc not found or not correctly configured ...
+  Creating a new one"). Raw hw = stereo 16 kHz only, so our mono 24 kHz
+  voice wavs were refused, and the mic opened exclusively so the
+  barge-in listener could not share it.
+- Fix: ~/.asoundrc now addresses the card BY NAME (hw:CARD=Audio) and
+  carries a comment line "card 0 card 1 card 2 card 3 card 4" so the
+  daemon's check passes whatever index the card lands on. Daemon's copy
+  kept at ~/.asoundrc.bak-daemon-stock-20260826. Same file is in the
+  deploy bundle (deploy/pi/dotfiles/.asoundrc) and verify.sh now has a
+  25th check for it.
+- If it ever happens again: `head -3 ~/.asoundrc` — if it says
+  "type hw" it was clobbered; restore from the bundle, then
+  `sudo systemctl restart supervaise` so the mic reopens shared.

@@ -209,7 +209,10 @@ def _reload_lexicon() -> None:
         phon = raw.get(k)
         if isinstance(phon, str):
             pat = re.escape(k).replace("ñ", "[ñn]").replace("Ñ", "[ÑNñn]")
-            force.append((re.compile(r"(?<![A-Za-z0-9])" + pat + r"(?![A-Za-z0-9])",
+            # 2026-08-25: also catch possessive / plural forms (Panganiban's,
+            # Panganibans, PANGANIBAN'S) so the name is read the same way in
+            # every form; the suffix is kept, lower-cased.
+            force.append((re.compile(r"(?<![A-Za-z0-9])" + pat + r"(['’]?s)?(?![A-Za-z0-9])",
                                      re.IGNORECASE), phon))
     _lex_cache["force"] = force
     _lex_cache["mtime"] = mtime
@@ -230,7 +233,7 @@ def apply_forced_respellings(text: str) -> str:
     only what the voice engine READS changes."""
     _reload_lexicon()
     for pattern, phon in _lex_cache["force"]:
-        text = pattern.sub(phon, text)
+        text = pattern.sub(lambda m, p=phon: p + (m.group(1) or "").lower(), text)
     return text
 
 
@@ -289,9 +292,31 @@ def emotion_speed(emotion: str) -> float | None:
     return round(min(1.2, max(0.7, base + _EMOTION_SPEED_DELTA.get(emotion, 0.0))), 3)
 
 
+# Farewell delivery (A/B'd by ear 2026-08-25, user picked the most expressive
+# of three): lower stability + style exaggeration + a touch slower makes the
+# goodbye sound warm instead of flat. Separate cache keys (settings are part
+# of the key). Tunable via CJ_FAREWELL_STABILITY / _STYLE / _SPEED.
+def farewell_settings() -> dict | None:
+    """voice_settings dict for farewells, or None when the ElevenLabs voice
+    config is unavailable (callers then fall back to the default delivery)."""
+    try:
+        import sys as _sys
+        root = str(Path(__file__).resolve().parent.parent)
+        if root not in _sys.path:
+            _sys.path.insert(0, root)
+        from voice.speak import effective_settings
+        st = effective_settings(float(os.environ.get("CJ_FAREWELL_SPEED", "0.97")))
+        st["stability"] = float(os.environ.get("CJ_FAREWELL_STABILITY", "0.30"))
+        st["style"] = float(os.environ.get("CJ_FAREWELL_STYLE", "0.50"))
+        return st
+    except Exception:
+        return None
+
+
 def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
                        speed: float | None = None,
-                       previous_text: str | None = None) -> str:
+                       previous_text: str | None = None,
+                       voice_settings: dict | None = None) -> str:
     """Synthesize with the cloned voice (repo-root voice/ package) and return
     the path of a 24 kHz mono PCM_16 wav. Uses the local clip cache, so
     repeat lines are instant. Raises on any failure — callers keep the
@@ -316,7 +341,8 @@ def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
     if os.environ.get("CJ_ELEVEN_RESPELL", "0") == "1":
         text = apply_forced_respellings(text)
     norm = v_cache.normalize_text(text)
-    key = v_cache.cache_key(norm, effective_settings(speed))
+    settings = voice_settings or effective_settings(speed)  # full override (farewells)
+    key = v_cache.cache_key(norm, settings)
     align_path = v_cache.cache_dir() / f"{key}.align.json"
     words = None
     hit = v_cache.get(key)
@@ -334,7 +360,8 @@ def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
     else:
         align: dict = {}
         pcm = v_audio.process(v_synthesize(norm, speed=speed, align_out=align,
-                                           previous_text=previous_text),
+                                           previous_text=previous_text,
+                                           settings=settings),
                               v_audio.SYNTH_SAMPLE_RATE)
         sr = v_audio.SYNTH_SAMPLE_RATE
         v_cache.put(key, pcm, sr)

@@ -50,6 +50,11 @@ def say_offline():
 # writes/s would wear the SD card anywhere else.
 WAKE_LIVE = "/dev/shm/cj_wake_live.json"
 WAKE_EVENTS = "/dev/shm/cj_wake_events.jsonl"
+# Stop-word (barge-in) scores get their OWN meter on /maintain (2026-08-26,
+# user: "add stop meter beside wake meter") — they used to be pushed into the
+# wake meter, which muddled both.
+STOP_LIVE = "/dev/shm/cj_stop_live.json"
+STOP_EVENTS = "/dev/shm/cj_stop_events.jsonl"
 # Touched by the dashboard's "Activate listening" button — fires the wake
 # state machine without the phrase. Ignored when older than 10 s (stale).
 WAKE_TRIGGER = "/dev/shm/cj_wake_trigger"
@@ -301,6 +306,37 @@ def _publish_wake(score, fired=False):
                        "fired_ts": st["fired_ts"],
                        "fired_score": st["fired_score"]}, f)
         os.replace(WAKE_LIVE + ".tmp", WAKE_LIVE)
+    except OSError:
+        pass
+
+
+_stop_pub = {"hist": [], "fired_ts": 0.0, "fired_score": 0.0}
+
+
+def _publish_stop(score, fired=False):
+    """Same shape as _publish_wake, for the barge-in listener while the answer
+    plays: /dev/shm/cj_stop_live.json (300 ms meter) + cj_stop_events.jsonl."""
+    st = _stop_pub
+    st["hist"].append(score)
+    del st["hist"][:-13]
+    now = time.time()
+    if fired:
+        st["fired_ts"], st["fired_score"] = now, score
+        try:
+            with open(STOP_EVENTS, "a") as f:
+                f.write(json.dumps({"ts": now, "score": round(score, 4)}) + "\n")
+            if os.path.getsize(STOP_EVENTS) > 20_000:
+                lines = open(STOP_EVENTS).read().splitlines()[-50:]
+                open(STOP_EVENTS, "w").write("\n".join(lines) + "\n")
+        except OSError:
+            pass
+    try:
+        with open(STOP_LIVE + ".tmp", "w") as f:
+            json.dump({"ts": now, "score": round(score, 4),
+                       "peak1s": round(max(st["hist"]), 4),
+                       "fired_ts": st["fired_ts"],
+                       "fired_score": st["fired_score"]}, f)
+        os.replace(STOP_LIVE + ".tmp", STOP_LIVE)
     except OSError:
         pass
 
@@ -699,6 +735,34 @@ def _speech_threshold(noise_rms):
     return min(max(int(noise_rms * mult), floor_), cap)
 
 
+def _min_speech_frames(frame_ms):
+    """Frames above threshold needed before a recording counts as 'speech
+    started' (CJ_MIC_MIN_SPEECH_MS, default 240). Added 2026-08-26: half of
+    the 'did not hear me' turns that day were false starts — a knock, the
+    perk motor or a speaker tail tripped ONE frame, the 1 s trailing-silence
+    rule then closed the mic and STT got a silent clip (4-5 s wasted, prompt
+    echo discarded). 0 restores the single-frame trigger."""
+    return max(0, int(_env_num("CJ_MIC_MIN_SPEECH_MS", 240) // frame_ms))
+
+
+_bt_route_cache = {"mtime": None, "bt": False}
+
+
+def _bt_route():
+    """True when ~/bin/audio-out has playback on a Bluetooth speaker (route
+    file says bluealsa). Cached by mtime — read per turn, not per frame."""
+    path = os.path.expanduser("~/.asoundrc.route")
+    try:
+        m = os.path.getmtime(path)
+        if m != _bt_route_cache["mtime"]:
+            with open(path) as f:
+                _bt_route_cache["bt"] = "bluealsa" in f.read()
+            _bt_route_cache["mtime"] = m
+    except OSError:
+        _bt_route_cache["bt"] = False
+    return _bt_route_cache["bt"]
+
+
 class _StopTrace:
     """Stop-word diagnostics (2026-08-25, user: "it does not stop when saying
     cjap"): keeps the mic audio the listener scored (<= 40 s) and the top
@@ -743,6 +807,7 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
     n = int(RATE * frame_ms / 1000)
     frames, speech_seen, silence_run = [], False, 0
     trailing = trailing_silence_ms // frame_ms
+    min_speech, speech_run = _min_speech_frames(frame_ms), 0
     max_frames = int(max_s * 1000 / frame_ms)
     no_speech_frames = int(no_speech_timeout_s * 1000 / frame_ms)
     threshold, probe = None, []
@@ -761,6 +826,14 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
             print(f"[mic] noise floor rms={noise} -> speech threshold {threshold}")
     else:
         stream.flush()                   # follow-up / enrollment: drop stale audio
+        # Bluetooth speakers lag 200-400 ms behind aplay: right after an answer
+        # the noise-floor probe would otherwise sample the speaker's tail and
+        # set the speech threshold too high for the first words (2026-08-26).
+        # No echo cancellation on BT either, so let it ring out. CJ_BT_SETTLE_S.
+        settle = _env_num("CJ_BT_SETTLE_S", 0.4)
+        if settle > 0 and _bt_route():
+            time.sleep(settle)
+            stream.flush()
     # The pre-roll holds the wake phrase's tail (and the perk motor) followed
     # by the user's pause: keep that audio, but only start speech/silence
     # detection in its last 300 ms — otherwise the phrase counts as speech and
@@ -789,9 +862,14 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
             tag = "SPEECH " if rms > threshold else "quiet  "
             print(f"\r  {tag} rms={rms:5d} {bars:<40}", end="", flush=True)
             if rms > threshold:
-                speech_seen, silence_run = True, 0
+                speech_run += 1
+                if speech_run >= min_speech:   # sustained, not a one-frame blip
+                    speech_seen = True
+                silence_run = 0
             else:
                 silence_run += 1
+                if not speech_seen:
+                    speech_run = 0
                 if speech_seen and silence_run >= trailing:
                     print("\n[mic] end of speech")
                     break
@@ -964,7 +1042,7 @@ def _play_wav_interruptible(wav_path, stop):
                 score = float(max(model.predict(frame[:, 0]).values()))
                 trace.add(frame[:, 0], score)
                 peak = max(peak, score)
-                _publish_wake(score, fired=score >= stop.threshold)
+                _publish_stop(score, fired=score >= stop.threshold)
                 if score >= stop.threshold:
                     fired = score
                     proc.terminate()
@@ -1025,7 +1103,7 @@ class StopListener:
                         score = float(max(model.predict(frame[:, 0]).values()))
                         self._trace.add(frame[:, 0], score)
                         self.peak = max(self.peak, score)
-                        _publish_wake(score, fired=score >= self._stop.threshold)
+                        _publish_stop(score, fired=score >= self._stop.threshold)
                         if score >= self._stop.threshold:
                             self.fired = score
                             print(f"[stop] wake phrase during playback "
@@ -1126,6 +1204,131 @@ def _play_aside(clip, stop=None):
     subprocess.run(["aplay", "-q", clip], stderr=subprocess.DEVNULL)
 
 
+def _load_wav_mono_int16(path):
+    rate, a = wavfile.read(path)
+    if a.dtype != np.int16:
+        raise ValueError(f"unsupported wav dtype {a.dtype}")
+    if a.ndim > 1:
+        a = a.mean(axis=1).astype(np.int16)
+    return int(rate), np.ascontiguousarray(a)
+
+
+def _trim_edges(a, rate, thr_dbfs=-42.0):
+    """Strip the TTS clip's baked-in leading silence and normalise its trailing
+    silence to CJ_SENT_GAP_MS (default 150) so every sentence boundary is the
+    same short pause; 5 ms fades keep the cut click-free. Clips measured
+    2026-08-26: lead 0-80 ms, trail 180-290 ms."""
+    gap = int(rate * _env_num("CJ_SENT_GAP_MS", 150) / 1000)
+    if len(a) < rate // 10:
+        return a
+    win = max(1, int(rate * 0.01))
+    x = a.astype(np.float32)
+    env = np.sqrt(np.convolve(x * x, np.ones(win, dtype=np.float32) / win, mode="same"))
+    idx = np.flatnonzero(env > 32768 * 10 ** (thr_dbfs / 20))
+    if not len(idx):
+        return a
+    start = max(0, int(idx[0]) - int(rate * 0.02))
+    end = int(idx[-1]) + gap
+    out = a[start:min(len(a), end)]
+    if end > len(a):
+        out = np.concatenate([out, np.zeros(end - len(a), dtype=np.int16)])
+    else:
+        out = out.copy()
+    f = min(len(out) // 2, int(rate * 0.005))
+    if f > 0:
+        ramp = np.linspace(0.0, 1.0, f, dtype=np.float32)
+        out[:f] = (out[:f] * ramp).astype(np.int16)
+        out[-f:] = (out[-f:] * ramp[::-1]).astype(np.int16)
+    return out
+
+
+class _SentenceOut:
+    """Streamed-sentence player (2026-08-26, user: "make the transition between
+    sentences smoother"). ONE PortAudio output stream stays open for the whole
+    answer and each sentence's samples are written into it, so a sentence
+    boundary no longer pays an aplay spawn + ALSA/PipeWire re-open (150-400 ms,
+    worse on Bluetooth) on top of the clip's own trailing silence. A keep-alive
+    thread feeds silence whenever no sentence is being written (next sentence
+    still synthesising) so the device never underruns. Device: ALSA
+    "audio_out_route" — the same pcm aplay's default resolves to, so it follows
+    ~/bin/audio-out (internal / Sony / Marshall). Measured gapless on the Pi
+    through both PipeWire and BlueALSA. Any failure falls back to aplay for
+    that sentence; CJ_SENTENCE_PLAYER=aplay restores the old path outright."""
+    CHUNK_S = 0.05
+
+    def __init__(self):
+        self.stream, self.rate = None, None
+        self.lock = threading.Lock()
+        self._alive = None
+        self._last_write = 0.0
+
+    @staticmethod
+    def enabled():
+        return os.environ.get("CJ_SENTENCE_PLAYER", "stream").strip().lower() != "aplay"
+
+    def _open(self, rate):
+        if self.stream is not None and self.rate == rate:
+            return self.stream
+        self.close()
+        st = sd.OutputStream(device="audio_out_route", samplerate=rate, channels=1,
+                             dtype="int16", blocksize=int(rate * self.CHUNK_S),
+                             latency=_env_num("CJ_SENT_OUT_LATENCY_S", 0.15))
+        st.start()
+        self.stream, self.rate = st, rate
+        self._last_write = time.monotonic()
+        self._alive = threading.Thread(target=self._keepalive, args=(st,), daemon=True)
+        self._alive.start()
+        return st
+
+    def _keepalive(self, st):
+        zeros = np.zeros(int(self.rate * self.CHUNK_S), dtype=np.int16)
+        while self.stream is st:
+            with self.lock:
+                if self.stream is st and time.monotonic() - self._last_write > self.CHUNK_S:
+                    try:
+                        st.write(zeros)
+                        self._last_write = time.monotonic()
+                    except Exception:
+                        pass
+            time.sleep(self.CHUNK_S / 2)
+
+    def _release(self, abort):
+        with self.lock:
+            st, self.stream = self.stream, None
+        if st is not None:
+            try:
+                (st.abort if abort else st.stop)()
+                st.close()
+            except Exception:
+                pass
+
+    def close(self):    # answer finished: let the tail drain, then release
+        self._release(abort=False)
+
+    def abort(self):    # stop word / mute: drop what is buffered now
+        self._release(abort=True)
+
+    def play(self, wav_path, listener, trim=True):
+        """True if the listener cut it, False when written out. Raises on
+        device trouble — the caller then falls back to aplay."""
+        rate, a = _load_wav_mono_int16(wav_path)
+        if trim:
+            a = _trim_edges(a, rate)
+        st = self._open(rate)
+        n = int(rate * self.CHUNK_S)
+        for k in range(0, len(a), n):
+            if listener.fired:
+                self.abort()
+                return True
+            with self.lock:
+                st.write(a[k:k + n])
+                self._last_write = time.monotonic()
+        return False
+
+
+_SENT_OUT = _SentenceOut()
+
+
 def _play_wav_listener(wav_path, listener, prefed_age=None):
     """aplay one streamed sentence while the answer-spanning StopListener
     watches the mic. Returns True if the stop word (or dashboard mute) cut
@@ -1152,6 +1355,15 @@ def _play_wav_listener(wav_path, listener, prefed_age=None):
                 return True
             time.sleep(0.1)
         return False
+    if _SENT_OUT.enabled():
+        try:
+            # avatar "sync" mode plays the untrimmed wav on the page too: keep
+            # our timing identical to it, so no edge trim there
+            return _SENT_OUT.play(wav_path, listener, trim=not mode)
+        except Exception as e:
+            _SENT_OUT.abort()
+            print(f"[audio] stream player failed ({type(e).__name__}: {e}) "
+                  "— aplay for this sentence")
     proc = subprocess.Popen(["aplay", "-q", wav_path])
     while proc.poll() is None:
         if listener.fired:
@@ -1166,9 +1378,11 @@ def _play_wav_listener(wav_path, listener, prefed_age=None):
     return False
 
 
-def speak(text, filler=None, stop=None):
+def speak(text, filler=None, stop=None, voice_settings=None):
     """TTS + play. With a StopWord, playback is interruptible by the wake
-    phrase; returns True if it was cut short that way."""
+    phrase; returns True if it was cut short that way.
+    voice_settings: ElevenLabs voice_settings override for expressive
+    deliveries (voice_io.farewell_settings()); None = default voice."""
     interrupted = False
     try:  # P0 entity pass on the spoken text (citation exactness); fails open
         from postprocess import process_tts_sentence
@@ -1179,7 +1393,8 @@ def speak(text, filler=None, stop=None):
     mp3_path = wav_from_eleven = None
     if getattr(voice_io, "TTS_BACKEND", "openai") == "elevenlabs":
         try:  # cloned voice; mp3 kept for the dashboard replay button
-            wav_from_eleven = voice_io.tts_elevenlabs_wav(text)
+            wav_from_eleven = voice_io.tts_elevenlabs_wav(
+                text, voice_settings=voice_settings)
             mp3_path = wav_from_eleven.replace(".wav", ".mp3")
             subprocess.run(["ffmpeg", "-y", "-loglevel", "quiet",
                             "-i", wav_from_eleven, mp3_path], check=True)
@@ -1386,6 +1601,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         listener = listener_box.get("l")
         if listener is not None:
             listener.close()
+        _SENT_OUT.close()   # drain the last sentence's tail, free the device
 
 
 _ACK_DIR = os.path.expanduser("~/fillers_ack")
@@ -1611,8 +1827,18 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         _stage("compose", "done", "curated farewell")
         _stage("fidelity", "done", "curated — pre-verified")
         gestures.start("talk")
-        speak(FAREWELL_TEXT, None, stop=stop)
-        _publish_transcript("cj", FAREWELL_TEXT)
+        # Warm, varied goodbye from the curated pool (2026-08-25, "improve
+        # the emotion in the farewells"); the flat one-liner is the fallback.
+        farewell = None
+        try:
+            import canned_answers
+            farewell = canned_answers.get("thanks_goodbye")
+        except Exception as e:
+            print(f"[canned] farewell pool unavailable ({e})")
+        farewell = farewell or FAREWELL_TEXT
+        speak(farewell, None, stop=stop,
+              voice_settings=voice_io.farewell_settings())
+        _publish_transcript("cj", farewell)
         return "bye"
     try:  # canned fast path: curated answers for common questions (fails open)
         import canned_answers
@@ -1634,7 +1860,9 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         response = hit["answer"]
         t0 = time.monotonic()
         gestures.start("talk")
-        interrupted = speak(response, None, stop=stop)
+        # goodbyes get the expressive delivery (see voice_io.farewell_settings)
+        vs = voice_io.farewell_settings() if hit["id"] == "thanks_goodbye" else None
+        interrupted = speak(response, None, stop=stop, voice_settings=vs)
         _publish_transcript("cj", response)
         _publish_turn_meta({
             "phase": "composed", "raw_asr": raw_asr, "question": question,

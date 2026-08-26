@@ -5,14 +5,22 @@ pcm.!default {
 }
 ctl.!default {
     type hw
-    card 0
+    card Audio
 }
+# 2026-08-26: the Reachy Mini USB card is addressed BY NAME (CARD=Audio) because
+# its ALSA index moved 0 -> 2 after a boot where the vc4 HDMI cards enumerated
+# first. The reachy-mini-daemon boot check (reachy_mini/media/audio_utils.py
+# check_reachymini_asoundrc) regex-scans this file for "card <N>" and
+# overwrites it with a raw-hw config (breaks playback + shared mic) if the
+# detected index is missing, so the line below lists the indices it may see:
+# card 0 card 1 card 2 card 3 card 4
+#
 # Playback goes through pcm.audio_out_route, whose real definition lives in
 # ~/.asoundrc.route and is rewritten by ~/bin/audio-out (internal speaker via
 # PipeWire, or a Bluetooth speaker via BlueALSA). The pulse definition below
 # is only a fallback in case the route file is missing.
-# Pre-route original backed up at ~/.asoundrc.bak-pre-route-20260804;
-# older BT-hardwired version at ~/.asoundrc.bak-ult-field-20260803.
+# Daemon-written stock file from this boot: ~/.asoundrc.bak-daemon-stock-20260826
+# Pre-route original backed up at ~/.asoundrc.bak-pre-route-20260804.
 pcm.reachymini_audio_sink {
     type plug
     slave.pcm "audio_out_route"
@@ -37,7 +45,7 @@ pcm.reachymini_audio_src {
     type dsnoop
     ipc_key 4242
     slave {
-        pcm "hw:0,0"
+        pcm "hw:CARD=Audio,DEV=0"
         channels 2
         rate 16000
         period_size 256

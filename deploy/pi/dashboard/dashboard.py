@@ -70,6 +70,8 @@ ACTIONS = {
 
 WAKE_LIVE = "/dev/shm/cj_wake_live.json"
 WAKE_EVENTS = "/dev/shm/cj_wake_events.jsonl"
+STOP_LIVE = "/dev/shm/cj_stop_live.json"        # barge-in scores (2026-08-26)
+STOP_EVENTS = "/dev/shm/cj_stop_events.jsonl"
 TRANSCRIPT = "/dev/shm/cj_transcript.jsonl"
 SPEAKER_LAST = "/dev/shm/cj_speaker_last.json"
 SPEAKER_ENROLLED = os.path.join(HOME, "speaker_id", "enrolled.npz")
@@ -466,6 +468,39 @@ def wake_threshold():
             pass
         _thr_cache["t"] = time.time()
     return _thr_cache["v"]
+
+
+_stop_thr_cache = {"t": 0, "v": 0.02}
+
+
+def stop_threshold():
+    if time.time() - _stop_thr_cache["t"] > 10:
+        try:
+            _stop_thr_cache["v"] = float(wake_info()["env"].get("CJ_STOP_OWW_THRESHOLD", 0.02))
+        except Exception:
+            pass
+        _stop_thr_cache["t"] = time.time()
+    return _stop_thr_cache["v"]
+
+
+def stop_live():
+    """Stop-word meter feed (2026-08-26): what the barge-in listener scores
+    while an answer plays. live=False between answers (nothing scoring)."""
+    out = {"live": False, "threshold": stop_threshold(), "events": []}
+    try:
+        d = json.load(open(STOP_LIVE))
+        age = time.time() - d.get("ts", 0)
+        out.update(d)
+        out["age"] = round(age, 2)
+        out["live"] = age < 2.0
+    except Exception:
+        pass
+    try:
+        lines = open(STOP_EVENTS).read().splitlines()[-8:]
+        out["events"] = [json.loads(ln) for ln in lines][::-1]
+    except Exception:
+        pass
+    return out
 
 
 def wake_live():
@@ -1065,6 +1100,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, json.dumps(status()))
         elif path == "/api/wake":
             self._send(200, json.dumps(wake_live()))
+        elif path == "/api/stop":
+            self._send(200, json.dumps(stop_live()))
         elif path == "/api/wifi":
             saved, current = wifi_status()
             nets = wifi_scan(rescan=params.get("rescan") == "1")
@@ -1155,6 +1192,17 @@ class Handler(BaseHTTPRequestHandler):
             name = ""
         if name not in ACTIONS:
             self._send(400, json.dumps({"ok": False, "output": f"unknown action {name!r}"}))
+            return
+        if name == "reboot":
+            # 2026-08-25: answer the browser FIRST, then reboot a moment later —
+            # otherwise this process is SIGTERMed mid-request and the page never
+            # learns whether the button worked.
+            self._send(200, json.dumps({"ok": True, "output": "rebooting"}))
+            try:
+                print(f"[action] {self.client_address[0]} reboot -> scheduled", flush=True)
+            except Exception:
+                pass
+            threading.Timer(1.5, lambda: subprocess.run(ACTIONS["reboot"], timeout=30)).start()
             return
         # tagalog-sample is a ~45 s clip — the generic 30 s cap would cut it off
         code, out = run(ACTIONS[name], timeout=90 if name == "tagalog-sample" else 30)

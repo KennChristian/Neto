@@ -34,6 +34,8 @@ TRANSCRIPT = "/dev/shm/cj_transcript.jsonl"
 TURN_META = "/dev/shm/cj_turn_meta.jsonl"
 WAKE_LIVE = "/dev/shm/cj_wake_live.json"
 WAKE_EVENTS = "/dev/shm/cj_wake_events.jsonl"
+STOP_LIVE = "/dev/shm/cj_stop_live.json"        # barge-in meter (2026-08-26)
+STOP_EVENTS = "/dev/shm/cj_stop_events.jsonl"
 POSTPROC_LOG = "/dev/shm/cj_postproc_corrections.jsonl"
 LAST_ANSWER = "/dev/shm/cj_last_answer.mp3"
 SPEAKING = "/dev/shm/cj_speaking.json"   # live per-sentence caption feed
@@ -194,12 +196,32 @@ def state():
         "avatar_page": _read_json(AVATAR_PAGE_STATUS),
         "avatar_cmd": _read_json(AVATAR_PAGE_CMD),
         "wake_events": _tail_jsonl(WAKE_EVENTS, 12),
+        "stop": _read_json(STOP_LIVE),
+        "stop_events": _tail_jsonl(STOP_EVENTS, 12),
         "corrections": _tail_jsonl(POSTPROC_LOG, 20),
         "health": _health(),
         "has_last_answer": os.path.exists(LAST_ANSWER),
         "event_mode": os.path.exists(EVENT_FLAG),
         "muted": os.path.exists(MUTED_FLAG),
+        # 2026-08-25 Reboot-button fix: the page compares these to know the box
+        # really went down and came back before it reloads itself
+        "boot_id": _read_text("/proc/sys/kernel/random/boot_id"),
+        "uptime_s": _uptime_s(),
     }
+
+
+def _read_text(path):
+    try:
+        return open(path).read().strip()
+    except Exception:
+        return None
+
+
+def _uptime_s():
+    try:
+        return int(float(open("/proc/uptime").read().split()[0]))
+    except Exception:
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -959,6 +981,10 @@ pre{max-height:280px;overflow:auto;white-space:pre-wrap;background:#0d1117;borde
   <div class="bar" style="height:14px"><i id="wakebar" style="width:0%"></i></div>
   <canvas id="spark" style="width:100%;height:64px;background:#0d1117;border-radius:6px"></canvas>
   <table id="wake"><tr><th>time</th><th>score</th></tr></table></div>
+<div class="card"><h2>Stop meter <span class="dim" id="stopnow"></span></h2>
+  <div class="bar" style="height:14px"><i id="stopbar" style="width:0%"></i></div>
+  <canvas id="stopspark" style="width:100%;height:64px;background:#0d1117;border-radius:6px"></canvas>
+  <table id="stopt"><tr><th>time</th><th>score</th></tr></table></div>
 <div class="card"><h2>LiveAvatar page <span class="dim" id="avstate"></span></h2>
   <div id="avstatus" class="dim" style="margin-bottom:10px">no /face-avatar page open</div>
   <div class="btns"><span class="lbl">Page</span>
@@ -1048,13 +1074,39 @@ async function act(a){$('msg').innerText=a+'\\u2026';
   $('msg').innerText=r.ok?a+' ok':'FAILED: '+(r.output||'');}
 async function rebootPi(){
   if(!confirm('Reboot the Pi? The robot goes quiet for about a minute.'))return;
-  $('msg').innerText='rebooting\u2026 this page reconnects on its own';
-  try{await fetch('/api/action',{method:'POST',body:JSON.stringify({action:'reboot'})});}catch(e){}
-  // server dies mid-reboot; wait, then probe until it answers and reload
-  await new Promise(r=>setTimeout(r,40000));
-  for(let i=0;i<60;i++){try{const r=await fetch('/api/state',{cache:'no-store'});if(r.ok){location.reload();return;}}catch(e){}
-    await new Promise(r=>setTimeout(r,5000));}
-  $('msg').innerText='still offline after 5 min \u2014 reload manually';}
+  const say=t=>{$('msg').innerText=t;};
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  // fetch with a hard timeout: a SYN to a dead host can hang 1-2 min otherwise
+  const ping=async()=>{const c=new AbortController();const t=setTimeout(()=>c.abort(),4000);
+    try{const r=await fetch('/api/state?_='+Date.now(),{cache:'no-store',signal:c.signal});
+      if(!r.ok)return null;return await r.json();}catch(e){return null;}finally{clearTimeout(t);}};
+  const before=await ping();const oldBoot=before&&before.boot_id||null;
+  // stop every poller/camera timer on this page so they don't pile up hung
+  // requests against the dead host (browser caps 6 connections per host)
+  const top=setInterval(()=>{},100000);for(let i=1;i<=top;i++)clearInterval(i);
+  window.__rebooting=true;
+  say('rebooting... this page reconnects on its own');
+  try{const c=new AbortController();setTimeout(()=>c.abort(),8000);
+    const r=await fetch('/api/action',{method:'POST',body:JSON.stringify({action:'reboot'}),signal:c.signal});
+    const j=await r.json();if(!j.ok){say('reboot FAILED: '+(j.output||''));return;}
+  }catch(e){}   // server usually dies before answering - that is fine
+  const t0=Date.now();const el=()=>Math.round((Date.now()-t0)/1000)+'s';
+  // phase 1: wait for the box to actually go away (a reload now would just
+  // land on a dying server).  Give up waiting after 3 min and go to phase 2.
+  let down=false;
+  while(Date.now()-t0<180000){const s=await ping();
+    if(!s||(oldBoot&&s.boot_id&&s.boot_id!==oldBoot)){down=true;break;}
+    say('shutting down... '+el());await sleep(2000);}
+  if(!down)say('server still answering after 3 min - waiting for it to come back anyway');
+  // phase 2: wait for a *fresh* boot (new boot_id, or uptime < 5 min when the
+  // old id is unknown), then hard-navigate.  Up to 10 min.
+  while(Date.now()-t0<600000){const s=await ping();
+    if(s&&((oldBoot&&s.boot_id&&s.boot_id!==oldBoot)||(!oldBoot&&s.uptime_s!=null&&s.uptime_s<300))){
+      say('back up - reloading');await sleep(1500);
+      location.replace(location.pathname+location.search);return;}
+    say(s?'still shutting down... '+el():'waiting for the Pi to come back... '+el());
+    await sleep(3000);}
+  say('still offline after 10 min - reload manually');}
 async function loadOv(){const r=await(await fetch('/api/entities?key='+KEY)).json();
   if(r.ok)$('ov').value=r.content;}
 async function saveOv(){const r=await(await fetch('/api/entities?key='+KEY,{method:'POST',
@@ -1171,28 +1223,40 @@ async function poll(){try{
   $('ner').innerHTML='<tr><th>heard</th><th>&rarr; canonical</th><th>class</th><th>conf</th></tr>'+
     (s.corrections||[]).slice(-14).reverse().map(c=>'<tr><td class="raw">'+esc(c.surface)+
     '</td><td class="fix">'+esc(c.canonical)+'</td><td>'+esc(c.class)+'</td><td>'+esc(c.confidence)+'</td></tr>').join('');
-  $('wake').innerHTML='<tr><th>time</th><th>score</th></tr>'+
-    (s.wake_events||[]).slice(-8).reverse().map(e=>'<tr><td>'+
+  const evRows=(evs)=>'<tr><th>time</th><th>score</th></tr>'+
+    (evs||[]).slice(-8).reverse().map(e=>'<tr><td>'+
     new Date(1000*(e.ts||0)).toLocaleTimeString()+'</td><td>'+esc((e.score||0).toFixed?e.score.toFixed(3):e.score)+'</td></tr>').join('');
+  $('wake').innerHTML=evRows(s.wake_events);
+  $('stopt').innerHTML=evRows(s.stop_events);
 }catch(e){}}
-let spark=[];
-async function wakeTick(){try{
-  const w=await(await fetch('/api/wake')).json();
-  const sc=w.score!=null?w.score:0,th=w.threshold!=null?w.threshold:0.07;
-  $('wakenow').innerText=(w.live?'live ':'OFFLINE ')+sc.toFixed(3)+' / thr '+th;
-  $('wakebar').style.width=Math.min(100,100*sc/Math.max(th*2,0.01))+'%';
-  $('wakebar').style.background=sc>=th?'var(--bad)':'var(--gold)';
-  spark.push(sc);if(spark.length>200)spark.shift();
-  const c=$('spark'),g=c.getContext('2d');
+// Wake meter + Stop meter (2026-08-26): same drawing, separate feeds —
+// /api/wake scores while idle-listening, /api/stop scores while an answer
+// plays (barge-in listener). Exactly one of them is live at any moment.
+let spark=[],stopspark=[];
+function drawMeter(w,ids,buf,color,liveLabel,idleLabel,defThr){
+  const sc=w.score!=null?w.score:0,th=w.threshold!=null?w.threshold:defThr;
+  $(ids.now).innerText=(w.live?liveLabel+' ':idleLabel+' ')+sc.toFixed(3)+' / thr '+th;
+  $(ids.bar).style.width=Math.min(100,100*sc/Math.max(th*2,0.01))+'%';
+  $(ids.bar).style.background=sc>=th?'var(--bad)':color;
+  buf.push(w.live?sc:0);if(buf.length>200)buf.shift();
+  const c=$(ids.spark),g=c.getContext('2d');
   if(c.width!==c.clientWidth){c.width=c.clientWidth;c.height=64;}
   g.clearRect(0,0,c.width,c.height);
   const ymax=Math.max(th*2,0.1);
   g.strokeStyle='#f8514966';g.beginPath();
   g.moveTo(0,64-64*th/ymax);g.lineTo(c.width,64-64*th/ymax);g.stroke();
-  g.strokeStyle='#c9a227';g.beginPath();
-  spark.forEach((v,i)=>{const x=i*c.width/200,y=64-Math.min(64,64*v/ymax);
+  g.strokeStyle=color;g.beginPath();
+  buf.forEach((v,i)=>{const x=i*c.width/200,y=64-Math.min(64,64*v/ymax);
     i?g.lineTo(x,y):g.moveTo(x,y);});
   g.stroke();
+}
+async function wakeTick(){try{
+  const [w,st]=await Promise.all([fetch('/api/wake').then(r=>r.json()),
+                                  fetch('/api/stop').then(r=>r.json())]);
+  drawMeter(w,{now:'wakenow',bar:'wakebar',spark:'spark'},spark,'#c9a227',
+            'live',st.live?'answering':'OFFLINE',0.07);
+  drawMeter(st,{now:'stopnow',bar:'stopbar',spark:'stopspark'},stopspark,'#58a6ff',
+            'armed',w.live?'idle':'OFFLINE',0.02);
 }catch(e){}}
 async function sysTick(){try{
   const st=await(await fetch('/api/status')).json();

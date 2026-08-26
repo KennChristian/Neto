@@ -6,7 +6,7 @@ fail=0
 ok()   { printf '  \033[32mPASS\033[0m %s\n' "$*"; }
 bad()  { printf '  \033[31mFAIL\033[0m %s\n' "$*"; fail=$((fail+1)); }
 chk()  { local name="$1"; shift; if "$@" >/dev/null 2>&1; then ok "$name"; else bad "$name"; fi; }
-echo "== services  (verify.sh: 24 checks)"
+echo "== services  (verify.sh: 25 checks)"
 for s in reachy-mini-daemon supervaise pi-dashboard; do chk "$s active" systemctl is-active --quiet $s; done
 chk "supervaise enabled at boot" systemctl is-enabled --quiet supervaise
 chk "user session lingers (PipeWire at boot)" test -f "/var/lib/systemd/linger/$(id -un)"
@@ -22,6 +22,11 @@ chk "user@ realtime drop-in installed" test -s /etc/systemd/system/user@.service
 echo "== audio hardware"
 chk "XMOS mic array present (USB audio card)" bash -c "arecord -l | grep -qiE 'reachy|respeaker|xmos|usb'"
 chk "ALSA route reachymini_audio_src_plug defined" bash -c "arecord -L | grep -q reachymini_audio_src_plug"
+# 2026-08-26: reachy-mini-daemon rewrites ~/.asoundrc with a raw-hw config when the USB
+# card index it detects is not literally listed in the file -> "Channels count non
+# available" on every answer + barge-in mic unavailable. Our file addresses the card
+# by name and lists "card 0..4" in a comment so the daemon check passes at any index.
+chk ".asoundrc is ours (card by name, not daemon-clobbered)" bash -c "grep -q 'hw:CARD=Audio' '$HOME/.asoundrc' && grep -q 'audio_out_route' '$HOME/.asoundrc' && grep -q 'card 0 card 1 card 2' '$HOME/.asoundrc'"
 chk "XMOS firmware >= 2.1.0 (DoA)" bash -c "timeout 20 /venvs/mini_daemon/bin/python /venvs/mini_daemon/lib/python3.12/site-packages/reachy_mini/media/audio_control_utils.py VERSION | $VPY -c 'import sys,re; m=re.search(r\"VERSION: \\[(\\d+), (\\d+), (\\d+), (\\d+)\\]\", sys.stdin.read()); v=[int(x) for x in m.groups()] if m else None; sys.exit(0 if v and v[1:3] >= [2,1] else 1)'"
 chk "direction-of-arrival readable" bash -c "timeout 30 $VPY -c 'from reachy_mini.media.audio_doa import AudioDoA; d=AudioDoA(); r=d.get_DoA(); d.close(); assert r is not None' 2>/dev/null"
 echo "== python env"
