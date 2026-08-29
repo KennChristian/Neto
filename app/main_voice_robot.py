@@ -476,8 +476,7 @@ class _SpeakerDoA:
             self.max_yaw = 45.0
         self.angle, self.ts = None, 0.0
         self._doa, self._started = None, False
-        self._usb_lock = threading.Lock()   # DoA reads + LED writes share one USB handle
-        self._led_last, self._led_warned = None, False
+        self._usb_lock = threading.Lock()   # one USB control transfer at a time
 
     def start(self):
         if not self.on or self._started:
@@ -522,54 +521,8 @@ class _SpeakerDoA:
         return max(-self.max_yaw, min(self.max_yaw, y))
 
 
-    def set_led(self, effect=None, color=None, brightness=None):
-        """LED ring on the XVF3800 board (2026-08-29, user: visible listening /
-        mic-muted state). effect: chip effect id (observed: 4 = DoA direction
-        colours at boot; solid/breathe/off ids are verified with the /maintain
-        LED test buttons); color: 0xRRGGBB. Fails open, warns once."""
-        if not self.on or self._doa is None or getattr(self._doa, "_respeaker", None) is None:
-            return False
-        key = (effect, color, brightness)
-        if key == self._led_last:
-            return True
-        try:
-            with self._usb_lock:
-                rs = self._doa._respeaker
-                if color is not None:
-                    rs.write("LED_COLOR", [int(color) & 0xFFFFFF])
-                if brightness is not None:
-                    rs.write("LED_BRIGHTNESS", [int(brightness) & 0xFF])
-                if effect is not None:
-                    rs.write("LED_EFFECT", [int(effect) & 0xFF])
-            self._led_last = key
-            return True
-        except Exception as e:
-            if not self._led_warned:
-                print(f"[led] write failed ({type(e).__name__}: {e}) — LED states off")
-                self._led_warned = True
-            return False
-
-
 _speaker_doa = _SpeakerDoA()
 
-# LED ring per robot state: "effect:RRGGBB" (empty colour = keep the chip's).
-# Override any with CJ_LED_<STATE>; CJ_LED=0 disables. Effect ids are the
-# XVF3800's (boot default 4 = direction-of-arrival colours); confirm the
-# solid / breathe ids with the /maintain "LED ring" test buttons and adjust.
-_LED_DEFAULTS = {"idle": "4:", "listen": "3:2060FF", "think": "1:FFA000",
-                 "talk": "4:", "muted": "3:E02020", "off": "0:"}
-
-
-def led_state(state):
-    if os.environ.get("CJ_LED", "1").strip().lower() in {"0", "off", "false"}:
-        return
-    try:
-        spec = os.environ.get(f"CJ_LED_{state.upper()}", _LED_DEFAULTS[state])
-        eff, _, col = spec.partition(":")
-        _speaker_doa.set_led(effect=int(eff) if eff else None,
-                             color=int(col, 16) if col else None)
-    except (KeyError, ValueError):
-        pass
 
 
 class Gestures:
@@ -773,8 +726,11 @@ class Gestures:
 
     def start(self, mode):
         self.stop()
-        led_state("muted" if (mode == "sleep" and _muted()) else
-                  {"listen": "listen", "think": "think", "talk": "talk"}.get(mode, "idle"))
+        if mode == "sleep" and _muted() and self.mini:
+            # Mic muted (2026-08-29): the robot has no LEDs, so the body shows
+            # it — antennas drooped, head slightly bowed, no idle sway.
+            self._move(0, 8, 0, 0.9, antennas=[-0.6, 0.6])
+            return
         if mode == "talk":
             self.talk_style = "neutral"   # style is per-sentence; reset per answer
         elif mode == "sleep":
@@ -821,15 +777,6 @@ class Gestures:
     def manual(self, name):
         """Run one named mechanical action from the dashboard. Blocking (call
         from a thread); returns a short status string for the log."""
-        if name.startswith("led-"):   # LED ring tests / states (no motion involved)
-            what = name[4:]
-            if what.startswith("effect-"):
-                ok = _speaker_doa.set_led(effect=int(what[7:]), color=0x2060FF)
-                return f"LED effect {what[7:]} (blue) {'set' if ok else 'FAILED'}"
-            if what in _LED_DEFAULTS:
-                led_state(what)
-                return f"LED state {what}"
-            return f"unknown led action {what!r}"
         if name not in self.MANUAL:
             return f"unknown gesture {name!r}"
         if not self.mini:
@@ -2252,14 +2199,15 @@ def _wake_stream(det):
     tap = _mic_tap()
     tap.flush()   # audio that piled up while the robot was busy is not a wake
     with contextlib.nullcontext(tap) as stream:
-        muted_led, nframe = None, 0
+        muted_seen, nframe = None, 0
         while True:
             nframe += 1
-            if nframe % 12 == 0:   # ~1 Hz: mic-mute LED (red) follows the dashboard flag
+            if nframe % 12 == 0:   # ~1 Hz: mic-mute posture follows the dashboard flag
                 m = _muted()
-                if m != muted_led:
-                    muted_led = m
-                    led_state("muted" if m else "idle")
+                if m != muted_seen:
+                    muted_seen = m
+                    if _gestures_inst is not None:
+                        _gestures_inst.start("sleep")   # drooped when muted, sway when live
             if os.path.exists(ASK_TRIGGER):
                 ask = None
                 try:

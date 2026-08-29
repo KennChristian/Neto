@@ -18,7 +18,12 @@ SESSION_AVG (so answers match each other, not just their own opener); the
 first sentence of an answer is never stretched (first-audio latency) — it
 only refines the target.
 
-Env: CJ_TEMPO_SMOOTH=0 disables; CJ_TEMPO_MAX (0.06); CJ_TEMPO_ALPHA (0.5);
+Speed limit (2026-08-29 evening, user: "can we limit the speaking speed"):
+the target is capped at CJ_TEMPO_RATE_MAX chars/s (default 15.0 ≈ the median
+of the clip cache; p75 is 17.2) and sentences are only ever SLOWED
+(CJ_TEMPO_SPEEDUP=1 re-enables speeding up). A too-fast opener is slowed too.
+
+Env: CJ_TEMPO_SMOOTH=0 disables; CJ_TEMPO_MAX (0.10); CJ_TEMPO_ALPHA (0.5);
 CJ_TEMPO_DEADBAND (0.01) — stretches smaller than this are skipped.
 """
 from __future__ import annotations
@@ -96,9 +101,11 @@ class TempoSmoother:
         self.avg = None          # EMA of the (post-stretch) rate, chars/s
         self.seed = _load_session_avg()   # previous answers' tempo (may be None)
         self._n = 0
-        self.max = _f("CJ_TEMPO_MAX", 0.06)
+        self.max = _f("CJ_TEMPO_MAX", 0.10)
         self.alpha = _f("CJ_TEMPO_ALPHA", 0.5)
         self.deadband = _f("CJ_TEMPO_DEADBAND", 0.01)
+        self.rate_max = _f("CJ_TEMPO_RATE_MAX", 15.0)        # chars/s ceiling
+        self.speedup = os.environ.get("CJ_TEMPO_SPEEDUP", "0").strip() == "1"
 
     def process(self, wav: str):
         """Returns (factor, rate_before, rate_after) or None when skipped."""
@@ -117,15 +124,21 @@ class TempoSmoother:
             first = self._n == 0
             self._n += 1
         factor = 1.0
-        if first:
-            # opener: no stretch (latency); blend it into the session target
+        if first and r <= self.rate_max:
+            # opener within the limit: no stretch (latency); seed the target
             new_rate = r if self.seed is None else 0.5 * self.seed + 0.5 * r
+            new_rate = min(new_rate, self.rate_max)
             with self._lock:
                 self.avg = new_rate
             _save_session_avg(new_rate)
             return 1.0, r, r
+        if first:
+            target = self.rate_max          # too-fast opener: slow it to the ceiling
         if target:
+            target = min(target, self.rate_max)
             factor = max(1.0 - self.max, min(1.0 + self.max, target / r))
+            if not self.speedup:
+                factor = max(1.0, factor)   # limit only: never speed a sentence up
         if abs(factor - 1.0) >= self.deadband:
             try:
                 factor = stretch_wav(wav, factor)

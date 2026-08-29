@@ -285,9 +285,9 @@ _EMOTION_SPEED_DELTA = {
 def _speed_limits() -> tuple[float, float]:
     try:
         lo = float(os.environ.get("CJ_SPEED_MIN", "0.95"))
-        hi = float(os.environ.get("CJ_SPEED_MAX", "1.05"))
+        hi = float(os.environ.get("CJ_SPEED_MAX", "1.00"))   # 2026-08-29 evening: never faster than base
     except ValueError:
-        lo, hi = 0.95, 1.05
+        lo, hi = 0.95, 1.00
     lo, hi = max(0.7, lo), min(1.2, hi)
     return (lo, hi) if lo <= hi else (hi, lo)
 
