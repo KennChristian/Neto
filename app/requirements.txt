@@ -1,0 +1,38 @@
+# --- Core ----------------------------------------------------------
+anthropic>=0.40.0        # Claude — router, composer, fidelity check
+openai>=1.40.0           # Whisper STT + tts-1 TTS
+python-dotenv>=1.0.0     # multi-location .env loading (cj_chat.py)
+
+# --- Audio ---------------------------------------------------------
+# OpenAI returns MP3 bytes; pydub concatenates per-sentence chunks
+# cleanly. pydub needs ffmpeg to decode/re-encode MP3, so we also
+# ship imageio-ffmpeg which bundles the ffmpeg binary on every
+# platform — no system PATH gymnastics. voice_io.py auto-points pydub
+# at imageio_ffmpeg.get_ffmpeg_exe() when found.
+# Both packages are optional: without them, voice_io falls back to
+# raw MP3 byte concatenation (minor seam artefacts on strict players,
+# but the response still plays).
+pydub>=0.25.1
+imageio-ffmpeg>=0.4.9
+
+# --- Dashboard (Streamlit) -----------------------------------------
+streamlit>=1.40.0
+
+# --- Wake-word (PLAN-0008 Task 0) ----------------------------------
+# openWakeWord runs a sliding-window scorer on a continuous Python
+# audio stream — see PLAN-0008 §3. sounddevice gives us the mic on
+# the laptop; the same WakeWordEngine will accept a Reachy SDK
+# AudioSource later (Task 4) without changing the engine.
+# streamlit-autorefresh polls the engine's detection flag at 500 ms
+# while listening — required because background-thread detections
+# don't auto-trigger Streamlit reruns.
+openwakeword>=0.6.0
+sounddevice>=0.4.6
+streamlit-autorefresh>=1.0.1
+
+# --- Optional ------------------------------------------------------
+# numpy + scipy were used by the prior local-Whisper path; kept here
+# because some downstream tools (smoke runner percentile stats) may
+# need them. Safe to drop if you're not exercising those code paths.
+numpy>=1.24.0
+scipy>=1.10.0

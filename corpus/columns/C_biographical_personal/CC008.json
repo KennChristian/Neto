@@ -1,0 +1,384 @@
+{
+  "id": "CC008",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 8,
+  "title": "'Keep doing my best, let God do the rest'",
+  "date": "2015-01-04",
+  "year": 2015,
+  "source_url": "https://opinion.inquirer.net/81448/keep-doing-my-best-let-god-do-the-rest",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Inquirer readership over New Year holidays",
+      "Ateneo de Manila admissions committee (essay's original purpose)",
+      "Family members on both Panganiban and Yaptangco sides",
+      "Southridge School community",
+      "Young professionals seeking life-credo and goal-setting framework",
+      "CJP biographical-followers and FLP supporters",
+      "Cancer patients and Moving as One (MAO) supporters"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "early_life_sampaloc"
+    ],
+    "secondary": [
+      "family_and_marriage",
+      "faith_journey"
+    ]
+  },
+  "keywords": [
+    "year in review",
+    "DongYan wedding",
+    "Toyota School",
+    "carillon bells",
+    "book launches",
+    "Manila Cathedral",
+    "royal wedding"
+  ],
+  "primary_topics": [
+    "New Year credo column January 4, 2015 â€” features grandson Rafa P. Yaptangco's Ateneo college-admission essay",
+    "Rafa as Southridge School 4th-year student in Alabang, Muntinlupa City; essay submitted for college admission at Ateneo de Manila University",
+    "Companion to C99 last-Sunday (grandson Miguel P. Sandejas Asian Conference on the Family piece)",
+    "'Ageless Passion' musicale at CJP's 75th-birthday celebration as essay frame â€” Rafa took minor role declining to play younger-Lolo",
+    "Farmer-and-son parable: village marvels at alternating good and bad fortune; farmer responds 'Good news, bad news, who knows? I will just keep on doing my best and let God do the rest' â€” adopted as Rafa's life-mantra and reused as column title",
+    "CJP's rags-to-riches biographical sweep quoted by grandson (Sampaloc newsboy to CJ)",
+    "Sampaloc newsboy â†’ Inquirer presidency; ignorant Catholic â†’ advisor to the Holy Father in the Vatican; frustrated grad-school applicant â†’ father of 5 US-pedigreed-university graduates; shoeshine boy â†’ blue-chip boardrooms; frustrated chemical engineer â†’ reluctant lawyer â†’ highest magistrate of the land",
+    "Choir of 20-or-so boys raising funds for their school as Rafa's first poverty-exposure experience",
+    "Rafa's Southridge leadership: cofounder of Admirals Business Club + LÃ©ger de Main (cardistry, illusions and deceptions club)",
+    "Concert in partnership with Moving as One (MAO) raising awareness for cancer patients; Southridge philosophy of 'forming men of integrity' acknowledgment"
+  ],
+  "sub_topics": [
+    "Christmas and New Year as grand occasions for family bonding and rejoicing",
+    "Last Sunday CJP featured grandson Miguel P. Sandejas (C99); this Sunday grandson Rafa P. Yaptangco",
+    "Rafa essay submitted to secure college admission at Ateneo de Manila University",
+    "'Ageless passion is what propelled my grandfatherâ€¦ in his rise from rags to riches, not in worldly wealth but in his multi-career fulfillment'",
+    "Life story so compelling and moving it was brought to glory in a musicale for his 75th-birthday celebration",
+    "Opening message of musicale: farmer-and-son parable with 'good news, bad news, who knows? I will just keep on doing my best and let God do the rest'",
+    "This has now become Rafa's mantra in life",
+    "Rafa was asked to represent younger version of CJP in 'Ageless Passion' musicale but politely turned down (fear of singing) and settled for minor role â€” in hindsight should have taken the challenge",
+    "Experience exposed Rafa to a different perspective: poverty both in storyline and amongst performers, most notably the choir of 20 or so boys performing to raise funds for their school",
+    "Musicale tells of CJP's: newsboy from backstreets of Sampaloc, Manila to presidency of Philippine Daily Inquirer",
+    "From ignorant Catholic to advisor to Holy Father in Vatican",
+    "From frustrated applicant for graduate studies to father of 5 wonderful children who each achieved his impossible dream of graduating from pedigreed US university",
+    "From shoeshine boy to boardrooms of largest blue chips in our part of Planet Earth",
+    "From frustrated chemical engineer to reluctant lawyer to highest magistrate of the land",
+    "Rafa taken aback at story of CJP's life â€” 'absolutely amazed me'",
+    "Before this, Rafa thought of Lolo as just caring father to his Mom who loved Sunday family dinners",
+    "Realization of CJP's character and ageless passion â€” Lolo became his idol with infinite respect",
+    "'He shows that anyone willing to contribute a great deal of hard work for a better future can, indeed, have a better future'",
+    "Rafa: 'extremely lucky to have been born into circumstances where finance is not a problem and infinitely grateful to be the grandson of a man so industrious'",
+    "Goal: to make Lolo proud â€” just being successful is not enough; employ ageless passion through Lolo's life story",
+    "CJP still in board of numerous big-name companies; dinner-table talk often about law and business",
+    "Rafa cofounded Admirals Business Club of Southridge â€” managing numerous concerts including one for cancer patients in partnership with Moving as One (MAO)",
+    "Cofounded LÃ©ger de Main â€” cardistry, illusions and deceptions club at Southridge â€” teaching card tricks/magic to instill values of confidence and composure in public performances",
+    "As leader, drove both groups to be more unique organizations in Southridge; passed down leadership system for continuity post-graduation",
+    "Thanked Southridge philosophy of forming men of integrity, parents/brother/relatives/friends, but most of all not to stray from valuable lesson of farmer's parable",
+    "'Already, I can see myself on the right track to making my Lolo proud. Obviously, it will not be a straight path to my goal; there will be highs and lows. Good news, bad news, who knows? I will just keep doing my best and let God do the rest' â€” circular close",
+    "Same farmer-credo as opening creates structural bookend"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Good news, bad news, who knows?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Keep doing my best and let God do the rest",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "ageless passion",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rags to riches",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "multi-career fulfillment",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "highest magistrate of the land",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "blue chips in our part of Planet Earth",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Rafa P. Yaptangco (grandson essay author; Southridge School 4th-year)",
+      "CJP (subject of essay)",
+      "Miguel P. Sandejas (grandson, C99 author, brother / half-brother reference)",
+      "CJP's Mom (Rafa's mother / CJP's daughter)"
+    ],
+    "institutions": [
+      "Southridge School (Alabang, Muntinlupa City)",
+      "Ateneo de Manila University (Rafa's college-admission target)",
+      "Admirals Business Club of Southridge (Rafa cofounder)",
+      "LÃ©ger de Main cardistry/illusions/deceptions club of Southridge (Rafa cofounder)",
+      "Moving as One (MAO) cancer-patient awareness partner",
+      "Philippine Daily Inquirer (CJP presidency)",
+      "Vatican (CJP advisory role)",
+      "Supreme Court of the Philippines (CJP CJ post)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "CJP's 75th-birthday celebration â€” 'Ageless Passion' musicale",
+      "Rafa took minor role in musicale rather than play younger-CJP",
+      "Admirals Business Club cancer-awareness concert (MAO partnership)",
+      "Southridge graduation upcoming"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Christmas and the New Year are grand occasions for family bonding and rejoicing â€” last Sunday CJ featured grandson Miguel P. Sandejas's sharing (C99); today, an essay from another grandson, Rafa P. Yaptangco, a fourth-year student at Southridge School submitted for college admission at Ateneo de Manila",
+      "rhetorical_move": "family-bonding setup + back-reference to C99 + introduction of Rafa",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "(Rafa speaks) 'Ageless passion is what propelled my grandfather, retired Chief Justice Artemio V. Panganiban, in his rise from rags to riches â€” not in worldly wealth but in his multi-career fulfillment; his life story is so compelling and moving that it was brought to glory in a musicale for his 75th-birthday celebration'",
+      "rhetorical_move": "tribute-thesis opening of grandson's essay",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "(Rafa) The opening message of the musicale comes from one of Lolo's favorite stories â€” a farmer-and-son parable about alternating good and bad fortune, to which the farmer always answered 'Good news, bad news, who knows? I will just keep on doing my best and let God do the rest' â€” this has now become Rafa's mantra in life",
+      "rhetorical_move": "farmer-parable as central life-mantra delivery",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "(Rafa) The musicale tells of CJP's transformations: from newsboy from the backstreets of Sampaloc to Inquirer presidency; from ignorant Catholic to Vatican adviser; from frustrated grad applicant to father of 5 US-pedigreed-university graduates; from shoeshine boy to blue-chip boardrooms; from frustrated chemical engineer to reluctant lawyer to highest magistrate of the land",
+      "rhetorical_move": "rags-to-riches biographical-sweep enumeration (5-arc)",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "(Rafa) Realization of Lolo's character and ageless passion: 'Lolo became my idol, the person I hope to eventually be like, the person whom I have infinite respect for â€” he shows that anyone willing to contribute a great deal of hard work for a better future can, indeed, have a better future'",
+      "rhetorical_move": "idol-elevation + universal-applicability claim",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "(Rafa) 'I am extremely lucky to have been born into circumstances where finance is not a problem and infinitely grateful to be the grandson of a man so industrious' â€” privilege-acknowledgment paired with industriousness-gratitude",
+      "rhetorical_move": "privilege-acknowledgment self-positioning",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "(Rafa) Following Lolo's life story has set general goal: to make Lolo proud â€” this threw life around, as Rafa did not have a life goal in mind; to just be successful is not enough; now sees a light at end of tunnel: to employ the ageless passion Lolo has taught through his life story",
+      "rhetorical_move": "goal-direction transformation as essay's narrative arc",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "(Rafa, close) Already can see himself on the right track to making Lolo proud; obviously not a straight path â€” there will be highs and lows; 'Good news, bad news, who knows? I will just keep doing my best and let God do the rest' â€” circular farmer-parable close creates structural bookend",
+      "rhetorical_move": "circular-credo close as structural bookend",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Rafa as Southridge 4th-year student; essay for Ateneo college admission",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Companion column to C99 (Miguel Sandejas piece last Sunday)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "'Ageless Passion' musicale at CJP's 75th-birthday celebration",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Rafa declined to play younger-CJP role due to fear of singing, took minor role",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Choir of 20-or-so boys raising funds for their school â€” Rafa's first poverty-exposure",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Sampaloc newsboy origin story",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Inquirer presidency arc",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Vatican adviser arc (ignorant Catholic to Holy Father adviser)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Frustrated grad-school applicant + father of 5 US-pedigreed-university graduates",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Shoeshine boy to blue-chip boardrooms",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Frustrated chemical engineer to reluctant lawyer to CJ â€” 'reluctant lawyer' framing notable",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Rafa's Admirals Business Club concert for cancer patients with Moving as One (MAO)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Rafa's LÃ©ger de Main cardistry/illusions/deceptions club",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Leadership-handoff system to continue both clubs post-graduation",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJP still in board of numerous big-name companies; dinner-table law and business talk",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "'Good news, bad news, who knows?' farmer-parable bookend",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "Farmer-parable credo: 'Good news, bad news, who knows? Keep doing best, let God do rest' as life-orientation framework",
+    "Ageless-passion as multi-career-fulfillment driver",
+    "Rags-to-riches as not-worldly-wealth but career-arc framework",
+    "Idol-modeling pedagogy: study elder's life to set goals",
+    "Privilege-plus-industriousness self-positioning",
+    "Goal-direction transformation: success-not-enough + employ-the-passion",
+    "Leadership-handoff-system for organizational continuity"
+  ],
+  "target_audience": [
+    "Inquirer readership over New Year holidays",
+    "Ateneo de Manila admissions committee (essay's original purpose)",
+    "Family members on both Panganiban and Yaptangco sides",
+    "Southridge School community",
+    "Young professionals seeking life-credo and goal-setting framework",
+    "CJP biographical-followers and FLP supporters",
+    "Cancer patients and Moving as One (MAO) supporters"
+  ],
+  "register_markers": [
+    "grandson-essay-feature format (companion to C99)",
+    "minimal CJ-editorial intervention â€” full essay quoted",
+    "family-bonding setup + back-reference to last Sunday",
+    "farmer-parable opening + circular close structural bookend",
+    "rags-to-riches biographical-sweep enumeration (5-arc)",
+    "idol-elevation + universal-applicability claim",
+    "privilege-acknowledgment self-positioning",
+    "goal-direction transformation narrative arc",
+    "'reluctant lawyer' notable framing",
+    "'highest magistrate of the land' formal title-phrasing",
+    "'blue chips in our part of Planet Earth' regional-pride phrasing"
+  ],
+  "one_paragraph_summary": "Panganiban opens by noting that Christmas and the New Year are grand occasions for family bonding and rejoicing â€” last Sunday he featured a sharing by grandson Miguel P. Sandejas (C99); today he presents an essay by another grandson, Rafa P. Yaptangco, a fourth-year student at Southridge School in Alabang submitted to secure college admission at Ateneo de Manila University. Rafa's essay begins: 'Ageless passion is what propelled my grandfather, retired Chief Justice Artemio V. Panganiban, in his rise from rags to riches, not in worldly wealth but in his multi-career fulfillment. His life story is so compelling and so moving that it, deservedly so, was brought to glory in a musicale for his 75th birthday celebration.' The opening message of the musicale comes from one of Lolo's favorite stories â€” about a farmer and his 20-year-old son experiencing good fortune, then bad fortune, then good fortune again, back and forth. The whole village would go to the farmer and marvel at his good fortune or show empathy at his bad fortune; and to everything, the farmer simply answered, 'Good news, bad news, who knows? I will just keep on doing my best and let God do the rest.' This has now become Rafa's mantra in life. Thinking back, Rafa never really appreciated who Lolo was until asked to represent the younger version of him in that musicale, titled 'Ageless Passion.' Cringing at fear of singing to a large audience, he politely turned down that opportunity and settled for a minor role; in hindsight he should have taken the challenge. During the experience he saw a different perspective he would not have been able to experience in his immediate society: poverty, both in the storyline and amongst the performers â€” most notably the choir, composed of 20 or so boys performing to raise funds for their school. The musicale tells of CJP's transformations: from newsboy from the backstreets of Sampaloc, Manila to the presidency of the Philippine Daily Inquirer; from an ignorant Catholic to an advisor to the Holy Father in the Vatican; from a frustrated applicant for graduate studies to father of five wonderful children who each achieved his impossible dream of graduating from a pedigreed US university; from a shoeshine boy to the boardrooms of the largest blue chips in our part of Planet Earth; and from a frustrated chemical engineer to a reluctant lawyer to the highest magistrate of the land. Rafa was taken aback at the story of Lolo's life â€” back then all he really thought of him was a caring father to his Mom who loved (and still does) to take the family out to Sunday dinners. Upon really understanding what Lolo has gone through, it absolutely amazed Rafa. It is incredibly hard to believe that all this was achieved by a single person â€” and it was done by Lolo. It was then Rafa realized what character he had and the ageless passion he has radiated; it was then Lolo became his idol, the person he hopes to eventually be like, the person for whom he has infinite respect. He shows that anyone willing to contribute a great deal of hard work for a better future can, indeed, have a better future. Rafa is extremely lucky to have been born into circumstances where finance is not a problem and infinitely grateful to be the grandson of a man so industrious. Following Lolo's life story, Rafa has set out with the general goal: to make Lolo proud. This threw life around, as he did not really have a life goal in mind at that time; to just be successful is not enough. Rafa now sees a light at the end of the tunnel: to employ the ageless passion Lolo has taught him through his life story. Even now, Lolo continues to work hard as he is in the board of numerous big-name companies; most of the things he talks about at the dinner table are about law and business â€” this just goes to show how dedicated to his work he is, and Rafa strives to someday achieve that. Rafa has gone on to cofound the Admirals Business Club of Southridge, managing numerous concerts including one to raise awareness for cancer patients in partnership with Moving as One (MAO), money earned given to charity. He has also cofounded LÃ©ger de Main, a cardistry, illusions, and deceptions club, teaching people card tricks and other forms of magic â€” hoping to instill values of confidence and composure in public performances. As leader he has driven both groups to be more unique organizations in Southridge, setting up a leadership-handoff system to ensure continuity post-graduation. In all this Rafa is thankful for Southridge's philosophy of forming men of integrity, grateful for his parents, older brother, relatives, and good friends â€” but most of all knows he must not stray from the valuable lesson of the farmer in Lolo's story. Already he can see himself on the right track to making Lolo proud. Obviously, it will not be a straight path to the goal; there will be highs and lows. 'Good news, bad news, who knows? I will just keep doing my best and let God do the rest' â€” circular bookend to the farmer-parable opening."
+}

@@ -1,0 +1,32 @@
+version: 1.0.0
+
+# Core module — always active, no relevance scoring
+core: core/module.yaml
+
+# Optional modules — activated by relevance scoring against project profile
+modules:
+  - modules/data-contracts/module.yaml
+  - modules/verification/module.yaml
+  - modules/planning/module.yaml
+  - modules/docs-retrieval/module.yaml
+
+# Cross-cutting pattern library — available to all projects
+patterns:
+  anti_patterns: patterns/anti-patterns/
+  decision_guides: patterns/decision-guides/
+  test_patterns: patterns/test-patterns/
+
+# Claude Code skills — suggested based on tech signals
+skills:
+  - id: frontend-hook
+    path: .claude/skills/frontend-hook/
+    relevance:
+      tech_signals: ["react", "tanstack-query", "typescript"]
+  - id: zod-schema
+    path: .claude/skills/zod-schema/
+    relevance:
+      tech_signals: ["zod", "typescript"]
+  - id: web-design-guidelines
+    path: .claude/skills/web-design-guidelines/
+    relevance:
+      tech_signals: ["html", "css", "tailwind", "react"]

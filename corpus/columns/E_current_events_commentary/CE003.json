@@ -1,0 +1,155 @@
+{
+  "id": "CE003",
+  "type": "column",
+  "theme": "E",
+  "theme_label": "Signature Current Events Commentary",
+  "number": 3,
+  "title": "Relentless defender of PH sovereignty",
+  "date": "2026-03-30",
+  "year": 2026,
+  "source_url": "https://opinion.inquirer.net/190728/relentless-defender-of-ph-sovereignty",
+  "routing": {
+    "primary_intent": [
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes"
+    ],
+    "secondary": [
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "sovereignty",
+    "West Philippine Sea",
+    "Carpio",
+    "arbitral award",
+    "rule of law"
+  ],
+  "primary_topics": [
+    "Antonio T. Carpio's career as defender of Philippine sovereignty",
+    "West Philippine Sea legal advocacy and 'lawfare'",
+    "historical and treaty-based documentation of Philippine territorial claims"
+  ],
+  "sub_topics": [
+    "Turnover of historic '1875 Carta General del ArchipiÃ©lago Filipino' to the National Library",
+    "Carpio's call for a new arbitration case against China over Scarborough Shoal fishermen's rights",
+    "Carpio's 18 years on the Supreme Court",
+    "almost-decade as longest-serving Senior Associate Justice (SAJ)",
+    "SAJ as a distinct statutory rank for the longest-sitting member",
+    "the 2016 Permanent Court of Arbitration award against China",
+    "'lawfare' as use of legal mechanisms (arbitration) instead of military confrontation",
+    "UNCLOS framework",
+    "Treaty of Paris (1898), Treaty of Washington (1900) as historical/legal bases for Philippine sovereignty",
+    "the 1875 Carta General as the most comprehensive Spanish-colonial-era Philippine territorial map"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "FOR THOSE WHO ADMIRE SAJ TONY'S CAREER",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "clarion call",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "calmly but firmly",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "relentless defender",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Parenthetically (recurring CJ device)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "principled and sustained advocacy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "lawfare",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rules-based approach",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "lifelong defender of liberty and prosperity under the rule of law (recurring CJ formulation)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [],
+    "institutions": [],
+    "cases": [],
+    "laws_treaties": [],
+    "events": []
+  },
+  "stances": [],
+  "notable_anecdotes": [
+    {
+      "summary": "Turnover ceremony of the '1875 Carta General del ArchipiÃ©lago Filipino' to the National Library, where Carpio used the occasion to urge a new arbitration case over Scarborough Shoal",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ explains the SAJ honorific: it is a 'distinct rank granted by law to the sitting Court member serving the longest, compared to his/her current colleagues' â€” Carpio held it for almost a decade",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 2016 arbitral award won by the Philippines against China at the Permanent Court of Arbitration as Carpio's signature lawfare triumph",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [],
+  "target_audience": [],
+  "register_markers": [],
+  "one_paragraph_summary": ""
+}

@@ -1,0 +1,59 @@
+id: data-contracts
+name: Data Contracts (ODCS v3.1.0)
+version: 1.0.0
+description: >
+  Generate and govern Open Data Contract Standard (ODCS v3.1.0) contracts for
+  structured data outputs. Supports CSV, DB table, API response, and in-memory
+  config archetypes with quality rule catalogs and optional drift detection hooks.
+
+relevance:
+  file_signals:
+    - pattern: "**/*.csv"
+      locations: ["outputs/", "exports/", "data/"]
+      weight: 3
+    - pattern: "**/*.parquet"
+      weight: 2
+    - pattern: "*.sql"
+      locations: ["migrations/", "scripts/"]
+      weight: 2
+  code_signals:
+    - pattern: "CREATE TABLE|CREATE VIEW"
+      weight: 3
+    - pattern: "superset|metabase|grafana|tableau|looker"
+      case_insensitive: true
+      weight: 2
+    - pattern: "@dataclass|TypedDict"
+      weight: 1
+  tech_signals:
+    - tech: "postgresql"
+      weight: 2
+    - tech: "pandas"
+      weight: 1
+  threshold: 4
+  max_score: 16
+
+bootstrap:
+  phase_name: "Data Contracts"
+  phase_order: 10.5
+
+prompt: prompt.md
+
+templates:
+  - datacontracts-claude-md.md
+  - odcs-contract-csv.yaml
+  - odcs-contract-db-table.yaml
+  - odcs-contract-api-response.yaml
+  - odcs-contract-inmemory-config.yaml
+  - odcs-quality-rules-catalog.md
+
+scripts:
+  - check-contract-drift.sh
+
+hooks:
+  - settings-fragment.json
+
+test_patterns:
+  - contract-validation.md
+
+lessons:
+  - anti-patterns.md

@@ -1,0 +1,88 @@
+# {NAME} — {ONE_LINE_DESCRIPTION}
+# See: docs/datacontracts/CLAUDE.md for conventions
+kind: DataContract
+apiVersion: v3.1.0
+id: dc-{KEBAB_NAME}-001
+version: 1.0.0
+status: draft
+name: "{NAME}"
+domain: {DOMAIN}
+dataProduct: {DATA_PRODUCT}
+
+description:
+  purpose: |
+    {PURPOSE}
+  limitations: |
+    {LIMITATIONS}
+  usage: |
+    {USAGE}
+
+# Optional: Link to specs, code, tests (STANDARD/COMPREHENSIVE mode)
+# authoritativeDefinitions:
+#   - type: specification
+#     url: {SPEC_PATH}
+#     description: {SPEC_DESCRIPTION}
+#   - type: codeRepository
+#     url: {CODE_PATH}
+#     description: {CODE_DESCRIPTION}
+#   - type: testSuite
+#     url: {TEST_PATH}
+#     description: {TEST_DESCRIPTION}
+
+# No servers block — in-memory configs are not persisted to external systems.
+# If the config is serialized for caching or transfer, use the csv or api-response template instead.
+
+schema:
+  - id: {SCHEMA_ID}
+    name: {SCHEMA_NAME}
+    logicalType: object
+    businessName: "{NAME}"
+    description: |
+      {SCHEMA_DESCRIPTION}
+    dataGranularityDescription: "{GRANULARITY}"
+    tags: [{TAGS}]
+    quality:
+      # In-memory configs typically have conformity rules rather than completeness
+      - id: qr-{RULE_ID}
+        name: "{RULE_NAME}"
+        type: custom
+        dimension: conformity
+        severity: error
+        description: |
+          {RULE_DESCRIPTION}
+      # Add more quality rules from the catalog
+    properties:
+      # Repeat this block for each field in the dataclass/struct/interface:
+      - id: {FIELD_NAME}
+        name: {FIELD_NAME}
+        logicalType: {LOGICAL_TYPE}  # string | integer | number | boolean
+        required: {true_or_false}
+        description: |
+          {FIELD_DESCRIPTION}
+        # examples: [{EXAMPLES}]
+        # quality:
+        #   - id: qr-{FIELD_NAME}-valid
+        #     name: "Valid {FIELD_NAME}"
+        #     type: custom
+        #     dimension: conformity
+        #     severity: error
+        #     description: "{VALIDATION_DESCRIPTION}"
+
+# Optional: SLA properties — typically only freshness for derived configs
+# slaProperties:
+#   - property: freshness
+#     description: "{FRESHNESS_DESCRIPTION}"
+#     customProperties:
+#       - property: gate
+#         value: "{FRESHNESS_GATE_COMMAND}"
+
+# Optional: Custom properties (COMPREHENSIVE mode)
+# customProperties:
+#   - property: outputType
+#     value: "in-memory dataclass (not persisted)"
+#     description: "Config is derived at runtime, not written to disk"
+#   - property: dataSource
+#     value: "{SOURCE_DESCRIPTION}"
+#     description: "Where the config's input data comes from"
+
+contractCreatedTs: "{CREATED_TIMESTAMP}"

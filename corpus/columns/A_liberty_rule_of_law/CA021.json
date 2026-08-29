@@ -1,0 +1,250 @@
+{
+  "id": "CA021",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 21,
+  "title": "An amparo success, though not yet complete",
+  "date": "2024-05-13",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/173652/an-amparo-success-though-not-yet-complete",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Lawyers, law students, and bar examinees (explicitly named at close)",
+      "Activists vulnerable to Red-tagging (journalists, students, laborers, jeepney drivers, ordinary citizens)",
+      "Constitutional-law scholars and historians of the writ",
+      "Civic readers tracking SC jurisprudence on protection of rights"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine",
+      "supreme_court_history"
+    ],
+    "secondary": [
+      "due_process",
+      "bar_exam_and_legal_education"
+    ]
+  },
+  "keywords": [
+    "writ of amparo",
+    "Deduro v. Vinoya",
+    "Red-tagging",
+    "Justice Rodil V. Zalameda",
+    "Adolfo Azcuna",
+    "extralegal killings",
+    "enforced disappearances"
+  ],
+  "primary_topics": [
+    "Supreme Court's writ of amparo in Deduro v. Vinoya (July 4, 2023, released May 8, 2024) to protect a Red-tagged petitioner",
+    "Distinguishing the 'writ of amparo' (prima facie issuance) from the 'privilege of the writ of amparo' (substantial-evidence summary proceedings)",
+    "Coverage of the writ: (a) extralegal killings, (b) enforced disappearances, (c) threats thereof",
+    "Red-tagging as a form of harassment that can trigger amparo because the Red-tagged person becomes a target of vigilantes, paramilitary groups, or state agents"
+  ],
+  "sub_topics": [
+    "39-page Zalameda ponencia unanimously concurred in â€” treatise on (1) purpose, (2) coverage, (3) parties, (4) legal process",
+    "Origin of amparo: from Mexico, expounded by Prof. HÃ©ctor Fix-Zamudio; J Azcuna as 'Father of the Writ of Amparo in the Philippines'",
+    "1971 Constitutional Convention â€” Azcuna proposed inclusion, failed because few understood",
+    "1986 Constitutional Commission â€” Azcuna tried again; CJ Roberto Concepcion convinced him to incorporate in SC powers instead of Bill of Rights",
+    "Writ vs privilege distinction analogous to (but not identical to) preliminary vs permanent injunction in civil cases",
+    "Evidentiary standards: prima facie (writ) â†’ substantial evidence (privilege); contrasted with preponderance in civil and proof beyond reasonable doubt in criminal",
+    "UN-instrument definition of extralegal killings â€” without due process, regardless of motive, by state or non-state actors",
+    "RA 10353 definition of enforced disappearance â€” deprivation of liberty by State agents (or with State authorization) plus refusal to acknowledge or concealment of fate/whereabouts",
+    "SND v. Manalo (Oct 7, 2008) â€” 'right to security is actually freedom from threats that can exist independently of the right to liberty'",
+    "Deduro must still produce substantial evidence at the summary hearings to obtain the privilege"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "a victory of activists, i.e., journalists, students, laborers, jeepney drivers, and even plain citizens peacefully exercising their freedom of expression via public rallies, writings, speeches, and body language like fist clenching, sneering, gesticulating, and staring",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "expertly penned by Justice Rodil V. Zalameda",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a well-written treatise",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the writ of amparo is a good start but to complete his victory, he must produce 'substantial evidence'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Father of the Writ of Amparo in the Philippines",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Curiosity impelled me to ask the eminent J Azcuna",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "any 'threat to the rights to life, liberty, or security is an actionable wrong'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an actionable wrong",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "it could erupt in another bar exam",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author)",
+      "Justice Rodil V. Zalameda (ponente, Deduro v. Vinoya)",
+      "Retired Justice Adolfo S. Azcuna (1991 bar examiner; 'Father of the Writ of Amparo')",
+      "Prof. HÃ©ctor Fix-Zamudio (Mexican scholar)",
+      "CJ Roberto Concepcion (1986 Constitutional Commission)",
+      "Petitioner Siegfred Deduro (Red-tagged)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "1971 Constitutional Convention",
+      "1986 Constitutional Commission",
+      "United Nations (definitional source for extralegal killings)"
+    ],
+    "cases": [
+      "Deduro v. Vinoya (July 4, 2023, released May 8, 2024) â€” writ of amparo issued for Red-tagging victim",
+      "SND v. Manalo (Oct 7, 2008) â€” right to security independent of right to liberty"
+    ],
+    "laws_treaties": [
+      "Republic Act No. 10353 (Anti-Enforced Disappearance Act)",
+      "1973 Constitution (Azcuna's failed amparo proposal)",
+      "1987 Constitution (amparo enshrined in SC powers)",
+      "UN instruments on extralegal killings"
+    ],
+    "events": [
+      "1991 bar exam â€” Azcuna's amparo question",
+      "1971 Constitutional Convention",
+      "1986 Constitutional Commission",
+      "July 4, 2023 â€” Deduro v. Vinoya decision",
+      "May 8, 2024 â€” public release of decision"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The writ of amparo issuance in Deduro v. Vinoya is a 'victory of activists' (journalists, students, laborers, jeepney drivers, plain citizens) exercising freedom of expression via rallies, writings, speeches, and body language â€” but it is only a 'good start' because Deduro must still produce substantial evidence at the summary proceedings to obtain the actual 'privilege of the writ.'",
+      "rhetorical_move": "celebrate-but-qualify framing distinguishing writ from privilege",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Retired Justice Adolfo S. Azcuna deserves the title 'Father of the Writ of Amparo in the Philippines' for his untiring spade work â€” proposing it as a 1971 ConCon delegate (failing because few understood), trying again at the 1986 ConCom (where CJ Concepcion redirected it to SC powers from the Bill of Rights), and crystallizing the concept first encountered in Prof. Fix-Zamudio's Mexican exposition.",
+      "rhetorical_move": "institutional-paternity attribution with historical-chronology evidence",
+      "confidence": "asserted as personal recognition",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The 'writ of amparo' (ex parte issuance on prima facie face-of-petition showing) must be carefully distinguished from the 'privilege of the writ of amparo' (granted after summary hearings on substantial evidence), analogous to but not identical with preliminary injunction (ex parte) vs permanent injunction (post-trial) in civil cases â€” with the evidentiary scale running prima facie â†’ substantial evidence (amparo) vs preponderance (civil) vs proof beyond reasonable doubt (criminal).",
+      "rhetorical_move": "doctrinal-distinction with civil-criminal evidentiary mapping",
+      "confidence": "asserted as pedagogical clarification",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Red-tagging is a form of harassment that constitutes a cognizable cause to invoke the writ of amparo because the Red-tagged person becomes a target of vigilantes, paramilitary groups, or even state agents â€” the Red-tagged individual's fear of being killed or illegally abducted is therefore an 'actionable wrong' under SND v. Manalo's doctrine that the right to security exists independently of the right to liberty.",
+      "rhetorical_move": "third-party-violence-risk argument grounded in security-independent-of-liberty doctrine",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "CJ's personal recollection of asking the eminent J Azcuna how the writ came about â€” receiving the reply that it originated from Mexico, was expounded by Prof. HÃ©ctor Fix-Zamudio, and was twice carried by Azcuna into Philippine constitutional drafting (1971 ConCon failure, 1986 ConCom success after CJ Concepcion's redirection) â€” used to bestow the title 'Father of the Writ of Amparo.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 1991 bar exam question by Azcuna asking about the writ's intent and constitutional basis â€” 'very few answered correctly,' confirming the doctrinal obscurity of amparo even within the bar at that time.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The vivid taxonomy of expressive behaviors covered as activist freedom-of-expression: 'public rallies, writings, speeches, and body language like fist clenching, sneering, gesticulating, and staring' â€” applying constitutional protection to gestural and somatic expression.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing semi-joke that Zalameda's treatise is so comprehensive 'it could erupt in another bar exam' â€” connecting the column back to the 1991 bar question that opened it.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses writ-vs-privilege distinction as primary doctrinal lens",
+    "maps evidentiary thresholds across writ, civil, and criminal cases for comparative grounding",
+    "treats institutional-paternity (Azcuna) as legitimate basis for recognition independent of strict authorship",
+    "applies third-party-violence-risk analysis to recognize Red-tagging as an actionable threat",
+    "anchors right-to-security as an independent right separable from right-to-liberty (SND v. Manalo)",
+    "uses bar-exam relevance as proxy for doctrinal importance"
+  ],
+  "target_audience": [
+    "Lawyers, law students, and bar examinees (explicitly named at close)",
+    "Activists vulnerable to Red-tagging (journalists, students, laborers, jeepney drivers, ordinary citizens)",
+    "Constitutional-law scholars and historians of the writ",
+    "Civic readers tracking SC jurisprudence on protection of rights"
+  ],
+  "register_markers": [
+    "doctrinal-treatise register celebrating the Zalameda ponencia",
+    "constitutional-history register (1971 ConCon, 1986 ConCom, J Azcuna's role)",
+    "comparative-evidentiary mapping (prima facie / substantial / preponderance / beyond reasonable doubt)",
+    "Mexican-origin attribution with foreign-scholar citation (Prof. Fix-Zamudio)",
+    "vivid-list rhetoric of expressive behaviors ('fist clenching, sneering, gesticulating, staring')",
+    "honorific-title bestowal ('Father of the Writ of Amparo')",
+    "bar-exam framing as opening and closing device",
+    "deferred-discussion close ('For lack of space, I can no longer discuss the third and fourth items')"
+  ],
+  "one_paragraph_summary": "Panganiban celebrates the Supreme Court's unanimous ruling in Deduro v. Vinoya (July 4, 2023, released May 8, 2024) â€” a 39-page treatise expertly penned by Justice Rodil V. Zalameda â€” issuing the writ of amparo to a Red-tagged petitioner, calling it 'a victory of activists' from journalists and students to laborers, jeepney drivers, and plain citizens exercising freedom of expression via rallies, writings, speeches, and even body language like fist clenching, sneering, and staring. He carefully distinguishes the 'writ of amparo' (ex parte issuance on prima facie face-of-petition showing) from the 'privilege of the writ of amparo' (granted only after summary hearings on substantial evidence), analogizing to but distinguishing from preliminary vs permanent injunction in civil cases. He bestows on retired Justice Adolfo S. Azcuna the title 'Father of the Writ of Amparo in the Philippines' â€” Azcuna, as 1991 bar examiner, asked the question very few answered correctly, having earlier proposed inclusion of the writ in the 1973 Constitution (failed) and the 1986 Bill of Rights (redirected to SC powers by CJ Roberto Concepcion). He explains the writ's coverage of (a) extralegal killings, (b) enforced disappearances (per RA 10353), and (c) threats thereof â€” including, per SND v. Manalo (Oct 7, 2008), threats to security existing independently of deprivation of liberty â€” making Red-tagging a cognizable cause of action because the Red-tagged person becomes a target of vigilantes, paramilitary groups, or state agents. Deduro must still produce substantial evidence at the summary proceedings to obtain the actual privilege. CJ defers parties and process to law students because the treatise 'could erupt in another bar exam.'"
+}

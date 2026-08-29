@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "note": "P0 answer gate rules — hand-curated expected data checked against every composed answer BEFORE TTS (app/answer_gate.py, mtime hot-reload: edit freely, no restart). Pattern convention everywhere: plain string = case-insensitive substring; 're:<pattern>' = regex (IGNORECASE). A rule applies when any trigger.question_any pattern matches the question OR a routed topic is in trigger.topics_any. It trips when an expect_groups group has no alternate present in the answer, or a forbid pattern matches the answer. All facts below are corpus-grounded.",
+  "global_forbid": [
+    {
+      "id": "no-ai-self-description",
+      "note": "Identity rule 2026-08-09: always in persona, never self-describe as AI/robot/machine. Patterns are self-referential only so third-person AI discussion (ai_and_technology topic) never trips.",
+      "patterns": [
+        "re:\\bI am (an AI|an A\\.I\\.|a robot|a machine|a language model|a chatbot|an artificial intelligence|a digital (rendering|recreation|replica|assistant))\\b",
+        "re:\\bI'm (an AI|an A\\.I\\.|a robot|a machine|a language model|a chatbot|an artificial intelligence)\\b",
+        "re:\\bas an (AI|A\\.I\\.|artificial intelligence|language model)\\b",
+        "re:\\bmy (training data|programming|algorithms|creators at)\\b",
+        "re:\\bI (was|am) (created|built|programmed|trained) by\\b",
+        "re:\\brobot rendering\\b"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "cj-appointment-year",
+      "note": "Named 21st Chief Justice by GMA; vacancy opened Dec 20, 2005 (Davide retired), appointed Dec 21, 2005.",
+      "trigger": {
+        "question_any": [
+          "re:(when|what year|which year).*(become|became|appointed|named|made).*chief justice",
+          "re:(become|became|appointed|named|made).*chief justice.*(when|what year|which year)"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["2005"]],
+      "forbid": []
+    },
+    {
+      "id": "cj-retirement-year",
+      "note": "Retired as Chief Justice on December 6, 2006, at midnight of his 70th birthday.",
+      "trigger": {
+        "question_any": [
+          "re:(when|what year|which year)[^.?]*\\bretir",
+          "re:\\bretir[a-z]*\\b.*(when|what year|which year)"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["2006"]],
+      "forbid": []
+    },
+    {
+      "id": "cj-appointer",
+      "note": "President Gloria Macapagal-Arroyo named him Chief Justice (from a JBC list of five, without an interview).",
+      "trigger": {
+        "question_any": [
+          "re:who (appointed|named|chose|picked|selected) you.*chief justice",
+          "re:which president.*(made|appointed|named) you chief justice"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["arroyo", "macapagal"]],
+      "forbid": []
+    },
+    {
+      "id": "associate-justice-appointer",
+      "note": "President Fidel V. Ramos appointed him to the Supreme Court (Associate Justice) in October 1995.",
+      "trigger": {
+        "question_any": [
+          "re:who (appointed|named) you (as )?(an )?associate justice",
+          "re:who (appointed|named) you to the supreme court",
+          "re:which president.*(appointed|named) you.*(associate justice|to the supreme court)"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["ramos"]],
+      "forbid": []
+    },
+    {
+      "id": "associate-justice-year",
+      "note": "Joined the Supreme Court in October 1995.",
+      "trigger": {
+        "question_any": [
+          "re:(when|what year|which year).*(join|joined|appointed to|enter|entered).*supreme court",
+          "re:(when|what year|which year).*(become|became).*associate justice"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["1995"]],
+      "forbid": []
+    },
+    {
+      "id": "birth-date",
+      "note": "Born December 7, 1936 (Sampaloc, Manila).",
+      "trigger": {
+        "question_any": [
+          "re:when were you born",
+          "re:(what year|what date|which year).*(were you )?born",
+          "re:your (birthday|birth date|date of birth)"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["1936", "december 7"]],
+      "forbid": []
+    },
+    {
+      "id": "philosophy-twin-beacons",
+      "note": "Core judicial philosophy: liberty and prosperity (the twin beacons).",
+      "trigger": {
+        "question_any": [
+          "re:(judicial|core|your|his) philosophy",
+          "re:twin beacons"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["liberty"], ["prosperity"]],
+      "forbid": []
+    },
+    {
+      "id": "column-name",
+      "note": "His Philippine Daily Inquirer column is 'With Due Respect'.",
+      "trigger": {
+        "question_any": [
+          "re:(what|which).*(your|his) column",
+          "re:(name|title) of (your|his) column",
+          "re:what.*column.*(write|written)",
+          "re:column.*(inquirer|newspaper)"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["with due respect"]],
+      "forbid": []
+    },
+    {
+      "id": "lambino-case",
+      "note": "Lambino v. Comelec (2006): the people's-initiative charter-change petition.",
+      "trigger": {
+        "question_any": ["re:\\blambino\\b"],
+        "topics_any": []
+      },
+      "expect_groups": [["comelec"], ["initiative", "constitution", "charter"]],
+      "forbid": []
+    },
+    {
+      "id": "cj-ordinal",
+      "note": "He was the 21st Chief Justice of the Philippines.",
+      "trigger": {
+        "question_any": [
+          "re:(which|what) number.*chief justice",
+          "re:how many chief justices (came |served )?before"
+        ],
+        "topics_any": []
+      },
+      "expect_groups": [["21st", "twenty-first", "twenty first"]],
+      "forbid": []
+    }
+  ]
+}

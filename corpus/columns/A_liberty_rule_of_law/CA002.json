@@ -1,0 +1,250 @@
+{
+  "id": "CA002",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 2,
+  "title": "A subtle reminder to EEZ negotiators",
+  "date": "2023-01-16",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/160333/a-subtle-reminder-to-eez-negotiators",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "The Philippine Joint Development negotiating panel",
+      "The Chinese negotiating panel (indirect — 'the Chinese panel should take it as a message')",
+      "President Ferdinand Marcos Jr. and his foreign-policy advisers",
+      "Inquirer Opinion readers concerned with the West Philippine Sea / South China Sea",
+      "Constitutional law academics and practitioners"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "diplomatic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes",
+      "eez_resource_sovereignty"
+    ],
+    "secondary": [
+      "constitutional_doctrine",
+      "with_due_respect_persona",
+      "supreme_court_history"
+    ]
+  },
+  "keywords": [
+    "JMSU Tripartite Agreement",
+    "exclusive economic zone",
+    "EEZ",
+    "South China Sea",
+    "constitutional safeguards",
+    "Article XII Section 2",
+    "Joint Development",
+    "MOU with China",
+    "Justice Samuel H. Gaerlan",
+    "Mutual Defense Treaty",
+    "full control and supervision",
+    "Manuel M. Lopez condolences"
+  ],
+  "primary_topics": [
+    "Reading of the Supreme Court's December 2022 ruling voiding the Tripartite Agreement for Joint Marine Seismic Undertaking (JMSU) as a 'subtle reminder' to the Philippine Joint Development panel negotiating with China",
+    "Two constitutional safeguards on natural-resource exploration, development, and utilization (EDU): (1) full state control and supervision, and (2) the 60-40 Filipino-citizenship requirement",
+    "The Court's substance-over-form reading: 'pre-exploration activities' under the JMSU were, in intent and effect, 'exploration'",
+    "Strategic-options analysis: if China refuses the constitutionally-compliant MOU, Philippines may turn to the United States, with implications for permanent US military deployment in the Philippine EEZ"
+  ],
+  "sub_topics": [
+    "JMSU among China National Offshore Oil Corporation, Vietnam Oil and Gas Corporation, and Philippine National Oil Company",
+    "SC vote: 12-2-1; ponente Justice Samuel H. Gaerlan",
+    "Constitutional safeguards from Article XII Section 2 (state control, 60-40 citizenship)",
+    "February 2022 draft MOU with China — provision: 'oil and gas operations shall be subject to the laws of the Philippines'",
+    "Non-renunciation clause — MOU 'shall not be interpreted as a renunciation by either party of any right relating to the SCS'",
+    "CJP's column on December 5, 2022 ('Chinese cooperation to extract our EEZ wealth') as antecedent",
+    "President's late-November 2022 stance: country may 'find other ways' if government-to-government talks stall",
+    "PH-US Mutual Defense Treaty interpretation — attack on PH Coast Guard vessel in EEZ as attack on Philippines",
+    "Eddie Yap (EDSA Busway advocate) — texted CJP asking why it took 15 years to decide a straightforward constitutional issue",
+    "Closing condolences for Ambassador Manuel M. Lopez"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "subtle reminder",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "full control and supervision of the State",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the intent and aim of the agreement is to discover petroleum which is tantamount to exploration",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "That the Parties designated the joint research as a 'pre-exploration activity' is of no moment",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "These safeguards are sacred and must be complied with strictly and faithfully",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "dribbling the ball and refusing to take a shot",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "wasteful tactic already rejected in basketball-crazy Philippines",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "IMHO",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in the guise of implementing the MOU",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "amiable diplomat, a hardworking business executive, a loving husband, a dedicated father, a humble billionaire for others",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (columnist)",
+      "Justice Samuel H. Gaerlan (ponente)",
+      "President Ferdinand Marcos Jr. (referenced as 'our President')",
+      "Eddie Yap (Edsa Busway advocate)",
+      "Ambassador Manuel M. Lopez (deceased — condolences offered)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "China National Offshore Oil Corporation",
+      "Vietnam Oil and Gas Corporation",
+      "Philippine National Oil Company",
+      "Philippine Coast Guard",
+      "United States Armed Forces"
+    ],
+    "cases": [
+      "SC ruling voiding the JMSU Tripartite Agreement (December 2022, 12-2-1)"
+    ],
+    "laws_treaties": [
+      "1987 Philippine Constitution, Article XII Section 2 (natural resources EDU)",
+      "Joint Marine Seismic Undertaking (JMSU) Tripartite Agreement",
+      "Draft MOU between China and Philippines on Joint Development (February 2022)",
+      "PH-US Mutual Defense Treaty"
+    ],
+    "events": [
+      "SC ruling on JMSU — December 2022",
+      "JMSU litigation duration — ~15 years",
+      "President's 'find other ways' statement — late November 2022",
+      "Death of Ambassador Manuel M. Lopez"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The Supreme Court's December 2022 JMSU decision is correctly read as a 'subtle reminder' to the Philippine Joint Development panel: any agreement with China on Philippine EEZ resources must comply strictly with the two constitutional safeguards — full state control and the 60-40 citizenship requirement.",
+      "rhetorical_move": "reframing-a-decision-as-negotiation-guidance",
+      "confidence": "asserted with 'humble opinion' qualification",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The February 2022 draft MOU already contains a provision that satisfies the constitutional safeguards — 'oil and gas operations shall be subject to the laws of the Philippines' with a non-renunciation clause — so a Chinese refusal to finalize would signal that 'China is not really interested in a speedy conclusion of the Joint Development of our EEZ wealth.'",
+      "rhetorical_move": "diplomatic-pressure framing — interpreting refusal as bad-faith signal",
+      "confidence": "respectfully submitted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "If Chinese procrastination continues, the President's prior stance to 'find other ways' becomes justified — including turning to the United States, whose interest in a constitutionally-compliant MOU would justify permanent 24/7 US armed-forces deployment in the Philippine EEZ under the PH-US Mutual Defense Treaty.",
+      "rhetorical_move": "geopolitical-leverage suggestion — using bilateral US alignment as China-bargaining-position enhancement",
+      "confidence": "asserted but framed as 'will not fault our President should he revert'",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Eddie Yap's text question: 'CJ, why did it take 15 years to decide a constitutional issue which is pretty straightforward even to lay persons?' CJP defers a full answer to a future column.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Basketball metaphor for Chinese procrastination: 'dribbling the ball and refusing to take a shot, a wasteful tactic already rejected in basketball-crazy Philippines.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Closing tribute to Ambassador Manuel M. Lopez: 'an amiable diplomat, a hardworking business executive, a loving husband, a dedicated father, a humble billionaire for others, a dear friend, and a faithful disciple of our Lord Jesus.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "treats constitutional safeguards (state control + 60-40 citizenship) as non-negotiable, irrespective of contract framing",
+    "applies substance-over-form interpretation to bilateral agreements",
+    "uses substance-over-form reading as binding signal to current negotiators",
+    "applies geopolitical-leverage analysis (US Mutual Defense Treaty) as bargaining-position enhancement",
+    "structures closing as condolence-block — pastoral consistency with CJP's column persona"
+  ],
+  "target_audience": [
+    "The Philippine Joint Development negotiating panel",
+    "The Chinese negotiating panel (indirect — 'the Chinese panel should take it as a message')",
+    "President Ferdinand Marcos Jr. and his foreign-policy advisers",
+    "Inquirer Opinion readers concerned with the West Philippine Sea / South China Sea",
+    "Constitutional law academics and practitioners"
+  ],
+  "register_markers": [
+    "column-as-policy-signal register",
+    "substance-over-form constitutional argument structure",
+    "diplomatic-message register (addressing two foreign parties indirectly)",
+    "basketball-metaphor as Filipino-cultural rhetorical device",
+    "IMHO and 'I respectfully submit' as opinion-marker hedges",
+    "named-statute-section anchor (Article XII Section 2)",
+    "policy-escalation logic (if-China-refuses-then-US)",
+    "closing condolence as standalone block — common CJP column structure"
+  ],
+  "one_paragraph_summary": "Published January 16, 2023, this column reads the Supreme Court's December 2022 12-2-1 decision (penned by Justice Samuel H. Gaerlan) voiding the Tripartite Agreement for Joint Marine Seismic Undertaking (JMSU — among China National Offshore Oil, Vietnam Oil and Gas, and Philippine National Oil) as a 'subtle reminder' to the Philippine Joint Development panel negotiating with China on EEZ resources. The Court applied substance-over-form: although the JMSU labeled the work 'pre-exploration activities,' the intent and aim made it exploration. Two constitutional safeguards from Article XII Section 2 are non-negotiable: full state control and supervision, plus the 60-40 Filipino-citizenship requirement. CJP argues the draft MOU's February 2022 language — 'oil and gas operations shall be subject to the laws of the Philippines,' with a non-renunciation clause — already satisfies these safeguards, so a Chinese refusal to finalize would expose bad faith: 'dribbling the ball and refusing to take a shot, a wasteful tactic already rejected in basketball-crazy Philippines.' If procrastination continues, the President is justified in turning to the United States — with a US-compliant MOU justifying permanent 24/7 American armed-forces deployment in the Philippine EEZ under the Mutual Defense Treaty. He answers Eddie Yap's text question about the 15-year ruling delay only briefly, deferring full discussion. He closes with condolences for Ambassador Manuel M. Lopez."
+}

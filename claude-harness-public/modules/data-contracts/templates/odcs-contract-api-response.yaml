@@ -1,0 +1,129 @@
+# {NAME} — {ONE_LINE_DESCRIPTION}
+# See: docs/datacontracts/CLAUDE.md for conventions
+kind: DataContract
+apiVersion: v3.1.0
+id: dc-{KEBAB_NAME}-001
+version: 1.0.0
+status: draft
+name: "{NAME}"
+domain: {DOMAIN}
+dataProduct: {DATA_PRODUCT}
+
+description:
+  purpose: |
+    {PURPOSE}
+  limitations: |
+    {LIMITATIONS}
+  usage: |
+    {USAGE}
+
+# Optional: Link to specs, code, tests (STANDARD/COMPREHENSIVE mode)
+# authoritativeDefinitions:
+#   - type: specification
+#     url: {SPEC_PATH}
+#     description: {SPEC_DESCRIPTION}
+#   - type: codeRepository
+#     url: {CODE_PATH}
+#     description: {CODE_DESCRIPTION}
+#   - type: testSuite
+#     url: {TEST_PATH}
+#     description: {TEST_DESCRIPTION}
+
+servers:
+  - server: {SERVER_ID}
+    type: rest
+    description: "{SERVER_DESCRIPTION}"
+    environment: production
+    customProperties:
+      - property: baseUrl
+        value: "{BASE_URL}"
+      - property: endpoint
+        value: "{ENDPOINT_PATH}"
+      - property: method
+        value: "{HTTP_METHOD}"  # GET | POST | PUT | PATCH
+      - property: authentication
+        value: "{AUTH_TYPE}"  # bearer | api-key | oauth2 | none
+      - property: contentType
+        value: "application/json"
+  # Optional: Add staging server
+  # - server: {SERVER_ID}-staging
+  #   type: rest
+  #   description: Staging API
+  #   environment: staging
+  #   customProperties:
+  #     - property: baseUrl
+  #       value: "{STAGING_BASE_URL}"
+  #     - property: endpoint
+  #       value: "{ENDPOINT_PATH}"
+  #     - property: method
+  #       value: "{HTTP_METHOD}"
+
+schema:
+  - id: {SCHEMA_ID}
+    name: {SCHEMA_NAME}
+    logicalType: object
+    businessName: "{NAME}"
+    description: |
+      {SCHEMA_DESCRIPTION}
+    tags: [{TAGS}]
+    quality:
+      - id: qr-response-status
+        name: Successful response
+        type: custom
+        dimension: completeness
+        severity: error
+        description: Endpoint must return 2xx status code
+      # Add more quality rules from the catalog
+    properties:
+      # Top-level response fields:
+      - id: {FIELD_NAME}
+        name: {FIELD_NAME}
+        logicalType: {LOGICAL_TYPE}  # string | integer | number | boolean | array | object
+        required: {true_or_false}
+        description: |
+          {FIELD_DESCRIPTION}
+        # examples: [{EXAMPLES}]
+        # For nested objects, describe the shape:
+        # properties:
+        #   - id: {NESTED_FIELD}
+        #     name: {NESTED_FIELD}
+        #     logicalType: {LOGICAL_TYPE}
+        #     required: {true_or_false}
+        #     description: "{NESTED_DESCRIPTION}"
+      # For array fields, describe the item schema:
+      # - id: {ARRAY_FIELD}
+      #   name: {ARRAY_FIELD}
+      #   logicalType: array
+      #   required: {true_or_false}
+      #   description: "{ARRAY_DESCRIPTION}"
+      #   items:
+      #     logicalType: object
+      #     properties:
+      #       - id: {ITEM_FIELD}
+      #         name: {ITEM_FIELD}
+      #         logicalType: {LOGICAL_TYPE}
+      #         description: "{ITEM_DESCRIPTION}"
+
+# Optional: SLA properties (STANDARD/COMPREHENSIVE mode)
+# slaProperties:
+#   - property: latency
+#     description: "{LATENCY_DESCRIPTION}"
+#     value: {LATENCY_MS}
+#     unit: ms
+#   - property: availability
+#     description: "{AVAILABILITY_DESCRIPTION}"
+#     value: {AVAILABILITY_PERCENT}
+#     unit: percent
+#   - property: freshness
+#     description: "{FRESHNESS_DESCRIPTION}"
+
+# Optional: Custom properties (COMPREHENSIVE mode)
+# customProperties:
+#   - property: rateLimit
+#     value: "{RATE_LIMIT}"
+#     description: "Requests per minute/hour"
+#   - property: paginationType
+#     value: "{PAGINATION_TYPE}"  # cursor | offset | keyset
+#     description: "Pagination strategy"
+
+contractCreatedTs: "{CREATED_TIMESTAMP}"

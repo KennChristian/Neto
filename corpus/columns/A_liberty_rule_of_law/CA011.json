@@ -1,0 +1,314 @@
+{
+  "id": "CA011",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 11,
+  "title": "The rule of law in th'WPS is ours—no ifs and buts'",
+  "date": "2019-07-28",
+  "year": 2019,
+  "source_url": "https://opinion.inquirer.net/122903/wps-is-ours-no-ifs-and-buts",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Filipino voters following SONA commentary",
+      "Constitutional-law and foreign-affairs readership",
+      "FLP donors interested in legacy WPS work",
+      "Carpio-followers / WPS-followers",
+      "Inquirer general readership"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes",
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "rule_of_law",
+      "supreme_court_history",
+      "icc_and_duterte"
+    ]
+  },
+  "keywords": [
+    "SONA 2019",
+    "WPS sovereignty",
+    "arbitral award",
+    "UNCLOS",
+    "EEZ marine wealth",
+    "treaty concurrence",
+    "Senate two-thirds",
+    "Carpio rebuttal"
+  ],
+  "primary_topics": [
+    "Duterte's SONA assertion that the WPS is ours 'with no ifs and buts'",
+    "Duterte's 'delicate balancing act' and Ecclesiastes 3 invocation",
+    "Carpio's instant rebuttal on constitutional limits to allowing foreign nationals to fish in the EEZ",
+    "CJ's defense: liberal interpretation + Senate two-thirds concurrence safeguard"
+  ],
+  "sub_topics": [
+    "Estimated 18% of the SONA (â‰ˆ17 of 93 minutes) devoted to WPS",
+    "'More and better results can be reached in the privacy of a conference room than in a squabble in public'",
+    "Constitution Art. XIII, Sec. 2, 2nd par. â€” marine wealth reserved exclusively to Filipino citizens",
+    "Traditional fishing rights allowed to foreigners only in archipelagic waters and territorial sea",
+    "Treaty/agreement validity contingent on Senate two-thirds concurrence",
+    "Ecclesiastes 3 paraphrase ('a time to negotiate and a time to quarrelâ€¦ to antagonize and to make peace and a time to go to war')",
+    "Critics' option to enforce the award aggressively after Duterte's term",
+    "'Cheers!' closer"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "During his State of the Nation Address (Sona) on July 22, President Duterte made it very clear",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the West Philippine Sea is ours. There [are] no ifs and buts. It is ours",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "we have been acting [applause] along that legal truth and line. But we have to temper it with the times and the realities that we face today",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in my estimate, about 18 percent of its length or roughly 17 of his 93 minutes of delivery time",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the avoidance of conflict â€” armed conflict â€” and protection of our territorial waters and natural resources compel us to perform a delicate balancing act",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "more and better results can be reached in the privacy of a conference room than in a squabble in public",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "our ownership of the [WPS] is internationally recognized",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "fact-checking the President, Senior Justice Antonio T. Carpio instantly reacted",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "factually and legally, China is not in possession of the entire WPS",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the learned justice may be correct in his textual reading of the Constitution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I think a liberal interpretation may allow the President, with the concurrence of 'at least two-thirds of all the Members of the Senate'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in my humble view, we need not fear that our President may have entered intoâ€¦ a lopsided agreement",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "such agreement or treaty, by the express wording of our Constitution, shall not be 'valid and effective' absent the Senate's concurrence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I am glad the President has boldly clarified his stance",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "paraphrasing Ecclesiastes 3 of the Good Book",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "everyone, including his critics, should be mollified that, to repeat, he has not waived our maritime rights or the arbitral award",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I would rather focus on and offer a toast to his bold presidential incantation",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Cheers!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Rodrigo Duterte",
+      "Antonio T. Carpio (Senior Justice)"
+    ],
+    "institutions": [
+      "Senate of the Philippines (treaty-concurrence two-thirds)",
+      "Permanent Court of Arbitration",
+      "United Nations"
+    ],
+    "cases": [
+      "Republic of the Philippines v. People's Republic of China â€” UNCLOS Annex VII arbitral award (July 12, 2016)"
+    ],
+    "laws_treaties": [
+      "1987 Philippine Constitution, Art. XIII, Sec. 2, 2nd par. (marine wealth reserved to Filipinos)",
+      "Constitution provisions on Senate two-thirds concurrence in treaties",
+      "United Nations Convention on the Law of the Sea (UNCLOS)"
+    ],
+    "events": [
+      "Duterte's State of the Nation Address, July 22, 2019",
+      "Carpio's public reaction immediately after the SONA"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Duterte's SONA was unambiguous on WPS sovereignty â€” 'the West Philippine Sea is ours. There are no ifs and buts' â€” and the President devoted roughly 18% (â‰ˆ17 of 93 minutes) of his speech to this controversy, explaining that conflict-avoidance compels a delicate balancing act and that better results come from private conference rooms than from public squabbles.",
+      "rhetorical_move": "concession-counting of SONA content (specific quote + estimated air-time)",
+      "confidence": "asserted with own estimation flagged",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Carpio is correct in his textual reading that the Constitution reserves the use and enjoyment of EEZ marine wealth exclusively to Filipino citizens, and that traditional fishing rights for foreigners are allowed only in archipelagic waters and the territorial sea â€” but a liberal interpretation may permit the President, with the concurrence of at least two-thirds of the Senate, to enter into a treaty allowing other states to use such wealth.",
+      "rhetorical_move": "agree-then-qualify (concede the textual reading; offer the liberal-interpretive escape hatch)",
+      "confidence": "asserted with 'I think' and 'in my humble view' humility markers",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Filipinos need not fear a lopsided Duterte-Xi private agreement because, by the express wording of the Constitution, any such treaty or agreement shall not be 'valid and effective' without Senate two-thirds concurrence.",
+      "rhetorical_move": "constitutional-safeguard reassurance (procedural backstop)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "By the SONA itself, Duterte has asserted â€” not waived â€” PH maritime rights and the arbitral award, leaving room for successors to enforce them aggressively via options short of war.",
+      "rhetorical_move": "preservation-of-rights argument (today's restraint does not foreclose tomorrow's enforcement)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Whatever critics say, presidential foreign-policy determination is the President's prerogative subject only to constitutional and statutory limits; criticisms 'amount to nothing unless he adopts or accepts them.'",
+      "rhetorical_move": "constitutional-allocation-of-power reminder",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "CJ's own time-estimate of WPS coverage in the SONA â€” 'about 18 percent of its length or roughly 17 of his 93 minutes of delivery time' â€” the kind of measurable specificity that distinguishes CJ's commentary from mere reaction, with the precision itself functioning as the argument that the President took the issue seriously.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Carpio rebuttal sequence â€” Carpio 'instantly reacted' to Duterte's SONA, CJ then 'fact-checking' Carpio while agreeing on the textual reading but offering the Senate-concurrence escape hatch â€” the most explicit doctrinal exchange between two of the most respected Filipino legal voices in the entire arc.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Duterte's Ecclesiastes 3 paraphrase â€” 'There is a time for everything. A time to negotiate and a time to quarrelâ€¦ a time to antagonize and a time to make peace and a time to go to war, and a time to live and a time to die' â€” quoted by CJ as the President's framing of why aggressive enforcement is deferred to 'in due time.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'Cheers!' closer â€” distinctive of CJ's signature register, deployed here as a toast to Duterte's bold sovereignty assertion despite the column's earlier disagreement with parts of the SONA.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies content-analysis quantification of speeches (% of length and minutes) as evidence of presidential prioritization",
+    "uses agree-then-qualify pattern toward respected peers (concede the textual reading; offer the liberal-interpretive route)",
+    "applies the Senate two-thirds concurrence as the procedural backstop against worst-case presidential agreements",
+    "treats today's diplomatic restraint as preservation, not waiver, of future enforcement options",
+    "applies the constitutional-allocation-of-power principle (presidential prerogative on foreign policy subject to constitutional/statutory limits)",
+    "applies 'liberal interpretation' as the default mode for resolving textual ambiguity in favor of executive flexibility",
+    "frames the President as 'asserting' rather than 'waiving' rights â€” even in conciliatory diplomacy"
+  ],
+  "target_audience": [
+    "Filipino voters following SONA commentary",
+    "Constitutional-law and foreign-affairs readership",
+    "FLP donors interested in legacy WPS work",
+    "Carpio-followers / WPS-followers",
+    "Inquirer general readership"
+  ],
+  "register_markers": [
+    "doctrinal-formal register with quantified content-analysis of speech",
+    "agree-then-qualify pattern toward fellow jurist ('the learned justice may be correct in his textual reading')",
+    "'in my humble view' and 'I think' humility markers stacked on contested interpretation",
+    "'fact-checking the President' as the column's structural device",
+    "biblical reference (Ecclesiastes 3) carried from the speech and quoted",
+    "'Cheers!' closer â€” characteristic CJ register marker",
+    "no Tagalog markers; doctrinal-international English",
+    "explicit refusal to 'nitpick on the factual and textual issues at this point'"
+  ],
+  "one_paragraph_summary": "Reacting to Duterte's July 22, 2019 State of the Nation Address, Panganiban quotes the President's unambiguous declaration â€” 'the West Philippine Sea is ours. There are no ifs and buts. It is ours' â€” and estimates the speech devoted roughly 18% of its length (â‰ˆ17 of 93 minutes) to the WPS controversy. Duterte explained that conflict-avoidance and resource protection compel a 'delicate balancing act,' and that better results come from 'the privacy of a conference room than in a squabble in public,' paraphrasing Ecclesiastes 3 to defer aggressive enforcement to 'in due time.' Senior Justice Antonio T. Carpio reacted immediately, arguing that, factually, China does not possess the entire WPS, and that the President cannot by himself allow foreign nationals to fish in the EEZ because the Constitution (Art. XIII, Sec. 2, 2nd par.) reserves marine wealth exclusively to Filipinos. CJ fact-checks the fact-checker: Carpio is correct on the textual reading, but a liberal interpretation may permit the President â€” with two-thirds Senate concurrence â€” to enter into such a treaty. And because the Constitution makes any such agreement not 'valid and effective' without Senate concurrence, Filipinos need not fear a lopsided Xi-Duterte deal. By the SONA itself, CJ argues, Duterte has asserted â€” not waived â€” PH maritime rights and the arbitral award, preserving future enforcement options for his successors. He closes with a toast to the President's bold sovereignty incantation â€” 'Cheers!'"
+}

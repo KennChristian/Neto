@@ -1,0 +1,252 @@
+{
+  "id": "CA001",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 1,
+  "title": "Let the rule of law reign in Asean",
+  "date": "2023-10-23",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/167388/let-the-rule-of-law-reign-in-asean",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "ASEAN Law Association delegates from all member-countries",
+      "Inquirer Opinion readers (general civic + legal-academic)",
+      "Philippine Supreme Court justices and the broader Philippine judiciary",
+      "FLP donors and prospective partners",
+      "Regional and international legal community"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "diplomatic",
+      "valedictory",
+      "doxological"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "asean_law_association",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "msme_and_entrepreneurship",
+      "ai_and_technology",
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "ASEAN Law Association",
+    "ALA General Assembly",
+    "Kuala Lumpur",
+    "rule of law",
+    "consensus",
+    "twin beacons",
+    "Strategic Plan for Judicial Innovation",
+    "Foundation for Liberty and Prosperity",
+    "Center for Liberty and Prosperity",
+    "Prosperity Fund",
+    "ALA Philippines chairmanship handover"
+  ],
+  "primary_topics": [
+    "Column-version of the valedictory address as head of Philippine delegation to the ALA General Assembly (Kuala Lumpur, October 17-22, 2023)",
+    "ASEAN's 40-year tradition of consensus and rule of law as the operating principles for regional cooperation",
+    "Handover of ALA Philippines chairmanship from CJP to CJ Alexander G. Gesmundo effective January 1, 2024",
+    "Progress report on FLP's liberty programs (83 scholarships, 16 chairs, 27 dissertation winners) and prosperity programs (10 ESMEL fellowships)",
+    "Announcement of FLP's two ultimate projects: Center for Liberty and Prosperity (with AI-powered Museum) and the multibillion-peso Prosperity Fund"
+  ],
+  "sub_topics": [
+    "Address delivered before Malaysian PM Anwar Ibrahim",
+    "Negotiated chairmanship transition — Gesmundo busy with SC's 'Strategic Plan for Judicial Innovation' for 'the Age of Artificial Intelligence'; CJP an 'ancient relic' who overstayed since 2015",
+    "ALA officers normally serve only three-year terms",
+    "Seven other SC justices in the Philippine delegation: Inting, Zalameda, Mario V. Lopez, Gaerlan, Jhosep Y. Lopez, Kho Jr., Singh — plus appellate court justices, retired justices, attorneys, academicians, government lawyers (50 total)",
+    "ASEAN's rejection of 'armed, forcible, insidious, and bullying tactics' including so-called 'gray tactics'",
+    "Explicit negative-list: NOT mob rule, NOT propaganda, NOT falsehood, NOT nuclear weapons",
+    "Self-quotation from February 26, 2015 ALA General Assembly address — 'truth is eternal and limitless... truth is not bound by sovereignty, or territory, or ideology, or legality'",
+    "FLP's role in funding ALA Philippines's 2015 hosting of the General Assembly"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "consensus has always dominated our discussions and decisions",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "this rule of unanimity forged our unity despite our diversity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "consensus as our North star",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "NOT in the rule of the mob, NOT in the rule of propaganda and falsehood, and NOT in the rule of nuclear weapons",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the so-called 'gray tactics'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "these twin beacons must always go together; one is useless without the other",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "truth is eternal and limitless",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "twin and inseparable beacons",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "liberty and prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "ancient relic who has overstayed",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (outgoing ALA Philippines chair)",
+      "Anwar Ibrahim (Malaysian Prime Minister)",
+      "CJ Alexander G. Gesmundo (incoming ALA Philippines chair; incumbent CJ Philippines)",
+      "Justices Henri Jean Paul B. Inting, Rodil V. Zalameda, Mario V. Lopez, Samuel H. Gaerlan, Jhosep Y. Lopez, Antonio T. Kho Jr., Maria Filomena D. Singh"
+    ],
+    "institutions": [
+      "ASEAN Law Association (ALA)",
+      "ALA Philippines",
+      "Supreme Court of the Philippines",
+      "Foundation for Liberty and Prosperity (FLP)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "ALA General Assembly — Kuala Lumpur, October 17-22, 2023",
+      "12th ALA General Assembly — February 26, 2015 (CJP's prior valedictory-style address)",
+      "Planned Gesmundo chairmanship handover — January 1, 2024"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "ASEAN's 40-year history demonstrates that consensus and the rule of law — not military force, propaganda, mob rule, or nuclear coercion — are the only durable methods for managing disputes among nations with diverse histories, religions, and forms of government.",
+      "rhetorical_move": "negative-list rhetoric (NOT in mob, NOT in propaganda, NOT in nuclear weapons) followed by positive affirmation",
+      "confidence": "asserted as ASEAN doctrine",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Truth is not bound by sovereignty, territory, ideology, or legality; humans everywhere need BOTH justice AND jobs, freedom AND food, ethics AND economics, peace AND development — liberty and prosperity as twin and inseparable beacons.",
+      "rhetorical_move": "self-citation of 2015 valedictory + universalist-truth premise",
+      "confidence": "asserted as personal credo, attributed by self-quotation",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The proper second-life work of a former Chief Justice is to institutionalize the twin beacons through FLP — currently 83 scholarships, 16 professorial chairs, 27 dissertation winners, 10 ESMEL fellowships — culminating in the Center for Liberty and Prosperity (AI-powered Museum) and multibillion-peso Prosperity Fund.",
+      "rhetorical_move": "first-person FLP-program inventory as legitimization of the ultimate projects",
+      "confidence": "asserted with progress statistics",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Negotiated chairmanship handover: Gesmundo asked CJP to stay because the SC was busy with 'Strategic Plan for Judicial Innovation' for the 'Age of Artificial Intelligence'; CJP begged Gesmundo to take it immediately because he was 'already an ancient relic who has overstayed as chair since 2015' — compromise: CJP through end of year, Gesmundo from January 1, 2024.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Self-quotation from February 26, 2015 ALA address as he humbly assumed ALA Philippines chairmanship: 'truth is eternal and limitless; that truth is not bound by sovereignty, or territory, or ideology, or legality; that what is true in America is also true in the Philippines, in the Asean, and in the world.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "ASEAN's 40-year track record of never using military arms against each other 'not even so-called gray tactics' (diplomatic coded reference to coercion in the South China Sea).",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "elevates consensus-and-rule-of-law dyad as the operative ASEAN test for any dispute resolution",
+    "rejects four named alternatives explicitly (mob rule, propaganda, falsehood, nuclear coercion) as the negative space defining legitimate methods",
+    "treats philanthropic infrastructure (FLP) as the proper retirement vocation of a former chief magistrate",
+    "uses self-citation as evidence of doctrinal consistency over decades",
+    "structures FLP reporting in dyadic form (liberty programs + prosperity programs) to enact twin-beacons philosophy"
+  ],
+  "target_audience": [
+    "ASEAN Law Association delegates from all member-countries",
+    "Inquirer Opinion readers (general civic + legal-academic)",
+    "Philippine Supreme Court justices and the broader Philippine judiciary",
+    "FLP donors and prospective partners",
+    "Regional and international legal community"
+  ],
+  "register_markers": [
+    "column-as-shortened-speech register — explicitly framed as the published version of an ALA address",
+    "diplomatic-protocol opener ('Your Honors, ladies and gentlemen')",
+    "valedictory-as-handover compositional structure",
+    "self-citation register (lifting his own 2015 address verbatim)",
+    "polite-circumlocution on contested geopolitics ('gray tactics' without naming China)",
+    "FLP-program-progress-report embedded in cross-border valedictory",
+    "doxological-aspirational closer ('Before I leave this earth and enter the Great Beyond')"
+  ],
+  "one_paragraph_summary": "Published October 23, 2023 in the Inquirer Opinion as a column-version of his valedictory address as head of the Philippine delegation to the ASEAN Law Association (ALA) General Assembly in Kuala Lumpur on October 17-22, 2023 (graced by Malaysian PM Anwar Ibrahim), this piece compresses the speech for newspaper readers. CJP announces the handover of the ALA Philippines chairmanship to incumbent Philippine CJ Alexander G. Gesmundo effective January 1, 2024 — a compromise arising from Gesmundo's preoccupation with the SC's 'Strategic Plan for Judicial Innovation' for 'the Age of Artificial Intelligence' and CJP's self-deprecating admission that he was 'an ancient relic who has overstayed' since 2015. He names the seven other SC justices in the 50-person Philippine delegation. He frames ASEAN's 40-year history as the practical demonstration that consensus and rule of law — explicitly NOT mob rule, propaganda, falsehood, or nuclear weapons, and not even 'gray tactics' — are the only durable regional methods. He self-quotes his February 26, 2015 ALA address on truth as eternal and unbounded, reports FLP's progress (83 scholarships, 16 chairs, 27 dissertation winners, 10 ESMEL fellowships), and announces the two ultimate projects (Center for Liberty and Prosperity with AI-powered Museum, and the multibillion-peso Prosperity Fund), which he hopes to complete 'before I leave this earth.'"
+}

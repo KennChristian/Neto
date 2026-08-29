@@ -1,0 +1,292 @@
+{
+  "id": "CC010",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 10,
+  "title": "Reminiscing, praying, and caring",
+  "date": "2022-04-18",
+  "year": 2022,
+  "source_url": "https://opinion.inquirer.net/152153/reminiscing-praying-and-caring",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "FEU-NRMF graduating medical students (primary)",
+      "Filipino medical professionals broadly",
+      "Catholic readers and the faithful",
+      "FEU alumni and university community",
+      "Younger readers needing autobiographical motivation"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "faith_journey"
+    ],
+    "secondary": [
+      "bar_exam_and_legal_education",
+      "eulogies_and_passing"
+    ]
+  },
+  "keywords": [
+    "FEU-NRMF graduation speech",
+    "miraculous escapes from death",
+    "Fr. Michael Nolan",
+    "Centennial Prayer of the Courts",
+    "two Cs (competence and care)",
+    "FEU Central Student Organization",
+    "ruptured appendix"
+  ],
+  "primary_topics": [
+    "Graduation speech at Far Eastern University-Nicanor Reyes Medical Foundation (FEU-NRMF)",
+    "Series of miraculous escapes from death attributed to Jesus and Mary",
+    "First advice: Always pray and trust God",
+    "Second advice: Work with two Cs â€” competence and care"
+  ],
+  "sub_topics": [
+    "1957 election as president of FEU Central Student Organization despite being only a sophomore law student",
+    "Opposition to the P6 health-and-hospitalization fee (only a few would be hospitalized, all required to pay)",
+    "Ruptured appendix episode at FEU Hospital â€” Dr. Ricardo Alfonso's white-blood-count diagnosis (over 36,000); rear-left rupture; CJ withdrew his opposition under indescribable pain",
+    "1942 (age 6) WWII dysentery â€” no hospital, no medicine, no doctor, no nurse; given up for dead; mother nursed him to miraculous recovery",
+    "1983 diabetes diagnosis controlled with help of Dr. Augusto Litonjua (still seen every three months)",
+    "Three hemorrhoid operations; heart rhythm skips; ECG/echo/treadmill failures but angiogram pass (Dr. Dante Morales)",
+    "1949 jeepney-newspaper-peddling fall â€” speeding jeepney, lost balance, 6Ã—6 army truck rolled over him with enough road clearance for his lean and thin body to slide under",
+    "Born Catholic but unschooled in religion; FEU chaplain Fr. Michael Nolan introduced him to Jesus Christ and taught him Our Father, Hail Mary, Glory Be, and the FEU Prayer",
+    "FEU Prayer as source of the 'Centennial Prayer of the Courts' (composed 2001, recited up to now in SC and other courts)",
+    "Second advice ('care'): the Filipino multibillionaire confined in a top US hospital â€” sterile institutional treatment vs Filipino doctors and nurses' companionship-and-love",
+    "Closing maxim: 'Pray as though everything depended on God; work as though everything depended on you'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "To spread further the glory of the resurrection",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Doctor, you win. I withdraw my opposition to the six-peso fee",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Your appendix ruptured two weeks ago but the poison was contained because fat enveloped it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "given up for dead",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "my mother refused to surrender",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "miraculous escapes from death",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rare, natural skip in my heart beats",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Always pray and trust God",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Our prayer should not be for God to banish them. Our prayer should be for God to grant us the strength and the will to triumph over evil",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "God will always help us â€” in His own way, in His own time, not in our way, not in our time",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Pray as though everything depended on God; work as though everything depended on you",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Work with two 'Cs' â€” competence and care",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "viewed merely as an object to be studied, operated on, and monitored, not as a human being with emotions of fear, loneliness, and desperation",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author, speaker)",
+      "Dr. Ricardo Alfonso (FEU Hospital director, 1957)",
+      "Fr. Michael Nolan (FEU chaplain)",
+      "Dr. Augusto Litonjua (diabetes specialist)",
+      "Dr. Dante Morales (cardiology)",
+      "Unnamed Filipino multibillionaire (deceased) â€” US-hospital anecdote",
+      "CJ's mother (1942 dysentery vigil)"
+    ],
+    "institutions": [
+      "Far Eastern University (FEU)",
+      "FEU Central Student Organization (CJ as 1957 president)",
+      "FEU-Nicanor Reyes Medical Foundation (graduation venue)",
+      "FEU Hospital",
+      "Supreme Court of the Philippines (Centennial Prayer of the Courts)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "1942 â€” WWII dysentery (age 6)",
+      "1949 â€” jeepney-peddling fall and 6Ã—6 truck escape",
+      "1957 â€” FEU Central Student Organization presidency; P6 fee opposition and appendix rupture",
+      "1983 â€” diabetes diagnosis",
+      "2001 â€” composition of the Centennial Prayer of the Courts",
+      "FEU-NRMF graduation exercises (speech occasion)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Our Lord Jesus and His mother Mary were responsible for CJ's miraculous escapes from death â€” the 1942 WWII dysentery survival without hospital or doctor (saved by his mother's vigil), the 1949 jeepney-fall under a 6Ã—6 army truck (saved by the truck's road clearance and his lean body), and the 1957 ruptured appendix that had ruptured two weeks earlier but stayed contained because 'fat enveloped it' â€” and CJ ascribes 'whatever I may have achieved in my humble life and career' to Jesus Christ.",
+      "rhetorical_move": "providential-attribution autobiographical framing",
+      "confidence": "faith-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "First advice â€” 'Always pray and trust God' â€” but the right object of prayer is not for God to banish evils, devils, defeats, difficulties, and obstacles, but for God to 'grant us the strength and the will to triumph over evil, to forsake the devil, to solve difficulties, and to hurdle obstacles,' because 'God will always help us â€” in His own way, in His own time, not in our way, not in our time.'",
+      "rhetorical_move": "reframe-prayer-from-substitute-to-fortification doctrine",
+      "confidence": "advice-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Second advice â€” 'Work with two Cs: competence and care' â€” with competence taken as given from FEU-NRMF training, but care emphasized through the unnamed multibillionaire's anecdote about being treated in a top US hospital 'merely as an object to be studied, operated on, and monitored, not as a human being with emotions of fear, loneliness, and desperation' versus the longed-for 'companionship, care, and love of Filipino doctors and nurses.'",
+      "rhetorical_move": "two-C framework with cautionary-tale grounding for the second C",
+      "confidence": "advice-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The closing maxim â€” 'Pray as though everything depended on God; work as though everything depended on you' â€” synthesizes the two advices into a single rule combining maximal divine trust with maximal personal effort, framing them as non-competing rather than alternative.",
+      "rhetorical_move": "synthesis-maxim resolving apparent prayer/work tension",
+      "confidence": "concluding",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "1957 ruptured-appendix episode: as sophomore president of FEU Central Student Organization, CJ vigorously opposed the P6 hospitalization fee on grounds of unfairness, only to be rushed to FEU Hospital with white-blood-count over 36,000; Dr. Ricardo Alfonso asked, 'Do you want to pay the full hospital bills or the six-peso fee?' â€” to which CJ softly replied amid 'indescribably wrenching pain': 'Doctor, you win. I withdraw my opposition.' Appendix found ruptured at the rear left (unusual location), having ruptured two weeks earlier but contained by enveloping fat.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "1942 WWII dysentery at age 6: 'There was no hospital, no medicine, no doctor, no nurse. I was given up for dead. But my mother refused to surrender. She watched over me as I miraculously recovered in her arms.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "1949 jeepney-peddling near-death: 'While peddling newspapers aboard the rear of a speeding jeepney, I jumped and lost my balance. As I laid flat on the cemented road, an oncoming 6Ã—6 army truck rolled over me. Fortunately, it had high road clearance â€” enough for my lean and thin body to slide under its axles and escape serious injury and death.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "1983 diabetes + ongoing care from Dr. Augusto Litonjua (every three months); three hemorrhoid operations; heart-rhythm skips (failed ECG, 2D echo, treadmill) but passed angiogram per Dr. Dante Morales who confirmed 'rare, natural skip in my heart beats.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Fr. Michael Nolan as the chaplain who introduced CJ to Catholicism and taught him the Our Father, Hail Mary, Glory Be, and FEU Prayer â€” the last becoming a source of the 'Centennial Prayer of the Courts' composed in 2001 and recited up to now in the SC and other courts.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Unnamed Filipino multibillionaire (now deceased) confined in a top US hospital for heart bypass and kidney transplant â€” could not be visited except during specific hours and days, treated 'merely as an object' â€” used to contrast with Filipino care culture.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses providential-attribution autobiography as legitimation for prayer-advice",
+    "reframes prayer as fortification rather than substitution for action",
+    "structures professional advice as two-C framework (competence + care)",
+    "uses cautionary-anecdote (US hospital) to ground the underemphasized second virtue",
+    "synthesizes apparent tension between prayer and effort through complementary-maxim closing",
+    "treats personal medical history as accumulated evidence for divine-providence claim"
+  ],
+  "target_audience": [
+    "FEU-NRMF graduating medical students (primary)",
+    "Filipino medical professionals broadly",
+    "Catholic readers and the faithful",
+    "FEU alumni and university community",
+    "Younger readers needing autobiographical motivation"
+  ],
+  "register_markers": [
+    "graduation-commencement-speech register",
+    "autobiographical-vignette serial format (1942, 1949, 1957, 1983)",
+    "providential-attribution language ('miraculous,' 'Jesus and Mary were responsible')",
+    "two-advice structuring ('first advice... second advice')",
+    "maxim-closing register ('Pray as though everything depended on God; work as though everything depended on you')",
+    "doctor-named credentialing (Alfonso, Litonjua, Morales) as humility marker",
+    "direct-dialogue reconstruction (1957 hospital exchange)",
+    "religious-pedagogy register (Our Father, Hail Mary, Glory Be, FEU Prayer)",
+    "cautionary-tale register (US-hospital multibillionaire)",
+    "Easter-resurrection seasonal-tie opening"
+  ],
+  "one_paragraph_summary": "Panganiban reproduces his graduation speech at the Far Eastern University-Nicanor Reyes Medical Foundation (FEU-NRMF), framed around miraculous escapes from death and two pieces of advice. He recounts being rushed to FEU Hospital in 1957 â€” sophomore law-student president of the FEU Central Student Organization opposing a P6 hospitalization fee â€” with a white-blood-cell count over 36,000; Dr. Ricardo Alfonso asked whether he wanted to pay the full bill or the six-peso fee, and CJ withdrew his opposition mid-pain; the rupture was at the rear-left (unusual) and had been contained for two weeks by enveloping fat. He recalls 1942 dysentery at age six during WWII with no hospital, medicine, doctor, or nurse â€” his mother refused to surrender and he 'miraculously recovered in her arms.' In 1949 he jumped from a speeding jeepney while peddling newspapers and a 6Ã—6 army truck rolled over him; he survived because his lean body slid under the high road clearance. In 1983 he was diagnosed with diabetes (still seen every three months by Dr. Augusto Litonjua); he had three hemorrhoid operations and heart-rhythm skips (Dr. Dante Morales confirmed a rare natural skip). He attributes all to Jesus and Mary and to FEU chaplain Fr. Michael Nolan who first taught him the Our Father, Hail Mary, Glory Be, and FEU Prayer (the last a source of the 'Centennial Prayer of the Courts' composed in 2001). His first advice: 'Always pray and trust God' â€” but pray not to banish evils, only for strength to overcome them, since 'God will always help us â€” in His own way, in His own time.' His second advice: 'Work with two Cs â€” competence and care' â€” illustrated by an unnamed Filipino multibillionaire confined in a top US hospital and treated 'merely as an object to be studied, operated on, and monitored,' longing for the companionship of Filipino doctors and nurses. He closes with the synthesis: 'Pray as though everything depended on God; work as though everything depended on you.'"
+}

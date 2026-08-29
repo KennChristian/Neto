@@ -1,0 +1,283 @@
+{
+  "id": "CE005",
+  "type": "column",
+  "theme": "E",
+  "theme_label": "Signature Current Events Commentary",
+  "number": 5,
+  "title": "Little known SC decisions",
+  "date": "2024-07-15",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/175164/little-known-sc-decisions",
+  "routing": {
+    "primary_intent": [
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Lawyers and law students reviewing 2023 jurisprudence",
+      "Ordinary readers affected by family-status, senior-discount, online-libel, drug-seizure cases",
+      "Senior citizens and their families navigating interment costs",
+      "Trial practitioners on drug cases (chain-of-custody compliance)",
+      "Foreign banks and PH real estate lawyers",
+      "Congressional and constitutional-law scholars"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine",
+      "family_and_marriage"
+    ],
+    "secondary": []
+  },
+  "keywords": [
+    "Ko v. Republic legitimacy filiation",
+    "senior 20% discount interment",
+    "Ong v. Senate Pharmally",
+    "Soliman v. People online libel fine",
+    "4E Steel v. Maybank foreclosure",
+    "Act Teachers v. Duterte Congressional Journal",
+    "People v. Almayda warrantless drug seizure inventory"
+  ],
+  "primary_topics": [
+    "Seven little-known Supreme Court decisions from 2023 affecting both lawyers and ordinary people",
+    "Family Code: presumption of legitimacy distinguished from filiation (Ko v. Republic)",
+    "Senior citizens' 20% discount extends to interment services (Republic v. Pryce)",
+    "Limits on congressional contempt power in legislative investigations (Ong v. Senate)",
+    "Cybercrime law: alternative penalty of fine for online libel (Soliman v. People)",
+    "Foreign-bank mortgage foreclosure conditions (4E Steel Builders v. Maybank)",
+    "Congressional Journal trumps livestream video on quorum (Act Teachers v. Duterte)",
+    "Warrantless drug seizure inventory must be at place of seizure (People v. Almayda)"
+  ],
+  "sub_topics": [
+    "Ko v. Republic (April 12, 2023): children conceived or born during marriage presumed legitimate even when conceived/born in separation and biologically the wife's child with another man; distinction between legitimacy (civil status during marriage) and filiation (biological/biotechnological); biological father cannot petition to tag offspring as 'natural child' because that deprives the child of legitimacy rights (e.g., right to inherit from legal father); only the child, and in some instances the legal father or his heirs, can challenge directly (not collaterally); 'even the mother is prohibited by law from declaring against the child's legitimacy'",
+    "Republic v. Pryce (March 8, 2023): senior-citizen 20% discount necessarily includes interment services â€” diggings for the grave, concreting, and other services during actual burial",
+    "Ong v. Senate (March 28, 2023): four limitations on congressional legislative-inquiry power â€” (1) inquiry must be 'in aid of legislation,' (2) per chamber's published rules of procedure, (3) rights of persons appearing or affected must be respected, (4) contempt detention only until termination of the inquiry; Pharmally resource persons cited in contempt and arrested without opportunity to be heard â€” Senate violated the third limitation; only detention (not criminal/civil liability) decided",
+    "Soliman v. People (April 25, 2023): Cybercrime Law imposes online-libel penalty one degree higher than traditional libel under RPC; traditional libel penalty is prision correcional minimum and medium periods OR fine of P40,000-P1,200,000 OR both; for online libel courts may impose the alternative fine instead of imprisonment",
+    "4E Steel Builders v. Maybank Philippines (March 13, 2023): foreign banks may foreclose and acquire mortgaged real property under three conditions â€” (1) max 5 years' possession; (2) no title transfer to the foreign bank; (3) must transfer right to a qualified Philippine national within the 5-year period",
+    "Act Teachers v. Duterte (Jan. 24, 2023): livestream video and photographs of quorum absence cannot prevail over the Congressional Journal â€” 'no less than the Constitution itself grants the Congressional Journal its imprimatur'; CJ adds his humble opinion that the principle of separation of powers grants each branch autonomy to determine internal processes (SC respects Congressional Journal; Congress respects SC internal deliberations and votes; both respect Executive Branch internal Cabinet decisions)",
+    "People v. Almayda (June 14, 2023): in warrantless drug seizures, physical inventory and photo-taking must as a rule be done at the place of seizure; as exception may be done at nearest police station or apprehending officer/team office IF officers show via clear, consistent, sensible affidavits that (1) inventory at place of seizure not practicable, or (2) seized items threatened by immediate or extreme danger at place of seizure"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "little-known ones that may affect or be of interest to both lawyers and ordinary people",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "legitimacy refers to the civil status established for a person born during the subsistence of a marriage, while filiation is the state of being someone's offspring as determined by biology and biotechnology",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Even the mother is prohibited by law from declaring against the child's legitimacy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "necessarily include interment services, such as diggings for the deceased person's grave, its concreting, and other services being done during the actual burial",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in aid of legislation",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the alternative penalty of fine instead of imprisonment",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "no less than the Constitution itself grants the Congressional Journal its imprimatur",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "If I may add my humble opinion",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "clear, consistent, and sensible affidavits",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "Court of Appeals (appellate review path)",
+      "Senate of the Philippines",
+      "House of Representatives",
+      "Pharmally Pharmaceutical Corp (resource persons in Ong)",
+      "Ombudsman (referenced via prosecution pathway)",
+      "Office of the Bar Confidant",
+      "Local law enforcement (warrantless drug seizure context)"
+    ],
+    "cases": [
+      "Ko v. Republic (April 12, 2023) â€” legitimacy vs filiation",
+      "Republic v. Pryce (March 8, 2023) â€” senior discount includes interment",
+      "Ong v. Senate (March 28, 2023) â€” four limitations on congressional inquiry",
+      "Soliman v. People (April 25, 2023) â€” alternative fine penalty for online libel",
+      "4E Steel Builders v. Maybank Philippines (March 13, 2023) â€” foreign bank foreclosure",
+      "Act Teachers v. Duterte (Jan 24, 2023) â€” Congressional Journal imprimatur",
+      "People v. Almayda (June 14, 2023) â€” warrantless drug seizure inventory location"
+    ],
+    "laws_treaties": [
+      "Family Code (presumption of legitimacy)",
+      "Senior Citizens Act (20% discount)",
+      "Cybercrime Prevention Act (online libel)",
+      "Revised Penal Code (traditional libel)",
+      "Anti-Foreign-Bank-Foreclosure conditions (per 4E Steel)",
+      "Comprehensive Dangerous Drugs Act (warrantless seizure)",
+      "1987 Constitution (separation of powers; Congressional Journal imprimatur)"
+    ],
+    "events": []
+  },
+  "stances": [
+    {
+      "claim": "Under the Family Code, children conceived or born during a marriage are presumed legitimate even when the parents were separated and the child was biologically the wife's offspring with a man other than her legal husband; legitimacy (civil-status concept) and filiation (biological-biotechnological concept) are distinct, and the presumption of legitimacy â€” which benefits the child by securing rights like inheritance from the legal father â€” can be challenged only directly (not collaterally) and only by the child, or in some instances by the legal father or his heirs; even the mother is prohibited by law from declaring against the child's legitimacy (Ko v. Republic, April 12, 2023).",
+      "rhetorical_move": "legitimacy/filiation distinction with child-benefit rationale",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The senior-citizen 20% discount granted by law 'necessarily include[s] interment services, such as diggings for the deceased person's grave, its concreting, and other services being done during the actual burial' (Republic v. Pryce, March 8, 2023).",
+      "rhetorical_move": "expansive-construction of senior-discount coverage",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Congressional legislative-investigation power has four constitutional limitations â€” (1) in aid of legislation, (2) per published rules, (3) respect for rights of persons appearing or affected, (4) contempt detention only until end of inquiry â€” and in Ong v. Senate (March 28, 2023) the Senate violated the third limitation by citing the Pharmally resource persons in contempt and ordering arrest without opportunity to be heard (only detention, not criminal or civil liability, was decided).",
+      "rhetorical_move": "four-limitations doctrinal framework with violation-mapping",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "For online libel under the Cybercrime Law â€” penalized one degree higher than traditional libel under the RPC (prision correcional minimum-medium OR P40,000-P1.2M fine OR both) â€” courts may impose the alternative penalty of fine instead of imprisonment (Soliman v. People, April 25, 2023).",
+      "rhetorical_move": "alternative-penalty availability doctrine",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Foreign banks may foreclose and acquire mortgaged real property under three cumulative conditions â€” (1) 5-year max possession, (2) no title transfer to the foreign bank, (3) must transfer to a qualified Philippine national within the 5-year period (4E Steel Builders v. Maybank Philippines, March 13, 2023).",
+      "rhetorical_move": "three-condition framework for foreign-bank foreclosure",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Livestream video and photographs cannot prevail over the Congressional Journal on quorum questions because 'no less than the Constitution itself grants the Congressional Journal its imprimatur' (Act Teachers v. Duterte, Jan. 24, 2023) â€” and CJ adds his humble opinion that the separation of powers grants the three branches autonomy to determine internal processes (SC respects Congressional Journal; Congress respects SC internal deliberations and votes; both respect Executive Cabinet internal processes).",
+      "rhetorical_move": "constitutional-imprimatur doctrine + CJ's humble-opinion extension to inter-branch internal autonomy",
+      "confidence": "doctrine-asserted + humble-opinion supplement",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "In warrantless drug seizures, physical inventory and photo-taking must as a rule be done at the place of seizure; as exception they may be done at the nearest police station or apprehending officer/team office only if officers show via clear, consistent, and sensible affidavits that (1) inventory at the seizure place is not practicable, or (2) seized items are threatened by immediate or extreme danger at the seizure place (People v. Almayda, June 14, 2023).",
+      "rhetorical_move": "rule-plus-narrow-exception structuring of chain-of-custody",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The Family Code's stark protection of legitimacy: 'Even the mother is prohibited by law from declaring against the child's legitimacy' â€” a single-sentence policy choice that subordinates biological truth to civil-status protection of the child.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Pryce case extending the senior-citizen 20% discount to 'diggings for the deceased person's grave, its concreting, and other services being done during the actual burial' â€” funereal coverage rarely discussed in senior-rights commentary.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Pharmally case's procedural irony: the Senate could cite witnesses in contempt 'in aid of legislation' but violated the third limitation by ordering arrest 'without giving them the opportunity to be heard' â€” the right of arrested persons to be heard not extinguished by the legislative-investigation context.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ's humble-opinion addendum to Act Teachers v. Duterte â€” extending the Congressional Journal imprimatur to a general principle of inter-branch internal autonomy: SC respects Congress, Congress respects SC's internal deliberations and votes, both respect Executive internal Cabinet decisions â€” a clean three-branch reciprocity-of-restraint doctrine.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Almayda warrantless-seizure place-of-seizure rule operating on 'clear, consistent, and sensible affidavits' as the exception standard â€” judicial vocabulary that signals heightened scrutiny of police paperwork.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses civil-status-vs-biology distinction (legitimacy vs filiation) as primary lens in family-law analysis",
+    "treats child-benefit rationale as overriding even biological-father petitioning rights",
+    "applies four-limitations framework to congressional inquiry powers",
+    "uses cumulative-conditions framework (3-element) for foreign-bank foreclosure",
+    "applies rule-plus-narrow-exception structuring with affidavit-quality test for chain-of-custody",
+    "deploys reciprocity-of-internal-autonomy across the three branches as separation-of-powers doctrine",
+    "treats constitutional imprimatur as decisive over technological evidence (Journal over livestream)"
+  ],
+  "target_audience": [
+    "Lawyers and law students reviewing 2023 jurisprudence",
+    "Ordinary readers affected by family-status, senior-discount, online-libel, drug-seizure cases",
+    "Senior citizens and their families navigating interment costs",
+    "Trial practitioners on drug cases (chain-of-custody compliance)",
+    "Foreign banks and PH real estate lawyers",
+    "Congressional and constitutional-law scholars"
+  ],
+  "register_markers": [
+    "case-digest register (seven cases enumerated)",
+    "lawyer-AND-ordinary-people audience framing in opening",
+    "doctrinal-summary-plus-CJ-humble-opinion register (Act Teachers extension)",
+    "rule-plus-exception structuring (Almayda inventory)",
+    "alternative-penalty acknowledgment register (Soliman)",
+    "ordinal-organization (First, Second, ..., Seventh)",
+    "civil-status-vs-biology distinction register (legitimacy vs filiation)",
+    "constitutional-imprimatur register (Congressional Journal)",
+    "humility marker for editorial extension ('If I may add my humble opinion')"
+  ],
+  "one_paragraph_summary": "Panganiban surveys seven little-known 2023 Supreme Court decisions affecting both lawyers and ordinary people. First, Ko v. Republic (April 12, 2023) distinguishes legitimacy (civil status during marriage) from filiation (biological/biotechnological), holding that children conceived or born during marriage are presumed legitimate â€” even when biologically the wife's offspring with another man during separation â€” and the presumption can be challenged only directly (not collaterally) and only by the child, or in some instances by the legal father or his heirs; 'even the mother is prohibited by law from declaring against the child's legitimacy.' Second, Republic v. Pryce (March 8, 2023) extends the senior-citizen 20% discount to interment services including grave-digging, concreting, and other burial services. Third, Ong v. Senate (March 28, 2023) sets out four limitations on congressional legislative-inquiry power â€” in aid of legislation, per published rules, respect for rights of persons, and contempt detention only until end of inquiry â€” and finds the Senate violated the third limitation by holding Pharmally resource persons in contempt without an opportunity to be heard. Fourth, Soliman v. People (April 25, 2023) holds that for online libel (one degree higher than traditional libel under the RPC), courts may impose the alternative penalty of fine instead of imprisonment. Fifth, 4E Steel Builders v. Maybank Philippines (March 13, 2023) sets three cumulative conditions for foreign-bank foreclosure: 5-year maximum possession, no title transfer to the foreign bank, and required transfer to a qualified Philippine national within five years. Sixth, Act Teachers v. Duterte (Jan. 24, 2023) holds that livestream video and photographs of quorum absence cannot prevail over the Congressional Journal because 'no less than the Constitution itself grants the Congressional Journal its imprimatur' â€” to which CJ adds his humble opinion that the separation of powers grants each branch autonomy over internal processes (SC respects the Journal; Congress respects SC internal deliberations and votes; both respect Executive Cabinet internal decisions). Seventh, People v. Almayda (June 14, 2023) holds that in warrantless drug seizures, physical inventory and photo-taking must as a rule be done at the place of seizure, with exception only on 'clear, consistent, and sensible affidavits' showing impracticability or immediate/extreme danger at the seizure site."
+}

@@ -1,0 +1,321 @@
+{
+  "id": "CB006",
+  "type": "column",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 6,
+  "title": "Unleashing entrepreneurial ingenuity (1)",
+  "date": "2015-03-01",
+  "year": 2015,
+  "source_url": "https://opinion.inquirer.net/82941/unleashing-entrepreneurial-ingenuity-1",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "ALA delegates from 10 Asean countries",
+      "Asean lawyers and judges",
+      "FLP donors and supporters",
+      "Inquirer readership interested in FLP philosophy",
+      "Law students and academics tracking CJP's twin-beacons framework",
+      "Constitutional-reform and entrepreneurship advocates",
+      "Comparative-development scholars"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "twin_beacons_doctrine",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "asean_law_association",
+      "rule_of_law",
+      "judicial_reform"
+    ]
+  },
+  "keywords": [
+    "FLP",
+    "Asean Law Association",
+    "rule of law",
+    "speech",
+    "judicial reform",
+    "opening luncheon",
+    "12th General Assembly"
+  ],
+  "primary_topics": [
+    "Foundational FLP-philosophy speech first-part March 1 2015 â€” ALA 12th general assembly opening luncheon Feb 26 at Makati Shangri-La",
+    "Martin Luther King Jr. opening quote: 'If a man does not have a job or an income, he has neither life nor liberty nor the possibility for the pursuit of happiness'",
+    "'Liberty and Prosperity' twin-anchors canonical statement â€” twin beacons must always go together; one is useless without the other",
+    "Back-reference to October 18-20 2006 'Global Forum on Liberty and Prosperity' valedictory activity at Makati Shangri-La",
+    "2011 75th-birthday Foundation for Liberty and Prosperity founding mention; FLP cosponsor with SC and Philippine ALA Chapter",
+    "Confucius 'give a man a fish' adage applied to entrepreneurship policy",
+    "Government's role as fisherman-supporter â€” guarantees, incentives, institutions, minimal regulations to prevent monopoly and ensure tax sharing",
+    "Three-country validation tour: United States (Edison/Tesla/Vanderbilt/Rockefeller/Carnegie/Ford/JP Morgan + FDR/Eisenhower), China (Mao revolt vs Deng Xiaoping 'One-Country-Two-Systems'), South-vs-North Korea contrast"
+  ],
+  "sub_topics": [
+    "ALA 12th general assembly at Makati Shangri-La hotel Feb 26-28, 2015",
+    "Speech delivered at opening luncheon Feb 26",
+    "MLK opening quote despite being a foreigner â€” truth is not bound by sovereignty, territory, ideology, or legality",
+    "Truth is this: humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity",
+    "'Twin beacons must always go together; one is useless without the other'",
+    "Always espoused 'Liberty and Prosperity' as twin anchors of being lawyer and jurist",
+    "Many attended valedictory activity as CJ on Oct 18-20, 2006 â€” 'Global Forum on Liberty and Prosperity' at Makati Shangri-La",
+    "Even in retirement continued advocacy; in 2011 (75th birthday) organized Foundation for Liberty and Prosperity",
+    "FLP honored to cosponsor general assembly with Philippine Supreme Court and Philippine ALA Chapter",
+    "Certain truths transcend sovereignties: best way to conquer poverty, create wealth, and share prosperity is to unleash entrepreneurial genius of people by granting freedom and tools",
+    "Confucius adage: 'Give a man a fish and you feed him for a day. Teach him to fish and you feed him for a lifetime'",
+    "To save a fisherman from destitution: help learn to fish more effectively, educate in skills, assist in acquiring boat, allow freedom to sail vast oceans, teach how to market catch",
+    "Fears of misjudgments may happen but exceptions rather than rule; 'we must never stop dreaming for fear that reality may shatter our dreams'",
+    "Goal of governance and law: provide guarantees and incentives to help fisherman prosper, create institutions to support him, promulgate minimal regulations to prevent appropriating fishing grounds, keep all earnings, forget tax obligations",
+    "Government must inspire sharing of consequential wealth with rest of society",
+    "United States: powerful country, great promoter of liberal democracy; pioneers defied monarchical tyrannies; unleashed inventive/innovative/entrepreneurial spirit of Edison, Tesla, Vanderbilt, Rockefeller, Carnegie, Ford, JP Morgan; great government leaders FDR and Eisenhower provided encouragement and good governance",
+    "China: second most powerful economy and prime promoter of communist system; Mao Zedong dislodged corrupt monarchy; but Deng Xiaoping led nation to unparalleled economic prosperity by unleashing entrepreneurial ingenuity under 'One-Country-Two-Systems' philosophy",
+    "Korea: divided by WWII into North and South; engaged in terrible war that ruined both; rising from ruins, South Korea relied on entrepreneurial spirit, private initiative, creativity, freedom and hard work; North Korea despite technological/military bravado wallows in abject poverty as result of tight grip on creativity and inordinate fear of entrepreneurship/education/freedom",
+    "'(Concluded next Sunday)' â€” sequel B17 March 8"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "twin beacons",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Liberty and Prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in my humble opinion (implied)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "twin anchors",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "give a man a fish",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "save the fisherman",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "limitless truths",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the spirit of the fisherman",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Dr. Martin Luther King Jr. (opening quote)",
+      "Thomas Edison",
+      "Nikola Tesla",
+      "Cornelius Vanderbilt",
+      "John Rockefeller",
+      "Andrew Carnegie",
+      "Henry Ford",
+      "J.P. Morgan",
+      "Franklin Delano Roosevelt",
+      "Dwight Eisenhower",
+      "Mao Zedong",
+      "Deng Xiaoping",
+      "Confucius"
+    ],
+    "institutions": [
+      "Asean Law Association (ALA)",
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Supreme Court of the Philippines",
+      "Philippine ALA Chapter",
+      "United States (validation case)",
+      "People's Republic of China (validation case)",
+      "Republic of Korea / South Korea (validation case)",
+      "Democratic People's Republic of Korea / North Korea (counter-case)"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "'One-Country-Two-Systems' philosophy (Deng Xiaoping framework, referenced)"
+    ],
+    "events": [
+      "Asean Law Association 12th General Assembly â€” Feb 26-28, 2015",
+      "Opening luncheon February 26 at Makati Shangri-La",
+      "October 18-20, 2006 â€” Global Forum on Liberty and Prosperity (CJP valedictory activity)",
+      "2011 â€” CJP's 75th birthday + founding of Foundation for Liberty and Prosperity"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Quoting Martin Luther King Jr. â€” an American civil rights icon and foreigner to the 10 Asean countries â€” is justified because truth is eternal and limitless; not bound by sovereignty, territory, ideology, or legality",
+      "rhetorical_move": "limitless-truths opening framing",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity â€” these twin beacons must always go together; one is useless without the other",
+      "rhetorical_move": "twin-beacons canonical statement",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ has always espoused 'Liberty and Prosperity' as the twin anchors of his being as lawyer and jurist â€” culminating in the October 2006 Global Forum and the 2011 founding of the Foundation for Liberty and Prosperity on his 75th birthday",
+      "rhetorical_move": "personal-advocacy-history disclosure",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The best way to conquer poverty, create wealth, and share prosperity is to unleash the entrepreneurial genius of people by granting them the freedom and the tools to help themselves and society",
+      "rhetorical_move": "entrepreneurship-unleashing thesis",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Confucius adage 'Teach a man to fish and you feed him for a lifetime' applies to entrepreneurship policy: to save the fisherman from destitution, help him learn to fish, educate him in skills, assist him in acquiring a boat, allow him freedom to sail the vast oceans, and teach him to market his catch",
+      "rhetorical_move": "Confucius-adage application as policy framework",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Fears of fisherman-misjudgment (getting lost, becoming selfish, becoming a rival) may happen sometimes â€” but human arrogance/greed/avarice are exceptions, not rule; we must never stop dreaming for fear reality may shatter our dreams",
+      "rhetorical_move": "fear-rebuttal with don't-stop-dreaming sentiment",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The goal of governance and of law is to provide guarantees and incentives to help the fisherman prosper, create institutions to support him, promulgate minimal regulations to prevent monopoly and ensure he pays reasonable taxes â€” and to inspire him to share his consequential wealth with the rest of society",
+      "rhetorical_move": "government-role formulation through Confucius framework",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Three country cases validate the thesis: the United States rose by unleashing the entrepreneurial spirit of Edison/Tesla/Vanderbilt/Rockefeller/Carnegie/Ford/JP Morgan with FDR-Eisenhower governance; China rose under Deng Xiaoping's One-Country-Two-Systems unleashing of entrepreneurial ingenuity (not Mao's earlier revolt); South Korea rose by relying on entrepreneurial spirit while North Korea wallows in abject poverty due to its tight grip on creativity",
+      "rhetorical_move": "three-country validation tour as empirical anchor",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "MLK quote opening despite his being a foreigner â€” truth-is-limitless framing",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Back-reference to October 18-20, 2006 'Global Forum on Liberty and Prosperity' valedictory activity at Makati Shangri-La (same venue as ALA 12th)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "2011 75th birthday as FLP founding occasion",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Confucius 'give a man a fish' adage applied to entrepreneurship policy",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "US entrepreneurs roster: Edison, Tesla, Vanderbilt, Rockefeller, Carnegie, Ford, JP Morgan + FDR/Eisenhower governance",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Deng Xiaoping's 'One-Country-Two-Systems' as China's true growth-unleashing framework (not Mao's revolt)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "North Korea as counter-case: technological/military bravado but abject poverty from tight creativity-grip",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "Twin-beacons framework: liberty + prosperity always together",
+    "Limitless-truths principle: truth transcends sovereignty/territory/ideology/legality",
+    "Entrepreneurship-unleashing as poverty-conquest strategy",
+    "Confucius fisherman framework: skills + tools + freedom + market-access",
+    "Government-as-fisherman-supporter role: guarantees + incentives + institutions + minimal regulations + tax-sharing inspiration",
+    "Don't-stop-dreaming sentiment as policy-defense against worst-case fears",
+    "Three-country validation methodology: US + China + Korea-bifurcation"
+  ],
+  "target_audience": [
+    "ALA delegates from 10 Asean countries",
+    "Asean lawyers and judges",
+    "FLP donors and supporters",
+    "Inquirer readership interested in FLP philosophy",
+    "Law students and academics tracking CJP's twin-beacons framework",
+    "Constitutional-reform and entrepreneurship advocates",
+    "Comparative-development scholars"
+  ],
+  "register_markers": [
+    "first-part-of-speech format with explicit '(Concluded next Sunday)' continuation marker",
+    "limitless-truths opening framing",
+    "MLK quote-from-foreigner-justified-by-universal-truth setup",
+    "twin-beacons canonical statement",
+    "personal-advocacy-history disclosure (Global Forum + FLP founding)",
+    "Confucius-adage application as policy framework",
+    "fear-rebuttal with don't-stop-dreaming sentiment",
+    "three-country validation tour as empirical anchor",
+    "section labels (Limitless truths, Saving the fisherman, Validating the truth)"
+  ],
+  "one_paragraph_summary": "Panganiban opens the first part of his speech at the Asean Law Association's 12th general assembly opening luncheon (February 26, 2015, at Makati Shangri-La) with a famous quotation from Dr. Martin Luther King Jr.: 'If a man does not have a job or an income, he has neither life nor liberty nor the possibility for the pursuit of happiness.' It may seem ironic to begin a speech before the judicial and legal greats of Asean by citing an American civil rights icon â€” a foreigner in the 10 member countries â€” but CJ quotes MLK not because of his nationality, color, gender, or religion, but because of the truth he said so simply and profoundly: truth is eternal and limitless, not bound by sovereignty, territory, ideology, or legality. And that truth is this â€” humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity; these twin beacons must always go together; one is useless without the other. CJ has always espoused 'Liberty and Prosperity' as the twin anchors of his being as a lawyer and as a jurist. Many of those present attended his valedictory activity as chief justice when on October 18-20, 2006 he convened a 'Global Forum on Liberty and Prosperity' at the same Makati Shangri-La. Even in retirement he continues the advocacy: in 2011, when he celebrated his 75th birthday, he organized the Foundation for Liberty and Prosperity, which is now honored to cosponsor the general assembly together with the Philippine Supreme Court and the Philippine ALA Chapter. Certain truths transcend sovereignties, territories, ideologies, and legalities. And one of these truths is this: the best way to conquer poverty, to create wealth, and to share prosperity is to unleash the entrepreneurial genius of people by granting them the freedom and the tools to help themselves and society. To prove the thesis, CJ quotes a popular adage from Confucius: 'Give a man a fish and you feed him for a day. Teach him to fish and you feed him for a lifetime.' Indeed, to save a fisherman from destitution, we must help him learn how to fish more effectively, educate him in the skills needed to catch fish more efficiently, assist him in acquiring a boat, allow him the freedom to sail the vast oceans, and teach him how to market his catch. Sometimes, some of us fear that the fisherman may get lost and die in storms, become selfish and want to own the entire ocean and its resources, or become too rich and powerful and metamorphose into a rival, an enemy, or worse, a master. Such fears of possible misjudgments may indeed happen some of the time â€” human arrogance, greed, and avarice lurk in all undertakings, but they are the exceptions rather than the rule. We must never stop dreaming for fear that reality may shatter our dreams; that is part of the interesting reality of being human. On the other hand, the goal of governance and of law is to provide guarantees and incentives to help the fisherman prosper, to create the institutions to support him, and to promulgate minimal regulations to prevent him from appropriating all the fishing grounds, from keeping all the earnings to himself, and from forgetting his obligation to pay reasonable taxes â€” government must also inspire him to share his consequential wealth with the rest of society. To validate this simple truth, take three countries. The United States, the most powerful country in the world and the great promoter of liberal democracy, attained affluence because of the pioneers who defied monarchical tyrannies and started a new nation that unleashed the inventive, innovative, and entrepreneurial spirit of people like Thomas Edison, Nikola Tesla, Cornelius Vanderbilt, John Rockefeller, Andrew Carnegie, Henry Ford, and J.P. Morgan â€” and of great government leaders like Franklin Delano Roosevelt and Dwight Eisenhower who provided them with the encouragement to attain their dreams and the good governance to contain their greed and share their wealth. Then to China, the second most powerful economy in the world and the prime promoter of the communist system: true, Mao Zedong led the masses in a revolt that dislodged the corrupt and inefficient government born of an outdated monarchy, but it was Deng Xiaoping who led this nation to unparalleled economic prosperity by unleashing the entrepreneurial ingenuity of the Chinese under his 'One-Country-Two-Systems' philosophy. Finally, to Korea: as a result of World War II, this country was divided into North and South, which unfortunately could not accept their division and engaged in a terrible war that ruined their economies; rising from the ruins, South Korea relied on the entrepreneurial spirit of the Koreans, built on their private initiative, creativity, freedom, and hard work, and thereby ushered prosperity. In contrast, North Korea â€” despite its technological and military bravado â€” wallows in abject poverty as a result of its tight grip on creativity and on its inordinate fear of the entrepreneurship, education, and freedom of its people. (Concluded next Sunday in B17.)"
+}

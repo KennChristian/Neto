@@ -1,0 +1,44 @@
+id: verification
+name: Verification Audit Agent
+version: 1.0.0
+description: >
+  Outcome-based verification for plan-driven development. Generates project-specific
+  verification-audit-agents that review completed work against milestones, diagnose
+  regressions, and produce audit reports.
+
+relevance:
+  file_signals:
+    - pattern: "**/00-index.md"
+      weight: 3
+    - pattern: "**/000-manifest.md"
+      weight: 2
+    - pattern: "tests/**"
+      weight: 2
+  code_signals:
+    - pattern: "pytest|jest|mocha|cargo test|go test"
+      weight: 2
+  tech_signals:
+    - tech: "pytest"
+      weight: 1
+    - tech: "jest"
+      weight: 1
+    - tech: "mocha"
+      weight: 1
+  threshold: 3
+  max_score: 8
+
+bootstrap:
+  phase_name: "Verification Agent"
+  phase_order: 11
+
+prompt: prompt.md
+
+templates:
+  - verification-audit-agent.md
+  - verification-audit-agent-description.md
+
+test_patterns:
+  - verification-audit-test-cases.md
+
+lessons:
+  - anti-patterns.md

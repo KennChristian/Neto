@@ -1,0 +1,269 @@
+{
+  "id": "CD001",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 1,
+  "title": "11 LibPros scholars",
+  "date": "2016-11-27",
+  "year": 2016,
+  "source_url": "https://opinion.inquirer.net/99561/11-libpros-scholars",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Law students and FLP scholarship applicants",
+      "Law school administrators, deans, and PHILJA",
+      "Sponsor networks: TYKF, Metrobank Foundation, MPIC, Ayala, Lopez Group, San Miguel",
+      "Civic readers tracking PH legal philanthropy",
+      "Bar associations and legal education observers",
+      "FLP volunteers and PALS members"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_donors_and_partners",
+      "twin_beacons_doctrine"
+    ],
+    "secondary": [
+      "foundation_for_liberty_and_prosperity",
+      "flp_scholarship_programs",
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "First batch of 11 LibPros scholars",
+    "CJ Sereno board of judges",
+    "Tan Yan Kee Foundation cosponsor",
+    "PALS partnership",
+    "Sean Borja and 10 others from Admu/FEU/UP/PUP/UST/SBC/USC",
+    "FLP three programs: scholarships, dissertation contest, professorial chairs"
+  ],
+  "primary_topics": [
+    "First batch of 11 LibPros scholars (10 originally planned)",
+    "FLP origin (Dec 2011, CJ's 75th birthday) and dual-goal philosophy",
+    "Scholarship qualifications, sponsors, board of judges",
+    "FLP companion activities: dissertation contest, 10 professorial chairs",
+    "Postscript on US Electoral College mechanics clarification"
+  ],
+  "sub_topics": [
+    "Award ceremony Dec 1, 2016 at new UP campus, Fort Bonifacio, Taguig",
+    "CJ Maria Lourdes P. A. Sereno as guest speaker",
+    "Full scholarship: tuition + books + monthly stipend, max P200,000 each",
+    "10 new scholars per year going forward",
+    "School distribution: Ateneo 2, FEU-Makati 2, San Beda 2, UST 2, PUP 1, USC 1, UP 1",
+    "Named scholars: Sean James Borja (Admu), Kaycelle Anne Castillo (FEU), Ervin Frederick Dy (UP), Rexlyn Ann Evora (PUP), Ken Kevin Ganchero (FEU), Jose Noel Hilario (UST), Violeta Najarro Jr. (SBC-Alabang), Dion Ceasar Pascua (SBC-Manila), Ma Janine Pedernal (UST), Tess Marie Tan (USC), Vanessa Gloria Vergara (Admu)",
+    "Cosponsor: Tan Yan Kee Foundation (TYKF)",
+    "Cooperation with Philippine Association of Law Schools (PALS)",
+    "Board of judges: CJ Sereno + FLP president Evelyn T. Dumdum + former Edu Sec Edilberto C. de Jesus + TYKF legal counsel Ma Cecilia L. Pesayco + PALS president Ma Soledad D. Mawis",
+    "FLP executive director Martin Angelo L. Esguerra assisting",
+    "7 qualification requirements (3rd-year law student, top 10%, â‰¥83% avg or 2.25, full loads no drops, dean's commendation, essay on liberty and prosperity, board screening)",
+    "FLP founded December 2011 during CJ's 75th birthday",
+    "FLP mission: perpetuate legal philosophy of liberty + prosperity under rule of law",
+    "Six dyads: justice and jobs, freedom and food, ethics and economics, democracy and development, liberty and prosperity",
+    "FLP-Ayala Group dissertation contest: P300K champion, P200K runner-up, P100K each for 3 honorable mentions, P20K each for 20 qualifying entries",
+    "Contest open to all law students nationwide",
+    "10 professorial chairs with Metrobank Foundation and MPIC as cosponsors",
+    "9 chairs filled: deans of Admu, FEU, USC, UP, UST, DLSU, Silliman, U Cordilleras + PHILJA chancellor",
+    "USC dean Joan Largo's Dec 9 fourth professorial lecture in Cebu City",
+    "FLP head office acquired via First Philippine Holdings, Lopez Holdings, Meralco, PLDT, MPIC, San Miguel's Ramon S. Ang",
+    "Postscript: clarification on US elector selection â€” names on ballot vary by state"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Only 10 were to be chosen. But after a thorough evaluation",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the board of judges, led by Chief Justice Maria Lourdes P. A. Sereno, was so impressed that it recommended 11",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the first batch of 11 'LibPros' law scholars",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "perpetuate the legal philosophy of safeguarding the liberty and nurturing the prosperity of our people under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "justice and jobs, freedom and food, ethics and economics, democracy and development, nay, liberty and prosperity must always go together; one is useless without the other",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the intertwining relationship of law and business, and of regulation and entrepreneurship",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "To clarify last Sunday's column",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (FLP founder)",
+      "CJ Maria Lourdes P. A. Sereno (board of judges leader, awarding ceremony guest speaker)",
+      "Evelyn T. Dumdum (FLP president)",
+      "Edilberto C. de Jesus (former Education Secretary, board of judges)",
+      "Ma Cecilia L. Pesayco (TYKF legal counsel, board of judges)",
+      "Ma Soledad D. Mawis (PALS president, board of judges)",
+      "Martin Angelo L. Esguerra (FLP executive director)",
+      "Joan Largo (USC law dean, Dec 9 professorial lecture)",
+      "Ramon S. Ang (San Miguel Corp. president, FLP office contributor)",
+      "Sean James Borja (Ateneo, scholar)",
+      "Kaycelle Anne Castillo (FEU, scholar)",
+      "Ervin Frederick Dy (UP, scholar)",
+      "Rexlyn Ann Evora (PUP, scholar)",
+      "Ken Kevin Ganchero (FEU, scholar)",
+      "Jose Noel Hilario (UST, scholar)",
+      "Violeta Najarro Jr. (SBC-Alabang, scholar)",
+      "Dion Ceasar Pascua (SBC-Manila, scholar)",
+      "Ma Janine Pedernal (UST, scholar)",
+      "Tess Marie Tan (USC, scholar)",
+      "Vanessa Gloria Vergara (Ateneo, scholar)"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Tan Yan Kee Foundation (TYKF, cosponsor)",
+      "Philippine Association of Law Schools (PALS)",
+      "Metrobank Foundation (professorial chairs cosponsor)",
+      "Metro Pacific Investments Corp. (MPIC, cosponsor)",
+      "Ayala Group (dissertation contest cosponsor)",
+      "First Philippine Holdings Corp.",
+      "Lopez Holdings Corp.",
+      "Meralco",
+      "PLDT",
+      "San Miguel Corporation",
+      "Philippine Judicial Academy (PHILJA)",
+      "Law schools: Ateneo, FEU-Makati, San Beda (Manila and Alabang), UST, PUP, USC, UP, DLSU, Silliman, U Cordilleras",
+      "UP campus Fort Bonifacio, Taguig (awarding ceremony venue)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "Dec 2011 â€” FLP founding on CJ's 75th birthday",
+      "Dec 1, 2016 â€” first LibPros scholarship awarding ceremony",
+      "Dec 9, 2016 â€” Joan Largo's fourth professorial lecture in Cebu"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The board of judges led by CJ Sereno was so impressed during candidate evaluation that it expanded the planned cohort from 10 to 11 scholars â€” and the FLP happily agreed â€” demonstrating that the screening process was substantive rather than mechanical, with merit overriding administrative target.",
+      "rhetorical_move": "expansion-as-quality-signal (one-extra-scholar as evidence of substantive screening)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP's philosophy â€” that 'justice and jobs, freedom and food, ethics and economics, democracy and development, nay, liberty and prosperity must always go together; one is useless without the other' â€” requires future lawyers to understand 'the intertwining relationship of law and business, and of regulation and entrepreneurship,' making the LibPros scholarship a vehicle for producing dual-fluency advocates.",
+      "rhetorical_move": "philosophy-statement via five-dyad enumeration with binary-inseparability framing",
+      "confidence": "asserted as foundational philosophy",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP's three companion activities â€” LibPros scholarships (school-specific), Ayala-cosponsored dissertation contest (nationwide), and 10 professorial chairs (with Metrobank Foundation + MPIC cosponsorship, 9 already filled) â€” represent a layered institutional strategy for embedding the liberty-and-prosperity philosophy at student, dissertation, and faculty levels simultaneously.",
+      "rhetorical_move": "three-layer-strategy framing (student + dissertation + faculty all addressed)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The 10-to-11 expansion: 'Only 10 were to be chosen. But after a thorough evaluation of the candidates, the board of judges, led by Chief Justice Maria Lourdes P. A. Sereno, was so impressed that it recommended 11. The Foundation for Liberty and Prosperity (FLP) happily agreed' â€” the column's opening anecdote and immediately the highest-credibility marker for the program's rigor.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The full named scholar roster with schools â€” the most extensive single named list in any FLP column, making the column itself the public record of the first LibPros cohort.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "FLP's founding origin: 'organized in December 2011 during my 75th birthday' â€” making the foundation date personally rather than institutionally anchored.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'last Sunday's column' clarification on US electoral mechanics that closes the piece â€” using the postscript convention to address reader confusion from the prior week's column (E85 'Will Trump emulate Gore?') without losing the column's main D-series focus.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The FLP head-office sponsor list (First Philippine Holdings, Lopez Holdings, Meralco, PLDT, MPIC, San Miguel's Ramon S. Ang) â€” quietly cataloguing the corporate network underwriting FLP's physical operations.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses expansion-as-quality-signal when administrative targets are exceeded based on merit",
+    "applies five-dyad enumeration with binary-inseparability framing for philosophy statements",
+    "structures institutional strategy as three-layer (student + dissertation + faculty)",
+    "treats personally-anchored founding dates as legitimate (founder's birthday as foundation moment)",
+    "deploys named-roster format as public-record function for institutional milestones",
+    "uses postscript-clarification convention for prior-column reader confusion resolution"
+  ],
+  "target_audience": [
+    "Law students and FLP scholarship applicants",
+    "Law school administrators, deans, and PHILJA",
+    "Sponsor networks: TYKF, Metrobank Foundation, MPIC, Ayala, Lopez Group, San Miguel",
+    "Civic readers tracking PH legal philanthropy",
+    "Bar associations and legal education observers",
+    "FLP volunteers and PALS members"
+  ],
+  "register_markers": [
+    "FLP-administrative-update register",
+    "labeled-subhead structure ('Awarding ceremonies', 'FLP goals', 'Other FLP activities')",
+    "expansion-as-quality-signal opening anecdote",
+    "extensive named-roster format (11 scholars, board of judges, professorial chair holders)",
+    "five-dyad enumeration as philosophical signature ('justice and jobs, freedom and food, ethics and economics, democracy and development, liberty and prosperity')",
+    "binary-inseparability framing ('one is useless without the other')",
+    "three-layer-strategy framing (scholarship + dissertation + professorial chairs)",
+    "personally-anchored founding date (75th birthday)",
+    "corporate-network catalog without commentary",
+    "postscript-clarification convention (US Electoral College clarification)"
+  ],
+  "one_paragraph_summary": "Panganiban announces the first batch of LibPros law scholars â€” originally planned at 10 but expanded to 11 after the board of judges, led by CJ Maria Lourdes P. A. Sereno, was so impressed it recommended an extra scholar; the FLP happily agreed. The Dec 1, 2016 awarding ceremony at the new UP campus in Fort Bonifacio, Taguig will feature CJ Sereno as guest speaker; each scholar receives full scholarship (tuition + books + monthly stipend up to P200,000), and 10 new scholars will be selected every school year. The distribution across schools: Ateneo, FEU-Makati, San Beda, and UST 2 each; PUP, USC, UP 1 each â€” named: Sean James Borja, Kaycelle Anne Castillo, Ervin Frederick Dy, Rexlyn Ann Evora, Ken Kevin Ganchero, Jose Noel Hilario, Violeta Najarro Jr., Dion Ceasar Pascua, Ma Janine Pedernal, Tess Marie Tan, and Vanessa Gloria Vergara. The program is cosponsored by the Tan Yan Kee Foundation (TYKF) in cooperation with the Philippine Association of Law Schools (PALS); the board of judges includes CJ Sereno, FLP president Evelyn T. Dumdum, former education secretary Edilberto C. de Jesus, TYKF legal counsel Ma Cecilia L. Pesayco, and PALS president Ma Soledad D. Mawis, with FLP executive director Martin Angelo L. Esguerra assisting. Qualification requires being a third-year law student in an eligible school, top 10% of class, â‰¥83% (2.25) average across four prior semesters, full loads with no drops, dean's commendation, an essay on liberty and prosperity, and board screening. The FLP was organized in December 2011 during CJ's 75th birthday to perpetuate the legal philosophy that 'justice and jobs, freedom and food, ethics and economics, democracy and development, nay, liberty and prosperity must always go together; one is useless without the other.' Beyond the scholarships, FLP and the Ayala Group cosponsor a dissertation contest open to all law students nationwide (P300K champion, P200K runner-up, P100K each for 3 honorable mentions, P20K each for 20 qualifying entries); with Metrobank Foundation and MPIC, FLP has created 10 professorial chairs â€” 9 already filled by the law deans of Ateneo, FEU, USC, UP, UST, DLSU, Silliman, U Cordilleras, plus the PHILJA chancellor; USC dean Joan Largo will deliver her fourth professorial lecture in Cebu City on Dec 9. FLP acquired its Makati head office with assistance from First Philippine Holdings, Lopez Holdings, Meralco, PLDT, MPIC, and San Miguel's Ramon S. Ang. A postscript clarifies last Sunday's column on US elector selection: each state determines elector election methods by local law â€” in some, elector names are on the ballot; in others, presidential candidate names appear but votes still count for the electors, not the candidates directly."
+}

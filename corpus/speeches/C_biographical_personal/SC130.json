@@ -1,0 +1,313 @@
+{
+  "id": "SC130",
+  "type": "speech",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 130,
+  "title": "Why I Am Who I Am Now",
+  "date": "2007-05-24",
+  "year": 2007,
+  "source_url": "https://cjpanganiban.com/why-i-am-who-i-am-now/",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Canossian Sisters celebrating their 200th foundation day in Lipa City",
+      "Students and faculty of Canossian Academy",
+      "Catholic religious-formation audiences seeking testimony of faith + vocation",
+      "Aspiring lawyers and judiciary candidates facing rejection",
+      "Filipinos seeking biographical inspiration across class-mobility lines"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "doxological"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "faith_journey",
+      "family_and_marriage"
+    ],
+    "secondary": [
+      "jbc_discernment_and_appointment",
+      "early_life_sampaloc",
+      "philippine_political_landscape"
+    ]
+  },
+  "keywords": [
+    "Canossian Sisters",
+    "200th foundation day",
+    "Lipa City",
+    "good news bad news parable",
+    "FEU",
+    "Jovito R. Salonga",
+    "Fr. Michael Nolan",
+    "Bukas Loob sa Diyos",
+    "seven JBC rejections",
+    "Sampaloc childhood",
+    "Manila Times Philippine Daily Inquirer"
+  ],
+  "primary_topics": [
+    "Keynote at the Canossian Sisters' 200th foundation day (Canossian Academy, Lipa City, May 24, 2007)",
+    "The 'good news, bad news, who knows?' parable as governing framework for biographical reflection",
+    "Panganiban's autobiography of poverty, hard work, education, faith conversion, and judicial vocation",
+    "Twin life-mottos: 'Do your best and God will do the rest'; aspire for what money cannot buy",
+    "The seven JBC rejections and the Gospel breakthrough (Luke 11 and Luke 9) that led to the SC appointment"
+  ],
+  "sub_topics": [
+    "Parable: medieval farmer whose horse runs away, returns with 10 wild horses, son breaks leg, king's army loses war but spares lame son — each turn met with 'Good news, bad news, who knows?'",
+    "Childhood as fourth of four children in Sampaloc, Manila, post-WWII — hawking newspapers, selling cigarettes, shining shoes",
+    "Born Catholic but 'unchurched and uncatechized' — purely secular education",
+    "Father insisted on law over chemical engineering — 'father's word was law and could not be broken'",
+    "UP Diliman scholarship offered (honor student, Mapa High) but father could not afford 15-centavo bus fare",
+    "UST entrance interview failure — Dominican priest asked 'How many Gods? How many Persons? Name them' — got 'Jesus, Mary, Joseph' wrong",
+    "Enrolled at FEU instead — academic excellence + leadership + Catholic faith encounter",
+    "Dean Jovito R. Salonga as 'role model in my chosen career' — UP/Harvard/Yale-style teaching",
+    "Salonga's foundational teaching: aspire for what money cannot buy — integrity, dignity, honor, ethics, credibility",
+    "Fr. Michael Nolan (FEU chaplain) recruited him into FEU Student Catholic Action — taught rudiments of Catholicism",
+    "Wife Leni — joining Bukas Loob sa Diyos — renewed-Catholic stage",
+    "Childhood prediction realized: 'one day I would become the president of the Manila Times' — became president of the Philippine Daily Inquirer instead",
+    "Declined early government offers because public-official compensation insufficient for family",
+    "June 17, 1992 — Ramos offered SC seat; three years and seven JBC rejections followed",
+    "Two Gospel breakthroughs: Luke 11 ('Ask and you shall receive, seek and you shall find, knock and the door shall be opened to you') and Luke 9 ('This is my Son, my Chosen One. Listen to Him.')",
+    "September 20, 1995 — first time passing the JBC screening; appointment 'after I had given up'",
+    "Late 2005 — JBC short list to succeed CJ Davide; chosen by President Arroyo as 21st CJ"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Good news, bad news, who knows? I will just keep on trying my best and God will do the rest",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Do your best and God will do the rest",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Why I am who I am now",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Please ask the Lord and Mother Mary. I am merely their servant",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "while it is desirable to have the things that money can buy, we should never ever forget that it is far more important to aspire for the things that money cannot buy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "integrity, dignity, honor, ethics and credibility",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "How long, oh God, must I bear these frustrations and embarrassment of being rejected?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Ask and you shall receive, seek and you shall find, knock and the door shall be opened to you",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "This is my Son, my Chosen One. Listen to Him",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "A miracle!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "from being a poor newsboy in the backstreets of Sampaloc to... the highest magistrate of our country",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "God has woven my many pains and gains into a magnificent tapestry showing His mystical presence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "To God be the glory",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (speaker)",
+      "Sister Estela Cordero (Canossian; inviter)",
+      "Father (unnamed) — high school graduate, Bureau of Lands clerk",
+      "Mother (unnamed) — primary school only",
+      "Dean Jovito R. Salonga (FEU; lifetime guru)",
+      "Fr. Michael Nolan (FEU chaplain)",
+      "Leni Carpio-Panganiban (wife)",
+      "President Fidel V. Ramos (made the 1992 offer)",
+      "President Gloria Macapagal-Arroyo (named him 21st CJ)",
+      "CJ Hilario G. Davide Jr. (predecessor)"
+    ],
+    "institutions": [
+      "Canossian Sisters / Canossian Academy (Lipa City)",
+      "Mapa High School",
+      "University of the Philippines (offered scholarship)",
+      "University of Santo Tomas (entrance interview failure)",
+      "Far Eastern University (FEU) — alma mater",
+      "FEU Student Catholic Action",
+      "Bukas Loob sa Diyos",
+      "Manila Times (boyhood dream presidency)",
+      "Philippine Daily Inquirer (eventual presidency)",
+      "Judicial and Bar Council (JBC) — seven rejections",
+      "Supreme Court of the Philippines"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "Canossian Sisters' 200th foundation day (May 24, 2007)",
+      "President Ramos's offer of SC seat (June 17, 1992)",
+      "Seven JBC rejections (1992-1995)",
+      "First successful JBC screening (September 20, 1995)",
+      "Appointment to SC by FVR (October 10, 1995)",
+      "Appointment as 21st CJ by GMA (late 2005)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Life events do not have stable valences — 'good news, bad news, who knows?' Setbacks become blessings and triumphs reveal new burdens; the proper posture is to keep doing one's best and let God do the rest.",
+      "rhetorical_move": "parable-as-life-framework (the medieval-farmer story) deployed as the speech's interpretive scaffolding",
+      "confidence": "asserted as personal credo, attributed to a fictional parable",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Poverty in childhood — hawking newspapers, selling cigarettes, shining shoes in Sampaloc's streets — was a 'blessing in disguise' because it taught the value of hard work and a good college education, and the discipline of dreaming big AND working hard toward those dreams.",
+      "rhetorical_move": "redemptive-reframing of biographical hardship",
+      "confidence": "asserted retrospectively",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Jovito R. Salonga's lifetime lesson — that it is far more important to aspire for what money cannot buy (integrity, dignity, honor, ethics, credibility) than for what money can buy — is the single most formative teaching of Panganiban's career, held 'sacred to this day' and repeated across his speeches.",
+      "rhetorical_move": "guru-citation as constitutive of self",
+      "confidence": "asserted with reverence",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The seven JBC rejections (1992-1995) were not failures but the substance of vocational testing — only after Panganiban had effectively 'given up' did the Luke 11 ('ask, seek, knock') and Luke 9 ('listen to Him') gospel readings give him the courage to resubmit, leading to the September 20, 1995 breakthrough.",
+      "rhetorical_move": "scriptural-providential reading of professional rejection cycle",
+      "confidence": "asserted as testimony",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The medieval-farmer parable — horse runs away (bad news), returns with 10 wild horses (good news), son breaks leg (bad news), king conscripts all village youth and they all die in war except the lame son (good news). The farmer's response to every turn: 'Good news, bad news, who knows? I will just keep on trying my best and God will do the rest.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "UST entrance interview failure: Dominican priest asked 'How many Gods? How many Persons? Name them.' Panganiban knew 'One' and 'Three' but for the names 'sheepishly whispered, Jesus, Mary, Joseph.' Failed the test. Enrolled at FEU instead — became the turning point of his life.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Father could not afford the 15-centavo bus fare from Sampaloc to UP Diliman despite his honor-student son's UP scholarship — so a chemical-engineering dream (and a UP undergraduate career) was vetoed by family poverty plus father's law-degree insistence.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Seven JBC rejections over three years (1992-1995). He sobbed and asked: 'How long, oh God, must I bear these frustrations and embarrassment of being rejected?'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Two consecutive Sunday Gospel readings (Luke 11 and Luke 9) at the Holy Communion ministry: he had 'cold perspiration and goose pimples' and gasped, 'My Lord, are you asking me to persist in my quest?' He resubmitted his name; on September 20, 1995, he passed JBC screening for the first time.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Boyhood newspaper-selling dream of becoming Manila Times president was overtaken: he became president of the Philippine Daily Inquirer — 'the most widely circulated broadsheet in the country.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies 'good news bad news who knows' as a working test for not over-reading any single biographical event",
+    "treats the seven JBC rejections as a vocational-discernment cycle rather than as professional failure",
+    "elevates 'do your best, God does the rest' as a settled posture — work, then surrender",
+    "uses scriptural cues (Luke 11, Luke 9) as actionable triggers for vocational decision",
+    "frames poverty-shaped childhood as the constitutive condition of later prosperity-advocacy"
+  ],
+  "target_audience": [
+    "Canossian Sisters celebrating their 200th foundation day in Lipa City",
+    "Students and faculty of Canossian Academy",
+    "Catholic religious-formation audiences seeking testimony of faith + vocation",
+    "Aspiring lawyers and judiciary candidates facing rejection",
+    "Filipinos seeking biographical inspiration across class-mobility lines"
+  ],
+  "register_markers": [
+    "testimonial-autobiographical register — first-person Christian witness",
+    "parable-as-frame opener (Middle Ages farmer story) before personal narrative",
+    "section headings as biographical chapters ('FEU: A TURNING POINT', 'SUPREME COURT DREAM', 'VICTORY AT LAST', 'THE CHIEF JUSTICESHIP')",
+    "scriptural-citation register (Luke 11, Luke 9) inside personal narrative",
+    "self-deprecating poverty-detail (15-centavo bus fare, hawking newspapers)",
+    "doxological closer ('To God be the glory!')",
+    "tapestry-of-pains-and-gains metaphor for divine providence",
+    "before-and-after biographical pairings (newsboy → newspaper president, ignoramus → Pontifical Council member, etc.)"
+  ],
+  "one_paragraph_summary": "Delivered May 24, 2007 at the Canossian Academy in Lipa City for the Canossian Sisters' 200th foundation day, this is Panganiban's most compact autobiography. He opens with a medieval-farmer parable — horse runs away (bad news), comes back with ten wild horses (good news), son breaks leg (bad news), king conscripts the village and only the lame son survives (good news) — with the farmer's refrain 'Good news, bad news, who knows? I will just keep on trying my best and God will do the rest' becoming the speech's interpretive scaffolding. He then walks through his real story: post-WWII Sampaloc poverty as fourth child of an elementary-only mother and high-school-only Bureau of Lands clerk father; hawking newspapers, cigarettes, shoeshines; born Catholic but 'unchurched and uncatechized'; father vetoing his chemical-engineering dream and insisting on law; UP scholarship he could not afford the 15-centavo bus fare to claim; failed UST entrance interview when he answered 'Jesus, Mary, Joseph' instead of the Trinity; enrolling at FEU instead, which proved 'one of the best turns of my entire life' — there he met Dean Jovito R. Salonga (whose teaching about aspiring for what money cannot buy he holds 'sacred to this day') and FEU chaplain Fr. Michael Nolan (who taught him basic Catholicism). After Ramos offered him an SC seat on June 17, 1992, seven JBC rejections over three years followed; reading Luke 11 ('ask, seek, knock') and Luke 9 ('listen to Him') on successive Sundays gave him the courage to resubmit. On September 20, 1995, he passed JBC screening for the first time; in late 2005 he was named 21st CJ. To Sister Estela's question 'Why are you who you are now?' his answer: 'Please ask the Lord and Mother Mary. I am merely their servant.'"
+}

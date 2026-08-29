@@ -1,0 +1,266 @@
+{
+  "id": "CB005",
+  "type": "column",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 5,
+  "title": "Merging law and economics",
+  "date": "2019-11-03",
+  "year": 2019,
+  "source_url": "https://opinion.inquirer.net/124992/merging-law-and-economics",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Economic-reform community (Momentum book launch audience)",
+      "FLP donors and prospective scholars",
+      "Constitutional-law scholars and prosperity-rights advocates",
+      "Civic readers committed to the twin-beacons philosophy",
+      "PH bar examinees and law students"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_donors_and_partners",
+      "twin_beacons_doctrine"
+    ],
+    "secondary": [
+      "constitutional_doctrine",
+      "foundation_for_liberty_and_prosperity",
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "liberty and prosperity",
+    "twin beacons",
+    "Foundation for Liberty and Prosperity",
+    "TaÃƒÂ±ada v. Angara",
+    "globalization",
+    "Bill of Rights",
+    "Global Forum on Liberty and Prosperity",
+    "Manila Declaration"
+  ],
+  "primary_topics": [
+    "Launch of 'Momentum,' an economic-reforms book by Bernardo, Chikiamco, de Dios, Fabella, Paderanga",
+    "Liberty and Prosperity philosophy as twin beacons that must go together",
+    "TaÃƒÂ±ada v. Angara (May 2, 1997) Ã¢â‚¬â€� affirmation of PH membership in WTO and adoption of globalization, liberalization, deregulation, privatization",
+    "Global Forum on Liberty and Prosperity and the Manila Declaration",
+    "Foundation for Liberty and Prosperity (FLP) and its three educational projects"
+  ],
+  "sub_topics": [
+    "Authors of 'Momentum': Romeo Bernardo, Calixto Chikiamco, Emmanuel de Dios, Raul Fabella, the late Cayetano Paderanga",
+    "TaÃƒÂ±ada v. Angara unanimous outcome; started with only 3 concurrences out of 15",
+    "Reigning 1997 doctrine: 'Filipino First' (isolationist)",
+    "CJ Beverley McLachlin of Canada Ã¢â‚¬â€� renamed philosophy as 'liberty and prosperity under the rule of law'",
+    "1987 Constitution Bill of Rights Ã¢â‚¬â€� mandatory and self-executing",
+    "Prosperity provisions in three other articles Ã¢â‚¬â€� mostly aspirational, need implementing laws",
+    "Patrick Henry's 'Give me liberty or give me death' as US-Constitution origin reference",
+    "FLP founded 2011 (CJ's 75th birthday Dec 11, 2011 implicit)",
+    "Three FLP projects: 20 Metrobank Foundation professorial chairs; 20 annual Tan Yan Kee Foundation P200,000 scholarships; Ayala CorporationÃ¢â‚¬â€œfunded dissertation contests (~P2M prizes)",
+    "First FLP scholar batch: all passed bar exam, two in top five (1st and 5th places)",
+    "CJ Diosdado M. Peralta chairs scholarship board",
+    "Senior Justice Estela M. Perlas-Bernabe chairs dissertation contest board",
+    "Plans: roving museum (2020), Global Forum reconvening (2021)"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "These twin beacons must always go together; one is useless without the other",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "egalitarian goal should be achieved only via libertarian methods",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "liberty and prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Give me liberty or give me death",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the singular truth",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "isolationist policies",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "21st-century economic doctrines",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "mere ideals and aspirations",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "mandatory and self-executing",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author, FLP founder)",
+      "Romeo Bernardo (Momentum co-author)",
+      "Calixto Chikiamco (Momentum co-author)",
+      "Emmanuel de Dios (Momentum co-author)",
+      "Raul Fabella (Momentum co-author)",
+      "Cayetano Paderanga (late Momentum co-author)",
+      "CJ Beverley McLachlin (Canada, renamed the philosophy)",
+      "Patrick Henry (US revolution, quoted)",
+      "CJ Diosdado M. Peralta (FLP scholarship board chair)",
+      "Senior Justice Estela M. Perlas-Bernabe (FLP dissertation contest board chair)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "World Trade Organization (WTO)",
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Metrobank Foundation",
+      "Tan Yan Kee Foundation",
+      "Ayala Corporation",
+      "Global Forum on Liberty and Prosperity (2006)"
+    ],
+    "cases": [
+      "TaÃƒÂ±ada v. Angara (May 2, 1997)"
+    ],
+    "laws_treaties": [
+      "1987 Philippine Constitution (Bill of Rights vs prosperity provisions)",
+      "US Constitution (referenced for Bill-of-Rights borrowing)",
+      "World Trade Organization agreements",
+      "Manila Declaration on Liberty and Prosperity (2006)"
+    ],
+    "events": []
+  },
+  "stances": [
+    {
+      "claim": "Humans need both justice and jobs, freedom and food, ethics and economics, peace and development Ã¢â‚¬â€� liberty and prosperity as twin beacons that must always go together because 'one is useless without the other.'",
+      "rhetorical_move": "chiastic-doublet philosophical thesis",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The best way to conquer poverty, create wealth, and share prosperity is to unleash the entrepreneurial genius of people by granting them freedom and the tools to help themselves and society Ã¢â‚¬â€� not through dependency-relief paradigms but through libertarian methods toward egalitarian ends.",
+      "rhetorical_move": "libertarian-method egalitarian-goal synthesis",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The 1987 Constitution structurally subordinates prosperity to political liberty: the Bill of Rights is mandatory and self-executing, but the roads to prosperity (rights to education, healthy environment, freedom from poverty) appear in three other articles and are mostly viewed as ideals and aspirations needing implementing legislation to be judicially enforceable Ã¢â‚¬â€� a hierarchy traceable to the document's anti-colonial origins.",
+      "rhetorical_move": "constitutional-text structural-asymmetry diagnosis",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "After CJ Panganiban's retirement, the Court 'returned to the tradition of giving primacy to political liberties and shelving prosperity only as a secondary objective' Ã¢â‚¬â€� a regression that the FLP exists to counter by giving equal primacy to the twin beacons through professorial chairs, scholarships, and dissertation contests.",
+      "rhetorical_move": "post-retirement-regression critique with institutional-counter-effort",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "TaÃƒÂ±ada v. Angara backstory: 'At the start, only three members of the Court fully concurred with me. But after days of patient explanations and discussions, I finally convinced the 14 other justices to agree unanimously' Ã¢â‚¬â€� modeling persuasive doctrinal change against the reigning 'Filipino First' doctrine.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ Beverley McLachlin's request Ã¢â‚¬â€� and CJ Panganiban's acceptance Ã¢â‚¬â€� to rename the philosophy 'liberty and prosperity under the rule of law' to stress that 'egalitarian goal should be achieved only via libertarian methods,' a comparative-jurisprudence collaboration preserved as a founding linguistic moment.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "First FLP scholar batch: all passed the bar exam, with two placing first and fifth Ã¢â‚¬â€� used as proof-of-concept evidence for the merit-based philosophy.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Patrick Henry's 'Give me liberty or give me death' invoked to explain why the PH Bill of Rights is structured for political liberty rather than prosperity.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies twin-beacons framework to evaluate any law/economy question",
+    "deploys libertarian-method egalitarian-goal synthesis as decision lens",
+    "treats unleashing-entrepreneurial-genius as primary anti-poverty intervention",
+    "uses Bill-of-Rights-self-executing vs prosperity-aspirational asymmetry as constitutional diagnosis",
+    "frames FLP's three projects (chairs, scholarships, contests) as deliberate institutional rebalancing"
+  ],
+  "target_audience": [
+    "Economic-reform community (Momentum book launch audience)",
+    "FLP donors and prospective scholars",
+    "Constitutional-law scholars and prosperity-rights advocates",
+    "Civic readers committed to the twin-beacons philosophy",
+    "PH bar examinees and law students"
+  ],
+  "register_markers": [
+    "book-launch speech-summary register",
+    "chiastic-doublet phrase generator ('justice and jobs; freedom and food; ethics and economics')",
+    "FLP-philosophy primary-statement register",
+    "TaÃƒÂ±ada v. Angara as recurring self-citation",
+    "comparative-constitutional structural analysis",
+    "Patrick Henry quotation as US-origin reference",
+    "FLP-project enumeration with named board chairs"
+  ],
+  "one_paragraph_summary": "Panganiban summarizes his speech at the launch of 'Momentum,' an economic-reforms book by Romeo Bernardo, Calixto Chikiamco, Emmanuel de Dios, Raul Fabella, and the late Cayetano Paderanga. He proposes that the authors would constitute a 'Supreme Court for economic matters' and uses the launch to restate his core philosophy: 'Humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity' Ã¢â‚¬â€� twin beacons that must always go together because 'one is useless without the other,' achieved by unleashing the entrepreneurial genius of people. He cites TaÃƒÂ±ada v. Angara (May 2, 1997), which he authored Ã¢â‚¬â€� affirming Philippine WTO membership and adopting globalization, liberalization, deregulation, and privatization against the then-reigning 'Filipino First' doctrine Ã¢â‚¬â€� and recalls that he began with only three concurrences but persuaded the other 14 to a unanimous outcome. He recounts CJ Beverley McLachlin of Canada renaming the philosophy 'liberty and prosperity under the rule of law' to stress that 'egalitarian goal should be achieved only via libertarian methods,' and the Global Forum's Manila Declaration. He notes that after his retirement the Court reverted to giving primacy to political liberties Ã¢â‚¬â€� traceable to the Constitution's anti-colonial origins, where the Bill of Rights (borrowed from the US Constitution, epitomized by Patrick Henry's 'Give me liberty or give me death') is mandatory and self-executing while prosperity provisions are mostly aspirational. He founded the FLP in 2011 to give equal primacy, sponsoring three projects: 20 Metrobank Foundation professorial chairs on liberty and prosperity, 20 annual Tan Yan Kee Foundation P200,000 scholarships (first batch all passed the bar; two placed first and fifth, with CJ Peralta chairing the board), and Ayala CorporationÃ¢â‚¬â€œfunded dissertation contests (~P2 million in prizes, with Senior Justice Perlas-Bernabe as board chair). FLP plans a roving museum in 2020 and a Global Forum reconvening in 2021."
+}

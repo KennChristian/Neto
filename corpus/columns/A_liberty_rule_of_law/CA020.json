@@ -1,0 +1,283 @@
+{
+  "id": "CA020",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 20,
+  "title": "Defeat for Trump, victory for rule of law",
+  "date": "2020-12-27",
+  "year": 2020,
+  "source_url": "https://opinion.inquirer.net/136462/defeat-for-trump-victory-for-rule-of-law",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Filipino readers tracking the US 2020 election aftermath",
+      "Comparative-constitutional-law scholars",
+      "Critics and supporters of Duterte's PH SC composition",
+      "Civic-minded readers concerned about presidential-judicial relations",
+      "Future Philippine and US presidents and their appointees"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "rule_of_law",
+      "global_geopolitics"
+    ]
+  },
+  "keywords": [
+    "Texas v. Pennsylvania",
+    "Trump SCOTUS 7-2",
+    "Electoral College 306-232",
+    "Mitch McConnell concession",
+    "Estrada v. Desierto",
+    "umbilical ties",
+    "Fiat justitia ruat caelum",
+    "rule of law"
+  ],
+  "primary_topics": [
+    "SCOTUS 7-2 rejection of Texas v. Pennsylvania (Dec 11, 2020) Ã¢â‚¬â€� Trump-aligned challenge to Georgia, Michigan, Pennsylvania, Wisconsin results",
+    "All three Trump SCOTUS appointees (Kavanaugh, Gorsuch, Barrett) voted with the majority",
+    "Trump's lost 'last card' at the Jan 6 congressional count Ã¢â‚¬â€� neutralized by McConnell's concession",
+    "Parallel to Estrada v. Desierto (March 2, 2001) Ã¢â‚¬â€� 13-0 ousting of Estrada with two inhibitions",
+    "Doctrine: presidents should accept 'cutting of umbilical ties' when jurists enter the Court"
+  ],
+  "sub_topics": [
+    "Texas v. Pennsylvania sought to subtract 62 electoral votes (GA 16, MI 16, PA 20, WI 10) from Biden's 306 and add to Trump's 232 Ã¢â‚¬â€� would have flipped to 294-244 Trump",
+    "Two conservatives (Thomas, Alito) dissented only as to granting motion to file, not on merits Ã¢â‚¬â€� had Kavanaugh/Gorsuch/Barrett joined, it would have been 5-4 Trump",
+    "McConnell concession quoted: 'Many millions of us had hoped the presidential election would yield a different result. But our system of government has processes to determine who will be sworn in on January the 20th'",
+    "Estrada one-on-one meeting at Jose T. Pardo's house in Ayala Alabang (six years after Estrada's plunder conviction and pardon)",
+    "Estrada's question: 'During my two and half years in office, I named several justices to the Supreme Court. Why is it that none of them dissented from the 13-0 decision ousting me?'",
+    "CJ Davide and CJ Panganiban inhibited in Estrada v. Desierto (the two inhibitions)",
+    "Constitutional standard: 'proven competence, integrity, probity and independence'",
+    "Black-robe transformation: forfeit past activities, relatives, friends Ã¢â‚¬â€� especially the appointing president",
+    "Latin maxim: 'Fiat justitia ruat caelum' (Let justice be done though the heavens may fall)",
+    "Three new Scotus appointees: Brett Kavanaugh, Neil Gorsuch, Amy Coney Barrett",
+    "Two conservative dissenters: Clarence Thomas, Samuel Alito"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "could not contain himself in disgust",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "disgraceful miscarriage of justice",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "victory by judicial fiat",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "strange legal gobbledygook",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Trump's last card... is really a joker",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rule of law is much alive",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "after losing its way during the last four years, that mighty country could now be looked up to by the free world for leadership",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the wiles and whims of the governors",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "those who don the Court's black robes are expected to undergo a transformation",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to forfeit their past activities, relatives, and friends",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the hallowed doors of the Supreme Court",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "presidents should assume a cutting of umbilical ties",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Fiat justitia ruat caelum",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Let justice be done though the heavens may fall",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author)",
+      "President Donald Trump",
+      "President-elect Joe Biden",
+      "Justice Brett Kavanaugh (Trump SCOTUS appointee)",
+      "Justice Neil Gorsuch (Trump SCOTUS appointee)",
+      "Justice Amy Coney Barrett (Trump SCOTUS appointee)",
+      "Justice Clarence Thomas (dissenter on motion-to-file)",
+      "Justice Samuel Alito (dissenter on motion-to-file)",
+      "Senator Mitch McConnell (Senate Republican leader)",
+      "Former President Joseph Estrada",
+      "Jose T. Pardo (Estrada's former finance secretary; CJ's friend)",
+      "CJ Hilario G. Davide Jr. (co-inhibitor in Estrada v. Desierto)",
+      "Former President Gloria Macapagal Arroyo (acceded as Estrada successor)"
+    ],
+    "institutions": [
+      "Supreme Court of the United States (SCOTUS)",
+      "US Electoral College",
+      "US Congress",
+      "US Senate",
+      "Supreme Court of the Philippines"
+    ],
+    "cases": [
+      "Texas v. Pennsylvania (Dec 11, 2020) Ã¢â‚¬â€� SCOTUS 7-2",
+      "Estrada v. Desierto (March 2, 2001) Ã¢â‚¬â€� PH SC 13-0"
+    ],
+    "laws_treaties": [
+      "1987 Philippine Constitution (judicial-qualifications standard)",
+      "US Constitution (electoral processes)"
+    ],
+    "events": []
+  },
+  "stances": [
+    {
+      "claim": "SCOTUS's 7-2 rejection of Texas v. Pennsylvania Ã¢â‚¬â€� with all three Trump appointees (Kavanaugh, Gorsuch, Barrett) voting with the majority Ã¢â‚¬â€� was a 'victory for rule of law' that demonstrates 'despite Trump's occasional megalomania and authoritarian streak, the rule of law is much alive in the US,' and that the United States 'after losing its way during the last four years... could now be looked up to by the free world for leadership.'",
+      "rhetorical_move": "institutional-vindication declaration",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Trump's remaining 'last card' Ã¢â‚¬â€� the Jan 6 congressional count Ã¢â‚¬â€� is 'really a joker' because Senate Republican leader Mitch McConnell has already conceded, acknowledging 'our system of government has processes to determine who will be sworn in on January the 20th.'",
+      "rhetorical_move": "metaphor-driven dismissal (last card / joker)",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The SCOTUS rebuff parallels the Philippine Supreme Court's 13-0 decision in Estrada v. Desierto (March 2, 2001) ousting Estrada Ã¢â‚¬â€� and Estrada's later anguished question to CJ Panganiban ('Why is it that none of them dissented... If they could not side with me, why did they not just inhibit like you?') points to the central misunderstanding: judicial appointees owe no fealty to the appointing president.",
+      "rhetorical_move": "cross-jurisdictional parallel via personal-encounter anecdote",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Constitution requires judges to be 'of proven competence, integrity, probity and independence'; those who don the Court's black robes 'are expected to undergo a transformation, to become different persons, to forfeit their past activities, relatives, and friends, especially the president who appointed them, and to devote their full time and attention to the exclusive and reclusive world of decision-making.'",
+      "rhetorical_move": "doctrinal-standard restatement with transformative-vocation framing",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The proper moral disposition of an appointing president is not disappointment but pride: 'presidents should assume a cutting of umbilical ties when jurists enter the hallowed doors of the Supreme Court. In fact, I believe, they should be happy, or at least consoled, that their appointees lived up to their sworn duty of Fiat justitia ruat caelum.'",
+      "rhetorical_move": "normative-disposition correction with Latin-maxim sign-off",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The Estrada meeting six years after his conviction-and-pardon, arranged by Jose T. Pardo at Pardo's Ayala Alabang house Ã¢â‚¬â€� Estrada plaintively asking why none of his SCOTUS appointees dissented from the 13-0 decision, and 'If they could not side with me, why did they not just inhibit like you?' Ã¢â‚¬â€� preserved as the column's emotional centerpiece linking Manila to Washington.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The numerical-counterfactual analysis: had Kavanaugh, Gorsuch, and Barrett voted with Thomas and Alito, the result would have been 5-4 for Trump Ã¢â‚¬â€� a stark thought experiment showing how close the rule-of-law victory actually was.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ's coining of 'cutting of umbilical ties' as the proper presidential disposition toward judicial appointees Ã¢â‚¬â€� paired with the Latin sign-off 'Fiat justitia ruat caelum,' a CJ signature register marker.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies cross-jurisdictional comparative analysis (SCOTUS 7-2 parallel to PH SC 13-0)",
+    "uses counterfactual vote-flip arithmetic to show institutional-vindication stakes",
+    "deploys transformative-vocation doctrine to defeat appointing-president loyalty claims",
+    "treats appointing-president pride (not disappointment) as the correct normative disposition",
+    "frames 'rule of law' as the cross-cultural translation of judicial independence",
+    "applies black-robe transformation principle to anchor 'cutting of umbilical ties'"
+  ],
+  "target_audience": [
+    "Filipino readers tracking the US 2020 election aftermath",
+    "Comparative-constitutional-law scholars",
+    "Critics and supporters of Duterte's PH SC composition",
+    "Civic-minded readers concerned about presidential-judicial relations",
+    "Future Philippine and US presidents and their appointees"
+  ],
+  "register_markers": [
+    "rule-of-law triumphalist register",
+    "card-metaphor sustained ('last card... really a joker')",
+    "cross-jurisdictional parallel via personal anecdote",
+    "verbatim McConnell concession preserved",
+    "transformative-vocation framing (black robes; hallowed doors)",
+    "Latin-maxim sign-off ('Fiat justitia ruat caelum')",
+    "first-person institutional disclosure (CJ-Davide inhibition recounted)",
+    "'umbilical ties' coined metaphor for appointing-president disposition"
+  ],
+  "one_paragraph_summary": "Panganiban celebrates the US Supreme Court's 7-2 rejection of Texas v. Pennsylvania (Dec 11, 2020) Ã¢â‚¬â€� which had sought to subtract the 62 electoral votes of Georgia, Michigan, Pennsylvania, and Wisconsin from Biden's 306 and add them to Trump's 232 to flip the result to 294-244 by judicial fiat Ã¢â‚¬â€� and notes pointedly that all three Trump appointees (Brett Kavanaugh, Neil Gorsuch, and Amy Coney Barrett) voted with the majority, while only Justices Clarence Thomas and Samuel Alito dissented (and only to grant the motion to file, not on the merits). Had the three new appointees voted with their conservative seniors, the result would have been 5-4 for Trump. Trump's 'last card' at the January 6 congressional electoral count is 'really a joker' because Senate Republican leader Mitch McConnell has already conceded, acknowledging that 'our system of government has processes to determine who will be sworn in on January the 20th.' For CJ, the SCOTUS rebuff shows that 'despite Trump's occasional megalomania and authoritarian streak, the rule of law is much alive in the US' and that America, 'after losing its way during the last four years... could now be looked up to by the free world for leadership.' He draws the cross-jurisdictional parallel to Estrada v. Desierto (March 2, 2001), in which the Philippine SC unanimously (13-0, with CJ Davide and CJ Panganiban inhibiting) ousted Estrada in favor of VP Arroyo. Six years after his conviction-and-pardon, Estrada sought CJ out at Jose T. Pardo's Ayala Alabang house and asked why none of his own SC appointees dissented and 'If they could not side with me, why did they not just inhibit like you?' CJ's answer Ã¢â‚¬â€� preserved as the column's doctrinal core Ã¢â‚¬â€� is that judicial decisions 'must conform to the Constitution and the law, not to the wiles and whims of the governors,' and that those who 'don the Court's black robes are expected to undergo a transformation, to become different persons, to forfeit their past activities, relatives, and friends, especially the president who appointed them.' The moral lesson: 'presidents should assume a cutting of umbilical ties when jurists enter the hallowed doors of the Supreme Court. In fact, I believe, they should be happy, or at least consoled, that their appointees lived up to their sworn duty of Fiat justitia ruat caelum' Ã¢â‚¬â€� Let justice be done though the heavens may fall."
+}

@@ -1,0 +1,266 @@
+{
+  "id": "CA014",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 14,
+  "title": "Extracting WPS resources beyond the arbitral award",
+  "date": "2019-08-18",
+  "year": 2019,
+  "source_url": "https://opinion.inquirer.net/123392/extracting-wps-resources-beyond-the-arbitral-award",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Foreign-affairs and constitutional-law readership",
+      "Filipino policymakers preparing Beijing trip",
+      "FLP donors interested in legacy WPS work",
+      "Inquirer general readership following the arc"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "diplomatic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes",
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "eez_resource_sovereignty",
+      "icc_and_duterte"
+    ]
+  },
+  "keywords": [
+    "WPS",
+    "EEZ",
+    "arbitral award",
+    "China's April 13 2009 Note",
+    "RA 9522",
+    "UNCLOS",
+    "FTAA",
+    "La Bugal"
+  ],
+  "primary_topics": [
+    "China's April 13, 2009 Note to the UN as implied recognition of PH EEZ entitlements",
+    "The three concessions China cannot make on the arbitral award (freedom of navigation, dismantling reclamations, abandoning 'historic rights')",
+    "Constitutional modes for harvesting WPS natural resources",
+    "Ambassador Zhao Jianhua's reiterated rejection of the award"
+  ],
+  "sub_topics": [
+    "12-NM territorial sea, 24-NM contiguous zone, 200-NM EEZ, 350-NM extended continental shelf as UN-recognized entitlements",
+    "RA 9522 (March 10, 2009) establishing PH archipelagic baselines",
+    "Chinese note alleging Spratlys and Scarborough 'have been part of the territory of China since the ancient time'",
+    "60-40 sharing under co-production/joint-venture/production-sharing modes",
+    "FTAA flexibility under La Bugal-B'laan v. Ramos",
+    "Pag-asa Island and Scarborough as items deferred to Duterte's negotiating skill",
+    "Modern science and 'green substitutes' as a closing time-pressure argument"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Just after our people were getting united in our goals and methods",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Though it may want to retain our friendship, the People's Republic, I think, will not budge",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rights that are assiduously taught in Chinese schools to be essential parts of its heritage",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "out of the close rapport between Presidents Duterte and Xi",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Significantly, China's exceptions to RA 9522 were limited only to our declaration of sovereignty",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "since it did not contest such sovereign rightsâ€¦ China may be deemed to have impliedly accepted them",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "consequently, I believe that even without the arbitral award",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the more flexible 'financial and technical assistance agreements'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "even without invoking the arbitral award, we should be able to enjoy the valuable treasures of the WPS",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "before modern science and technology render them valueless with discoveries of green substitutes",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Ah, I will leave them to the negotiating skills of President Duterte",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Rodrigo Duterte",
+      "Xi Jinping",
+      "Zhao Jianhua (Chinese Ambassador)"
+    ],
+    "institutions": [
+      "Permanent Court of Arbitration / UNCLOS Annex VII tribunal",
+      "United Nations",
+      "Supreme Court of the Philippines",
+      "Philippine Congress"
+    ],
+    "cases": [
+      "La Bugal-B'laan v. Ramos (December 1, 2004)"
+    ],
+    "laws_treaties": [
+      "United Nations Convention on the Law of the Sea / Law of the Sea Convention (LOSC) â€” adopted April 30, 1982; entered into force November 16, 1994",
+      "Republic Act No. 9522 (PH baselines law, March 10, 2009)",
+      "1987 Philippine Constitution, Art. XII (60-40 modes; FTAA)"
+    ],
+    "events": [
+      "April 13, 2009 â€” China's Note to the UN Secretary-General taking exceptions to RA 9522",
+      "Arbitral award July 12, 2016",
+      "Ambassador Zhao Jianhua's public reiteration of rejection",
+      "Duterte's late-August 2019 Beijing visit"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "China cannot accept the arbitral award because doing so would force three intolerable concessions: opening the SCS to freedom of navigation by foreign warships and warplanes, dismantling its reclamations and installations, and giving up its 'historic rights' taught for generations as essential parts of Chinese heritage.",
+      "rhetorical_move": "structural-analysis of adversary's constraints (why no amount of friendship will move China on the award itself)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "China's April 13, 2009 Note to the UN took exceptions only to RA 9522's references to the Spratlys and Scarborough, not to PH sovereign rights in our territorial sea, contiguous zone, EEZ, and extended continental shelf â€” and since it did not contest those rights, China 'may be deemed to have impliedly accepted them.'",
+      "rhetorical_move": "textual-construction of an implied admission (silence as recognition)",
+      "confidence": "asserted (legal-inference)",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Out of the close rapport between Duterte and Xi, China may allow the PH to exploit, develop, and extract WPS gas, petroleum, and oil without invoking the China-abhorred arbitral award â€” passing the implied recognition sub silentio.",
+      "rhetorical_move": "diplomatic-best-case scenario sketch",
+      "confidence": "speculative-but-grounded",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "If China passes sub silentio, the PH can harvest WPS resources via constitutionally permitted modes â€” co-production, joint venture, production-sharing with 60% Filipino-owned entities, or the more flexible FTAAs over which La Bugal-B'laan v. Ramos gave the President wide discretion.",
+      "rhetorical_move": "constitutional-toolkit enumeration",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Even without the arbitral award, the PH should enjoy WPS treasures before modern science renders them valueless with green substitutes for minerals, petroleum, and other mineral oils â€” making harvest a time-sensitive imperative, not merely a sovereign prerogative.",
+      "rhetorical_move": "time-decay argument (window-closing)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The structural analysis of why China cannot accept the award â€” three reasons enumerated (freedom of navigation, dismantling installations, surrendering 'historic rights' taught in schools as heritage) â€” applied as the operational reason the PH must find a non-award channel.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The textual-construction move on the April 13, 2009 Note â€” observing that China's exceptions named only Spratlys and Scarborough, not EEZ entitlements, and concluding China 'may be deemed to have impliedly accepted them' â€” a quintessential CJ doctrinal turn taking China's words and reading their silences as commitments.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing aside on Pag-asa Island and Scarborough â€” 'Ah, I will leave them to the negotiating skills of President Duterte when he meets President Xi later this month' â€” the conversational sign-off that distinguishes columns from briefings, and the lone use of 'Ah' as a stylistic transition in the arc.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'green substitutes' time-pressure argument at close â€” a rare CJ argument from technological obsolescence rather than legal principle, urgent-economics rather than slow-doctrine.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies adversary-constraints analysis (enumerate what China cannot accept before proposing what it might tolerate)",
+    "uses textual-construction of silence as implied admission (the Note's omissions as legal commitments)",
+    "uses the 'unwaived rights + alternative channel' diplomatic pattern (sub silentio recognition rather than direct enforcement)",
+    "applies the constitutional-modes toolkit (co-production / joint venture / production-sharing / FTAA) as the menu once political space opens",
+    "applies the 'window-closing' time-decay frame on natural-resource extraction (use it or lose its value)",
+    "defers tactical land-occupation issues (Pag-asa, Scarborough) to executive negotiating discretion"
+  ],
+  "target_audience": [
+    "Foreign-affairs and constitutional-law readership",
+    "Filipino policymakers preparing Beijing trip",
+    "FLP donors interested in legacy WPS work",
+    "Inquirer general readership following the arc"
+  ],
+  "register_markers": [
+    "doctrinal-formal register with structural enumeration of adversary's constraints",
+    "'Though it may want to retain our friendship, the People's Republic, I think, will not budge' â€” characteristic 'I think' humility-with-confidence opener",
+    "'Significantly' as evidentiary marker",
+    "'sub silentio' Latinism â€” recurring CJ motif",
+    "'Ah, I will leave them to the negotiating skills of President Duterte' â€” conversational close",
+    "'Cheers!' style closer absent here; this column closes contemplative",
+    "no Tagalog markers; international-diplomatic English",
+    "explicit forward-looking reference to constitutional toolkit"
+  ],
+  "one_paragraph_summary": "Days after Ambassador Zhao Jianhua publicly reiterated China's rejection of the arbitral award, Panganiban argues that China cannot reverse itself on the award because doing so would force three intolerable concessions: accepting freedom of navigation for foreign warships in the SCS, dismantling reclamations and installations, and surrendering 'historic rights' taught for generations in Chinese schools as essential heritage. But, he argues, China may still allow the PH to harvest WPS resources through a quieter channel. Recalling that the PH established its archipelagic baselines through RA 9522 (March 10, 2009) and that China's April 13, 2009 Note took exceptions only to RA 9522's references to the Spratlys and Scarborough, he observes that China did not contest PH sovereign rights in the territorial sea, contiguous zone, EEZ, or extended continental shelf â€” and so 'may be deemed to have impliedly accepted them.' Out of the close Duterte-Xi rapport, Xi may simply pass this implied recognition sub silentio. If so, the PH can exploit WPS gas, petroleum, and oil through the constitutionally permitted modes (60-40 co-production/joint-venture/production-sharing, or the more flexible FTAAs that La Bugal-B'laan v. Ramos opened to wide presidential discretion). He closes with a time-decay warning â€” modern science may render mineral resources valueless with green substitutes â€” and defers the land-occupation questions of Pag-asa Island and Scarborough to Duterte's own negotiating skill."
+}

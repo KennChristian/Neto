@@ -1,0 +1,250 @@
+{
+  "id": "CD004",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 4,
+  "title": "FLP expanding into prosperity",
+  "date": "2022-04-11",
+  "year": 2022,
+  "source_url": "https://opinion.inquirer.net/151988/flp-expanding-into-prosperity",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Law students and MBA aspirants considering FLP applications",
+      "Law school deans tracking FLP eligibility criteria",
+      "Donors and partner institutions (MPIC, Tan Yan Kee, Ayala)",
+      "Bar and legal-education observers",
+      "FLP Scholars Society members and alumni network"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_donors_and_partners",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "msme_and_entrepreneurship",
+      "twin_beacons_doctrine",
+      "flp_scholarship_programs"
+    ]
+  },
+  "keywords": [
+    "Esmel Fellowships launch",
+    "Metro Pacific Investments Corporation",
+    "MBA grant programs",
+    "FLP Legal Scholarship Program",
+    "FLP Dissertation Writing Contest",
+    "AIM Ateneo DLSU UP UST eligible schools",
+    "entrepreneurship sustainability management"
+  ],
+  "primary_topics": [
+    "FLP's expansion from liberty-only to liberty-AND-prosperity programs",
+    "Launch of new 'Esmel Fellowships' (Entrepreneurship, Sustainability, Management, Economics, Business Law) with MPIC partnership",
+    "Continuation of legacy Legal Scholarship Program (Tan Yan Kee) and Dissertation Writing Contest (Ayala Corp)",
+    "Roster of 21 awarded scholars and 5 dissertation winners for prior school year"
+  ],
+  "sub_topics": [
+    "Esmel: P450,000 per grantee (P350,000 tuition + P100,000 books/stipend) â€” 5 fellows per year",
+    "Esmel eligible schools (graduate): AIM, Ateneo de Manila, De La Salle, UP, UST",
+    "Esmel merit-based â€” grantable even to those holding other fellowships",
+    "Legal Scholarship Program now on its 6th year â€” 20+ best/brightest law students at P200,000 each (P100k tuition + P20k books + P80k stipend)",
+    "Open to third and fourth year students of law schools above overall bar passing rate (per Office of the Bar Confidant data)",
+    "Dissertation Writing Contest aimed at literature on liberty/prosperity-under-rule-of-law philosophy",
+    "Open to third and fourth year law students AND those taking Master of Laws",
+    "CJ Gesmundo chaired the Legal Scholarship board of judges last school year",
+    "Senior Justice Estela M. Perlas-Bernabe chaired the Dissertation Writing board of judges",
+    "10 third-year law student scholars named (Crisostomo FEU, Laza St. Louis U, Leron UP, Maurin U Cebu, Opina UST, Pacumio UST, Ramos U Cordilleras, Salazar FEU, Sibayan U Cordilleras, Taongan DLSU-Manila)",
+    "11 fourth-year law student scholars named (Dela Cruz Father Saturnino Urios U, Dumelod UST, Fomaneg UP, Macalino ADMU, Mappang U Cordilleras, Mata USC, Negado USC, Obaob USC, Omamalin USC, Soriano UP, Sy ADMU)",
+    "Dissertation Writing winners: Cuntapay ADMU (1st, P320,000); Baliong USC (2nd, P220,000); 3 third-placers at P120,000 each (De Vera DLSU, Dulanas USC, Lim ADMU)",
+    "FLP founded 2011 to perpetuate the core judicial philosophy of liberty + prosperity under rule of law",
+    "FLP board: De Jesus, Sandoval-Gutierrez, Tetangco, Gregorio, Prof. Elenita C. Panganiban, Maria Elena P.S. Yaptangco, lawyer Sean James Borja; CJ as chair",
+    "Two ultimate projects: immersive interactive Museum for Liberty and Prosperity; multi-billion peso Entrepreneurship Fund"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "expanding its reach this school year to the 'prosperity' side of its philosophy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Esmel",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "merit-based",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Legal Scholarship Program is also merit-based and awards at least 20 of the best and the brightest law students in the country",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "core judicial philosophy to safeguard liberty and nurture prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "with yours truly as chair",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an immersive and interactive Museum for Liberty and Prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a program to help the poor help themselves through private entrepreneurship",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (FLP chair, author)",
+      "CJ Alexander G. Gesmundo (Legal Scholarship judges chair)",
+      "Senior Justice Estela M. Perlas-Bernabe (Dissertation judges chair)",
+      "Former education secretary Edilberto de Jesus (FLP trustee)",
+      "Retired Justice Angelina Sandoval-Gutierrez (FLP trustee)",
+      "Former BSP governor Amando M. Tetangco Jr. (FLP trustee)",
+      "Lawyer Joel Emerson Gregorio (FLP trustee/corporate secretary)",
+      "Prof. Elenita C. Panganiban (FLP trustee; CJ's late wife)",
+      "Maria Elena P.S. Yaptangco (FLP trustee)",
+      "Lawyer Sean James Borja (FLP trustee)",
+      "21 named scholars + 5 dissertation contest winners + 7 finalists"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Metro Pacific Investments Corporation (MPIC)",
+      "Metro Pacific Investments Foundation",
+      "Tan Yan Kee Foundation",
+      "Ayala Corporation",
+      "Asian Institute of Management (AIM)",
+      "Ateneo de Manila University (ADMU)",
+      "De La Salle University (DLSU)",
+      "University of the Philippines (UP)",
+      "University of Santo Tomas (UST)",
+      "University of San Carlos (USC)",
+      "University of Cebu",
+      "University of Cordilleras",
+      "Father Saturnino Urios University",
+      "Far Eastern University (FEU)",
+      "St. Louis University",
+      "Supreme Court Office of the Bar Confidant"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "Launch of Esmel Fellowships for AY 2022-2023",
+      "6th year of FLP Legal Scholarship Program",
+      "2011 founding of FLP"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "FLP is expanding its reach this school year from the liberty-only side of its philosophy to include the prosperity side, launching the new Esmel Fellowships (Entrepreneurship, Sustainability, Management, Economics, business Law) at P450,000 per grantee â€” strictly merit-based and grantable even to those holding other fellowships.",
+      "rhetorical_move": "program-expansion announcement with philosophy-justification framing",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Esmel eligibility for AY 2022-2023 is limited to MBA/MS-equivalent graduate programs in entrepreneurship, sustainability, management, economics, or business law at AIM, ADMU, DLSU, UP, and UST â€” institutional concentration that signals partner-quality emphasis over geographic spread.",
+      "rhetorical_move": "eligibility-restriction as quality-anchoring",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Legal Scholarship Program eligibility remains restricted to third and fourth year law students of law schools whose passing rate exceeds the overall bar passing rate (per Office of the Bar Confidant) â€” using bar-performance threshold as institutional-quality gate.",
+      "rhetorical_move": "performance-gated eligibility framework",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP's two ultimate projects â€” the immersive interactive Museum for Liberty and Prosperity (liberty side) and the multibillion-peso Entrepreneurship Fund (prosperity side) â€” together operationalize the foundation's purpose of helping 'the poor help themselves through private entrepreneurship.'",
+      "rhetorical_move": "ultimate-projects pairing as institutional-mission articulation",
+      "confidence": "aspirational",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The Esmel acronym itself â€” Entrepreneurship, Sustainability, Management, Economics, business Law â€” created to label the new MBA fellowship category, a CJ-style coinage that distills five disciplines into a memorable handle.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Cuntapay's first-prize dissertation taking P320,000 â€” the same Cuntapay being an ADMU writer mentioned in later FLP rosters, signaling the prize-winners' continuing involvement in the FLP Scholars Society pipeline.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "FLP board including Prof. Elenita C. Panganiban â€” CJ's late wife as trustee â€” making this column a quiet record of the household's joint stewardship of the foundation, written 11 months before her death.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "treats merit-based selection as foundational design principle independent of need",
+    "uses bar-performance threshold as institutional-quality gate for law-school eligibility",
+    "structures grants as itemized line-items (tuition / books / stipend) for transparency",
+    "uses concentration-on-top-schools as quality-signaling rather than geographic equity",
+    "frames ultimate-projects as twin pillars (talented + poor) matching twin-philosophy (liberty + prosperity)"
+  ],
+  "target_audience": [
+    "Law students and MBA aspirants considering FLP applications",
+    "Law school deans tracking FLP eligibility criteria",
+    "Donors and partner institutions (MPIC, Tan Yan Kee, Ayala)",
+    "Bar and legal-education observers",
+    "FLP Scholars Society members and alumni network"
+  ],
+  "register_markers": [
+    "institutional-announcement register (program-expansion notice)",
+    "roster-recital register (21 names + 5 names + 7 finalists)",
+    "specific-amount-itemization (P450,000 = P350k + P100k; P200,000 = P100k + P20k + P80k; P320k/P220k/P120k contest tiers)",
+    "criterion-citation register ('above the overall percentage of passing in the last bar exam')",
+    "self-reference 'yours truly as chair' as recurring CJ device",
+    "URL-redirect close ('please visit the FLP website, libpros.com')",
+    "board-membership roll-call register",
+    "philosophy-restatement device ('the intertwining relationship of justice and jobs... etc.')"
+  ],
+  "one_paragraph_summary": "Panganiban announces that the Foundation for Liberty and Prosperity (FLP), in partnership with the Metro Pacific Investments Foundation, is expanding from the liberty-only side of its philosophy to the prosperity side through the launch of 'Esmel Fellowships' â€” Entrepreneurship, Sustainability, Management, Economics, business Law â€” at P450,000 per grantee (P350,000 tuition + P100,000 books/stipend), strictly merit-based, awarded to five qualified applicants enrolled in MBA/MS-equivalent graduate programs at AIM, ADMU, DLSU, UP, or UST. The Legal Scholarship Program, now in its sixth year and partnered with the Tan Yan Kee Foundation, continues to award at least 20 of the best and brightest at P200,000 each (P100k tuition + P20k books + P80k stipend), open to third and fourth year students of law schools above the overall bar passing rate per the Office of the Bar Confidant. The Dissertation Writing Contest with Ayala Corporation augments the literature on liberty/prosperity under rule of law. He recites the rosters: 21 scholars named (10 third-year, 11 fourth-year) for the prior school year, with CJ Gesmundo having chaired the legal scholarship judges and Senior Justice Estela M. Perlas-Bernabe the dissertation judges. Winners of the dissertation contest were Cuntapay (ADMU, P320,000), Baliong (USC, P220,000), and three third-placers (De Vera DLSU, Dulanas USC, Lim ADMU) at P120,000 each. FLP â€” founded 2011 with a board including De Jesus, Sandoval-Gutierrez, Tetangco, Gregorio, Prof. Elenita C. Panganiban (CJ's wife), Maria Elena P.S. Yaptangco, and Sean James Borja, with CJ as chair â€” works toward two ultimate projects: an immersive interactive Museum for Liberty and Prosperity (liberty) and a multibillion-peso Entrepreneurship Fund to help the poor help themselves through private entrepreneurship (prosperity)."
+}

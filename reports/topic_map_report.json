@@ -1,0 +1,1901 @@
+{
+  "generated_at": "2026-05-25T22:27:11.778457+00:00",
+  "n_docs": 79,
+  "unmatched_docs": [],
+  "health_warnings": [
+    {
+      "kind": "over-broad",
+      "topic": "rule_of_law",
+      "doc_count": 30,
+      "msg": "rule_of_law claims 30 of 79 docs (38%); consider tightening matchers (PLAN-0007 §3c)"
+    },
+    {
+      "kind": "over-broad",
+      "topic": "twin_beacons_doctrine",
+      "doc_count": 27,
+      "msg": "twin_beacons_doctrine claims 27 of 79 docs (34%); consider tightening matchers (PLAN-0007 §3c)"
+    },
+    {
+      "kind": "over-broad",
+      "topic": "foundation_for_liberty_and_prosperity",
+      "doc_count": 25,
+      "msg": "foundation_for_liberty_and_prosperity claims 25 of 79 docs (32%); consider tightening matchers (PLAN-0007 §3c)"
+    },
+    {
+      "kind": "over-broad",
+      "topic": "constitutional_doctrine",
+      "doc_count": 28,
+      "msg": "constitutional_doctrine claims 28 of 79 docs (35%); consider tightening matchers (PLAN-0007 §3c)"
+    },
+    {
+      "kind": "over-broad",
+      "topic": "supreme_court_history",
+      "doc_count": 33,
+      "msg": "supreme_court_history claims 33 of 79 docs (42%); consider tightening matchers (PLAN-0007 §3c)"
+    },
+    {
+      "kind": "over-broad",
+      "topic": "bar_exam_and_legal_education",
+      "doc_count": 20,
+      "msg": "bar_exam_and_legal_education claims 20 of 79 docs (25%); consider tightening matchers (PLAN-0007 §3c)"
+    },
+    {
+      "kind": "over-broad",
+      "topic": "family_and_marriage",
+      "doc_count": 22,
+      "msg": "family_and_marriage claims 22 of 79 docs (28%); consider tightening matchers (PLAN-0007 §3c)"
+    },
+    {
+      "kind": "over-broad",
+      "topic": "faith_journey",
+      "doc_count": 20,
+      "msg": "faith_journey claims 20 of 79 docs (25%); consider tightening matchers (PLAN-0007 §3c)"
+    },
+    {
+      "kind": "near-duplicate",
+      "topics": [
+        "twin_beacons_doctrine",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "jaccard": 0.857,
+      "msg": "twin_beacons_doctrine and foundation_for_liberty_and_prosperity overlap (Jaccard=0.86); consider merge or matcher-disjoint refactor (PLAN-0007 §3e)"
+    },
+    {
+      "kind": "near-duplicate",
+      "topics": [
+        "twin_beacons_doctrine",
+        "flp_scholarship_programs"
+      ],
+      "jaccard": 0.586,
+      "msg": "twin_beacons_doctrine and flp_scholarship_programs overlap (Jaccard=0.59); consider merge or matcher-disjoint refactor (PLAN-0007 §3e)"
+    },
+    {
+      "kind": "near-duplicate",
+      "topics": [
+        "twin_beacons_doctrine",
+        "flp_donors_and_partners"
+      ],
+      "jaccard": 0.586,
+      "msg": "twin_beacons_doctrine and flp_donors_and_partners overlap (Jaccard=0.59); consider merge or matcher-disjoint refactor (PLAN-0007 §3e)"
+    },
+    {
+      "kind": "near-duplicate",
+      "topics": [
+        "foundation_for_liberty_and_prosperity",
+        "flp_scholarship_programs"
+      ],
+      "jaccard": 0.63,
+      "msg": "foundation_for_liberty_and_prosperity and flp_scholarship_programs overlap (Jaccard=0.63); consider merge or matcher-disjoint refactor (PLAN-0007 §3e)"
+    },
+    {
+      "kind": "near-duplicate",
+      "topics": [
+        "foundation_for_liberty_and_prosperity",
+        "flp_donors_and_partners"
+      ],
+      "jaccard": 0.63,
+      "msg": "foundation_for_liberty_and_prosperity and flp_donors_and_partners overlap (Jaccard=0.63); consider merge or matcher-disjoint refactor (PLAN-0007 §3e)"
+    },
+    {
+      "kind": "near-duplicate",
+      "topics": [
+        "msme_and_entrepreneurship",
+        "museum_for_liberty_and_prosperity"
+      ],
+      "jaccard": 0.909,
+      "msg": "msme_and_entrepreneurship and museum_for_liberty_and_prosperity overlap (Jaccard=0.91); consider merge or matcher-disjoint refactor (PLAN-0007 §3e)"
+    },
+    {
+      "kind": "near-duplicate",
+      "topics": [
+        "mentors_and_legal_lineage",
+        "early_life_sampaloc"
+      ],
+      "jaccard": 0.579,
+      "msg": "mentors_and_legal_lineage and early_life_sampaloc overlap (Jaccard=0.58); consider merge or matcher-disjoint refactor (PLAN-0007 §3e)"
+    },
+    {
+      "kind": "near-duplicate",
+      "topics": [
+        "flp_scholarship_programs",
+        "flp_donors_and_partners"
+      ],
+      "jaccard": 0.727,
+      "msg": "flp_scholarship_programs and flp_donors_and_partners overlap (Jaccard=0.73); consider merge or matcher-disjoint refactor (PLAN-0007 §3e)"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "rule_of_law",
+      "term": "rule of law",
+      "fraction": 1.0,
+      "msg": "rule_of_law: 'rule of law' fires on 30/30 (100%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "twin_beacons_doctrine",
+      "term": "liberty and prosperity",
+      "fraction": 1.0,
+      "msg": "twin_beacons_doctrine: 'liberty and prosperity' fires on 27/27 (100%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "foundation_for_liberty_and_prosperity",
+      "term": "foundation for liberty and prosperity",
+      "fraction": 0.84,
+      "msg": "foundation_for_liberty_and_prosperity: 'foundation for liberty and prosperity' fires on 21/25 (84%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "foundation_for_liberty_and_prosperity",
+      "term": "flp",
+      "fraction": 0.96,
+      "msg": "foundation_for_liberty_and_prosperity: 'flp' fires on 24/25 (96%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "foundation_for_liberty_and_prosperity",
+      "term": "Foundation for Liberty and Prosperity",
+      "fraction": 0.84,
+      "msg": "foundation_for_liberty_and_prosperity: 'Foundation for Liberty and Prosperity' fires on 21/25 (84%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "due_process",
+      "term": "due process",
+      "fraction": 1.0,
+      "msg": "due_process: 'due process' fires on 8/8 (100%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "impeachment_accountability",
+      "term": "impeachment",
+      "fraction": 0.8,
+      "msg": "impeachment_accountability: 'impeachment' fires on 4/5 (80%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "msme_and_entrepreneurship",
+      "term": "esmel",
+      "fraction": 1.0,
+      "msg": "msme_and_entrepreneurship: 'esmel' fires on 11/11 (100%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "mentors_and_legal_lineage",
+      "term": "salonga",
+      "fraction": 1.0,
+      "msg": "mentors_and_legal_lineage: 'salonga' fires on 16/16 (100%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "mentors_and_legal_lineage",
+      "term": "jovito r. salonga",
+      "fraction": 0.875,
+      "msg": "mentors_and_legal_lineage: 'jovito r. salonga' fires on 14/16 (88%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "faith_journey",
+      "term": "catholic",
+      "fraction": 0.8,
+      "msg": "faith_journey: 'catholic' fires on 16/20 (80%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "jbc_discernment_and_appointment",
+      "term": "jbc",
+      "fraction": 1.0,
+      "msg": "jbc_discernment_and_appointment: 'jbc' fires on 5/5 (100%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "jbc_discernment_and_appointment",
+      "term": "judicial and bar council",
+      "fraction": 0.8,
+      "msg": "jbc_discernment_and_appointment: 'judicial and bar council' fires on 4/5 (80%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "flp_scholarship_programs",
+      "term": "scholarship",
+      "fraction": 0.895,
+      "msg": "flp_scholarship_programs: 'scholarship' fires on 17/19 (89%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "museum_for_liberty_and_prosperity",
+      "term": "center for liberty and prosperity",
+      "fraction": 0.8,
+      "msg": "museum_for_liberty_and_prosperity: 'center for liberty and prosperity' fires on 8/10 (80%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    },
+    {
+      "kind": "dominant-term",
+      "topic": "prosperity_fund_msme",
+      "term": "prosperity fund",
+      "fraction": 1.0,
+      "msg": "prosperity_fund_msme: 'prosperity fund' fires on 5/5 (100%) of its docs; topic depends on one term — consider adding diversifying matchers"
+    }
+  ],
+  "per_doc": [
+    {
+      "id": "CA001",
+      "title": "Let the rule of law reign in Asean",
+      "theme": "A",
+      "topics_hit": 10,
+      "primary": [
+        "asean_law_association",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "msme_and_entrepreneurship",
+        "ai_and_technology",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "asean_law_association": 6,
+        "foundation_for_liberty_and_prosperity": 4,
+        "msme_and_entrepreneurship": 3,
+        "ai_and_technology": 3,
+        "rule_of_law": 2
+      }
+    },
+    {
+      "id": "CA002",
+      "title": "A subtle reminder to EEZ negotiators",
+      "theme": "A",
+      "topics_hit": 8,
+      "primary": [
+        "international_law_disputes",
+        "eez_resource_sovereignty"
+      ],
+      "secondary": [
+        "constitutional_doctrine",
+        "with_due_respect_persona",
+        "supreme_court_history"
+      ],
+      "top_scores": {
+        "international_law_disputes": 6,
+        "eez_resource_sovereignty": 5,
+        "constitutional_doctrine": 3,
+        "with_due_respect_persona": 2,
+        "supreme_court_history": 1
+      }
+    },
+    {
+      "id": "CA003",
+      "title": "Pivotal issue in Duterte's ICC case",
+      "theme": "A",
+      "topics_hit": 1,
+      "primary": [
+        "icc_and_duterte"
+      ],
+      "secondary": [],
+      "top_scores": {
+        "icc_and_duterte": 14,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0,
+        "with_due_respect_persona": 0
+      }
+    },
+    {
+      "id": "CA004",
+      "title": "Due process in impeachment",
+      "theme": "A",
+      "topics_hit": 3,
+      "primary": [
+        "impeachment_accountability",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "due_process"
+      ],
+      "top_scores": {
+        "impeachment_accountability": 7,
+        "constitutional_doctrine": 4,
+        "due_process": 4,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "CA005",
+      "title": "Due process and judicial compensation",
+      "theme": "A",
+      "topics_hit": 8,
+      "primary": [
+        "constitutional_doctrine",
+        "due_process"
+      ],
+      "secondary": [
+        "supreme_court_history",
+        "economic_governance_and_business_law",
+        "friendships_and_civic_circles"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 4,
+        "due_process": 3,
+        "supreme_court_history": 2,
+        "economic_governance_and_business_law": 2,
+        "friendships_and_civic_circles": 2
+      }
+    },
+    {
+      "id": "CA006",
+      "title": "Judicial activism in the Philippines",
+      "theme": "A",
+      "topics_hit": 5,
+      "primary": [
+        "constitutional_doctrine",
+        "bar_exam_and_legal_education"
+      ],
+      "secondary": [
+        "rule_of_law",
+        "impeachment_accountability",
+        "judicial_activism_and_political_question"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 8,
+        "bar_exam_and_legal_education": 2,
+        "rule_of_law": 1,
+        "impeachment_accountability": 1,
+        "judicial_activism_and_political_question": 1
+      }
+    },
+    {
+      "id": "CA007",
+      "title": "The rule of law in the besieged China Sea",
+      "theme": "A",
+      "topics_hit": 4,
+      "primary": [
+        "international_law_disputes",
+        "rule_of_law"
+      ],
+      "secondary": [
+        "icc_and_duterte",
+        "philippine_political_landscape"
+      ],
+      "top_scores": {
+        "international_law_disputes": 9,
+        "rule_of_law": 3,
+        "icc_and_duterte": 1,
+        "philippine_political_landscape": 1,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "CA008",
+      "title": "The rule of law in the besieged world",
+      "theme": "A",
+      "topics_hit": 4,
+      "primary": [
+        "global_geopolitics",
+        "icc_and_duterte"
+      ],
+      "secondary": [
+        "rule_of_law",
+        "faith_journey"
+      ],
+      "top_scores": {
+        "global_geopolitics": 8,
+        "icc_and_duterte": 5,
+        "rule_of_law": 2,
+        "faith_journey": 1,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "CA009",
+      "title": "Enforcing the Arbitral Award",
+      "theme": "A",
+      "topics_hit": 4,
+      "primary": [
+        "international_law_disputes",
+        "icc_and_duterte"
+      ],
+      "secondary": [
+        "global_geopolitics",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "international_law_disputes": 9,
+        "icc_and_duterte": 3,
+        "global_geopolitics": 2,
+        "rule_of_law": 1,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "CA010",
+      "title": "Understanding the arbitral award",
+      "theme": "A",
+      "topics_hit": 1,
+      "primary": [
+        "international_law_disputes"
+      ],
+      "secondary": [],
+      "top_scores": {
+        "international_law_disputes": 9,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0,
+        "with_due_respect_persona": 0
+      }
+    },
+    {
+      "id": "CA011",
+      "title": "The rule of law in th'WPS is ours—no ifs and buts'",
+      "theme": "A",
+      "topics_hit": 5,
+      "primary": [
+        "international_law_disputes",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "rule_of_law",
+        "supreme_court_history",
+        "icc_and_duterte"
+      ],
+      "top_scores": {
+        "international_law_disputes": 8,
+        "constitutional_doctrine": 2,
+        "rule_of_law": 1,
+        "supreme_court_history": 1,
+        "icc_and_duterte": 1
+      }
+    },
+    {
+      "id": "CA012",
+      "title": "'Might is right' vs 'Right is might'",
+      "theme": "A",
+      "topics_hit": 6,
+      "primary": [
+        "international_law_disputes",
+        "rule_of_law"
+      ],
+      "secondary": [
+        "global_geopolitics",
+        "with_due_respect_persona",
+        "supreme_court_history"
+      ],
+      "top_scores": {
+        "international_law_disputes": 11,
+        "rule_of_law": 2,
+        "global_geopolitics": 2,
+        "with_due_respect_persona": 1,
+        "supreme_court_history": 1
+      }
+    },
+    {
+      "id": "CA013",
+      "title": "Winning the war to exploit our EEZ",
+      "theme": "A",
+      "topics_hit": 4,
+      "primary": [
+        "international_law_disputes",
+        "global_geopolitics"
+      ],
+      "secondary": [
+        "with_due_respect_persona",
+        "icc_and_duterte"
+      ],
+      "top_scores": {
+        "international_law_disputes": 7,
+        "global_geopolitics": 2,
+        "with_due_respect_persona": 1,
+        "icc_and_duterte": 1,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "CA014",
+      "title": "Extracting WPS resources beyond the arbitral award",
+      "theme": "A",
+      "topics_hit": 4,
+      "primary": [
+        "international_law_disputes",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "eez_resource_sovereignty",
+        "icc_and_duterte"
+      ],
+      "top_scores": {
+        "international_law_disputes": 8,
+        "constitutional_doctrine": 2,
+        "eez_resource_sovereignty": 2,
+        "icc_and_duterte": 1,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "CA015",
+      "title": "AFP's role under the rule of law",
+      "theme": "A",
+      "topics_hit": 5,
+      "primary": [
+        "twin_beacons_doctrine",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "rule_of_law",
+        "icc_and_duterte",
+        "eulogies_and_passing"
+      ],
+      "top_scores": {
+        "twin_beacons_doctrine": 3,
+        "constitutional_doctrine": 3,
+        "rule_of_law": 1,
+        "icc_and_duterte": 1,
+        "eulogies_and_passing": 1
+      }
+    },
+    {
+      "id": "CA016",
+      "title": "Rule of, or by, law",
+      "theme": "A",
+      "topics_hit": 3,
+      "primary": [
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "rule_of_law",
+        "icc_and_duterte"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 2,
+        "rule_of_law": 1,
+        "icc_and_duterte": 1,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CA017",
+      "title": "ICC: The temporal vs the strategic",
+      "theme": "A",
+      "topics_hit": 1,
+      "primary": [
+        "icc_and_duterte"
+      ],
+      "secondary": [],
+      "top_scores": {
+        "icc_and_duterte": 11,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0,
+        "with_due_respect_persona": 0
+      }
+    },
+    {
+      "id": "CA018",
+      "title": "ICC prosecutor targets DOJ, OSG",
+      "theme": "A",
+      "topics_hit": 4,
+      "primary": [
+        "icc_and_duterte"
+      ],
+      "secondary": [
+        "judicial_activism_and_political_question",
+        "global_geopolitics",
+        "philippine_political_landscape"
+      ],
+      "top_scores": {
+        "icc_and_duterte": 10,
+        "judicial_activism_and_political_question": 1,
+        "global_geopolitics": 1,
+        "philippine_political_landscape": 1,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "CA019",
+      "title": "President Marcos' ICC options",
+      "theme": "A",
+      "topics_hit": 2,
+      "primary": [
+        "icc_and_duterte"
+      ],
+      "secondary": [
+        "philippine_political_landscape"
+      ],
+      "top_scores": {
+        "icc_and_duterte": 9,
+        "philippine_political_landscape": 1,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CA020",
+      "title": "Defeat for Trump, victory for rule of law",
+      "theme": "A",
+      "topics_hit": 3,
+      "primary": [
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "rule_of_law",
+        "global_geopolitics"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 2,
+        "rule_of_law": 1,
+        "global_geopolitics": 1,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CA021",
+      "title": "An amparo success, though not yet complete",
+      "theme": "A",
+      "topics_hit": 4,
+      "primary": [
+        "constitutional_doctrine",
+        "supreme_court_history"
+      ],
+      "secondary": [
+        "due_process",
+        "bar_exam_and_legal_education"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 4,
+        "supreme_court_history": 2,
+        "due_process": 1,
+        "bar_exam_and_legal_education": 1,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "CA022",
+      "title": "Yes, the Supreme Court can!",
+      "theme": "A",
+      "topics_hit": 3,
+      "primary": [
+        "constitutional_doctrine",
+        "due_process"
+      ],
+      "secondary": [
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 4,
+        "due_process": 2,
+        "rule_of_law": 1,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CA024",
+      "title": "Martial law, authoritarian rule and Cha-cha",
+      "theme": "A",
+      "topics_hit": 1,
+      "primary": [
+        "constitutional_doctrine"
+      ],
+      "secondary": [],
+      "top_scores": {
+        "constitutional_doctrine": 3,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0,
+        "with_due_respect_persona": 0
+      }
+    },
+    {
+      "id": "CB001",
+      "title": "AI fortifies liberty, prosperity, rule of law",
+      "theme": "B",
+      "topics_hit": 8,
+      "primary": [
+        "foundation_for_liberty_and_prosperity",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "friendships_and_civic_circles",
+        "ai_and_technology",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "foundation_for_liberty_and_prosperity": 4,
+        "constitutional_doctrine": 4,
+        "friendships_and_civic_circles": 2,
+        "ai_and_technology": 2,
+        "rule_of_law": 1
+      }
+    },
+    {
+      "id": "CB002",
+      "title": "Protecting and projecting national interest",
+      "theme": "B",
+      "topics_hit": 5,
+      "primary": [
+        "international_law_disputes",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "icc_and_duterte",
+        "global_geopolitics",
+        "philippine_political_landscape"
+      ],
+      "top_scores": {
+        "international_law_disputes": 8,
+        "constitutional_doctrine": 4,
+        "icc_and_duterte": 1,
+        "global_geopolitics": 1,
+        "philippine_political_landscape": 1
+      }
+    },
+    {
+      "id": "CB003",
+      "title": "Law scholarships with a difference",
+      "theme": "B",
+      "topics_hit": 10,
+      "primary": [
+        "twin_beacons_doctrine",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "bar_exam_and_legal_education",
+        "family_and_marriage",
+        "flp_donors_and_partners"
+      ],
+      "top_scores": {
+        "twin_beacons_doctrine": 4,
+        "foundation_for_liberty_and_prosperity": 4,
+        "bar_exam_and_legal_education": 4,
+        "family_and_marriage": 2,
+        "flp_donors_and_partners": 2
+      }
+    },
+    {
+      "id": "CB004",
+      "title": "Negative versus positive",
+      "theme": "B",
+      "topics_hit": 6,
+      "primary": [
+        "foundation_for_liberty_and_prosperity",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "rule_of_law",
+        "twin_beacons_doctrine",
+        "due_process"
+      ],
+      "top_scores": {
+        "foundation_for_liberty_and_prosperity": 5,
+        "constitutional_doctrine": 3,
+        "rule_of_law": 1,
+        "twin_beacons_doctrine": 1,
+        "due_process": 1
+      }
+    },
+    {
+      "id": "CB005",
+      "title": "Merging law and economics",
+      "theme": "B",
+      "topics_hit": 7,
+      "primary": [
+        "flp_donors_and_partners",
+        "twin_beacons_doctrine"
+      ],
+      "secondary": [
+        "constitutional_doctrine",
+        "foundation_for_liberty_and_prosperity",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 6,
+        "twin_beacons_doctrine": 5,
+        "constitutional_doctrine": 5,
+        "foundation_for_liberty_and_prosperity": 3,
+        "rule_of_law": 1
+      }
+    },
+    {
+      "id": "CB006",
+      "title": "Unleashing entrepreneurial ingenuity (1)",
+      "theme": "B",
+      "topics_hit": 5,
+      "primary": [
+        "twin_beacons_doctrine",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "asean_law_association",
+        "rule_of_law",
+        "judicial_reform"
+      ],
+      "top_scores": {
+        "twin_beacons_doctrine": 5,
+        "foundation_for_liberty_and_prosperity": 3,
+        "asean_law_association": 2,
+        "rule_of_law": 1,
+        "judicial_reform": 1
+      }
+    },
+    {
+      "id": "CB007",
+      "title": "SC decisions on the economy",
+      "theme": "B",
+      "topics_hit": 5,
+      "primary": [
+        "supreme_court_history"
+      ],
+      "secondary": [
+        "twin_beacons_doctrine",
+        "foundation_for_liberty_and_prosperity",
+        "flp_scholarship_programs"
+      ],
+      "top_scores": {
+        "supreme_court_history": 2,
+        "twin_beacons_doctrine": 1,
+        "foundation_for_liberty_and_prosperity": 1,
+        "eez_resource_sovereignty": 1,
+        "flp_scholarship_programs": 1
+      }
+    },
+    {
+      "id": "CC001",
+      "title": "Joy in writing for the Inquirer",
+      "theme": "C",
+      "topics_hit": 4,
+      "primary": [
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "with_due_respect_persona",
+        "mentors_and_legal_lineage",
+        "friendships_and_civic_circles"
+      ],
+      "top_scores": {
+        "foundation_for_liberty_and_prosperity": 1,
+        "with_due_respect_persona": 1,
+        "mentors_and_legal_lineage": 1,
+        "friendships_and_civic_circles": 1,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "CC002",
+      "title": "Jovito R. Salonga, my guru and surrogate father",
+      "theme": "C",
+      "topics_hit": 8,
+      "primary": [
+        "mentors_and_legal_lineage",
+        "faith_journey"
+      ],
+      "secondary": [
+        "bar_exam_and_legal_education",
+        "early_life_sampaloc",
+        "jbc_discernment_and_appointment"
+      ],
+      "top_scores": {
+        "mentors_and_legal_lineage": 4,
+        "bar_exam_and_legal_education": 3,
+        "faith_journey": 3,
+        "early_life_sampaloc": 2,
+        "jbc_discernment_and_appointment": 2
+      }
+    },
+    {
+      "id": "CC003",
+      "title": "My Leni as mom, grand mom, and professor",
+      "theme": "C",
+      "topics_hit": 4,
+      "primary": [
+        "faith_journey",
+        "family_and_marriage"
+      ],
+      "secondary": [
+        "flp_donors_and_partners",
+        "eulogies_and_passing"
+      ],
+      "top_scores": {
+        "faith_journey": 4,
+        "family_and_marriage": 3,
+        "flp_donors_and_partners": 3,
+        "eulogies_and_passing": 2,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "CC004",
+      "title": "Diokno, Salonga and Teehankee",
+      "theme": "C",
+      "topics_hit": 2,
+      "primary": [
+        "mentors_and_legal_lineage"
+      ],
+      "secondary": [
+        "bar_exam_and_legal_education"
+      ],
+      "top_scores": {
+        "mentors_and_legal_lineage": 5,
+        "bar_exam_and_legal_education": 1,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CC005",
+      "title": "Right man for the right job",
+      "theme": "C",
+      "topics_hit": 6,
+      "primary": [
+        "constitutional_doctrine",
+        "impeachment_accountability"
+      ],
+      "secondary": [
+        "rule_of_law",
+        "with_due_respect_persona",
+        "supreme_court_history"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 2,
+        "impeachment_accountability": 2,
+        "rule_of_law": 1,
+        "with_due_respect_persona": 1,
+        "supreme_court_history": 1
+      }
+    },
+    {
+      "id": "CC006",
+      "title": "For the alumni of Mapa High",
+      "theme": "C",
+      "topics_hit": 12,
+      "primary": [
+        "faith_journey",
+        "twin_beacons_doctrine"
+      ],
+      "secondary": [
+        "foundation_for_liberty_and_prosperity",
+        "mentors_and_legal_lineage",
+        "philippine_political_landscape"
+      ],
+      "top_scores": {
+        "faith_journey": 6,
+        "twin_beacons_doctrine": 4,
+        "foundation_for_liberty_and_prosperity": 3,
+        "mentors_and_legal_lineage": 3,
+        "philippine_political_landscape": 3
+      }
+    },
+    {
+      "id": "CC007",
+      "title": "Bar exams and legal education (1)",
+      "theme": "C",
+      "topics_hit": 5,
+      "primary": [
+        "mentors_and_legal_lineage",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "bar_exam_and_legal_education",
+        "early_life_sampaloc",
+        "eulogies_and_passing"
+      ],
+      "top_scores": {
+        "mentors_and_legal_lineage": 3,
+        "constitutional_doctrine": 2,
+        "bar_exam_and_legal_education": 2,
+        "early_life_sampaloc": 2,
+        "eulogies_and_passing": 1
+      }
+    },
+    {
+      "id": "CC008",
+      "title": "'Keep doing my best, let God do the rest'",
+      "theme": "C",
+      "topics_hit": 3,
+      "primary": [
+        "early_life_sampaloc"
+      ],
+      "secondary": [
+        "family_and_marriage",
+        "faith_journey"
+      ],
+      "top_scores": {
+        "early_life_sampaloc": 2,
+        "family_and_marriage": 1,
+        "faith_journey": 1,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "CC009",
+      "title": "Overwhelmed with honor and joy",
+      "theme": "C",
+      "topics_hit": 7,
+      "primary": [
+        "mentors_and_legal_lineage",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "with_due_respect_persona",
+        "supreme_court_history",
+        "bar_exam_and_legal_education"
+      ],
+      "top_scores": {
+        "mentors_and_legal_lineage": 4,
+        "constitutional_doctrine": 2,
+        "with_due_respect_persona": 1,
+        "supreme_court_history": 1,
+        "bar_exam_and_legal_education": 1
+      }
+    },
+    {
+      "id": "CC010",
+      "title": "Reminiscing, praying, and caring",
+      "theme": "C",
+      "topics_hit": 3,
+      "primary": [
+        "faith_journey"
+      ],
+      "secondary": [
+        "bar_exam_and_legal_education",
+        "eulogies_and_passing"
+      ],
+      "top_scores": {
+        "faith_journey": 2,
+        "bar_exam_and_legal_education": 1,
+        "eulogies_and_passing": 1,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "CC011",
+      "title": "Supercalifragilisticexpialidocious",
+      "theme": "C",
+      "topics_hit": 10,
+      "primary": [
+        "family_and_marriage",
+        "mentors_and_legal_lineage"
+      ],
+      "secondary": [
+        "honors_received",
+        "eulogies_and_passing",
+        "faith_journey"
+      ],
+      "top_scores": {
+        "family_and_marriage": 3,
+        "mentors_and_legal_lineage": 3,
+        "honors_received": 3,
+        "eulogies_and_passing": 2,
+        "asean_law_association": 1
+      }
+    },
+    {
+      "id": "CC012",
+      "title": "The bar exam and the legends of the bar",
+      "theme": "C",
+      "topics_hit": 6,
+      "primary": [
+        "mentors_and_legal_lineage",
+        "bar_exam_and_legal_education"
+      ],
+      "secondary": [
+        "early_life_sampaloc",
+        "with_due_respect_persona",
+        "judicial_activism_and_political_question"
+      ],
+      "top_scores": {
+        "mentors_and_legal_lineage": 7,
+        "bar_exam_and_legal_education": 2,
+        "early_life_sampaloc": 2,
+        "with_due_respect_persona": 1,
+        "judicial_activism_and_political_question": 1
+      }
+    },
+    {
+      "id": "CC013",
+      "title": "Why my best friends are my best critics",
+      "theme": "C",
+      "topics_hit": 6,
+      "primary": [
+        "mentors_and_legal_lineage",
+        "faith_journey"
+      ],
+      "secondary": [
+        "family_and_marriage",
+        "supreme_court_history",
+        "bar_exam_and_legal_education"
+      ],
+      "top_scores": {
+        "mentors_and_legal_lineage": 4,
+        "faith_journey": 4,
+        "family_and_marriage": 3,
+        "supreme_court_history": 2,
+        "bar_exam_and_legal_education": 1
+      }
+    },
+    {
+      "id": "CC014",
+      "title": "Student activism",
+      "theme": "C",
+      "topics_hit": 6,
+      "primary": [
+        "faith_journey",
+        "family_and_marriage"
+      ],
+      "secondary": [
+        "bar_exam_and_legal_education",
+        "global_geopolitics",
+        "international_law_disputes"
+      ],
+      "top_scores": {
+        "faith_journey": 4,
+        "bar_exam_and_legal_education": 2,
+        "family_and_marriage": 2,
+        "global_geopolitics": 2,
+        "international_law_disputes": 1
+      }
+    },
+    {
+      "id": "CC015",
+      "title": "Manila Cathedral: sad news, good news",
+      "theme": "C",
+      "topics_hit": 2,
+      "primary": [
+        "faith_journey"
+      ],
+      "secondary": [
+        "friendships_and_civic_circles"
+      ],
+      "top_scores": {
+        "faith_journey": 2,
+        "friendships_and_civic_circles": 1,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CC016",
+      "title": "New evangelization of Catholic Church",
+      "theme": "C",
+      "topics_hit": 6,
+      "primary": [
+        "constitutional_doctrine",
+        "faith_journey"
+      ],
+      "secondary": [
+        "due_process",
+        "family_and_marriage",
+        "icc_and_duterte"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 3,
+        "faith_journey": 2,
+        "due_process": 1,
+        "icc_and_duterte": 1,
+        "death_penalty_and_echegaray": 1
+      }
+    },
+    {
+      "id": "CC017",
+      "title": "Cyberlibel and Maria Ressa",
+      "theme": "C",
+      "topics_hit": 2,
+      "primary": [
+        "mentors_and_legal_lineage"
+      ],
+      "secondary": [
+        "supreme_court_history"
+      ],
+      "top_scores": {
+        "mentors_and_legal_lineage": 3,
+        "supreme_court_history": 1,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CD001",
+      "title": "11 LibPros scholars",
+      "theme": "D",
+      "topics_hit": 5,
+      "primary": [
+        "flp_donors_and_partners",
+        "twin_beacons_doctrine"
+      ],
+      "secondary": [
+        "foundation_for_liberty_and_prosperity",
+        "flp_scholarship_programs",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 6,
+        "twin_beacons_doctrine": 4,
+        "foundation_for_liberty_and_prosperity": 3,
+        "flp_scholarship_programs": 2,
+        "rule_of_law": 1
+      }
+    },
+    {
+      "id": "CD002",
+      "title": "Never give up, never say never",
+      "theme": "D",
+      "topics_hit": 12,
+      "primary": [
+        "flp_donors_and_partners",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "museum_for_liberty_and_prosperity",
+        "msme_and_entrepreneurship",
+        "mentors_and_legal_lineage"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 5,
+        "foundation_for_liberty_and_prosperity": 4,
+        "museum_for_liberty_and_prosperity": 4,
+        "msme_and_entrepreneurship": 3,
+        "mentors_and_legal_lineage": 3
+      }
+    },
+    {
+      "id": "CD003",
+      "title": "20 law grants at P250k, 5 MBA at P500k",
+      "theme": "D",
+      "topics_hit": 8,
+      "primary": [
+        "twin_beacons_doctrine",
+        "flp_scholarship_programs"
+      ],
+      "secondary": [
+        "flp_donors_and_partners",
+        "bar_exam_and_legal_education",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "twin_beacons_doctrine": 3,
+        "flp_scholarship_programs": 3,
+        "flp_donors_and_partners": 3,
+        "bar_exam_and_legal_education": 2,
+        "rule_of_law": 1
+      }
+    },
+    {
+      "id": "CD004",
+      "title": "FLP expanding into prosperity",
+      "theme": "D",
+      "topics_hit": 12,
+      "primary": [
+        "flp_donors_and_partners",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "msme_and_entrepreneurship",
+        "twin_beacons_doctrine",
+        "flp_scholarship_programs"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 9,
+        "foundation_for_liberty_and_prosperity": 5,
+        "msme_and_entrepreneurship": 4,
+        "twin_beacons_doctrine": 2,
+        "flp_scholarship_programs": 2
+      }
+    },
+    {
+      "id": "CD005",
+      "title": "For FLP scholars, little things mean a lot",
+      "theme": "D",
+      "topics_hit": 5,
+      "primary": [
+        "foundation_for_liberty_and_prosperity",
+        "flp_scholarship_programs"
+      ],
+      "secondary": [
+        "flp_donors_and_partners",
+        "twin_beacons_doctrine",
+        "early_life_sampaloc"
+      ],
+      "top_scores": {
+        "foundation_for_liberty_and_prosperity": 3,
+        "flp_scholarship_programs": 2,
+        "flp_donors_and_partners": 2,
+        "twin_beacons_doctrine": 1,
+        "early_life_sampaloc": 1
+      }
+    },
+    {
+      "id": "CD006",
+      "title": "'Liberty, prosperity, rule of law'",
+      "theme": "D",
+      "topics_hit": 6,
+      "primary": [
+        "twin_beacons_doctrine",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "flp_donors_and_partners",
+        "rule_of_law",
+        "flp_scholarship_programs"
+      ],
+      "top_scores": {
+        "twin_beacons_doctrine": 4,
+        "foundation_for_liberty_and_prosperity": 4,
+        "flp_donors_and_partners": 4,
+        "rule_of_law": 2,
+        "flp_scholarship_programs": 2
+      }
+    },
+    {
+      "id": "CD007",
+      "title": "FLP's 21 scholars, 10 winners, and 5 fellows",
+      "theme": "D",
+      "topics_hit": 7,
+      "primary": [
+        "flp_donors_and_partners",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "museum_for_liberty_and_prosperity",
+        "msme_and_entrepreneurship",
+        "flp_scholarship_programs"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 9,
+        "foundation_for_liberty_and_prosperity": 5,
+        "museum_for_liberty_and_prosperity": 3,
+        "msme_and_entrepreneurship": 2,
+        "flp_scholarship_programs": 2
+      }
+    },
+    {
+      "id": "CD008",
+      "title": "FLP's 2024 law scholars, fellows, and winners",
+      "theme": "D",
+      "topics_hit": 12,
+      "primary": [
+        "flp_donors_and_partners",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "msme_and_entrepreneurship",
+        "philippine_political_landscape",
+        "flp_scholarship_programs"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 9,
+        "foundation_for_liberty_and_prosperity": 5,
+        "msme_and_entrepreneurship": 3,
+        "philippine_political_landscape": 3,
+        "friendships_and_civic_circles": 2
+      }
+    },
+    {
+      "id": "CD009",
+      "title": "Hail to the FLP bar topnotchers and passers",
+      "theme": "D",
+      "topics_hit": 6,
+      "primary": [
+        "flp_scholarship_programs",
+        "bar_exam_and_legal_education"
+      ],
+      "secondary": [
+        "flp_donors_and_partners",
+        "twin_beacons_doctrine",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "top_scores": {
+        "bar_exam_and_legal_education": 2,
+        "flp_scholarship_programs": 2,
+        "flp_donors_and_partners": 2,
+        "twin_beacons_doctrine": 1,
+        "foundation_for_liberty_and_prosperity": 1
+      }
+    },
+    {
+      "id": "CD010",
+      "title": "Supreme Court's SPJI: Reminiscing the past",
+      "theme": "D",
+      "topics_hit": 12,
+      "primary": [
+        "judicial_reform",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "msme_and_entrepreneurship",
+        "impeachment_accountability",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "judicial_reform": 5,
+        "foundation_for_liberty_and_prosperity": 4,
+        "impeachment_accountability": 2,
+        "msme_and_entrepreneurship": 2,
+        "rule_of_law": 1
+      }
+    },
+    {
+      "id": "CE001",
+      "title": "Rejuvenating Baguio",
+      "theme": "E",
+      "topics_hit": 3,
+      "primary": [
+        "friendships_and_civic_circles"
+      ],
+      "secondary": [
+        "supreme_court_history",
+        "international_law_disputes"
+      ],
+      "top_scores": {
+        "friendships_and_civic_circles": 2,
+        "supreme_court_history": 1,
+        "international_law_disputes": 1,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "CE003",
+      "title": "Relentless defender of PH sovereignty",
+      "theme": "E",
+      "topics_hit": 2,
+      "primary": [
+        "international_law_disputes"
+      ],
+      "secondary": [
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "international_law_disputes": 5,
+        "rule_of_law": 1,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0,
+        "with_due_respect_persona": 0
+      }
+    },
+    {
+      "id": "CE004",
+      "title": "RA 6713, the 'Bible' of public officials",
+      "theme": "E",
+      "topics_hit": 2,
+      "primary": [
+        "mentors_and_legal_lineage"
+      ],
+      "secondary": [
+        "lawyer_ethics_initiative"
+      ],
+      "top_scores": {
+        "mentors_and_legal_lineage": 2,
+        "lawyer_ethics_initiative": 1,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CE005",
+      "title": "Little known SC decisions",
+      "theme": "E",
+      "topics_hit": 2,
+      "primary": [
+        "constitutional_doctrine",
+        "family_and_marriage"
+      ],
+      "secondary": [],
+      "top_scores": {
+        "constitutional_doctrine": 3,
+        "family_and_marriage": 2,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    },
+    {
+      "id": "CE006",
+      "title": "Powers of the Ombudsman",
+      "theme": "E",
+      "topics_hit": 4,
+      "primary": [
+        "constitutional_doctrine",
+        "icc_and_duterte"
+      ],
+      "secondary": [
+        "supreme_court_history",
+        "honors_received"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 3,
+        "icc_and_duterte": 3,
+        "supreme_court_history": 1,
+        "honors_received": 1,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "CE007",
+      "title": "Liberalism vs conservatism",
+      "theme": "E",
+      "topics_hit": 7,
+      "primary": [
+        "constitutional_doctrine",
+        "faith_journey"
+      ],
+      "secondary": [
+        "global_geopolitics",
+        "rule_of_law",
+        "supreme_court_history"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 2,
+        "faith_journey": 2,
+        "global_geopolitics": 2,
+        "rule_of_law": 1,
+        "supreme_court_history": 1
+      }
+    },
+    {
+      "id": "CE008",
+      "title": "Marital infidelity, abortion, PCP2",
+      "theme": "E",
+      "topics_hit": 4,
+      "primary": [
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "supreme_court_history",
+        "family_and_marriage",
+        "faith_journey"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 2,
+        "supreme_court_history": 1,
+        "family_and_marriage": 1,
+        "faith_journey": 1,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "SA015",
+      "title": "Consensus, Rule of Law, Liberty, and Prosperity in ASEAN",
+      "theme": "A",
+      "topics_hit": 15,
+      "primary": [
+        "asean_law_association",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "family_and_marriage",
+        "ai_and_technology",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "asean_law_association": 6,
+        "foundation_for_liberty_and_prosperity": 4,
+        "family_and_marriage": 4,
+        "ai_and_technology": 3,
+        "rule_of_law": 2
+      }
+    },
+    {
+      "id": "SA041",
+      "title": "The Bad, the Good, the Better and the Best News About Justice Carpio",
+      "theme": "A",
+      "topics_hit": 8,
+      "primary": [
+        "impeachment_accountability",
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "jbc_discernment_and_appointment",
+        "philippine_political_landscape",
+        "rule_of_law"
+      ],
+      "top_scores": {
+        "impeachment_accountability": 3,
+        "constitutional_doctrine": 2,
+        "jbc_discernment_and_appointment": 2,
+        "philippine_political_landscape": 2,
+        "rule_of_law": 1
+      }
+    },
+    {
+      "id": "SA136",
+      "title": "Maraming Salamat Po",
+      "theme": "A",
+      "topics_hit": 10,
+      "primary": [
+        "family_and_marriage",
+        "judicial_reform"
+      ],
+      "secondary": [
+        "mentors_and_legal_lineage",
+        "supreme_court_history",
+        "faith_journey"
+      ],
+      "top_scores": {
+        "family_and_marriage": 6,
+        "judicial_reform": 5,
+        "mentors_and_legal_lineage": 3,
+        "supreme_court_history": 2,
+        "faith_journey": 2
+      }
+    },
+    {
+      "id": "SB006",
+      "title": "Freedom for the Spirit, Food for the Body",
+      "theme": "B",
+      "topics_hit": 16,
+      "primary": [
+        "flp_donors_and_partners",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "constitutional_doctrine",
+        "flp_scholarship_programs",
+        "friendships_and_civic_circles"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 8,
+        "foundation_for_liberty_and_prosperity": 5,
+        "constitutional_doctrine": 3,
+        "friendships_and_civic_circles": 3,
+        "flp_scholarship_programs": 3
+      }
+    },
+    {
+      "id": "SB063",
+      "title": "Icons of Entrepreneurship and Nation Building",
+      "theme": "B",
+      "topics_hit": 4,
+      "primary": [
+        "twin_beacons_doctrine",
+        "foundation_for_liberty_and_prosperity"
+      ],
+      "secondary": [
+        "flp_donors_and_partners",
+        "friendships_and_civic_circles"
+      ],
+      "top_scores": {
+        "twin_beacons_doctrine": 5,
+        "foundation_for_liberty_and_prosperity": 3,
+        "flp_donors_and_partners": 3,
+        "friendships_and_civic_circles": 2,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "SB085",
+      "title": "How the Judiciary Can Help the Economy",
+      "theme": "B",
+      "topics_hit": 8,
+      "primary": [
+        "constitutional_doctrine",
+        "economic_governance_and_business_law"
+      ],
+      "secondary": [
+        "supreme_court_history",
+        "rule_of_law",
+        "twin_beacons_doctrine"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 3,
+        "economic_governance_and_business_law": 3,
+        "supreme_court_history": 2,
+        "rule_of_law": 1,
+        "twin_beacons_doctrine": 1
+      }
+    },
+    {
+      "id": "SC023",
+      "title": "So Unworthy and So Humbled, Yet So Honored and So Blessed",
+      "theme": "C",
+      "topics_hit": 8,
+      "primary": [
+        "faith_journey",
+        "family_and_marriage"
+      ],
+      "secondary": [
+        "mentors_and_legal_lineage",
+        "bar_exam_and_legal_education",
+        "supreme_court_history"
+      ],
+      "top_scores": {
+        "faith_journey": 7,
+        "family_and_marriage": 5,
+        "bar_exam_and_legal_education": 2,
+        "mentors_and_legal_lineage": 2,
+        "supreme_court_history": 1
+      }
+    },
+    {
+      "id": "SC059",
+      "title": "The Blessings and Foibles of Being 80",
+      "theme": "C",
+      "topics_hit": 3,
+      "primary": [
+        "family_and_marriage",
+        "philippine_political_landscape"
+      ],
+      "secondary": [
+        "jbc_discernment_and_appointment"
+      ],
+      "top_scores": {
+        "family_and_marriage": 5,
+        "philippine_political_landscape": 3,
+        "jbc_discernment_and_appointment": 2,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "SC130",
+      "title": "Why I Am Who I Am Now",
+      "theme": "C",
+      "topics_hit": 8,
+      "primary": [
+        "faith_journey",
+        "family_and_marriage"
+      ],
+      "secondary": [
+        "jbc_discernment_and_appointment",
+        "early_life_sampaloc",
+        "philippine_political_landscape"
+      ],
+      "top_scores": {
+        "faith_journey": 6,
+        "family_and_marriage": 5,
+        "jbc_discernment_and_appointment": 4,
+        "early_life_sampaloc": 3,
+        "philippine_political_landscape": 3
+      }
+    },
+    {
+      "id": "SD002",
+      "title": "Soon, a Futuristic Museum for Liberty and Prosperity",
+      "theme": "D",
+      "topics_hit": 12,
+      "primary": [
+        "flp_donors_and_partners",
+        "lawyer_ethics_initiative"
+      ],
+      "secondary": [
+        "foundation_for_liberty_and_prosperity",
+        "flp_scholarship_programs",
+        "museum_for_liberty_and_prosperity"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 14,
+        "lawyer_ethics_initiative": 6,
+        "foundation_for_liberty_and_prosperity": 5,
+        "flp_scholarship_programs": 5,
+        "museum_for_liberty_and_prosperity": 5
+      }
+    },
+    {
+      "id": "SD021",
+      "title": "A Fruitful Past Decade and a Hope-filled New Decade",
+      "theme": "D",
+      "topics_hit": 10,
+      "primary": [
+        "flp_donors_and_partners",
+        "flp_scholarship_programs"
+      ],
+      "secondary": [
+        "foundation_for_liberty_and_prosperity",
+        "msme_and_entrepreneurship",
+        "museum_for_liberty_and_prosperity"
+      ],
+      "top_scores": {
+        "flp_donors_and_partners": 11,
+        "flp_scholarship_programs": 5,
+        "foundation_for_liberty_and_prosperity": 4,
+        "msme_and_entrepreneurship": 2,
+        "museum_for_liberty_and_prosperity": 2
+      }
+    },
+    {
+      "id": "SD033",
+      "title": "Bequeathing My Legacy",
+      "theme": "D",
+      "topics_hit": 7,
+      "primary": [
+        "foundation_for_liberty_and_prosperity",
+        "family_and_marriage"
+      ],
+      "secondary": [
+        "flp_donors_and_partners",
+        "flp_scholarship_programs",
+        "bar_exam_and_legal_education"
+      ],
+      "top_scores": {
+        "foundation_for_liberty_and_prosperity": 5,
+        "family_and_marriage": 5,
+        "flp_donors_and_partners": 4,
+        "bar_exam_and_legal_education": 2,
+        "flp_scholarship_programs": 2
+      }
+    },
+    {
+      "id": "SE001",
+      "title": "Linda Manuel Mañalac is Love and Magnanimity Magnified",
+      "theme": "E",
+      "topics_hit": 3,
+      "primary": [
+        "eulogies_and_passing",
+        "family_and_marriage"
+      ],
+      "secondary": [
+        "faith_journey"
+      ],
+      "top_scores": {
+        "eulogies_and_passing": 8,
+        "family_and_marriage": 4,
+        "faith_journey": 2,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0
+      }
+    },
+    {
+      "id": "SE012",
+      "title": "The PH Constitution and the Running Bulls of Technology: (AI, Genetic Engineering, Nanotech and Info)",
+      "theme": "E",
+      "topics_hit": 4,
+      "primary": [
+        "constitutional_doctrine"
+      ],
+      "secondary": [
+        "supreme_court_history",
+        "eez_resource_sovereignty",
+        "ai_and_technology"
+      ],
+      "top_scores": {
+        "constitutional_doctrine": 5,
+        "supreme_court_history": 1,
+        "eez_resource_sovereignty": 1,
+        "ai_and_technology": 1,
+        "rule_of_law": 0
+      }
+    },
+    {
+      "id": "SE013",
+      "title": "Three AI Takeaways",
+      "theme": "E",
+      "topics_hit": 2,
+      "primary": [
+        "friendships_and_civic_circles",
+        "ai_and_technology"
+      ],
+      "secondary": [],
+      "top_scores": {
+        "friendships_and_civic_circles": 2,
+        "ai_and_technology": 2,
+        "rule_of_law": 0,
+        "twin_beacons_doctrine": 0,
+        "foundation_for_liberty_and_prosperity": 0
+      }
+    }
+  ]
+}

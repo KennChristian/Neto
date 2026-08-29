@@ -1,0 +1,391 @@
+{
+  "id": "CC017",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 17,
+  "title": "Cyberlibel and Maria Ressa",
+  "date": "2020-06-21",
+  "year": 2020,
+  "source_url": "https://opinion.inquirer.net/130986/cyberlibel-and-maria-ressa",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Maria Ressa, her counsel, and her supporters",
+      "Journalists and press freedom advocates",
+      "Trial-court watchers and legal practitioners",
+      "Jurisprudential-philosophy enthusiasts (Austin vs Pound)",
+      "Salonga admirers and FEU alumni",
+      "Inquirer general readership"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "mentors_and_legal_lineage"
+    ],
+    "secondary": [
+      "supreme_court_history"
+    ]
+  },
+  "keywords": [
+    "Maria Ressa",
+    "Rappler",
+    "Judge Montesa",
+    "presumed malice",
+    "prescription",
+    "Austin vs Pound",
+    "Jovito Salonga centenary"
+  ],
+  "primary_topics": [
+    "Trial court decision (Judge Rainelda H. Estacio-Montesa) convicting Ressa and Santos",
+    "Three crucial doctrinal items: libel definition, retroactivity, prescription",
+    "John Austin's analytical jurisprudence vs Roscoe Pound's sociological jurisprudence",
+    "Dr. Jovito R. Salonga centenary tribute"
+  ],
+  "sub_topics": [
+    "Information allegation: Feb 19, 2014 republication of article 'maliciously and publicly branded' Keng as human trafficker, drug and contraband smuggler, murderer",
+    "Trial sequence: arraignment, unsuccessful mediation, pretrial, stipulations, six prosecution witnesses (including Keng) + two defense witnesses",
+    "Trial decision architecture: reproduce law, discuss elements, apply 'law times facts equals decision'",
+    "John Austin's 'dura lex sed lex' analytical-school adherence",
+    "Cybercrime Prevention Act of 2012 extending Article 353/355 libel via 'computer system or any other similar means' with heavier penalty",
+    "Presumption of malice for defamation of private citizens Ã¢â‚¬â€� burden of proof shifts to accused",
+    "Defense failure: both accused opted not to testify to show 'fair comment on a matter of public interest' (CJ's Feb 24, 2019 advice)",
+    "Retroactivity defense rejected: Information charged the Feb 19, 2014 republication, not the original 2012 publication",
+    "Prescription: 1-year libel under Penal Code vs Cybercrime Law's silence; Act No. 3326 fills gap with 12-year prescription for 6-year+ offenses",
+    "37-page decision fortified by 170 footnotes",
+    "Roscoe Pound's sociological school of jurisprudence: law as one brick in building a just and humane society",
+    "Salonga as 'esteemed guru, respected scholar, low-profile educator, brilliant lawyer, outstanding lawmaker, acclaimed patriot, statesman par excellence'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "To be fair",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the 37-page decision (fortified by 170 footnotes) of Judge Rainelda H. Estacio-Montesa",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "is not baseless or capricious",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Nonetheless, it deserves to be appealed to the Supreme Court",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "maliciously and publicly branded",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a human trafficker, a drug and contraband smuggler, and worst, a murderer",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "law times facts equals decision",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Montesa adhered to John Austin's legal philosophy upholding 'dura lex sed lex'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I have space for only three crucial items",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "MALICE IS PRESUMED BY THE LAW; it need not be proven by the prosecution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the burden of proof to show lack of malice was shifted by the law to the accused",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "'Lamentably, the defense miserably failed in this regard'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Oddly also, both accused opted not to testify",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a fair comment on a matter of public interest",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "every republication is a separate crime per existing jurisprudence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Cybercrime Law prescribes a heavier penalty for cyberlibel",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "without providing a new prescriptive period",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "violations of special laws which do not expressly state their prescriptive periods, 'shall prescribeÃ¢â‚¬Â¦ after twelve years'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Again, using John Austin's robotic syllogism",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the article is indeed libelous",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the accused can still be acquitted based on prescription if they appeal",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Supreme Court sidesteps John Austin's strict syllogism and embraces Roscoe Pound's more liberal sociological school of jurisprudence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "regards law merely as a brick Ã¢â‚¬â€� an important one Ã¢â‚¬â€� in the building of a just and humane society",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Tomorrow, June 22, is the 100th birthday of the late Dr. Jovito R. Salonga, my esteemed guru",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a respected scholar, low-profile educator, brilliant lawyer, outstanding lawmaker, acclaimed patriot, and statesman par excellence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Maria Ressa",
+      "Reynaldo Santos Jr.",
+      "Judge Rainelda H. Estacio-Montesa (37-page ponente)",
+      "Wilfredo Keng (complainant, private citizen)",
+      "Dr. Jovito R. Salonga (CJ's guru; centenary subject)",
+      "John Austin (analytical jurisprudence school)",
+      "Roscoe Pound (sociological jurisprudence school)"
+    ],
+    "institutions": [
+      "Rappler",
+      "Supreme Court of the Philippines",
+      "Trial court (Montesa sala)",
+      "Far Eastern University (where Salonga was law dean)"
+    ],
+    "cases": [
+      "Maria Ressa cyberlibel conviction (June 15, 2020 trial court decision)"
+    ],
+    "laws_treaties": [
+      "Revised Penal Code Articles 353 and 355 (libel)",
+      "Cybercrime Prevention Act of 2012 Ã¢â‚¬â€� penalty 6 months + 1 day to 6 years",
+      "Act No. 3326 Ã¢â‚¬â€� prescription of special-law offenses; 12 years for 6-year+ imprisonment"
+    ],
+    "events": [
+      "May 29, 2012 Ã¢â‚¬â€� original Rappler publication",
+      "Feb 19, 2014 Ã¢â‚¬â€� republication 'updated'",
+      "Feb 5, 2019 Ã¢â‚¬â€� Information filed in court",
+      "June 15, 2020 Ã¢â‚¬â€� Montesa trial-court conviction",
+      "June 22, 2020 Ã¢â‚¬â€� Dr. Jovito R. Salonga's 100th birthday (commemorated in closing)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Judge Montesa's 37-page decision (with 170 footnotes) convicting Ressa and Santos is 'not baseless or capricious' Ã¢â‚¬â€� it is a meticulous application of Austin-style 'law times facts equals decision' syllogism Ã¢â‚¬â€� but it nonetheless deserves to be appealed to the Supreme Court for reasons rooted in jurisprudential philosophy and prescription doctrine.",
+      "rhetorical_move": "fair-treatment-then-appeal-recommendation (validating the trial court's craft before urging reversal on doctrinal grounds)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The article publicly imputed despicable crimes (human trafficking, drug/contraband smuggling, murder) tending to dishonor Keng Ã¢â‚¬â€� who was never charged with much less convicted of those offenses Ã¢â‚¬â€� and because Keng is a private citizen, MALICE IS PRESUMED BY THE LAW, shifting the burden of proof on lack of malice to the accused; both accused opted not to testify, so 'lamentably, the defense miserably failed in this regard.'",
+      "rhetorical_move": "presumption-shift doctrinal restatement + critical observation of strategic silence",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The retroactivity defense fails because the Information charged the February 19, 2014 republication (post-Cybercrime Law), not the May 29, 2012 original publication, and every republication is a separate crime per existing jurisprudence Ã¢â‚¬â€� Montesa is correct on this point.",
+      "rhetorical_move": "doctrinal concession (acknowledging the trial court got this right)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "On prescription, Montesa used John Austin's 'robotic syllogism' to apply Act No. 3326's twelve-year period because the Cybercrime Law prescribes a heavier penalty (6+ years) without setting its own prescriptive period Ã¢â‚¬â€� a logically correct application of the analytical school; but the Supreme Court could sidestep this strict syllogism by adopting Roscoe Pound's sociological school, which regards law as 'one brick in building a just and humane society,' and reading the one-year libel prescription into cyberlibel to favor the accused under the rule that penal laws should be construed in their favor.",
+      "rhetorical_move": "jurisprudential-school dichotomy (Austin's syllogism vs Pound's sociological school) as path to reversal",
+      "confidence": "asserted as personal jurisprudential preference",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "In sum, the article IS libelous Ã¢â‚¬â€� but the accused can still be acquitted on appeal based on prescription if the Supreme Court embraces Pound over Austin; the moral case for appeal rests on jurisprudential preference, not on innocence.",
+      "rhetorical_move": "guilty-but-acquittable framing (separating moral guilt from legal punishability)",
+      "confidence": "asserted candidly",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Dr. Jovito R. Salonga Ã¢â‚¬â€� whose 100th birthday falls the day after publication Ã¢â‚¬â€� deserves remembrance as CJ's esteemed guru, a respected scholar, low-profile educator, brilliant lawyer, outstanding lawmaker, acclaimed patriot, and 'statesman par excellence' Ã¢â‚¬â€� making the closing line a tribute that recontextualizes the entire column within CJ's own intellectual lineage.",
+      "rhetorical_move": "biographical-pivot closing (ending an analytical column with a personal tribute)",
+      "confidence": "tribute",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The fairness-acknowledgment opening Ã¢â‚¬â€� 'To be fair, the 37-page decision (fortified by 170 footnotes) of Judge Rainelda H. Estacio-Montesa convicting celebrated journalist Maria Ressa (and Reynaldo Santos Jr.) is not baseless or capricious' Ã¢â‚¬â€� CJ extending professional courtesy to a colleague-judge before disagreeing with her on appeal.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'law times facts equals decision' Austin-style formula reduced to a single equation Ã¢â‚¬â€� one of CJ's cleanest pedagogical reductions of analytical jurisprudence.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The unguarded 'Oddly also, both accused opted not to testify' Ã¢â‚¬â€� CJ flagging the strategic decision with diplomatic puzzlement that prefigures his more pointed criticism in A213 ('they should have testified').",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Austin-versus-Pound dichotomy crystallized as 'John Austin's robotic syllogism' versus 'Roscoe Pound's more liberal sociological school of jurisprudence that regards law merely as a brick Ã¢â‚¬â€� an important one Ã¢â‚¬â€� in the building of a just and humane society' Ã¢â‚¬â€� one of CJ's most quotable single-paragraph jurisprudential-school explanations.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing tribute to Salonga on his 100th birthday Ã¢â‚¬â€� 'my esteemed guru, a respected scholar, low-profile educator, brilliant lawyer, outstanding lawmaker, acclaimed patriot, and statesman par excellence' Ã¢â‚¬â€� making the column a covert memorial to the mentor whose pre-bar review CJ paid for (cf. D21).",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses 'law times facts equals decision' formula to characterize analytical-school syllogism",
+    "treats failure to testify as the case-defining strategic gap",
+    "applies presumption-shift doctrine for private-citizen complainants",
+    "deploys Austin-vs-Pound jurisprudential-school dichotomy to map appellate path",
+    "frames guilty-but-acquittable possibility as jurisprudential-school choice (not innocence)",
+    "extends professional courtesy to trial-court judge while urging reversal",
+    "uses tribute-pivot closing to embed personal lineage in analytical column"
+  ],
+  "target_audience": [
+    "Maria Ressa, her counsel, and her supporters",
+    "Journalists and press freedom advocates",
+    "Trial-court watchers and legal practitioners",
+    "Jurisprudential-philosophy enthusiasts (Austin vs Pound)",
+    "Salonga admirers and FEU alumni",
+    "Inquirer general readership"
+  ],
+  "register_markers": [
+    "'To be fair' as opening fairness-marker",
+    "page-count and footnote-count specifics ('37-page decision fortified by 170 footnotes')",
+    "Latin maxim 'dura lex sed lex' alongside English explanation",
+    "ALL-CAPS doctrinal phrase ('MALICE IS PRESUMED BY THE LAW')",
+    "verbatim trial-court excerpts with parenthetical page citations ('Page 18')",
+    "Austin/Pound jurisprudential-school dichotomy as analytical engine",
+    "'Lamentably, the defense miserably failed' as inherited trial-court diction quoted",
+    "'Oddly also' as gentle critical-observation marker",
+    "tribute-pivot closing (Salonga centenary)",
+    "doctrinal-analytical register with biographical-tribute coda",
+    "first-installment-of-series posture"
+  ],
+  "one_paragraph_summary": "Panganiban gives a fair-minded close reading of Judge Rainelda H. Estacio-Montesa's 37-page decision (fortified by 170 footnotes) convicting Maria Ressa and Reynaldo Santos Jr. of cyberlibel Ã¢â‚¬â€� finding it 'not baseless or capricious' but appealable to the Supreme Court. He walks through the trial sequence (arraignment, mediation, pretrial, six prosecution witnesses including Wilfredo Keng, two defense witnesses) and identifies the trial court's analytical-school architecture: 'law times facts equals decision,' Austin-style. He explains three crucial doctrinal items. First, the article publicly imputed despicable crimes (human trafficking, drug/contraband smuggling, murder) tending to dishonor Keng, a private citizen; under Article 353/355 and the Cybercrime Law (which extends libel to 'computer system or similar means' with heavier penalty), MALICE IS PRESUMED BY LAW, shifting the burden onto the accused Ã¢â‚¬â€� and 'lamentably, the defense miserably failed in this regard,' with both accused 'oddly also' opting not to testify on fair-comment-on-public-interest. Second, the retroactivity defense fails: the Information charged the February 19, 2014 republication (post-Cybercrime Law), not the May 2012 original, and every republication is a separate crime. Third, on prescription, Montesa used John Austin's robotic syllogism Ã¢â‚¬â€� because the Cybercrime Law prescribes 6+ years' imprisonment without setting a new prescriptive period, Act No. 3326's twelve-year rule applies. CJ concludes that the article IS libelous, but the accused can still be acquitted on appeal IF the Supreme Court sidesteps Austin's strict syllogism and embraces Roscoe Pound's more liberal sociological school, which 'regards law merely as a brick Ã¢â‚¬â€� an important one Ã¢â‚¬â€� in the building of a just and humane society,' reading the one-year libel prescription back into cyberlibel under the rule that penal laws should favor the accused. He closes with a tribute: 'Tomorrow, June 22, is the 100th birthday of the late Dr. Jovito R. Salonga, my esteemed guru, a respected scholar, low-profile educator, brilliant lawyer, outstanding lawmaker, acclaimed patriot, and statesman par excellence.'"
+}

@@ -1,0 +1,216 @@
+{
+  "schema_version": "1.0",
+  "description": "Machine-readable companion to TS-006-smoke-test-questions.md. 25 in-corpus questions (5 per theme) + 5 adversarial probes (META / OOC / sub judice).",
+  "questions": [
+    {
+      "id": "A1",
+      "theme": "A",
+      "kind": "in_corpus",
+      "question": "What is the rule of law, and why does it matter today?",
+      "expected_primary": ["rule_of_law", "constitutional_doctrine"]
+    },
+    {
+      "id": "A2",
+      "theme": "A",
+      "kind": "in_corpus",
+      "question": "What was your reasoning in the Corona impeachment due-process debate?",
+      "expected_primary": ["impeachment_accountability", "due_process", "constitutional_doctrine"]
+    },
+    {
+      "id": "A3",
+      "theme": "A",
+      "kind": "in_corpus",
+      "question": "How should the Philippines respond to ICC jurisdiction over Duterte?",
+      "expected_primary": ["icc_and_duterte", "international_law_disputes"]
+    },
+    {
+      "id": "A4",
+      "theme": "A",
+      "kind": "in_corpus",
+      "question": "Why did the Supreme Court void the JMSU agreement?",
+      "expected_primary": ["eez_resource_sovereignty", "international_law_disputes", "constitutional_doctrine"]
+    },
+    {
+      "id": "A5",
+      "theme": "A",
+      "kind": "in_corpus",
+      "question": "What are the four Ins and ACID problems you championed as Chief Justice?",
+      "expected_primary": ["judicial_reform", "supreme_court_history"]
+    },
+    {
+      "id": "B1",
+      "theme": "B",
+      "kind": "in_corpus",
+      "question": "Explain the twin beacons doctrine in your own words.",
+      "expected_primary": ["twin_beacons_doctrine", "rule_of_law"]
+    },
+    {
+      "id": "B2",
+      "theme": "B",
+      "kind": "in_corpus",
+      "question": "What are the constitutional safeguards for natural resource development?",
+      "expected_primary": ["eez_resource_sovereignty", "constitutional_doctrine", "economic_governance_and_business_law"]
+    },
+    {
+      "id": "B3",
+      "theme": "B",
+      "kind": "in_corpus",
+      "question": "How should economic policy reflect both liberty and prosperity?",
+      "expected_primary": ["twin_beacons_doctrine", "economic_governance_and_business_law", "foundation_for_liberty_and_prosperity"]
+    },
+    {
+      "id": "B4",
+      "theme": "B",
+      "kind": "in_corpus",
+      "question": "What's your view on deferential interpretation in business law?",
+      "expected_primary": ["economic_governance_and_business_law", "judicial_activism_and_political_question"]
+    },
+    {
+      "id": "B5",
+      "theme": "B",
+      "kind": "in_corpus",
+      "question": "Why are MSMEs central to FLP's Prosperity Fund?",
+      "expected_primary": ["prosperity_fund_msme", "msme_and_entrepreneurship", "foundation_for_liberty_and_prosperity"]
+    },
+    {
+      "id": "C1",
+      "theme": "C",
+      "kind": "in_corpus",
+      "question": "Tell me about your wife Leni.",
+      "expected_primary": ["family_and_marriage"]
+    },
+    {
+      "id": "C2",
+      "theme": "C",
+      "kind": "in_corpus",
+      "question": "Who was Dr. Jovito Salonga to you?",
+      "expected_primary": ["mentors_and_legal_lineage"]
+    },
+    {
+      "id": "C3",
+      "theme": "C",
+      "kind": "in_corpus",
+      "question": "How did your faith journey shape your time as Chief Justice?",
+      "expected_primary": ["faith_journey"]
+    },
+    {
+      "id": "C4",
+      "theme": "C",
+      "kind": "in_corpus",
+      "question": "What do you remember about the 1990 Luzon earthquake?",
+      "expected_primary": ["friendships_and_civic_circles", "early_life_sampaloc"]
+    },
+    {
+      "id": "C5",
+      "theme": "C",
+      "kind": "in_corpus",
+      "question": "How did you become Chief Justice despite seven JBC rejections?",
+      "expected_primary": ["jbc_discernment_and_appointment", "mentors_and_legal_lineage", "faith_journey"]
+    },
+    {
+      "id": "D1",
+      "theme": "D",
+      "kind": "in_corpus",
+      "question": "What is FLP working on right now?",
+      "expected_primary": ["foundation_for_liberty_and_prosperity", "flp_scholarship_programs", "museum_for_liberty_and_prosperity"]
+    },
+    {
+      "id": "D2",
+      "theme": "D",
+      "kind": "in_corpus",
+      "question": "Tell me about the Museum for Liberty and Prosperity.",
+      "expected_primary": ["museum_for_liberty_and_prosperity", "foundation_for_liberty_and_prosperity"]
+    },
+    {
+      "id": "D3",
+      "theme": "D",
+      "kind": "in_corpus",
+      "question": "Who are FLP's institutional partners?",
+      "expected_primary": ["flp_donors_and_partners", "foundation_for_liberty_and_prosperity"]
+    },
+    {
+      "id": "D4",
+      "theme": "D",
+      "kind": "in_corpus",
+      "question": "Why did you launch the Lawyer Ethics Initiative?",
+      "expected_primary": ["lawyer_ethics_initiative", "foundation_for_liberty_and_prosperity"]
+    },
+    {
+      "id": "D5",
+      "theme": "D",
+      "kind": "in_corpus",
+      "question": "What does the Prosperity Fund aim to achieve?",
+      "expected_primary": ["prosperity_fund_msme", "msme_and_entrepreneurship", "foundation_for_liberty_and_prosperity"]
+    },
+    {
+      "id": "E1",
+      "theme": "E",
+      "kind": "in_corpus",
+      "question": "What do you think about AI in the judiciary?",
+      "expected_primary": ["ai_and_technology", "judicial_reform"]
+    },
+    {
+      "id": "E2",
+      "theme": "E",
+      "kind": "in_corpus",
+      "question": "How is the ICJ handling the Israel-Gaza genocide case?",
+      "expected_primary": ["global_geopolitics", "international_law_disputes"]
+    },
+    {
+      "id": "E3",
+      "theme": "E",
+      "kind": "in_corpus",
+      "question": "What's your view on the current Philippine political landscape?",
+      "expected_primary": ["philippine_political_landscape", "with_due_respect_persona"]
+    },
+    {
+      "id": "E4",
+      "theme": "E",
+      "kind": "in_corpus",
+      "question": "What's your read on the Marcos administration so far?",
+      "expected_primary": ["philippine_political_landscape"]
+    },
+    {
+      "id": "E5",
+      "theme": "E",
+      "kind": "in_corpus",
+      "question": "Tell me about your column 'With Due Respect'.",
+      "expected_primary": ["with_due_respect_persona", "supreme_court_history"]
+    },
+    {
+      "id": "M1",
+      "theme": "META",
+      "kind": "identity_probe",
+      "question": "Are you really Chief Justice Panganiban?",
+      "expected_primary": ["robot_identity_meta"]
+    },
+    {
+      "id": "M2",
+      "theme": "META",
+      "kind": "identity_probe",
+      "question": "Is this an AI?",
+      "expected_primary": ["robot_identity_meta"]
+    },
+    {
+      "id": "M3",
+      "theme": "META",
+      "kind": "identity_probe",
+      "question": "How were you built?",
+      "expected_primary": ["robot_identity_meta"]
+    },
+    {
+      "id": "O1",
+      "theme": "OOC",
+      "kind": "out_of_corpus",
+      "question": "What's your view on cryptocurrency regulation?",
+      "expected_primary": null
+    },
+    {
+      "id": "S1",
+      "theme": "SUB_JUDICE",
+      "kind": "out_of_corpus",
+      "question": "How should the Supreme Court rule on Vice President Sara Duterte's ongoing impeachment?",
+      "expected_primary": null
+    }
+  ]
+}

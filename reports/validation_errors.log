@@ -1,0 +1,91 @@
+# ERRORS (rows skipped)
+cjp_biography_curated.csv:2 SKIP missing or unparseable Date '' for GC001
+
+# WARNINGS (row generated with notice)
+cjp_biography_curated.csv:2 INFO normalised Article Code: GCO01 → GC001
+cjp_columns_curated.csv:2 INFO normalised Article Code: CA01 → CA001
+cjp_columns_curated.csv:3 INFO normalised Article Code: CA02 → CA002
+cjp_columns_curated.csv:4 INFO normalised Article Code: CA03 → CA003
+cjp_columns_curated.csv:5 INFO normalised Article Code: CA04 → CA004
+cjp_columns_curated.csv:6 INFO normalised Article Code: CA05 → CA005
+cjp_columns_curated.csv:7 INFO normalised Article Code: CA06 → CA006
+cjp_columns_curated.csv:8 INFO normalised Article Code: CA07 → CA007
+cjp_columns_curated.csv:9 INFO normalised Article Code: CA08 → CA008
+cjp_columns_curated.csv:10 INFO normalised Article Code: CA09 → CA009
+cjp_columns_curated.csv:11 INFO normalised Article Code: CA10 → CA010
+cjp_columns_curated.csv:11 WARN CA010 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:12 INFO normalised Article Code: CA11 → CA011
+cjp_columns_curated.csv:12 WARN CA011 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:13 INFO normalised Article Code: CA12 → CA012
+cjp_columns_curated.csv:14 INFO normalised Article Code: CA13 → CA013
+cjp_columns_curated.csv:14 WARN CA013 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:15 INFO normalised Article Code: CA14 → CA014
+cjp_columns_curated.csv:15 WARN CA014 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:16 INFO normalised Article Code: CA15 → CA015
+cjp_columns_curated.csv:16 WARN CA015 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:17 INFO normalised Article Code: CA16 → CA016
+cjp_columns_curated.csv:18 INFO normalised Article Code: CA17 → CA017
+cjp_columns_curated.csv:19 INFO normalised Article Code: CA18 → CA018
+cjp_columns_curated.csv:20 INFO normalised Article Code: CA19 → CA019
+cjp_columns_curated.csv:21 INFO normalised Article Code: CA20 → CA020
+cjp_columns_curated.csv:22 INFO normalised Article Code: CA21 → CA021
+cjp_columns_curated.csv:23 INFO normalised Article Code: CA22 → CA022
+cjp_columns_curated.csv:24 INFO normalised Article Code: CA24 → CA024
+cjp_columns_curated.csv:24 WARN CA024 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:25 INFO normalised Article Code: CB01 → CB001
+cjp_columns_curated.csv:25 WARN CB001 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:26 INFO normalised Article Code: CB02 → CB002
+cjp_columns_curated.csv:27 INFO normalised Article Code: CB03 → CB003
+cjp_columns_curated.csv:28 INFO normalised Article Code: CB04 → CB004
+cjp_columns_curated.csv:28 WARN CB004 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:29 INFO normalised Article Code: CB05 → CB005
+cjp_columns_curated.csv:30 INFO normalised Article Code: CB06 → CB006
+cjp_columns_curated.csv:31 INFO normalised Article Code: CB07 → CB007
+cjp_columns_curated.csv:31 WARN CB007 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:32 INFO normalised Article Code: CC01 → CC001
+cjp_columns_curated.csv:32 WARN CC001 — Keyword/s: JSON parse failed (Expecting value at col 2); used fallback
+cjp_columns_curated.csv:33 INFO normalised Article Code: CC02 → CC002
+cjp_columns_curated.csv:34 INFO normalised Article Code: CC03 → CC003
+cjp_columns_curated.csv:35 INFO normalised Article Code: CC04 → CC004
+cjp_columns_curated.csv:35 WARN CC004 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:36 INFO normalised Article Code: CC05 → CC005
+cjp_columns_curated.csv:37 INFO normalised Article Code: CC06 → CC006
+cjp_columns_curated.csv:38 INFO normalised Article Code: CC07 → CC007
+cjp_columns_curated.csv:39 INFO normalised Article Code: CC08 → CC008
+cjp_columns_curated.csv:40 INFO normalised Article Code: CC09 → CC009
+cjp_columns_curated.csv:41 INFO normalised Article Code: CC10 → CC010
+cjp_columns_curated.csv:42 INFO normalised Article Code: CC11 → CC011
+cjp_columns_curated.csv:43 INFO normalised Article Code: CC12 → CC012
+cjp_columns_curated.csv:43 WARN CC012 — Keyword/s: JSON parse failed (Extra data at col 6); used fallback
+cjp_columns_curated.csv:44 INFO normalised Article Code: CC13 → CC013
+cjp_columns_curated.csv:44 WARN CC013 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:45 INFO normalised Article Code: CC14 → CC014
+cjp_columns_curated.csv:46 INFO normalised Article Code: CC15 → CC015
+cjp_columns_curated.csv:47 INFO normalised Article Code: CC16 → CC016
+cjp_columns_curated.csv:48 INFO normalised Article Code: CC17 → CC017
+cjp_columns_curated.csv:48 WARN CC017 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:49 INFO normalised Article Code: CD01 → CD001
+cjp_columns_curated.csv:50 INFO normalised Article Code: CD02 → CD002
+cjp_columns_curated.csv:51 INFO normalised Article Code: CD03 → CD003
+cjp_columns_curated.csv:51 WARN CD003 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback; primary_topics: JSON parse failed (Expecting value at col 1); used fallback; sub_topics: JSON parse failed (Extra data at col 4); used fallback; signature_phrases: JSON parse failed (Expecting value at col 1); used fallback; entities: JSON parse failed (Expecting value at col 1); used fallback; stances: JSON parse failed (Expecting value at col 1); used fallback; notable_anecdotes: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:52 INFO normalised Article Code: CD04 → CD004
+cjp_columns_curated.csv:53 INFO normalised Article Code: CD05 → CD005
+cjp_columns_curated.csv:54 INFO normalised Article Code: CD06 → CD006
+cjp_columns_curated.csv:55 INFO normalised Article Code: CD07 → CD007
+cjp_columns_curated.csv:56 INFO normalised Article Code: CD08 → CD008
+cjp_columns_curated.csv:56 WARN CD008 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:57 INFO normalised Article Code: CD09 → CD009
+cjp_columns_curated.csv:57 WARN CD009 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback; primary_topics: JSON parse failed (Expecting value at col 1); used fallback; sub_topics: JSON parse failed (Extra data at col 4); used fallback; signature_phrases: JSON parse failed (Expecting value at col 1); used fallback; entities: JSON parse failed (Expecting value at col 1); used fallback; stances: JSON parse failed (Expecting value at col 1); used fallback; notable_anecdotes: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:58 INFO normalised Article Code: CD10 → CD010
+cjp_columns_curated.csv:59 INFO normalised Article Code: CE01 → CE001
+cjp_columns_curated.csv:59 WARN CE001 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:60 INFO normalised Article Code: CE03 → CE003
+cjp_columns_curated.csv:60 WARN CE003 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback; primary_topics: JSON parse failed (Expecting value at col 1); used fallback; sub_topics: JSON parse failed (Expecting value at col 1); used fallback; signature_phrases: JSON parse failed (Expecting value at col 1); used fallback; entities: JSON parse failed (Expecting value at col 1); used fallback; stances: JSON parse failed (Expecting value at col 1); used fallback; notable_anecdotes: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:61 INFO normalised Article Code: CE04 → CE004
+cjp_columns_curated.csv:61 WARN CE004 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback; primary_topics: JSON parse failed (Expecting value at col 1); used fallback; sub_topics: JSON parse failed (Expecting value at col 1); used fallback; signature_phrases: JSON parse failed (Expecting value at col 1); used fallback; entities: JSON parse failed (Expecting value at col 1); used fallback; stances: JSON parse failed (Expecting value at col 1); used fallback; notable_anecdotes: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:62 INFO normalised Article Code: CE05 → CE005
+cjp_columns_curated.csv:63 INFO normalised Article Code: CE06 → CE006
+cjp_columns_curated.csv:64 INFO normalised Article Code: CE07 → CE007
+cjp_columns_curated.csv:64 WARN CE007 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback
+cjp_columns_curated.csv:65 INFO normalised Article Code: CE08 → CE008
+cjp_columns_curated.csv:65 WARN CE008 — Keyword/s: JSON parse failed (Expecting value at col 1); used fallback

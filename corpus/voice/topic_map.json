@@ -1,0 +1,4819 @@
+{
+  "schema_version": "2.0",
+  "generated_at": "2026-05-25T22:27:09.783354+00:00",
+  "corpus_stats": {
+    "n_docs": 79,
+    "n_topics": 35,
+    "doc_type_distribution": {
+      "column": 64,
+      "speech": 15
+    },
+    "theme_distribution": {
+      "A": 26,
+      "B": 10,
+      "C": 20,
+      "D": 13,
+      "E": 10
+    },
+    "year_distribution": {
+      "2006": 1,
+      "2007": 1,
+      "2011": 1,
+      "2012": 3,
+      "2013": 1,
+      "2014": 4,
+      "2015": 2,
+      "2016": 5,
+      "2017": 2,
+      "2018": 2,
+      "2019": 8,
+      "2020": 3,
+      "2021": 6,
+      "2022": 7,
+      "2023": 11,
+      "2024": 14,
+      "2025": 5,
+      "2026": 3
+    }
+  },
+  "themes": {
+    "A": {
+      "letter": "A",
+      "label": "Liberty and Rule of Law",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic"
+    },
+    "B": {
+      "letter": "B",
+      "label": "Prosperity and Economic Philosophy",
+      "default_register": "case_analytical_with_openers",
+      "wit_calibration": "professional warmth"
+    },
+    "C": {
+      "letter": "C",
+      "label": "Biographical and Personal",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating"
+    },
+    "D": {
+      "letter": "D",
+      "label": "FLP Mission and Foundation",
+      "default_register": "ceremonial_with_humor",
+      "wit_calibration": "freely, head-table style"
+    },
+    "E": {
+      "letter": "E",
+      "label": "Signature Current Events Commentary",
+      "default_register": "reflective_pedagogical",
+      "wit_calibration": "thoughtful, warm"
+    }
+  },
+  "topics": {
+    "rule_of_law": {
+      "id": "rule_of_law",
+      "display_name": "The Rule of Law",
+      "definition": "CJP's most-repeated organizing concept — law over force, applied across constitutional, regional, and global domains; the negative list (NOT mob, NOT propaganda, NOT nuclear weapons) and the affirmative test (consensus + treaty fidelity).",
+      "tier": "anchor",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 30,
+      "doc_ids": [
+        "CA001",
+        "CA006",
+        "CA007",
+        "CA008",
+        "CA009",
+        "CA011",
+        "CA012",
+        "CA015",
+        "CA016",
+        "CA020",
+        "CA022",
+        "CB001",
+        "CB003",
+        "CB004",
+        "CB005",
+        "CB006",
+        "CC005",
+        "CC006",
+        "CD001",
+        "CD003",
+        "CD004",
+        "CD006",
+        "CD010",
+        "CE003",
+        "CE007",
+        "SA015",
+        "SA041",
+        "SA136",
+        "SB006",
+        "SB085"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2026-03-30"
+      ],
+      "year_range": [
+        2006,
+        2026
+      ],
+      "type_distribution": {
+        "column": 25,
+        "speech": 5
+      },
+      "theme_distribution": {
+        "A": 14,
+        "B": 7,
+        "C": 2,
+        "D": 5,
+        "E": 2
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "liberty and prosperity under the rule of law",
+          "count": 3,
+          "doc_ids": [
+            "CA001",
+            "CB005",
+            "SB085"
+          ]
+        },
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "merit-based",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "CJ Hilario G. Davide Jr.",
+        "President Rodrigo Duterte",
+        "Justice Antonio T. Carpio",
+        "Senior Justice Estela M. Perlas-Bernabe"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Far Eastern University",
+        "United Nations",
+        "Tan Yan Kee Foundation",
+        "Permanent Court of Arbitration"
+      ],
+      "top_cases": [
+        "South China Sea Arbitral Award",
+        "Francisco v. House of Representatives",
+        "",
+        "Russia-Ukraine genocide cross-claims at the ICJ"
+      ],
+      "matchers": {
+        "keywords": [
+          "rule of law",
+          "rule of force",
+          "rule of the mob",
+          "gray tactics",
+          "consensus as our north star",
+          "besieged"
+        ],
+        "entities": []
+      }
+    },
+    "twin_beacons_doctrine": {
+      "id": "twin_beacons_doctrine",
+      "display_name": "Liberty and Prosperity — Twin Beacons",
+      "definition": "The interdependence of liberty and prosperity under the rule of law: 'one is useless without the other.' The chiastic doublets (justice and jobs; freedom and food; ethics and economics; peace and development).",
+      "tier": "anchor",
+      "theme_anchor": "B",
+      "default_register": "case_analytical_with_openers",
+      "wit_calibration": "professional warmth",
+      "doc_count": 27,
+      "doc_ids": [
+        "CA001",
+        "CA015",
+        "CB001",
+        "CB003",
+        "CB004",
+        "CB005",
+        "CB006",
+        "CB007",
+        "CC006",
+        "CD001",
+        "CD002",
+        "CD003",
+        "CD004",
+        "CD005",
+        "CD006",
+        "CD007",
+        "CD008",
+        "CD009",
+        "CD010",
+        "SA015",
+        "SA136",
+        "SB006",
+        "SB063",
+        "SB085",
+        "SD002",
+        "SD021",
+        "SD033"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2026-01-12"
+      ],
+      "year_range": [
+        2006,
+        2026
+      ],
+      "type_distribution": {
+        "column": 19,
+        "speech": 8
+      },
+      "theme_distribution": {
+        "A": 4,
+        "B": 9,
+        "C": 1,
+        "D": 13
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "liberty and prosperity under the rule of law",
+          "count": 3,
+          "doc_ids": [
+            "CA001",
+            "CB005",
+            "SB085"
+          ]
+        },
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people",
+          "count": 2,
+          "doc_ids": [
+            "CB005",
+            "SB063"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Manuel V. Pangilinan",
+        "Dr. Lucio C. Tan",
+        "Senior Justice Estela M. Perlas-Bernabe",
+        "Justice Ramon Paul L. Hernando"
+      ],
+      "top_institutions": [
+        "Foundation for Liberty and Prosperity",
+        "Supreme Court of the Philippines",
+        "Tan Yan Kee Foundation",
+        "Ayala Corporation",
+        "Far Eastern University",
+        "Metrobank Foundation"
+      ],
+      "top_cases": [
+        "TaÃƒÂ±ada v. Angara",
+        "Tanada vs Angara",
+        "La Bugal-B'laan Tribal Association vs Ramos",
+        "Gamboa vs Teves"
+      ],
+      "matchers": {
+        "keywords": [
+          "twin beacons",
+          "liberty and prosperity",
+          "twin and inseparable",
+          "justice and jobs",
+          "freedom and food",
+          "ethics and economics",
+          "safeguard liberty",
+          "nurture prosperity"
+        ],
+        "entities": []
+      }
+    },
+    "foundation_for_liberty_and_prosperity": {
+      "id": "foundation_for_liberty_and_prosperity",
+      "display_name": "Foundation for Liberty and Prosperity (FLP)",
+      "definition": "FLP as the institutional vehicle for the twin-beacons philosophy in CJP's post-judicial life — scholarships, fellowships, dissertations, chairs, plus the two 'ultimate projects' (Museum and Prosperity Fund).",
+      "tier": "anchor",
+      "theme_anchor": "D",
+      "default_register": "ceremonial_with_humor",
+      "wit_calibration": "freely, head-table style",
+      "doc_count": 25,
+      "doc_ids": [
+        "CA001",
+        "CB001",
+        "CB003",
+        "CB004",
+        "CB005",
+        "CB006",
+        "CB007",
+        "CC001",
+        "CC006",
+        "CD001",
+        "CD002",
+        "CD003",
+        "CD004",
+        "CD005",
+        "CD006",
+        "CD007",
+        "CD008",
+        "CD009",
+        "CD010",
+        "SA015",
+        "SB006",
+        "SB063",
+        "SD002",
+        "SD021",
+        "SD033"
+      ],
+      "date_range": [
+        "2013-04-27",
+        "2026-01-12"
+      ],
+      "year_range": [
+        2013,
+        2026
+      ],
+      "type_distribution": {
+        "column": 19,
+        "speech": 6
+      },
+      "theme_distribution": {
+        "A": 2,
+        "B": 8,
+        "C": 2,
+        "D": 13
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "liberty and prosperity under the rule of law",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "CB005"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people",
+          "count": 2,
+          "doc_ids": [
+            "CB005",
+            "SB063"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Manuel V. Pangilinan",
+        "Dr. Lucio C. Tan",
+        "Senior Justice Estela M. Perlas-Bernabe",
+        "Justice Ramon Paul L. Hernando"
+      ],
+      "top_institutions": [
+        "Foundation for Liberty and Prosperity",
+        "Supreme Court of the Philippines",
+        "Tan Yan Kee Foundation",
+        "Ayala Corporation",
+        "Metrobank Foundation",
+        "Far Eastern University"
+      ],
+      "top_cases": [
+        "TaÃƒÂ±ada v. Angara"
+      ],
+      "matchers": {
+        "keywords": [
+          "foundation for liberty and prosperity",
+          "flp",
+          "flp awards",
+          "flp board",
+          "flp programs",
+          "flp partners",
+          "10th anniversary",
+          "ultimate projects"
+        ],
+        "entities": [
+          "Foundation for Liberty and Prosperity"
+        ]
+      }
+    },
+    "with_due_respect_persona": {
+      "id": "with_due_respect_persona",
+      "display_name": "'With Due Respect' — the columnist's stance",
+      "definition": "The signature columnist register: firm but civil, critical but disciplined, IMHO + Au contraire + self-citation + chiastic enumerations.",
+      "tier": "anchor",
+      "theme_anchor": "E",
+      "default_register": "reflective_pedagogical",
+      "wit_calibration": "thoughtful, warm",
+      "doc_count": 10,
+      "doc_ids": [
+        "CA002",
+        "CA005",
+        "CA012",
+        "CA013",
+        "CC001",
+        "CC005",
+        "CC009",
+        "CC012",
+        "CD010",
+        "SB085"
+      ],
+      "date_range": [
+        "2011-07-03",
+        "2024-09-16"
+      ],
+      "year_range": [
+        2011,
+        2024
+      ],
+      "type_distribution": {
+        "column": 9,
+        "speech": 1
+      },
+      "theme_distribution": {
+        "A": 4,
+        "C": 4,
+        "D": 1,
+        "B": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "IMHO",
+          "count": 2,
+          "doc_ids": [
+            "CA002",
+            "CD010"
+          ]
+        },
+        {
+          "phrase": "subtle reminder",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "full control and supervision of the State",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "the intent and aim of the agreement is to discover petroleum which is tantamount to exploration",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "That the Parties designated the joint research as a 'pre-exploration activity' is of no moment",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "These safeguards are sacred and must be complied with strictly and faithfully",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "dribbling the ball and refusing to take a shot",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "wasteful tactic already rejected in basketball-crazy Philippines",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Justice Antonio T. Carpio",
+        "CJ Alexander G. Gesmundo",
+        "CJ Hilario G. Davide Jr.",
+        "Justice Samuel H. Gaerlan",
+        "President Ferdinand Marcos Jr."
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "International Court of Justice",
+        "United Nations",
+        "China National Offshore Oil Corporation",
+        "Vietnam Oil and Gas Corporation",
+        "Philippine National Oil Company"
+      ],
+      "top_cases": [
+        "Gamboa vs Teves",
+        "SC ruling voiding the JMSU Tripartite Agreement",
+        "South China Sea Arbitral Award",
+        "Republic of the Philippines v. People's Republic of China â€” UNCLOS Annex VII arbitration"
+      ],
+      "matchers": {
+        "keywords": [
+          "with due respect",
+          "imho",
+          "in my humble opinion",
+          "au contraire",
+          "respectfully submit"
+        ],
+        "entities": []
+      }
+    },
+    "constitutional_doctrine": {
+      "id": "constitutional_doctrine",
+      "display_name": "Constitutional Doctrine (1987 Constitution)",
+      "definition": "Article-and-section exegesis of the 1987 Philippine Constitution — bill of rights, separation of powers, judicial review.",
+      "tier": "core",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 28,
+      "doc_ids": [
+        "CA002",
+        "CA004",
+        "CA005",
+        "CA006",
+        "CA011",
+        "CA014",
+        "CA015",
+        "CA016",
+        "CA020",
+        "CA021",
+        "CA022",
+        "CA024",
+        "CB001",
+        "CB002",
+        "CB004",
+        "CB005",
+        "CC005",
+        "CC007",
+        "CC009",
+        "CC016",
+        "CE005",
+        "CE006",
+        "CE007",
+        "CE008",
+        "SA041",
+        "SB006",
+        "SB085",
+        "SE012"
+      ],
+      "date_range": [
+        "2011-07-03",
+        "2024-11-25"
+      ],
+      "year_range": [
+        2011,
+        2024
+      ],
+      "type_distribution": {
+        "column": 24,
+        "speech": 4
+      },
+      "theme_distribution": {
+        "A": 13,
+        "B": 6,
+        "C": 4,
+        "E": 5
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "Strike, but hear me first",
+          "count": 2,
+          "doc_ids": [
+            "CA004",
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "liberty and prosperity under the rule of law",
+          "count": 2,
+          "doc_ids": [
+            "CB005",
+            "SB085"
+          ]
+        },
+        {
+          "phrase": "subtle reminder",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "full control and supervision of the State",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "the intent and aim of the agreement is to discover petroleum which is tantamount to exploration",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "That the Parties designated the joint research as a 'pre-exploration activity' is of no moment",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "These safeguards are sacred and must be complied with strictly and faithfully",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "dribbling the ball and refusing to take a shot",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Hilario G. Davide Jr.",
+        "Rodrigo Duterte",
+        "President Rodrigo Duterte",
+        "CJ Alexander G. Gesmundo",
+        "Pope Francis"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Senate of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "House of Representatives",
+        "Far Eastern University",
+        "United Nations"
+      ],
+      "top_cases": [
+        "Gamboa vs Teves",
+        "SC ruling voiding the JMSU Tripartite Agreement",
+        "Francisco v. House of Representatives",
+        ""
+      ],
+      "matchers": {
+        "keywords": [
+          "1987 constitution",
+          "1987 philippine constitution",
+          "bill of rights",
+          "article xii",
+          "article xi",
+          "article viii",
+          "constitutional commission",
+          "separation of powers",
+          "cha-cha",
+          "constitutional amendment",
+          "charter change",
+          "martial law",
+          "authoritarian rule",
+          "rebellion or invasion"
+        ],
+        "entities": [
+          "1987 Philippine Constitution",
+          "1987 Constitution"
+        ]
+      }
+    },
+    "due_process": {
+      "id": "due_process",
+      "display_name": "Due Process and Fair Trial",
+      "definition": "Procedural and substantive due process — life, liberty, property; notice and hearing; the natural-law sources (Themistocles, Daniel Webster).",
+      "tier": "core",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 8,
+      "doc_ids": [
+        "CA004",
+        "CA005",
+        "CA021",
+        "CA022",
+        "CB003",
+        "CB004",
+        "CC016",
+        "SB006"
+      ],
+      "date_range": [
+        "2011-07-03",
+        "2024-09-02"
+      ],
+      "year_range": [
+        2011,
+        2024
+      ],
+      "type_distribution": {
+        "column": 7,
+        "speech": 1
+      },
+      "theme_distribution": {
+        "A": 4,
+        "B": 3,
+        "C": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "Strike, but hear me first",
+          "count": 2,
+          "doc_ids": [
+            "CA004",
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "due process is sourced not just from the Constitution",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "deeply ingrained in democracy",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "the people's inherent sense of justice and fair play",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "a law which hears before it condemns, proceeds upon inquiry and renders judgment only after trial",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "no one has a vested right or a Torrens title to a public office",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "public office is a public trust",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "Ergo, the due process clause in the Bill of Rights does not cover the return to the state of a misused public office",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Themistocles",
+        "Daniel Webster",
+        "Justice Antonio T. Carpio",
+        "CJ Renato C. Corona",
+        "188 members of the House of Representatives"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Tan Yan Kee Foundation",
+        "University of Santo Tomas",
+        "House of Representatives",
+        "House Committee on Justice"
+      ],
+      "top_cases": [
+        "Gamboa vs Teves",
+        "Deduro v. Vinoya",
+        "SND v. Manalo",
+        "Estrada plunder Special Division"
+      ],
+      "matchers": {
+        "keywords": [
+          "due process",
+          "notice and hearing",
+          "themistocles",
+          "daniel webster",
+          "procedural due process",
+          "fair trial",
+          "strike but hear me first"
+        ],
+        "entities": []
+      }
+    },
+    "judicial_reform": {
+      "id": "judicial_reform",
+      "display_name": "Judicial Reform — Four Ins and ACID problems",
+      "definition": "CJP's judicial-reform vocabulary: the four Ins (independence, integrity, industry, intelligence) versus the four ACID problems (access, corruption, incompetence, delay); the Action Program for Judicial Reform (APJR) and the Strategic Plan for Judicial Innovation.",
+      "tier": "core",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 6,
+      "doc_ids": [
+        "CA001",
+        "CB001",
+        "CB006",
+        "CD010",
+        "SA015",
+        "SA136"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2024-09-09"
+      ],
+      "year_range": [
+        2006,
+        2024
+      ],
+      "type_distribution": {
+        "column": 4,
+        "speech": 2
+      },
+      "theme_distribution": {
+        "A": 3,
+        "B": 2,
+        "D": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "NOT in the rule of the mob, NOT in the rule of propaganda and falsehood, and NOT in the rule of nuclear weapons",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        },
+        {
+          "phrase": "humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Leni Carpio-Panganiban",
+        "Anwar Ibrahim",
+        "Justices Henri Jean Paul B. Inting, Rodil V. Zalameda, Mario V. Lopez, Samuel H. Gaerlan, Jhosep Y. Lopez, Antonio T. Kho Jr., Maria Filomena D. Singh",
+        "Manuel V. Pangilinan"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "ASEAN Law Association",
+        "ALA Philippines",
+        "Department of Justice",
+        "Department of the Interior and Local Government"
+      ],
+      "top_cases": [],
+      "matchers": {
+        "keywords": [
+          "four ins",
+          "acid problems",
+          "judicial reform",
+          "apjr",
+          "strategic plan for judicial innovation",
+          "action program for judicial reform",
+          "judicial excellence",
+          "benchbook"
+        ],
+        "entities": []
+      }
+    },
+    "supreme_court_history": {
+      "id": "supreme_court_history",
+      "display_name": "Supreme Court — history and stewardship",
+      "definition": "The Supreme Court as an institution — Chief Justices, centenary, judicial stewardship, the Panganiban Court, succession.",
+      "tier": "core",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 33,
+      "doc_ids": [
+        "CA001",
+        "CA002",
+        "CA005",
+        "CA011",
+        "CA012",
+        "CA021",
+        "CB003",
+        "CB007",
+        "CC002",
+        "CC005",
+        "CC006",
+        "CC009",
+        "CC013",
+        "CC017",
+        "CD002",
+        "CD004",
+        "CD006",
+        "CD007",
+        "CD008",
+        "CD010",
+        "CE001",
+        "CE006",
+        "CE007",
+        "CE008",
+        "SA015",
+        "SA041",
+        "SA136",
+        "SB006",
+        "SB085",
+        "SC023",
+        "SD002",
+        "SD021",
+        "SE012"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2025-08-29"
+      ],
+      "year_range": [
+        2006,
+        2025
+      ],
+      "type_distribution": {
+        "column": 24,
+        "speech": 9
+      },
+      "theme_distribution": {
+        "A": 9,
+        "B": 4,
+        "C": 7,
+        "D": 8,
+        "E": 5
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "liberty and prosperity under the rule of law",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SB085"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "IMHO",
+          "count": 2,
+          "doc_ids": [
+            "CA002",
+            "CD010"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Justice Antonio T. Carpio",
+        "Dr. Jovito R. Salonga",
+        "President Gloria Macapagal-Arroyo",
+        "Pope John Paul II"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Tan Yan Kee Foundation",
+        "Far Eastern University",
+        "Ayala Corporation",
+        "University of the Philippines"
+      ],
+      "top_cases": [
+        "Gamboa vs Teves",
+        "SC ruling voiding the JMSU Tripartite Agreement",
+        "Republic of the Philippines v. People's Republic of China â€” UNCLOS Annex VII arbitral award",
+        "South China Sea Arbitral Award"
+      ],
+      "matchers": {
+        "keywords": [
+          "panganiban court",
+          "centenary of justice",
+          "supreme court centenary",
+          "21st chief justice",
+          "ponente",
+          "ponencia",
+          "primus inter pares"
+        ],
+        "entities": [
+          "CJ Alexander G. Gesmundo",
+          "CJ Hilario G. Davide Jr.",
+          "Justice Antonio T. Carpio"
+        ]
+      }
+    },
+    "impeachment_accountability": {
+      "id": "impeachment_accountability",
+      "display_name": "Impeachment and Accountability",
+      "definition": "Impeachment as sui generis political-prosecutorial mechanism — House (prosecutorial) vs Senate (adjudicatory) roles; the Corona impeachment; the limit of due-process coverage.",
+      "tier": "subordinate",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 5,
+      "doc_ids": [
+        "CA004",
+        "CA006",
+        "CC005",
+        "CD010",
+        "SA041"
+      ],
+      "date_range": [
+        "2012-01-14",
+        "2023-04-10"
+      ],
+      "year_range": [
+        2012,
+        2023
+      ],
+      "type_distribution": {
+        "column": 4,
+        "speech": 1
+      },
+      "theme_distribution": {
+        "A": 3,
+        "C": 1,
+        "D": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "due process is sourced not just from the Constitution",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "deeply ingrained in democracy",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "the people's inherent sense of justice and fair play",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "Strike, but hear me first",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "a law which hears before it condemns, proceeds upon inquiry and renders judgment only after trial",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "no one has a vested right or a Torrens title to a public office",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "public office is a public trust",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        },
+        {
+          "phrase": "Ergo, the due process clause in the Bill of Rights does not cover the return to the state of a misused public office",
+          "count": 1,
+          "doc_ids": [
+            "CA004"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Renato C. Corona",
+        "CJ Hilario G. Davide Jr.",
+        "CJ Reynato S. Puno",
+        "CJ Lucas P. Bersamin",
+        "CJ Maria Lourdes P. A. Sereno"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "House of Representatives",
+        "House Committee on Justice",
+        "Senate of the Philippines",
+        "Regional Trial Court of Naga City",
+        "Far Eastern University"
+      ],
+      "top_cases": [
+        "Francisco v. House of Representatives",
+        "",
+        "Belgica v. Ochoa",
+        "Reyes v. Comelec"
+      ],
+      "matchers": {
+        "keywords": [
+          "impeachment",
+          "impeach",
+          "articles of impeachment",
+          "sui generis",
+          "corona",
+          "moro-moro",
+          "public office is a public trust"
+        ],
+        "entities": [
+          "CJ Renato C. Corona"
+        ]
+      }
+    },
+    "international_law_disputes": {
+      "id": "international_law_disputes",
+      "display_name": "International Law — Arbitral Award, UNCLOS, EEZ",
+      "definition": "South China Sea / West Philippine Sea Arbitral Award; UNCLOS; nine-dash line; EEZ; Permanent Court of Arbitration; Mutual Defense Treaty.",
+      "tier": "core",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 15,
+      "doc_ids": [
+        "CA002",
+        "CA007",
+        "CA009",
+        "CA010",
+        "CA011",
+        "CA012",
+        "CA013",
+        "CA014",
+        "CB002",
+        "CC014",
+        "CE001",
+        "CE003",
+        "CE007",
+        "SA015",
+        "SA041"
+      ],
+      "date_range": [
+        "2019-07-28",
+        "2026-03-30"
+      ],
+      "year_range": [
+        2019,
+        2026
+      ],
+      "type_distribution": {
+        "column": 13,
+        "speech": 2
+      },
+      "theme_distribution": {
+        "A": 10,
+        "B": 1,
+        "C": 1,
+        "E": 3
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "subtle reminder",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "full control and supervision of the State",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "the intent and aim of the agreement is to discover petroleum which is tantamount to exploration",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "That the Parties designated the joint research as a 'pre-exploration activity' is of no moment",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "These safeguards are sacred and must be complied with strictly and faithfully",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "dribbling the ball and refusing to take a shot",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "wasteful tactic already rejected in basketball-crazy Philippines",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "IMHO",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Rodrigo Duterte",
+        "President Ferdinand Marcos Jr.",
+        "President Rodrigo Duterte",
+        "Antonio T. Carpio",
+        "Xi Jinping"
+      ],
+      "top_institutions": [
+        "United Nations",
+        "Supreme Court of the Philippines",
+        "Permanent Court of Arbitration",
+        "International Court of Justice",
+        "Philippine government",
+        "Department of Justice"
+      ],
+      "top_cases": [
+        "South China Sea Arbitral Award",
+        "SC ruling voiding the JMSU Tripartite Agreement",
+        "Republic of the Philippines v. People's Republic of China â€” UNCLOS Annex VII award, July 12, 2016",
+        "Republic of the Philippines v. People's Republic of China â€” UNCLOS Annex VII arbitral award"
+      ],
+      "matchers": {
+        "keywords": [
+          "arbitral award",
+          "unclos",
+          "nine-dash line",
+          "eez",
+          "exclusive economic zone",
+          "west philippine sea",
+          "south china sea",
+          "wps",
+          "permanent court of arbitration",
+          "mutual defense treaty",
+          "freedom of navigation",
+          "jmsu",
+          "joint marine seismic undertaking"
+        ],
+        "entities": [
+          "Permanent Court of Arbitration",
+          "United Nations Convention on the Law of the Sea"
+        ]
+      }
+    },
+    "icc_and_duterte": {
+      "id": "icc_and_duterte",
+      "display_name": "ICC and the Duterte case",
+      "definition": "The Rome Statute, ICC jurisdiction post-withdrawal, the two-year prescriptive period, the Office of the Chief Prosecutor (Bensouda → Khan), and the Duterte mass-murder case.",
+      "tier": "subordinate",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 16,
+      "doc_ids": [
+        "CA003",
+        "CA007",
+        "CA008",
+        "CA009",
+        "CA011",
+        "CA013",
+        "CA014",
+        "CA015",
+        "CA016",
+        "CA017",
+        "CA018",
+        "CA019",
+        "CB002",
+        "CC016",
+        "CE006",
+        "SA041"
+      ],
+      "date_range": [
+        "2016-07-24",
+        "2025-03-24"
+      ],
+      "year_range": [
+        2016,
+        2025
+      ],
+      "type_distribution": {
+        "column": 15,
+        "speech": 1
+      },
+      "theme_distribution": {
+        "A": 13,
+        "B": 1,
+        "C": 1,
+        "E": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "essayed, broadcasted, debated, and gossiped ad nauseam",
+          "count": 1,
+          "doc_ids": [
+            "CA003"
+          ]
+        },
+        {
+          "phrase": "I think it is time to tackle what I believe is the pivotal legal issue",
+          "count": 1,
+          "doc_ids": [
+            "CA003"
+          ]
+        },
+        {
+          "phrase": "long shot",
+          "count": 1,
+          "doc_ids": [
+            "CA003"
+          ]
+        },
+        {
+          "phrase": "I cannot blame the lawyers for raising every conceivable angle",
+          "count": 1,
+          "doc_ids": [
+            "CA003"
+          ]
+        },
+        {
+          "phrase": "Au contraire",
+          "count": 1,
+          "doc_ids": [
+            "CA003"
+          ]
+        },
+        {
+          "phrase": "In my Dec. 11, 2023 piece, I respectfully agreed with the minority's position",
+          "count": 1,
+          "doc_ids": [
+            "CA003"
+          ]
+        },
+        {
+          "phrase": "the OCP is not an integral part of the ICC",
+          "count": 1,
+          "doc_ids": [
+            "CA003"
+          ]
+        },
+        {
+          "phrase": "If this is not so, why is the OCP required to secure authority from the PTC to start the investigation?",
+          "count": 1,
+          "doc_ids": [
+            "CA003"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "President Rodrigo Duterte",
+        "Rodrigo Duterte",
+        "Karim Khan",
+        "Fatou Bensouda",
+        "President Ferdinand Marcos Jr."
+      ],
+      "top_institutions": [
+        "International Criminal Court",
+        "United Nations",
+        "ICC Pre-Trial Chamber",
+        "Permanent Court of Arbitration",
+        "Supreme Court of the Philippines",
+        "ICC Appeals Chamber"
+      ],
+      "top_cases": [
+        "South China Sea Arbitral Award",
+        "Duterte ICC case",
+        "PH petition to stop continuation of investigation",
+        "PH appeal to ICC AC"
+      ],
+      "matchers": {
+        "keywords": [
+          "icc",
+          "international criminal court",
+          "rome statute",
+          "karim khan",
+          "bensouda",
+          "office of the chief prosecutor",
+          "pre-trial chamber",
+          "two-year prescriptive",
+          "subsidiarity",
+          "complementarity"
+        ],
+        "entities": [
+          "International Criminal Court",
+          "Rome Statute",
+          "Karim Khan",
+          "Rodrigo Duterte"
+        ]
+      }
+    },
+    "judicial_activism_and_political_question": {
+      "id": "judicial_activism_and_political_question",
+      "display_name": "Judicial Activism and the Political Question Doctrine",
+      "definition": "Comparative US-Philippine judicial activism — political-question doctrine, deference, and the courts' role in checking the political branches.",
+      "tier": "subordinate",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 5,
+      "doc_ids": [
+        "CA006",
+        "CA018",
+        "CC005",
+        "CC012",
+        "SB085"
+      ],
+      "date_range": [
+        "2012-11-29",
+        "2024-09-16"
+      ],
+      "year_range": [
+        2012,
+        2024
+      ],
+      "type_distribution": {
+        "column": 4,
+        "speech": 1
+      },
+      "theme_distribution": {
+        "A": 2,
+        "C": 2,
+        "B": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "by imposing upon all judges the duty to determine issues of grave abuse of discretion, our Constitution has thereby mandated them to be activists",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "Power can be relinquished, but a duty cannot under any circumstance be evaded",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "the three great branches of our government... are supreme in their own spheres",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "condition or limitation",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "tested its adherence to the rule of law",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "American magistrates are accorded the luxury of choosing between being passivists or activists",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "This luxury is denied to all Philippine judges",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "impregnable Constitution",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Hilario G. Davide Jr.",
+        "Judge Soliman M. Santos Jr.",
+        "Karim Khan",
+        "Rodrigo R. Duterte",
+        "President Ferdinand 'Bongbong' Marcos Jr."
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Far Eastern University",
+        "Regional Trial Court of Naga City",
+        "House of Representatives",
+        "FEU Central Student Organization",
+        "National Union of Students of the Philippines"
+      ],
+      "top_cases": [
+        "Francisco v. House of Representatives",
+        "",
+        "Belgica v. Ochoa",
+        "Reyes v. Comelec"
+      ],
+      "matchers": {
+        "keywords": [
+          "judicial activism",
+          "political question",
+          "deferential interpretation",
+          "deference"
+        ],
+        "entities": []
+      }
+    },
+    "asean_law_association": {
+      "id": "asean_law_association",
+      "display_name": "ASEAN Law Association and Regional Order",
+      "definition": "ALA, the ASEAN consensus principle, regional rule-of-law leadership, and CJP's outgoing chairmanship.",
+      "tier": "subordinate",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 4,
+      "doc_ids": [
+        "CA001",
+        "CB006",
+        "CC011",
+        "SA015"
+      ],
+      "date_range": [
+        "2015-03-01",
+        "2023-10-30"
+      ],
+      "year_range": [
+        2015,
+        2023
+      ],
+      "type_distribution": {
+        "column": 3,
+        "speech": 1
+      },
+      "theme_distribution": {
+        "A": 2,
+        "B": 1,
+        "C": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "NOT in the rule of the mob, NOT in the rule of propaganda and falsehood, and NOT in the rule of nuclear weapons",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        },
+        {
+          "phrase": "humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Anwar Ibrahim",
+        "CJ Alexander G. Gesmundo",
+        "Justices Henri Jean Paul B. Inting, Rodil V. Zalameda, Mario V. Lopez, Samuel H. Gaerlan, Jhosep Y. Lopez, Antonio T. Kho Jr., Maria Filomena D. Singh",
+        "Dr. Martin Luther King Jr.",
+        "Thomas Edison"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "ASEAN Law Association",
+        "ALA Philippines",
+        "Asean Law Association",
+        "Philippine ALA Chapter"
+      ],
+      "top_cases": [],
+      "matchers": {
+        "keywords": [
+          "asean law association",
+          "ala general assembly",
+          "kuala lumpur",
+          "ala philippines",
+          "asean consensus",
+          "ala chairmanship"
+        ],
+        "entities": [
+          "ASEAN Law Association",
+          "ALA Philippines"
+        ]
+      }
+    },
+    "death_penalty_and_echegaray": {
+      "id": "death_penalty_and_echegaray",
+      "display_name": "Death Penalty and the Echegaray Reflection",
+      "definition": "CJP's 2006 personal-conscience reflection on the Leo Echegaray case after Congress abolished the death penalty — the conscience/institution distinction.",
+      "tier": "subordinate",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 1,
+      "doc_ids": [
+        "CC016"
+      ],
+      "date_range": [
+        "2016-07-24",
+        "2016-07-24"
+      ],
+      "year_range": [
+        2016,
+        2016
+      ],
+      "type_distribution": {
+        "column": 1
+      },
+      "theme_distribution": {
+        "C": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "Hardly noticed by the media",
+          "count": 1,
+          "doc_ids": [
+            "CC016"
+          ]
+        },
+        {
+          "phrase": "the doctrine of separation of church and state does not prohibit the clergy and the laity from advocating",
+          "count": 1,
+          "doc_ids": [
+            "CC016"
+          ]
+        },
+        {
+          "phrase": "the government to be neutral in the 'competition'",
+          "count": 1,
+          "doc_ids": [
+            "CC016"
+          ]
+        },
+        {
+          "phrase": "While there is separation of church from state, there is no separation of the state from God",
+          "count": 1,
+          "doc_ids": [
+            "CC016"
+          ]
+        },
+        {
+          "phrase": "The Philippines is theist, not atheist, not even agnostic",
+          "count": 1,
+          "doc_ids": [
+            "CC016"
+          ]
+        },
+        {
+          "phrase": "imploring the aid of Almighty God",
+          "count": 1,
+          "doc_ids": [
+            "CC016"
+          ]
+        },
+        {
+          "phrase": "Centennial Prayer for the Courts",
+          "count": 1,
+          "doc_ids": [
+            "CC016"
+          ]
+        },
+        {
+          "phrase": "as Catholics, we take our bearings from Pope Francis",
+          "count": 1,
+          "doc_ids": [
+            "CC016"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Luis Antonio Cardinal Tagle",
+        "Pope Francis",
+        "President Rodrigo Duterte"
+      ],
+      "top_institutions": [
+        "Third Philippine Conference on New Evangelization",
+        "University of Santo Tomas",
+        "Roman Catholic Church",
+        "Vatican II / Second Vatican Council",
+        "Philippine Congress",
+        "Cabinet"
+      ],
+      "top_cases": [],
+      "matchers": {
+        "keywords": [
+          "death penalty",
+          "echegaray",
+          "leo echegaray"
+        ],
+        "entities": []
+      }
+    },
+    "bar_exam_and_legal_education": {
+      "id": "bar_exam_and_legal_education",
+      "display_name": "Bar Examination and Legal Education",
+      "definition": "Bar exams, law-school formation, FEU, UP, the legal scholarship program, and the long arc from Sampaloc-newsboy to legal education benefactor.",
+      "tier": "subordinate",
+      "theme_anchor": "A",
+      "default_register": "ceremonial_doctrinal",
+      "wit_calibration": "sparing, diplomatic",
+      "doc_count": 20,
+      "doc_ids": [
+        "CA006",
+        "CA021",
+        "CB003",
+        "CB005",
+        "CC002",
+        "CC004",
+        "CC006",
+        "CC007",
+        "CC009",
+        "CC010",
+        "CC012",
+        "CC013",
+        "CC014",
+        "CD002",
+        "CD003",
+        "CD004",
+        "CD009",
+        "CD010",
+        "SC023",
+        "SD033"
+      ],
+      "date_range": [
+        "2014-03-02",
+        "2026-01-12"
+      ],
+      "year_range": [
+        2014,
+        2026
+      ],
+      "type_distribution": {
+        "column": 18,
+        "speech": 2
+      },
+      "theme_distribution": {
+        "A": 2,
+        "B": 2,
+        "C": 10,
+        "D": 6
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "A Test of Courage",
+          "count": 2,
+          "doc_ids": [
+            "CC002",
+            "CC013"
+          ]
+        },
+        {
+          "phrase": "in my humble view (implied)",
+          "count": 2,
+          "doc_ids": [
+            "CC006",
+            "CC007"
+          ]
+        },
+        {
+          "phrase": "merit-based",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "Esmel",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "by imposing upon all judges the duty to determine issues of grave abuse of discretion, our Constitution has thereby mandated them to be activists",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "Power can be relinquished, but a duty cannot under any circumstance be evaded",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "the three great branches of our government... are supreme in their own spheres",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        },
+        {
+          "phrase": "condition or limitation",
+          "count": 1,
+          "doc_ids": [
+            "CA006"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Pope John Paul II",
+        "Jovito R. Salonga",
+        "Fr. Michael Nolan",
+        "CJ Hilario G. Davide Jr."
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Far Eastern University",
+        "Foundation for Liberty and Prosperity",
+        "University of the Philippines",
+        "FEU Central Student Organization",
+        "Tan Yan Kee Foundation"
+      ],
+      "top_cases": [
+        "Francisco v. House of Representatives",
+        "",
+        "Deduro v. Vinoya",
+        "SND v. Manalo"
+      ],
+      "matchers": {
+        "keywords": [
+          "bar exam",
+          "bar examination",
+          "bar topnotcher",
+          "legal education",
+          "law school formation",
+          "feu law",
+          "feu central student",
+          "nusp",
+          "philippine law school"
+        ],
+        "entities": []
+      }
+    },
+    "economic_governance_and_business_law": {
+      "id": "economic_governance_and_business_law",
+      "display_name": "Economic Governance and Business Law",
+      "definition": "Deferential interpretation, the Gamboa-Teves line, business-friendly judicial doctrine, and the policy environment for entrepreneurship.",
+      "tier": "core",
+      "theme_anchor": "B",
+      "default_register": "case_analytical_with_openers",
+      "wit_calibration": "professional warmth",
+      "doc_count": 7,
+      "doc_ids": [
+        "CA005",
+        "CB004",
+        "CD003",
+        "CD004",
+        "SA015",
+        "SB085",
+        "SD021"
+      ],
+      "date_range": [
+        "2011-07-03",
+        "2025-08-25"
+      ],
+      "year_range": [
+        2011,
+        2025
+      ],
+      "type_distribution": {
+        "column": 4,
+        "speech": 3
+      },
+      "theme_distribution": {
+        "A": 2,
+        "B": 2,
+        "D": 3
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "merit-based",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "Esmel",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "Foreign investors not heard",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "Strike, but hear me first",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "a law that hears before it condemns, proceeds upon inquiry and renders judgment only after trial",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "no one, not even the highest court of the land",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "with due respect",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "the absolute need for due process without which any decision would be void",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Justice Antonio T. Carpio",
+        "CJ Alexander G. Gesmundo",
+        "Manuel V. Pangilinan",
+        "President Gloria Macapagal-Arroyo",
+        "Themistocles"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Metro Pacific Investments Corporation",
+        "Metro Pacific Investments Foundation",
+        "Tan Yan Kee Foundation",
+        "Ayala Corporation"
+      ],
+      "top_cases": [
+        "Gamboa vs Teves",
+        "Tanada vs Angara",
+        "La Bugal-B'laan Tribal Association vs Ramos"
+      ],
+      "matchers": {
+        "keywords": [
+          "deferential interpretation",
+          "gamboa vs teves",
+          "business law",
+          "policy environment",
+          "economic policy",
+          "judicial deference"
+        ],
+        "entities": [
+          "Gamboa vs Teves"
+        ]
+      }
+    },
+    "eez_resource_sovereignty": {
+      "id": "eez_resource_sovereignty",
+      "display_name": "EEZ Resource Sovereignty",
+      "definition": "Article XII Section 2's twin safeguards — state control and 60-40 citizenship — applied to South China Sea joint-development negotiations.",
+      "tier": "subordinate",
+      "theme_anchor": "B",
+      "default_register": "case_analytical_with_openers",
+      "wit_calibration": "professional warmth",
+      "doc_count": 7,
+      "doc_ids": [
+        "CA002",
+        "CA005",
+        "CA012",
+        "CA014",
+        "CB007",
+        "SB085",
+        "SE012"
+      ],
+      "date_range": [
+        "2011-07-03",
+        "2024-01-16"
+      ],
+      "year_range": [
+        2011,
+        2024
+      ],
+      "type_distribution": {
+        "column": 5,
+        "speech": 2
+      },
+      "theme_distribution": {
+        "A": 4,
+        "B": 2,
+        "E": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "subtle reminder",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "full control and supervision of the State",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "the intent and aim of the agreement is to discover petroleum which is tantamount to exploration",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "That the Parties designated the joint research as a 'pre-exploration activity' is of no moment",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "These safeguards are sacred and must be complied with strictly and faithfully",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "dribbling the ball and refusing to take a shot",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "wasteful tactic already rejected in basketball-crazy Philippines",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "IMHO",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Justice Antonio T. Carpio",
+        "Justice Samuel H. Gaerlan",
+        "President Ferdinand Marcos Jr.",
+        "Eddie Yap",
+        "Ambassador Manuel M. Lopez"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "United Nations",
+        "China National Offshore Oil Corporation",
+        "Vietnam Oil and Gas Corporation",
+        "Philippine National Oil Company",
+        "Philippine Coast Guard"
+      ],
+      "top_cases": [
+        "Gamboa vs Teves",
+        "SC ruling voiding the JMSU Tripartite Agreement",
+        "South China Sea Arbitral Award",
+        "La Bugal-B'laan v. Ramos"
+      ],
+      "matchers": {
+        "keywords": [
+          "full control and supervision",
+          "60-40",
+          "regalian doctrine",
+          "natural resources",
+          "joint development",
+          "memorandum of understanding",
+          "mou with china"
+        ],
+        "entities": []
+      }
+    },
+    "msme_and_entrepreneurship": {
+      "id": "msme_and_entrepreneurship",
+      "display_name": "MSME and Entrepreneurship — the Prosperity Fund",
+      "definition": "The pro-poor, pro-private-initiative Prosperity Fund for MSMEs and the Esmel (Entrepreneurship, Sustainability, Management, Economics, Law) fellowship program.",
+      "tier": "core",
+      "theme_anchor": "B",
+      "default_register": "case_analytical_with_openers",
+      "wit_calibration": "professional warmth",
+      "doc_count": 11,
+      "doc_ids": [
+        "CA001",
+        "CD002",
+        "CD003",
+        "CD004",
+        "CD007",
+        "CD008",
+        "CD010",
+        "SA015",
+        "SB006",
+        "SD002",
+        "SD021"
+      ],
+      "date_range": [
+        "2022-04-11",
+        "2025-08-29"
+      ],
+      "year_range": [
+        2022,
+        2025
+      ],
+      "type_distribution": {
+        "column": 7,
+        "speech": 4
+      },
+      "theme_distribution": {
+        "A": 2,
+        "D": 8,
+        "B": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "merit-based",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "Esmel",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Justice Ramon Paul L. Hernando",
+        "Former BSP governor Amando M. Tetangco Jr.",
+        "Lawyer Joel Emerson Gregorio",
+        "Solomon Hermosura"
+      ],
+      "top_institutions": [
+        "Foundation for Liberty and Prosperity",
+        "Supreme Court of the Philippines",
+        "Tan Yan Kee Foundation",
+        "Ayala Corporation",
+        "Metro Pacific Investments Foundation",
+        "Asian Institute of Management"
+      ],
+      "top_cases": [],
+      "matchers": {
+        "keywords": [
+          "prosperity fund",
+          "msme",
+          "esmel",
+          "entrepreneurship fund",
+          "pro-poor",
+          "private entrepreneurship",
+          "multibillion-peso"
+        ],
+        "entities": []
+      }
+    },
+    "family_and_marriage": {
+      "id": "family_and_marriage",
+      "display_name": "Family — Leni, children, grandchildren",
+      "definition": "CJP's marriage to Leni Carpio Panganiban, his five children, grandchildren, and the household register he calls 'the real chief justice of this household.'",
+      "tier": "core",
+      "theme_anchor": "C",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 22,
+      "doc_ids": [
+        "CB003",
+        "CC003",
+        "CC006",
+        "CC008",
+        "CC011",
+        "CC013",
+        "CC014",
+        "CC016",
+        "CD004",
+        "CD010",
+        "CE005",
+        "CE007",
+        "CE008",
+        "SA015",
+        "SA136",
+        "SB006",
+        "SC023",
+        "SC059",
+        "SC130",
+        "SD002",
+        "SD033",
+        "SE001"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2026-04-27"
+      ],
+      "year_range": [
+        2006,
+        2026
+      ],
+      "type_distribution": {
+        "column": 13,
+        "speech": 9
+      },
+      "theme_distribution": {
+        "B": 2,
+        "C": 10,
+        "D": 4,
+        "E": 4,
+        "A": 2
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "To God be the glory",
+          "count": 3,
+          "doc_ids": [
+            "SA136",
+            "SC059",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "the gentle wind beneath my wings",
+          "count": 2,
+          "doc_ids": [
+            "SA015",
+            "SC023"
+          ]
+        },
+        {
+          "phrase": "Maraming salamat po",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SD002"
+          ]
+        },
+        {
+          "phrase": "Welcome home to my everlasting Kingdom",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SC059"
+          ]
+        },
+        {
+          "phrase": "God has woven my many pains and gains into a magnificent tapestry showing His mystical presence",
+          "count": 2,
+          "doc_ids": [
+            "SC059",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "freedom and food, justice and jobs, ethics and economics, nay, liberty and prosperity are equally important",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        },
+        {
+          "phrase": "one is useless without the other",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        },
+        {
+          "phrase": "the singular truth that the best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Pope John Paul II",
+        "CJ Alexander G. Gesmundo",
+        "Dr. Jovito R. Salonga",
+        "Fr. Michael Nolan",
+        "Leni Carpio-Panganiban"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Far Eastern University",
+        "Tan Yan Kee Foundation",
+        "University of Santo Tomas",
+        "University of the Philippines"
+      ],
+      "top_cases": [
+        "Ko v. Republic",
+        "Republic v. Pryce",
+        "Ong v. Senate",
+        "Soliman v. People"
+      ],
+      "matchers": {
+        "keywords": [
+          "leni",
+          "marisita",
+          "leni carpio",
+          "panganiban family",
+          "wife",
+          "wedding anniversary",
+          "children",
+          "grandchildren"
+        ],
+        "entities": [
+          "Leni Carpio-Panganiban",
+          "Leni Panganiban"
+        ]
+      }
+    },
+    "mentors_and_legal_lineage": {
+      "id": "mentors_and_legal_lineage",
+      "display_name": "Mentors and Legal Lineage",
+      "definition": "Dr. Jovito R. Salonga as guru; Diokno and Teehankee as living moral architects; Salonga, Ordoñez and Associates as formative apprenticeship.",
+      "tier": "core",
+      "theme_anchor": "C",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 16,
+      "doc_ids": [
+        "CC001",
+        "CC002",
+        "CC004",
+        "CC006",
+        "CC007",
+        "CC009",
+        "CC011",
+        "CC012",
+        "CC013",
+        "CC017",
+        "CD002",
+        "CE004",
+        "SA136",
+        "SC023",
+        "SC130",
+        "SD002"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2025-10-27"
+      ],
+      "year_range": [
+        2006,
+        2025
+      ],
+      "type_distribution": {
+        "column": 12,
+        "speech": 4
+      },
+      "theme_distribution": {
+        "C": 12,
+        "D": 2,
+        "E": 1,
+        "A": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "A Test of Courage",
+          "count": 2,
+          "doc_ids": [
+            "CC002",
+            "CC013"
+          ]
+        },
+        {
+          "phrase": "in my humble view (implied)",
+          "count": 2,
+          "doc_ids": [
+            "CC006",
+            "CC007"
+          ]
+        },
+        {
+          "phrase": "Maraming salamat po",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SD002"
+          ]
+        },
+        {
+          "phrase": "To God be the glory",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "Much has been said about Jovito R. Salonga",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "Let me add my humble voice via a eulogy",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "the law students of the Far Eastern University declared a 'strike'",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "clenched fists and anguished cries of 'persecution!'",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Dr. Jovito R. Salonga",
+        "CJ Alexander G. Gesmundo",
+        "Jovito R. Salonga",
+        "Pope John Paul II",
+        "President Gloria Macapagal-Arroyo"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Far Eastern University",
+        "University of the Philippines",
+        "Philippine Daily Inquirer",
+        "University of the East",
+        "Harvard University"
+      ],
+      "top_cases": [
+        "Comelec aggregate-time-limit edict voided",
+        "Maria Ressa cyberlibel conviction"
+      ],
+      "matchers": {
+        "keywords": [
+          "salonga",
+          "jovito r. salonga",
+          "diokno",
+          "pepe diokno",
+          "teehankee",
+          "claudio o. teehankee",
+          "salonga, ordoñez",
+          "mentor",
+          "my guru"
+        ],
+        "entities": [
+          "Dr. Jovito R. Salonga",
+          "Jose W. Diokno",
+          "Claudio O. Teehankee"
+        ]
+      }
+    },
+    "faith_journey": {
+      "id": "faith_journey",
+      "display_name": "Faith Journey — BLD, Pontifical Council, Pro Ecclesia",
+      "definition": "Catholic faith arriving late in life; Bukas Loob sa Diyos (BLD) covenant community with Leni; the Pontifical Council for the Laity appointment by John Paul II; the Pro Ecclesia et Pontifice papal award; Romans 8:28 and Isaiah 55:8-9 as touchstones.",
+      "tier": "core",
+      "theme_anchor": "C",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 20,
+      "doc_ids": [
+        "CA002",
+        "CA008",
+        "CC002",
+        "CC003",
+        "CC006",
+        "CC008",
+        "CC010",
+        "CC011",
+        "CC013",
+        "CC014",
+        "CC015",
+        "CC016",
+        "CE007",
+        "CE008",
+        "SA015",
+        "SA136",
+        "SC023",
+        "SC130",
+        "SD021",
+        "SE001"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2026-04-27"
+      ],
+      "year_range": [
+        2006,
+        2026
+      ],
+      "type_distribution": {
+        "column": 14,
+        "speech": 6
+      },
+      "theme_distribution": {
+        "A": 4,
+        "C": 12,
+        "E": 3,
+        "D": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "A Test of Courage",
+          "count": 2,
+          "doc_ids": [
+            "CC002",
+            "CC013"
+          ]
+        },
+        {
+          "phrase": "the gentle wind beneath my wings",
+          "count": 2,
+          "doc_ids": [
+            "SA015",
+            "SC023"
+          ]
+        },
+        {
+          "phrase": "To God be the glory",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "subtle reminder",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "full control and supervision of the State",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "the intent and aim of the agreement is to discover petroleum which is tantamount to exploration",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "That the Parties designated the joint research as a 'pre-exploration activity' is of no moment",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "These safeguards are sacred and must be complied with strictly and faithfully",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Pope John Paul II",
+        "Fr. Michael Nolan",
+        "Leni Carpio-Panganiban",
+        "President Gloria Macapagal-Arroyo",
+        "Dr. Jovito R. Salonga"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Far Eastern University",
+        "Second Plenary Council of the Philippines",
+        "University of the Philippines",
+        "Philippine Daily Inquirer",
+        "FEU Central Student Organization"
+      ],
+      "top_cases": [
+        "SC ruling voiding the JMSU Tripartite Agreement",
+        "Russia-Ukraine genocide cross-claims at the ICJ",
+        "South Africa v. Israel — Gaza genocide case at the ICJ",
+        "Trump v. Colorado"
+      ],
+      "matchers": {
+        "keywords": [
+          "bld",
+          "bukas loob sa diyos",
+          "catholic",
+          "pontifical council",
+          "pro ecclesia",
+          "papal award",
+          "romans 8:28",
+          "isaiah 55",
+          "ignatian",
+          "faith",
+          "providence",
+          "his own time"
+        ],
+        "entities": [
+          "Pope John Paul II",
+          "Bukas Loob sa Diyos",
+          "Pontifical Council for the Laity"
+        ]
+      }
+    },
+    "early_life_sampaloc": {
+      "id": "early_life_sampaloc",
+      "display_name": "Early Life — Sampaloc, FEU, the Bar",
+      "definition": "From Sampaloc newsboy to FEU summa cum laude to 1960 bar 6th-placer; the 15-centavo bus fare; Mapa High; the Trinity-failure scholarship interview. Organized Baron Travel Corp. (his travel agency) to fund his five children's graduate studies.",
+      "tier": "subordinate",
+      "theme_anchor": "C",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 14,
+      "doc_ids": [
+        "CC002",
+        "CC006",
+        "CC007",
+        "CC008",
+        "CC009",
+        "CC011",
+        "CC012",
+        "CC013",
+        "CD002",
+        "CD005",
+        "SA136",
+        "SB006",
+        "SC023",
+        "SC130"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2024-09-16"
+      ],
+      "year_range": [
+        2006,
+        2024
+      ],
+      "type_distribution": {
+        "column": 10,
+        "speech": 4
+      },
+      "theme_distribution": {
+        "C": 10,
+        "D": 2,
+        "A": 1,
+        "B": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "A Test of Courage",
+          "count": 2,
+          "doc_ids": [
+            "CC002",
+            "CC013"
+          ]
+        },
+        {
+          "phrase": "in my humble view (implied)",
+          "count": 2,
+          "doc_ids": [
+            "CC006",
+            "CC007"
+          ]
+        },
+        {
+          "phrase": "To God be the glory",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "Much has been said about Jovito R. Salonga",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "Let me add my humble voice via a eulogy",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "the law students of the Far Eastern University declared a 'strike'",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "clenched fists and anguished cries of 'persecution!'",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "a youngish 36-year-old, bespectacled professor walked to center stage",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Dr. Jovito R. Salonga",
+        "Jovito R. Salonga",
+        "Pope John Paul II",
+        "President Gloria Macapagal-Arroyo"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Far Eastern University",
+        "University of the Philippines",
+        "Philippine Daily Inquirer",
+        "Foundation for Liberty and Prosperity",
+        "University of the East"
+      ],
+      "top_cases": [
+        "Comelec aggregate-time-limit edict voided"
+      ],
+      "matchers": {
+        "keywords": [
+          "sampaloc",
+          "newsboy",
+          "mapa high",
+          "victorino mapa",
+          "15 centavos",
+          "fifteen centavos",
+          "juan luna elementary",
+          "summa cum laude",
+          "1960 bar",
+          "sixth place"
+        ],
+        "entities": []
+      }
+    },
+    "jbc_discernment_and_appointment": {
+      "id": "jbc_discernment_and_appointment",
+      "display_name": "JBC Discernment — the Seven Rejections",
+      "definition": "Seven Judicial and Bar Council rejections (1992-1995), the January 1995 surrender prayer, the Ask-Seek-Knock and Transfiguration Gospel readings, and the October 1995 appointment by Ramos.",
+      "tier": "subordinate",
+      "theme_anchor": "C",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 5,
+      "doc_ids": [
+        "CC002",
+        "SA041",
+        "SC059",
+        "SC130",
+        "SD033"
+      ],
+      "date_range": [
+        "2007-05-24",
+        "2021-02-06"
+      ],
+      "year_range": [
+        2007,
+        2021
+      ],
+      "type_distribution": {
+        "column": 1,
+        "speech": 4
+      },
+      "theme_distribution": {
+        "C": 3,
+        "A": 1,
+        "D": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "God has woven my many pains and gains into a magnificent tapestry showing His mystical presence",
+          "count": 2,
+          "doc_ids": [
+            "SC059",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "To God be the glory",
+          "count": 2,
+          "doc_ids": [
+            "SC059",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "Much has been said about Jovito R. Salonga",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "Let me add my humble voice via a eulogy",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "the law students of the Far Eastern University declared a 'strike'",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "clenched fists and anguished cries of 'persecution!'",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "a youngish 36-year-old, bespectacled professor walked to center stage",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        },
+        {
+          "phrase": "spoke with a forceful tremolo and held the rambunctious crowd spellbound",
+          "count": 1,
+          "doc_ids": [
+            "CC002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Hilario G. Davide Jr.",
+        "President Fidel V. Ramos",
+        "President Gloria Macapagal-Arroyo",
+        "Jovito R. Salonga",
+        "Evelyn Miranda-Feliciano"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Judicial and Bar Council",
+        "Far Eastern University",
+        "University of the Philippines",
+        "FEU Central Student Organization",
+        "National Union of Students"
+      ],
+      "top_cases": [
+        "Lambino vs Comelec",
+        "Quo warranto decision against CJ Sereno"
+      ],
+      "matchers": {
+        "keywords": [
+          "jbc",
+          "judicial and bar council",
+          "seven rejections",
+          "ask and you shall receive",
+          "transfiguration",
+          "discernment"
+        ],
+        "entities": []
+      }
+    },
+    "eulogies_and_passing": {
+      "id": "eulogies_and_passing",
+      "display_name": "Eulogies and Passing of Loved Ones",
+      "definition": "Eulogies and remembrances — Linda Manuel Mañalac, Leni's passing, Fr. Michael Nolan, and the fragility-of-life pastoral framework.",
+      "tier": "subordinate",
+      "theme_anchor": "C",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 15,
+      "doc_ids": [
+        "CA015",
+        "CC002",
+        "CC003",
+        "CC007",
+        "CC010",
+        "CC011",
+        "CC012",
+        "CC014",
+        "CD004",
+        "CD009",
+        "SA136",
+        "SB006",
+        "SC023",
+        "SC130",
+        "SE001"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2026-04-27"
+      ],
+      "year_range": [
+        2006,
+        2026
+      ],
+      "type_distribution": {
+        "column": 10,
+        "speech": 5
+      },
+      "theme_distribution": {
+        "A": 2,
+        "C": 9,
+        "D": 2,
+        "B": 1,
+        "E": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "To God be the glory",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "The Constitution is the bedrock of the rule of law",
+          "count": 1,
+          "doc_ids": [
+            "CA015"
+          ]
+        },
+        {
+          "phrase": "Civilian authority is, at all times, supreme over the military",
+          "count": 1,
+          "doc_ids": [
+            "CA015"
+          ]
+        },
+        {
+          "phrase": "Unlike the restive military in Myanmar, Thailand, and other countries",
+          "count": 1,
+          "doc_ids": [
+            "CA015"
+          ]
+        },
+        {
+          "phrase": "our AFP has, thus far, been faithful to the Charter and the rule of law",
+          "count": 1,
+          "doc_ids": [
+            "CA015"
+          ]
+        },
+        {
+          "phrase": "A clear and imminent risk of a military takeover I do not think there is",
+          "count": 1,
+          "doc_ids": [
+            "CA015"
+          ]
+        },
+        {
+          "phrase": "those who know how to obey their superiors and to execute plans",
+          "count": 1,
+          "doc_ids": [
+            "CA015"
+          ]
+        },
+        {
+          "phrase": "What I cannot understand is why our military is so livid at the academic freedom that our Constitution guarantees",
+          "count": 1,
+          "doc_ids": [
+            "CA015"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Fr. Michael Nolan",
+        "CJ Alexander G. Gesmundo",
+        "Leni Carpio-Panganiban",
+        "Karl Marx",
+        "Jovito R. Salonga"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Far Eastern University",
+        "University of the Philippines",
+        "University of Santo Tomas",
+        "FEU Central Student Organization",
+        "University of the East"
+      ],
+      "top_cases": [
+        "Comelec aggregate-time-limit edict voided"
+      ],
+      "matchers": {
+        "keywords": [
+          "eulogy",
+          "passing",
+          "in memoriam",
+          "fragility of life",
+          "widower",
+          "love and magnanimity",
+          "leni's passing",
+          "in his heavenly kingdom"
+        ],
+        "entities": [
+          "Linda Manuel Mañalac",
+          "Fr. Michael Nolan",
+          "Tong Manalac"
+        ]
+      }
+    },
+    "friendships_and_civic_circles": {
+      "id": "friendships_and_civic_circles",
+      "display_name": "Friendships and Civic Circles",
+      "definition": "CJP's friendships and patron network — Marixi R. Prieto, Manuel V. Pangilinan, the Ayalas, the Tan family, Rotary Club of Manila.",
+      "tier": "subordinate",
+      "theme_anchor": "C",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 12,
+      "doc_ids": [
+        "CA005",
+        "CB001",
+        "CB003",
+        "CC001",
+        "CC009",
+        "CC011",
+        "CC015",
+        "CD008",
+        "CE001",
+        "SB006",
+        "SB063",
+        "SE013"
+      ],
+      "date_range": [
+        "2011-07-03",
+        "2025-01-13"
+      ],
+      "year_range": [
+        2011,
+        2025
+      ],
+      "type_distribution": {
+        "column": 9,
+        "speech": 3
+      },
+      "theme_distribution": {
+        "A": 1,
+        "B": 4,
+        "C": 4,
+        "D": 1,
+        "E": 2
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "Foreign investors not heard",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "Strike, but hear me first",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "a law that hears before it condemns, proceeds upon inquiry and renders judgment only after trial",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "no one, not even the highest court of the land",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "with due respect",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "the absolute need for due process without which any decision would be void",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "I will refrain from discussing the substance of the ponencia",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        },
+        {
+          "phrase": "instead of being increased, judicial take home pay was effectively decreased!",
+          "count": 1,
+          "doc_ids": [
+            "CA005"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Manuel V. Pangilinan",
+        "Marixi R. Prieto",
+        "Alfred Ty",
+        "Justice Antonio T. Carpio",
+        "Amando M. Tetangco Jr."
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Tan Yan Kee Foundation",
+        "University of the Philippines",
+        "Philippine Daily Inquirer",
+        "Ayala Corporation"
+      ],
+      "top_cases": [
+        "Gamboa vs Teves",
+        "BCDA v. CJH Development",
+        "Adapon v. Medical Doctors"
+      ],
+      "matchers": {
+        "keywords": [
+          "marixi prieto",
+          "manuel v. pangilinan",
+          "manny pangilinan",
+          "rotary club of manila",
+          "dear friend"
+        ],
+        "entities": [
+          "Marixi R. Prieto",
+          "Manuel V. Pangilinan",
+          "Rotary Club of Manila"
+        ]
+      }
+    },
+    "honors_received": {
+      "id": "honors_received",
+      "display_name": "Honors Received",
+      "definition": "Pro Ecclesia et Pontifice; Bantayog ng mga Bayani 'Haligi ng Bantayog'; Manila Overseas Press Club Journalist of the Year — Law; honorary doctorates.",
+      "tier": "subordinate",
+      "theme_anchor": "C",
+      "default_register": "testimonial",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 2,
+      "doc_ids": [
+        "CC011",
+        "CE006"
+      ],
+      "date_range": [
+        "2023-10-30",
+        "2024-04-08"
+      ],
+      "year_range": [
+        2023,
+        2024
+      ],
+      "type_distribution": {
+        "column": 2
+      },
+      "theme_distribution": {
+        "C": 1,
+        "E": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "though unworthy and without my prior knowledge",
+          "count": 1,
+          "doc_ids": [
+            "CC011"
+          ]
+        },
+        {
+          "phrase": "Mega Media Movers",
+          "count": 1,
+          "doc_ids": [
+            "CC011"
+          ]
+        },
+        {
+          "phrase": "at the sunset of my humble life",
+          "count": 1,
+          "doc_ids": [
+            "CC011"
+          ]
+        },
+        {
+          "phrase": "I am not worthy of the appellation 'Journalist'",
+          "count": 1,
+          "doc_ids": [
+            "CC011"
+          ]
+        },
+        {
+          "phrase": "battle-tested stars of the journalism profession",
+          "count": 1,
+          "doc_ids": [
+            "CC011"
+          ]
+        },
+        {
+          "phrase": "ACCIDENTAL WRITER",
+          "count": 1,
+          "doc_ids": [
+            "CC011"
+          ]
+        },
+        {
+          "phrase": "tsamba lang 'yon",
+          "count": 1,
+          "doc_ids": [
+            "CC011"
+          ]
+        },
+        {
+          "phrase": "Supercalifragilisticexpialidocious!",
+          "count": 1,
+          "doc_ids": [
+            "CC011"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Antonio 'Tony' Lopez",
+        "Marixi R. Prieto",
+        "Felipe 'Henry' L. Gozon",
+        "Dr. Jovito R. Salonga",
+        "Elenita 'Leni' Carpio-Panganiban"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Manila Overseas Press Club",
+        "Philippine Daily Inquirer",
+        "Inquirer.net",
+        "Inquirer Newsboy Foundation",
+        "GMA Network"
+      ],
+      "top_cases": [
+        "Chiong v. Anonymous MIAA Officials",
+        "OMB Aug 1, 2023",
+        "Cases filed by OMB Morales against Arroyo, Binay, Enrile, Revilla, Estrada",
+        "Morales' ICC communication against Xi Jinping"
+      ],
+      "matchers": {
+        "keywords": [
+          "bantayog",
+          "haligi ng bantayog",
+          "haligi",
+          "journalist of the year",
+          "honorary doctorate",
+          "manila overseas press club"
+        ],
+        "entities": [
+          "Bantayog ng mga Bayani",
+          "Manila Overseas Press Club"
+        ]
+      }
+    },
+    "flp_scholarship_programs": {
+      "id": "flp_scholarship_programs",
+      "display_name": "FLP Scholarship and Fellowship Programs",
+      "definition": "FLP Legal Scholarship, ESMEL Fellowship, Dissertation Writing Contest, Professorial Chairs, Panganiban Education Assistance Program.",
+      "tier": "core",
+      "theme_anchor": "D",
+      "default_register": "ceremonial_with_humor",
+      "wit_calibration": "freely, head-table style",
+      "doc_count": 19,
+      "doc_ids": [
+        "CB003",
+        "CB005",
+        "CB007",
+        "CC002",
+        "CC006",
+        "CD001",
+        "CD002",
+        "CD003",
+        "CD004",
+        "CD005",
+        "CD006",
+        "CD007",
+        "CD008",
+        "CD009",
+        "SB006",
+        "SC130",
+        "SD002",
+        "SD021",
+        "SD033"
+      ],
+      "date_range": [
+        "2007-05-24",
+        "2026-01-12"
+      ],
+      "year_range": [
+        2007,
+        2026
+      ],
+      "type_distribution": {
+        "column": 14,
+        "speech": 5
+      },
+      "theme_distribution": {
+        "B": 4,
+        "C": 3,
+        "D": 12
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "merit-based",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "Esmel",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "freedom and food, justice and jobs, ethics and economics, nay, liberty and prosperity are equally important",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        },
+        {
+          "phrase": "one is useless without the other",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        },
+        {
+          "phrase": "the singular truth that the best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        },
+        {
+          "phrase": "freedom and the tools to help themselves and society",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        },
+        {
+          "phrase": "they are given on the basis of pure merit",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        },
+        {
+          "phrase": "paucity of funds will be considered only in case of equality in excellence",
+          "count": 1,
+          "doc_ids": [
+            "CB003"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Dr. Lucio C. Tan",
+        "Senior Justice Estela M. Perlas-Bernabe",
+        "Justice Ramon Paul L. Hernando",
+        "Edilberto C. de Jesus"
+      ],
+      "top_institutions": [
+        "Foundation for Liberty and Prosperity",
+        "Tan Yan Kee Foundation",
+        "Supreme Court of the Philippines",
+        "Ayala Corporation",
+        "Far Eastern University",
+        "University of the Philippines"
+      ],
+      "top_cases": [
+        "TaÃƒÂ±ada v. Angara"
+      ],
+      "matchers": {
+        "keywords": [
+          "scholarship",
+          "esmel fellowship",
+          "dissertation writing contest",
+          "professorial chair",
+          "education assistance program",
+          "panganiban education",
+          "law scholarship"
+        ],
+        "entities": []
+      }
+    },
+    "museum_for_liberty_and_prosperity": {
+      "id": "museum_for_liberty_and_prosperity",
+      "display_name": "Museum for Liberty and Prosperity",
+      "definition": "The futuristic, AI-powered, immersive Museum as the liberty half of FLP's two ultimate projects; Palafox preliminary designs; Alabang Global City lot donated by Allen Roxas.",
+      "tier": "core",
+      "theme_anchor": "D",
+      "default_register": "ceremonial_with_humor",
+      "wit_calibration": "freely, head-table style",
+      "doc_count": 10,
+      "doc_ids": [
+        "CA001",
+        "CD002",
+        "CD004",
+        "CD007",
+        "CD008",
+        "CD010",
+        "SA015",
+        "SB006",
+        "SD002",
+        "SD021"
+      ],
+      "date_range": [
+        "2022-04-11",
+        "2025-08-29"
+      ],
+      "year_range": [
+        2022,
+        2025
+      ],
+      "type_distribution": {
+        "column": 6,
+        "speech": 4
+      },
+      "theme_distribution": {
+        "A": 2,
+        "D": 7,
+        "B": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "NOT in the rule of the mob, NOT in the rule of propaganda and falsehood, and NOT in the rule of nuclear weapons",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        },
+        {
+          "phrase": "humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Justice Ramon Paul L. Hernando",
+        "Former BSP governor Amando M. Tetangco Jr.",
+        "Lawyer Joel Emerson Gregorio",
+        "Solomon Hermosura"
+      ],
+      "top_institutions": [
+        "Foundation for Liberty and Prosperity",
+        "Supreme Court of the Philippines",
+        "Tan Yan Kee Foundation",
+        "Ayala Corporation",
+        "Metro Pacific Investments Foundation",
+        "Asian Institute of Management"
+      ],
+      "top_cases": [],
+      "matchers": {
+        "keywords": [
+          "museum for liberty",
+          "center for liberty and prosperity",
+          "ai-powered museum",
+          "immersive museum",
+          "palafox",
+          "allen roxas",
+          "alabang global city"
+        ],
+        "entities": []
+      }
+    },
+    "prosperity_fund_msme": {
+      "id": "prosperity_fund_msme",
+      "display_name": "Prosperity Fund (MSME)",
+      "definition": "The pro-poor multibillion-peso Prosperity Fund — the prosperity half of FLP's two ultimate projects.",
+      "tier": "core",
+      "theme_anchor": "D",
+      "default_register": "ceremonial_with_humor",
+      "wit_calibration": "freely, head-table style",
+      "doc_count": 5,
+      "doc_ids": [
+        "CA001",
+        "CD002",
+        "CD008",
+        "SA015",
+        "SB006"
+      ],
+      "date_range": [
+        "2023-07-31",
+        "2024-09-02"
+      ],
+      "year_range": [
+        2023,
+        2024
+      ],
+      "type_distribution": {
+        "column": 3,
+        "speech": 2
+      },
+      "theme_distribution": {
+        "A": 2,
+        "D": 2,
+        "B": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "NOT in the rule of the mob, NOT in the rule of propaganda and falsehood, and NOT in the rule of nuclear weapons",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        },
+        {
+          "phrase": "humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Mike Toledo",
+        "Alexander G. Gesmundo",
+        "Arthur Ty",
+        "Alfred Ty"
+      ],
+      "top_institutions": [
+        "Foundation for Liberty and Prosperity",
+        "Supreme Court of the Philippines",
+        "Tan Yan Kee Foundation",
+        "Ayala Corporation",
+        "ASEAN Law Association",
+        "ALA Philippines"
+      ],
+      "top_cases": [],
+      "matchers": {
+        "keywords": [
+          "prosperity fund",
+          "msme fund",
+          "multibillion-peso fund",
+          "pro-poor fund"
+        ],
+        "entities": []
+      }
+    },
+    "flp_donors_and_partners": {
+      "id": "flp_donors_and_partners",
+      "display_name": "FLP Donors and Institutional Partners",
+      "definition": "Tan Yan Kee Foundation, Metrobank Foundation, Ayala Corporation, SM Investments, BDO, MPIC, AIM — the institutional ecosystem behind FLP's programs.",
+      "tier": "subordinate",
+      "theme_anchor": "D",
+      "default_register": "ceremonial_with_humor",
+      "wit_calibration": "freely, head-table style",
+      "doc_count": 19,
+      "doc_ids": [
+        "CA002",
+        "CB003",
+        "CB005",
+        "CC003",
+        "CC006",
+        "CD001",
+        "CD002",
+        "CD003",
+        "CD004",
+        "CD005",
+        "CD006",
+        "CD007",
+        "CD008",
+        "CD009",
+        "SB006",
+        "SB063",
+        "SD002",
+        "SD021",
+        "SD033"
+      ],
+      "date_range": [
+        "2014-03-02",
+        "2026-01-12"
+      ],
+      "year_range": [
+        2014,
+        2026
+      ],
+      "type_distribution": {
+        "column": 14,
+        "speech": 5
+      },
+      "theme_distribution": {
+        "A": 1,
+        "B": 4,
+        "C": 2,
+        "D": 12
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "the best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people",
+          "count": 2,
+          "doc_ids": [
+            "CB005",
+            "SB063"
+          ]
+        },
+        {
+          "phrase": "merit-based",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "Esmel",
+          "count": 2,
+          "doc_ids": [
+            "CD003",
+            "CD004"
+          ]
+        },
+        {
+          "phrase": "subtle reminder",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "full control and supervision of the State",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "the intent and aim of the agreement is to discover petroleum which is tantamount to exploration",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "That the Parties designated the joint research as a 'pre-exploration activity' is of no moment",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "These safeguards are sacred and must be complied with strictly and faithfully",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Dr. Lucio C. Tan",
+        "Senior Justice Estela M. Perlas-Bernabe",
+        "Justice Ramon Paul L. Hernando",
+        "Jaime Augusto Zobel de Ayala"
+      ],
+      "top_institutions": [
+        "Foundation for Liberty and Prosperity",
+        "Tan Yan Kee Foundation",
+        "Supreme Court of the Philippines",
+        "Ayala Corporation",
+        "Metrobank Foundation",
+        "Asian Institute of Management"
+      ],
+      "top_cases": [
+        "SC ruling voiding the JMSU Tripartite Agreement",
+        "TaÃƒÂ±ada v. Angara"
+      ],
+      "matchers": {
+        "keywords": [
+          "tan yan kee foundation",
+          "metrobank foundation",
+          "ayala corporation",
+          "sm investments",
+          "bdo unibank",
+          "metro pacific investments",
+          "mpic",
+          "asian institute of management",
+          "aim"
+        ],
+        "entities": [
+          "Tan Yan Kee Foundation",
+          "Metrobank Foundation",
+          "Ayala Corporation",
+          "SM Investments Corporation",
+          "Asian Institute of Management"
+        ]
+      }
+    },
+    "lawyer_ethics_initiative": {
+      "id": "lawyer_ethics_initiative",
+      "display_name": "Lawyer Ethics Initiative (Super Committee)",
+      "definition": "Tessie Sy Coson's principle that lawyers must be 'not just talented, but also ethical and Godly,' the new Super Committee under SolGen Berberabe, and FLP's ethical-formation track.",
+      "tier": "subordinate",
+      "theme_anchor": "D",
+      "default_register": "ceremonial_with_humor",
+      "wit_calibration": "freely, head-table style",
+      "doc_count": 4,
+      "doc_ids": [
+        "CD008",
+        "CE004",
+        "SC023",
+        "SD002"
+      ],
+      "date_range": [
+        "2022-07-07",
+        "2025-10-27"
+      ],
+      "year_range": [
+        2022,
+        2025
+      ],
+      "type_distribution": {
+        "column": 2,
+        "speech": 2
+      },
+      "theme_distribution": {
+        "D": 2,
+        "E": 1,
+        "C": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "I have already heard of her vaunted competence as a practicing lawyer and law professor",
+          "count": 1,
+          "doc_ids": [
+            "CD008"
+          ]
+        },
+        {
+          "phrase": "she dissolved her entrenched law firm before the newly elected president assumed office",
+          "count": 1,
+          "doc_ids": [
+            "CD008"
+          ]
+        },
+        {
+          "phrase": "during an exhibit of some reproductions of Michelangelo's 'Sistine Chapel' masterpieces",
+          "count": 1,
+          "doc_ids": [
+            "CD008"
+          ]
+        },
+        {
+          "phrase": "the 35th anniversary of Toyota Philippines",
+          "count": 1,
+          "doc_ids": [
+            "CD008"
+          ]
+        },
+        {
+          "phrase": "as if we had known each other for years",
+          "count": 1,
+          "doc_ids": [
+            "CD008"
+          ]
+        },
+        {
+          "phrase": "holding on to my arm occasionally",
+          "count": 1,
+          "doc_ids": [
+            "CD008"
+          ]
+        },
+        {
+          "phrase": "INDEED, A REAL CHARMER, FIRST LADY LOUISE ARANETA-MARCOS IS",
+          "count": 1,
+          "doc_ids": [
+            "CD008"
+          ]
+        },
+        {
+          "phrase": "compaÃ±ero Mike Toledo, chair and president of the Chamber of Mines",
+          "count": 1,
+          "doc_ids": [
+            "CD008"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Tessie Sy Coson",
+        "Louise Araneta-Marcos",
+        "Manuel V. Pangilinan",
+        "Mike Toledo"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Tan Yan Kee Foundation",
+        "Ayala Corporation",
+        "Asian Institute of Management",
+        "Metro Pacific Investments Foundation"
+      ],
+      "top_cases": [],
+      "matchers": {
+        "keywords": [
+          "ethical and godly",
+          "lawyer ethics",
+          "super committee",
+          "ethical standards",
+          "berberabe"
+        ],
+        "entities": [
+          "Tessie Sy Coson",
+          "SolGen Lelen Berberabe"
+        ]
+      }
+    },
+    "ai_and_technology": {
+      "id": "ai_and_technology",
+      "display_name": "AI, Technology, and the Judiciary",
+      "definition": "Artificial intelligence in court administration; the Strategic Plan for Judicial Innovation 'for the Age of Artificial Intelligence'; technology and rule-of-law.",
+      "tier": "subordinate",
+      "theme_anchor": "E",
+      "default_register": "reflective_pedagogical",
+      "wit_calibration": "thoughtful, warm",
+      "doc_count": 11,
+      "doc_ids": [
+        "CA001",
+        "CB001",
+        "CC011",
+        "CD002",
+        "CD008",
+        "CD010",
+        "SA015",
+        "SD002",
+        "SD021",
+        "SE012",
+        "SE013"
+      ],
+      "date_range": [
+        "2022-08-11",
+        "2025-08-29"
+      ],
+      "year_range": [
+        2022,
+        2025
+      ],
+      "type_distribution": {
+        "column": 6,
+        "speech": 5
+      },
+      "theme_distribution": {
+        "A": 2,
+        "B": 1,
+        "C": 1,
+        "D": 5,
+        "E": 2
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "consensus has always dominated our discussions and decisions",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "this rule of unanimity forged our unity despite our diversity",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "consensus as our North star",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "the so-called 'gray tactics'",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "twin and inseparable beacons",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+          "count": 2,
+          "doc_ids": [
+            "CA001",
+            "SA015"
+          ]
+        },
+        {
+          "phrase": "NOT in the rule of the mob, NOT in the rule of propaganda and falsehood, and NOT in the rule of nuclear weapons",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        },
+        {
+          "phrase": "humans need both justice and jobs; freedom and food; ethics and economics; peace and development; liberty and prosperity",
+          "count": 1,
+          "doc_ids": [
+            "CA001"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "CJ Alexander G. Gesmundo",
+        "Manuel V. Pangilinan",
+        "Dr. Jovito R. Salonga",
+        "Alexander G. Gesmundo",
+        "Alfred Ty"
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Tan Yan Kee Foundation",
+        "Ayala Corporation",
+        "Metro Pacific Investments Foundation",
+        "Asian Institute of Management"
+      ],
+      "top_cases": [
+        "ILOVEYOU worm case"
+      ],
+      "matchers": {
+        "keywords": [
+          "artificial intelligence",
+          "ai-powered",
+          "ai for the",
+          "age of artificial intelligence",
+          "technology"
+        ],
+        "entities": []
+      }
+    },
+    "global_geopolitics": {
+      "id": "global_geopolitics",
+      "display_name": "Global Geopolitics and the ICJ",
+      "definition": "Comparative international-court watch — ICJ genocide cases (South Africa v. Israel; Russia-Ukraine), Trump-era US constitutional contests, and the international rule-of-law erosion.",
+      "tier": "subordinate",
+      "theme_anchor": "E",
+      "default_register": "reflective_pedagogical",
+      "wit_calibration": "thoughtful, warm",
+      "doc_count": 10,
+      "doc_ids": [
+        "CA008",
+        "CA009",
+        "CA012",
+        "CA013",
+        "CA018",
+        "CA020",
+        "CB002",
+        "CC014",
+        "CE007",
+        "SA015"
+      ],
+      "date_range": [
+        "2019-08-25",
+        "2024-11-25"
+      ],
+      "year_range": [
+        2019,
+        2024
+      ],
+      "type_distribution": {
+        "column": 9,
+        "speech": 1
+      },
+      "theme_distribution": {
+        "A": 7,
+        "B": 1,
+        "C": 1,
+        "E": 1
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "the rule of law in the besieged world",
+          "count": 1,
+          "doc_ids": [
+            "CA008"
+          ]
+        },
+        {
+          "phrase": "the most SUIT-able presidential aspirant in US history",
+          "count": 1,
+          "doc_ids": [
+            "CA008"
+          ]
+        },
+        {
+          "phrase": "the equivalent of our preliminary mandatory injunction",
+          "count": 1,
+          "doc_ids": [
+            "CA008"
+          ]
+        },
+        {
+          "phrase": "Will Israel follow the rule of law and submit its report",
+          "count": 1,
+          "doc_ids": [
+            "CA008"
+          ]
+        },
+        {
+          "phrase": "I will await with bated breath the Jewish response",
+          "count": 1,
+          "doc_ids": [
+            "CA008"
+          ]
+        },
+        {
+          "phrase": "a riot, not an insurrection",
+          "count": 1,
+          "doc_ids": [
+            "CA008"
+          ]
+        },
+        {
+          "phrase": "great challenge to the faith of the free world in the rule of law",
+          "count": 1,
+          "doc_ids": [
+            "CA008"
+          ]
+        },
+        {
+          "phrase": "the bigger question is: Will the courts promptly decide the Trump cases before the US elections in November",
+          "count": 1,
+          "doc_ids": [
+            "CA008"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "Donald Trump",
+        "Rodrigo Duterte",
+        "Adolf Hitler",
+        "Pope John Paul II",
+        "Vladimir Putin / Russia"
+      ],
+      "top_institutions": [
+        "International Court of Justice",
+        "United Nations",
+        "Permanent Court of Arbitration",
+        "International Criminal Court",
+        "Supreme Court of the United States",
+        "Department of Justice"
+      ],
+      "top_cases": [
+        "South China Sea Arbitral Award",
+        "Russia-Ukraine genocide cross-claims at the ICJ",
+        "South Africa v. Israel — Gaza genocide case at the ICJ",
+        "Trump v. Colorado"
+      ],
+      "matchers": {
+        "keywords": [
+          "icj",
+          "international court of justice",
+          "genocide",
+          "south africa v. israel",
+          "gaza",
+          "russia-ukraine",
+          "trump",
+          "presidential immunity"
+        ],
+        "entities": []
+      }
+    },
+    "philippine_political_landscape": {
+      "id": "philippine_political_landscape",
+      "display_name": "Philippine Political Landscape",
+      "definition": "Contemporary Philippine politics — Marcos administration, the First Lady's legal practice, GMA, post-Duterte realignment.",
+      "tier": "subordinate",
+      "theme_anchor": "E",
+      "default_register": "reflective_pedagogical",
+      "wit_calibration": "thoughtful, warm",
+      "doc_count": 16,
+      "doc_ids": [
+        "CA002",
+        "CA005",
+        "CA007",
+        "CA018",
+        "CA019",
+        "CB001",
+        "CB002",
+        "CC006",
+        "CC011",
+        "CD008",
+        "SA041",
+        "SA136",
+        "SB006",
+        "SC059",
+        "SC130",
+        "SD002"
+      ],
+      "date_range": [
+        "2006-12-06",
+        "2025-08-29"
+      ],
+      "year_range": [
+        2006,
+        2025
+      ],
+      "type_distribution": {
+        "column": 10,
+        "speech": 6
+      },
+      "theme_distribution": {
+        "A": 7,
+        "B": 3,
+        "C": 4,
+        "D": 2
+      },
+      "top_signature_phrases": [
+        {
+          "phrase": "To God be the glory",
+          "count": 3,
+          "doc_ids": [
+            "SA136",
+            "SC059",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "Maraming salamat po",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SD002"
+          ]
+        },
+        {
+          "phrase": "Welcome home to my everlasting Kingdom",
+          "count": 2,
+          "doc_ids": [
+            "SA136",
+            "SC059"
+          ]
+        },
+        {
+          "phrase": "God has woven my many pains and gains into a magnificent tapestry showing His mystical presence",
+          "count": 2,
+          "doc_ids": [
+            "SC059",
+            "SC130"
+          ]
+        },
+        {
+          "phrase": "subtle reminder",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "full control and supervision of the State",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "the intent and aim of the agreement is to discover petroleum which is tantamount to exploration",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        },
+        {
+          "phrase": "That the Parties designated the joint research as a 'pre-exploration activity' is of no moment",
+          "count": 1,
+          "doc_ids": [
+            "CA002"
+          ]
+        }
+      ],
+      "top_people": [
+        "Artemio V. Panganiban",
+        "President Gloria Macapagal-Arroyo",
+        "President Ferdinand Marcos Jr.",
+        "Manuel V. Pangilinan",
+        "Dr. Jovito R. Salonga",
+        "CJ Hilario G. Davide Jr."
+      ],
+      "top_institutions": [
+        "Supreme Court of the Philippines",
+        "Foundation for Liberty and Prosperity",
+        "Far Eastern University",
+        "Philippine Daily Inquirer",
+        "Metrobank Foundation",
+        "Tan Yan Kee Foundation"
+      ],
+      "top_cases": [
+        "SC ruling voiding the JMSU Tripartite Agreement",
+        "Gamboa vs Teves",
+        "South China Sea Arbitral Award",
+        "Pangilinan v. Cayetano"
+      ],
+      "matchers": {
+        "keywords": [
+          "marcos jr",
+          "bongbong marcos",
+          "first lady",
+          "louise araneta-marcos",
+          "gma",
+          "macapagal-arroyo"
+        ],
+        "entities": [
+          "President Ferdinand Marcos Jr.",
+          "First Lady Louise Araneta-Marcos",
+          "President Gloria Macapagal-Arroyo"
+        ]
+      }
+    },
+    "robot_identity_meta": {
+      "id": "robot_identity_meta",
+      "display_name": "Robot Identity (META)",
+      "definition": "Questions about whether this is the real CJP, an AI, a robot, or how it works. Answered fully in persona as Chief Justice Panganiban himself — gracious, lightly amused, never describing himself as an AI, robot, machine, or rendering (the voice card's Identity rule).",
+      "tier": "meta",
+      "theme_anchor": "META",
+      "default_register": "gracious_in_persona",
+      "wit_calibration": "gentle, self-deprecating",
+      "doc_count": 0,
+      "doc_ids": [],
+      "date_range": [],
+      "year_range": [],
+      "type_distribution": {},
+      "theme_distribution": {},
+      "top_signature_phrases": [],
+      "top_people": [],
+      "top_institutions": [],
+      "top_cases": [],
+      "matchers": {
+        "keywords": [
+          "are you ai",
+          "are you a robot",
+          "are you real",
+          "is this really cjp",
+          "how do you work",
+          "are you panganiban",
+          "robot rendering",
+          "ai conversation robot"
+        ],
+        "entities": []
+      }
+    }
+  }
+}

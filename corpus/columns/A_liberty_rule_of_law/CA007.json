@@ -1,0 +1,297 @@
+{
+  "id": "CA007",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 7,
+  "title": "The rule of law in the besieged China Sea",
+  "date": "2024-02-19",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/171013/the-rule-of-law-in-the-besieged-china-sea",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Philippine government foreign-policy and defense officials",
+      "Inquirer Opinion readers concerned with the West Philippine Sea",
+      "International-law academics and practitioners",
+      "Western embassy and foreign-affairs personnel in Manila",
+      "ASEAN delegations interested in regional security architecture"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes",
+      "rule_of_law"
+    ],
+    "secondary": [
+      "icc_and_duterte",
+      "philippine_political_landscape"
+    ]
+  },
+  "keywords": [
+    "South China Sea",
+    "East China Sea",
+    "Taiwan",
+    "Senkaku Diaoyu",
+    "Arbitral Award",
+    "UNCLOS",
+    "nine-dash line",
+    "ten-dash line",
+    "Paracels",
+    "Spratlys",
+    "gray zone tactics",
+    "Cairo Potsdam declarations",
+    "freedom of navigation",
+    "rule of force vs rule of law",
+    "Mao Zedong",
+    "Kuomintang"
+  ],
+  "primary_topics": [
+    "Assessment of the rule of law as 'besieged' in both the South China Sea and East China Sea due to aggressive Chinese claims over Taiwan, ~80% of SCS, and ECS islets",
+    "Historical sketch of Chinese claims — from imperial decay (1850s-1950s) through WWII Japanese occupation, postwar Kuomintang/Mao succession, Vietnam War realignment, to present-day occupations",
+    "Inventory of current SCS feature occupations: ~29 by Vietnam, 11 by Philippines, 7 by China, 6 by Malaysia, 2 by Taiwan, 1 by Brunei",
+    "China's strategic incentives: economy needs SCS sea lanes; security needs SCS as first line of defense; SCS as passage for nuclear submarines",
+    "Distinction between Arbitral Award scope (sovereign rights over maritime domain only) and Chinese claims (sovereignty over sea, air, and land via history/discovery/occupation/cession)",
+    "Philippines as 'international pygmy in the rule of force but a giant in the rule of law' — the only country with an Arbitral Award"
+  ],
+  "sub_topics": [
+    "China's harrowing 1850s-1950s decay — 'shameful, one-sided treaties and the cruel treatment of its nationals'",
+    "'To the Chinese, losing face is worse than losing life'",
+    "WWII: Japanese occupation of Paracels and Spratlys",
+    "1945: Kuomintang accepts Japanese surrender in Taiwan and SCS per Cairo and Potsdam declarations",
+    "1950: Mao's hordes drive Kuomintang to Taiwan; takes over Paracels and Spratlys",
+    "Vietnam War: North Vietnam relinquishes claims to PRC in appreciation; 1974 China expels South Vietnamese from Shanhu Island",
+    "Post-1975: united Vietnam adopts South's claim of sovereignty",
+    "China as second-largest economy; biggest standing military with nuclear arsenal; astronauts to moon; own space station",
+    "China constricted by hostile neighbors — only dependable: North Korea, Cambodia, Mongolia",
+    "Nine-dash line revived, expanded to ten-dash line",
+    "Diaoyu (China) / Senkaku (Japan) islets dispute in ECS",
+    "Disputes with Japan over ECS dividing line",
+    "Arbitral Award based on UNCLOS — covers sovereign rights over maritime domain, NOT sovereignty over land features and territorial seas",
+    "Western states (US, Australia, France, UK) use AA freedom-of-navigation parts despite not being parties",
+    "Duterte tried to befriend/placate China — to no avail",
+    "Marcos administration pivoted to US; hundreds of diplomatic protests; open-media exposure of Chinese 'gray zone tactics' (water cannons, lane cuttings)",
+    "Taiwan: international law recognizes Chinese state right to recover; Taiwan claims self-determination; US/Western one-China policy + mutual-defense commitment"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "the rule of law is besieged",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an international pygmy in the rule of force but a giant in the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rivals Egypt and its pharaohs, and Greece and its Olympic gods",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "To the Chinese, losing face is worse than losing life",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Mao Zedong's hordes",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the gray zone tactics",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "international discomfiture of China",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "renegade province",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to insist on the observance of the rule of law is the only recourse of the Philippines to counter the rule of force",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (columnist)",
+      "Mao Zedong",
+      "President Rodrigo Duterte (referenced)",
+      "President Ferdinand Marcos Jr. (referenced)"
+    ],
+    "institutions": [
+      "United Nations",
+      "Permanent Court of Arbitration",
+      "Philippine government",
+      "Chinese government",
+      "Vietnamese government",
+      "Kuomintang army",
+      "Western powers (US, Australia, France, UK)"
+    ],
+    "cases": [
+      "South China Sea Arbitral Award (July 12, 2016) — UNCLOS-based; outlawed nine-dash line; declared freedom of navigation"
+    ],
+    "laws_treaties": [
+      "United Nations Convention on the Law of the Sea (UNCLOS)",
+      "Cairo Declaration",
+      "Potsdam Declaration",
+      "(Implicit) US-Taiwan mutual defense treaty",
+      "(Implicit) PH-US Mutual Defense Treaty"
+    ],
+    "events": [
+      "WWII Japanese occupation of Paracels and Spratlys",
+      "1945 Kuomintang acceptance of Japanese surrender",
+      "1950 Mao's takeover of mainland and Paracels/Spratlys",
+      "Vietnam War (1955-1975)",
+      "1974 expulsion of South Vietnamese from Shanhu Island",
+      "Arbitral Award — July 12, 2016",
+      "CJP's prior column — June 20, 2021 (on China's long history)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The rule of law is besieged in both the South China Sea and the East China Sea due to aggressive Chinese claims of ownership and sovereignty over Taiwan, almost the entire SCS, and ECS islets — and the rival claims of riparian states and Western powers.",
+      "rhetorical_move": "besieged-frame as the column's organizing metaphor",
+      "confidence": "asserted as factual description",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "China's claims rest on history, discovery, occupation, control, and treaty cession (Cairo and Potsdam declarations) — covering sea, air, AND land. The Philippine claim rests on the Arbitral Award based on UNCLOS — covering sovereign rights over the maritime domain ONLY, NOT sovereignty over land features or territorial seas. These different bases lead to fundamentally different legal claims.",
+      "rhetorical_move": "side-by-side basis-of-claim distinction",
+      "confidence": "asserted as legal framing",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Despite China's might — second-largest economy, biggest standing military with nuclear arsenal, moon astronauts, own space station, science/tech/economic titans outbidding Western peers — it is constricted by hostile neighbors. Only North Korea, Cambodia, and Mongolia are dependable. China needs SCS sea lanes for economy and SCS as first line of defense; the SCS also serves as nuclear-submarine passage to the Pacific and Indian oceans.",
+      "rhetorical_move": "might-and-constraint dialectic",
+      "confidence": "asserted as geopolitical analysis",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Philippines is 'an international pygmy in the rule of force but a giant in the rule of law' — the only country in the SCS dispute that can boast an Arbitral Award to advance its sovereign rights. Insisting on rule of law is the ONLY recourse to counter the rule of force.",
+      "rhetorical_move": "pygmy-giant inversion as memorable framing",
+      "confidence": "asserted as strategic doctrine",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Duterte administration's attempt to befriend and placate China was unsuccessful ('to no avail'). The Marcos regime correctly pivoted to the US for pushback, has filed hundreds of diplomatic protests, and has exposed Chinese gray-zone tactics (water cannons, lane cuttings) through open media — 'to the international discomfiture of China.'",
+      "rhetorical_move": "presidential-administrations comparison + endorsement of Marcos pivot",
+      "confidence": "asserted with policy approval",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "An open question remains: while China may have the right under the rule of law to recover its 'renegade province' Taiwan (as international law recognizes recovery as internal affair), will China also OBSERVE the rule of law in respecting Philippine maritime rights under the Arbitral Award and UNCLOS?",
+      "rhetorical_move": "rhetorical-question closer that holds China to its own rule-of-law claim",
+      "confidence": "posed as unresolved challenge",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "China's long history 'rivals Egypt and its pharaohs, and Greece and its Olympic gods.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "'To the Chinese, losing face is worse than losing life' — cultural framing of why imperial-era humiliations remain politically salient.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Vietnam War realignment: North Vietnam relinquished claims to China during the war (in appreciation); united post-1975 Vietnam then adopted the SOUTH's sovereignty claims — a complete reversal made possible by reunification.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Current occupation tally — ~29 features by Vietnam (most), 11 by Philippines, 7 by China, 6 by Malaysia, 2 by Taiwan, 1 by Brunei.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Philippines as 'international pygmy in the rule of force but a giant in the rule of law' — the only AA holder.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "treats the rule-of-law-vs-rule-of-force dichotomy as the master frame for SCS analysis",
+    "distinguishes between sovereignty claims (land, air, territorial seas) and sovereign-rights claims (maritime domain)",
+    "uses occupation-tally as empirical anchor against grandiose claim rhetoric",
+    "applies might-and-constraint dialectic — geographic constraints shape strategic incentives even for great powers",
+    "endorses the Marcos pivot to US + transparency (media exposure) over Duterte's placation strategy",
+    "holds China to its own rule-of-law claim re Taiwan as the lever for SCS rule-of-law compliance"
+  ],
+  "target_audience": [
+    "Philippine government foreign-policy and defense officials",
+    "Inquirer Opinion readers concerned with the West Philippine Sea",
+    "International-law academics and practitioners",
+    "Western embassy and foreign-affairs personnel in Manila",
+    "ASEAN delegations interested in regional security architecture"
+  ],
+  "register_markers": [
+    "geopolitical-strategic-analysis register",
+    "historical-narrative compression (1850s through present in ~6 paragraphs)",
+    "civilization-comparison opening (China's antiquity vs Egypt and Greece)",
+    "memorable-aphorism deployment ('losing face is worse than losing life')",
+    "side-by-side legal-basis comparison (PRC sovereignty vs PH sovereign-rights)",
+    "occupation-tally enumeration as factual anchor",
+    "pygmy-giant inversion as Philippine self-positioning",
+    "rhetorical-question closer holding China to its own claim",
+    "loaded historical-political language ('Mao Zedong's hordes', 'renegade province')",
+    "(The rule of law in the South and North China Sea in a future column) — column-series continuation marker"
+  ],
+  "one_paragraph_summary": "Published February 19, 2024, this column assesses the rule of law as 'besieged' in both the South China Sea and the East China Sea due to aggressive Chinese claims over Taiwan, ~80% of the SCS, and ECS islets (Diaoyu/Senkaku), and the challenges posed by riparian states and Western powers. CJP traces the historical arc: China's long history 'rivals Egypt and its pharaohs, and Greece and its Olympic gods,' followed by the 1850s-1950s decay producing 'shameful, one-sided treaties' that left a cultural conviction that 'losing face is worse than losing life.' WWII brought Japanese occupation of the Paracels and Spratlys; the 1945 Kuomintang acceptance of surrender per the Cairo and Potsdam declarations; the 1950 Mao takeover; Vietnam War realignment (North Vietnam relinquished claims to PRC, then post-1975 unified Vietnam adopted the South's sovereignty claims). Current occupation tally: ~29 features by Vietnam, 11 by the Philippines, 7 by China, 6 by Malaysia, 2 by Taiwan, 1 by Brunei. Despite being the second-largest economy with the biggest standing military, nuclear arsenal, and space program, China is constricted — only North Korea, Cambodia, and Mongolia are dependable neighbors — and needs the SCS for economic sea lanes, security first-line defense, and nuclear-submarine passage. The legal bases differ fundamentally: PRC claims rest on history/discovery/occupation/treaty cession across sea-air-land; the Philippine Arbitral Award (under UNCLOS) covers sovereign rights over the maritime domain ONLY. The AA, though unrecognized by China, outlawed the nine-dash (now ten-dash) line and declared freedom of navigation — which Western powers (US, Australia, France, UK) invoke despite not being parties. The Philippines is 'an international pygmy in the rule of force but a giant in the rule of law.' Duterte's placation failed; the Marcos pivot to US engagement, diplomatic protests, and open-media exposure of Chinese 'gray zone tactics' (water cannons, lane cuttings) puts China to 'international discomfiture.' Closing question: while China may have the right under the rule of law to recover its 'renegade province' Taiwan, will it also observe the rule of law in respecting Philippine maritime rights under the AA and UNCLOS?"
+}

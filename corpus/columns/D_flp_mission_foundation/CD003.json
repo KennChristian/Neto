@@ -1,0 +1,174 @@
+{
+  "id": "CD003",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 3,
+  "title": "20 law grants at P250k, 5 MBA at P500k",
+  "date": "2025-08-25",
+  "year": 2025,
+  "source_url": "https://opinion.inquirer.net/185590/20-law-grants-at-p250k-5-mba-at-p500k",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "twin_beacons_doctrine",
+      "flp_scholarship_programs"
+    ],
+    "secondary": [
+      "flp_donors_and_partners",
+      "bar_exam_and_legal_education",
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "FLP",
+    "law scholarship",
+    "legal education",
+    "liberty and prosperity",
+    "bar exam"
+  ],
+  "primary_topics": [
+    "FLP's 2025-2026 grants: 20 legal scholarships (P250k each) and 5 MBA fellowships (P500k)",
+    "Ayala Corp partnership for dissertation writing contest awards",
+    "perpetuating CJ's core philosophy of liberty and prosperity under the rule of law"
+  ],
+  "sub_topics": [
+    "20 legal scholarships at P250,000 each (total P5 million), partnered with the Tan Yan Kee Foundation",
+    "5 MBA-equivalent fellowships at P500,000 each â€” 'Esmel' Fellowships (entrepreneurship, sustainability, management, economics, business law) in partnership with Metro Pacific Investments Corporation",
+    "10 third-year FLP scholars: Althea Acidre (Vicente Orestes Romualdez College), Danielle Caliosan (U of Southeastern Philippines), Kim Humarang (UST), Alyannah Mabelin (UCebu), Lia Manalo (UP), Joselino Poquiz (ADMU), Myka Reambonanza (USC), Lorraine Tumolva (UST), Brian Unabia (USC), Michelle Vergara (USC)",
+    "10 fourth-year FLP scholars: Kryster Bellen (UP), Kerstein Despi (USC), Cicily Mirasol (UP), Christa Mutuc (USC), Jayson Orajay (Xavier U), Enrico Paguia (ADMU), Ricardo SobreviÃ±as (ADMU), Mary Te (USC), Chinzen Viernes (UP), Ignacio Villareal (UP)",
+    "FLP-Ayala Corp dissertation writing contest awards: first prize P320,000 to Isabelle Ginez (ADMU), second prize P220,000 to Laurice Sy (ADMU), three third placers at P120,000 each (Chaira Ferran of De La Salle Lipa, Jadel Gines of ADMU, Kristine Kalalo of ADMU), four finalists at P20,000 each (Susanna Gruyal of UP, Christine Lopez of UST, Jose Vilchez of UP, Darren Zamudio of FEU)",
+    "Board of Judges (BOJ) led by SC Justice Jhosep Y. Lopez with members Dean Anna Maria D. Abad, lawyer Franchette M. Acosta, CTA Justice Marian Ivy Reyes Fajardo, lawyer Joel Emerson Gregorio",
+    "FLP founded 2011 to perpetuate CJ's core judicial philosophy: safeguard liberty and nurture prosperity under the rule of law",
+    "Bar-exam topnotchers from past FLP batches: Kyle Tutor (UP, 1st place 2024), Love Quebrar (UP, 6th place 2024), Sean James Borja (Ateneo law valedictorian, 1st place 2018)",
+    "five winning dissertations accessible at www.libpros.com"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "IN PARTNERSHIP WITH THE AYALA CORP.",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the best and the brightest law students",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "perpetuate my core judicial philosophy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "safeguard liberty and nurture prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "merit-based",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the program has always produced Bar toppers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Tan Yan Kee Foundation",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Esmel",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Master of Business Administration or its equivalent",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [],
+    "institutions": [],
+    "cases": [],
+    "laws_treaties": [],
+    "events": []
+  },
+  "stances": [],
+  "notable_anecdotes": [
+    {
+      "summary": "FLP's 2025-2026 grant tally: P5 million in legal scholarships across 20 students (P250,000 each), plus P2.5 million in MBA-equivalent Esmel fellowships across 5 students (P500,000 each), plus an FLP-Ayala Corp dissertation writing contest with a graduated cash-prize ladder",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Two of the 10 FLP scholars who took the 2024 bar exams placed in the top six â€” Kyle Tutor (UP) at 1st place and Love Quebrar (UP) at 6th",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Sean James Borja (Ateneo de Manila law valedictorian, 2018) â€” FLP's first bar topper at 1st place â€” invoked as the program's foundational success",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Board of Judges led by SC Justice Jhosep Y. Lopez, with Dean Anna Maria D. Abad, lawyer Franchette M. Acosta, CTA Justice Marian Ivy Reyes Fajardo, and lawyer Joel Emerson Gregorio",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Full texts of the five winning dissertations accessible at www.libpros.com",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [],
+  "target_audience": [],
+  "register_markers": [],
+  "one_paragraph_summary": ""
+}

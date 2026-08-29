@@ -1,0 +1,320 @@
+{
+  "id": "CD002",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 2,
+  "title": "Never give up, never say never",
+  "date": "2023-07-31",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/165185/never-give-up-never-say-never",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "FLP scholars, fellows, and dissertation winners (ceremony audience)",
+      "Aspiring law students and youth from impoverished backgrounds",
+      "Potential FLP donors and partner institutions",
+      "Catholic readers receptive to faith-based philanthropy framing",
+      "Legal community tracking CJ's post-judicial advocacy"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "ceremonial"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_donors_and_partners",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "museum_for_liberty_and_prosperity",
+      "msme_and_entrepreneurship",
+      "mentors_and_legal_lineage"
+    ]
+  },
+  "keywords": [
+    "FLP scholarship ceremony",
+    "Foundation for Liberty and Prosperity",
+    "Renaissance Jurist of the 21st Century",
+    "Ageless Passion musical",
+    "Museum for Liberty and Prosperity",
+    "Prosperity Fund",
+    "1,200 signed decisions",
+    "Yale visa denial"
+  ],
+  "primary_topics": [
+    "FLP awarding 21 legal scholarships, 5 Esmel fellowships, and 10 dissertation winners with CJ Gesmundo as keynote",
+    "CJ's life philosophy: 'When a door closes, a much larger and better window opens'",
+    "Autobiographical arc â€” UP scholarship lost, FEU door opened, Yale denied due to activism, SC and CJ-ship gained",
+    "FLP's two 'ultimate projects': Museum for Liberty and Prosperity + multibillion-peso Prosperity Fund for MSMEs"
+  ],
+  "sub_topics": [
+    "FLP's three programs: legal scholarships (P200,000 each, Tan Yan Kee partnership); Esmel MBA fellowships (P450,000 each, Metro Pacific Investments Foundation); dissertation contest (P1.325M total, Ayala Corp partnership)",
+    "UP scholarship granted but 15-centavo Diliman ride unaffordable for impoverished family",
+    "FEU window opened: mentored by law dean Jovito R. Salonga and Dr. Alejandro R. Roces; youngest FEUCSO president; founded NUSP; graduated cum laude; sixth place in bar exams",
+    "Yale full scholarship (including board and lodging) â€” US Embassy refused visa due to student activism",
+    "SC tenure: 1,200+ fully signed decisions in 11+ years; one book per year; chaired most SC committees",
+    "Unanimous SC resolution naming him 'The Renaissance Jurist of the 21st Century' and 'the Court's most prolific writer, bar none'",
+    "Resolution citing his 'core judicial philosophy of safeguarding the liberty and nurturing the prosperity of our people'",
+    "Inspired five years after retirement by Ryan Cayabyab's 'Ageless Passion' musical to convert legal lore into practical reality",
+    "Initial P2 million seed to FLP treasury; P50M from companies/foundations for Makati 700 sqm head office; another P50M (and counting) for educational projects",
+    "Center for Liberty and Prosperity in Metro Manila (and a larger one planned at New Manila International Airport in Bulacan)",
+    "AI-powered immersive museum with virtual SC Session Hall (visitors hear oral arguments, ask questions) and AI robots mimicking justices filled with info on decisions, speeches, life careers",
+    "Prosperity Fund: nonprofit but financially viable, helps MSMEs, unleashes entrepreneurial ingenuity to eliminate extreme poverty",
+    "CJ's personal donation: P100M+ Paseo de Magallanes residential lot to FLP, to be liquified for the two ultimate projects"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Life is a strange interplay of light and shadows, of victories and defeats",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Amid these zigzags of life, we must keep on trying, keep on fighting",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "We must never give up; never say 'never'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "When a door closes, a much larger and better window opens",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I buried myself in work as a virtual hermit, shunning social interaction",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "humbly earning, though unworthy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The Renaissance Jurist of the 21st Century",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Court's most prolific writer, bar none",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "imbedded 'legal lore'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the world of hard knocks and grinding poverty",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the talented and... the poor",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "To put our money where our mouth is",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "help the poor help themselves through viable and sustainable private enterprises",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Whatever you do for the least of my brethren, you do unto me",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author; FLP chair)",
+      "CJ Alexander G. Gesmundo (keynote speaker)",
+      "Law dean Jovito R. Salonga (FEU mentor)",
+      "Dr. Alejandro R. Roces (FEU mentor)",
+      "National artist Ryan Cayabyab ('Ageless Passion' composer)"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Tan Yan Kee Foundation",
+      "Metro Pacific Investments Foundation",
+      "Ayala Corporation",
+      "University of the Philippines (UP)",
+      "Far Eastern University (FEU)",
+      "FEU Central Student Organization (FEUCSO)",
+      "National Union of Students of the Philippines (NUSP)",
+      "Yale University",
+      "US Embassy in the Philippines",
+      "Supreme Court of the Philippines",
+      "New Manila International Airport (Bulacan)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "FLP scholarship ceremony, July 28, 2023 (the 'Last Friday' referenced)",
+      "1957 â€” CJ's youngest FEUCSO presidency era",
+      "Yale visa denial (activism-era)",
+      "11+ years on the Supreme Court",
+      "Donation of Paseo de Magallanes lot (P100M+) to FLP"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Life is a strange interplay of light and shadows, of victories and defeats â€” and the right response is to keep trying, keep fighting, never give up, never say 'never,' because 'when a door closes, a much larger and better window opens.'",
+      "rhetorical_move": "philosophy-of-life maxim with door/window metaphor as autobiographical lens",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ's career arc illustrates the door-window principle: UP scholarship granted but unenterable due to 15-centavo Diliman ride; FEU window opened (Salonga and Roces as mentors, FEUCSO and NUSP leadership, cum laude, sixth-place bar); Yale full scholarship with US Embassy visa refusal due to activism; eventual SC appointment, 1,200+ signed decisions, CJ-ship, and the unanimous resolution naming him 'The Renaissance Jurist of the 21st Century' and 'the Court's most prolific writer, bar none.'",
+      "rhetorical_move": "autobiographical-illustration of philosophical principle",
+      "confidence": "asserted with humility markers ('though unworthy')",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Five years after retirement, inspired by Ryan Cayabyab's musical 'Ageless Passion,' CJ converted his judicial philosophy from 'imbedded legal lore' into practical reality â€” moving the philosophy 'outside the intellectual realm of lawyers into the world of hard knocks and grinding poverty' through FLP's seeded P2M, then P50M for the Makati head office, then P50M+ for educational projects.",
+      "rhetorical_move": "philosophy-into-practice conversion narrative with funding-cascade",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP's two ultimate projects are (1) a Center for Liberty and Prosperity hosting an AI-powered immersive Museum (in partnership with the SC) where visitors enter a virtual SC Session Hall and interact with AI robots mimicking justices â€” 'dedicated to the talented'; and (2) a multibillion-peso Prosperity Fund for MSMEs, nonprofit but financially viable and sustainable, to 'unleash the entrepreneurial ingenuity of our people as the key to eliminating extreme poverty' â€” 'dedicated to the poor,' grounded in Matthew 25:40.",
+      "rhetorical_move": "two-project ultimate-mission statement with talented-vs-poor pairing",
+      "confidence": "aspirational-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "UP scholarship granted but unenterable â€” 'I could not enter UP's door to higher education because my impoverished family could not afford the then measly 15 centavo ride to Diliman, QC' â€” perhaps the single most-vivid datum of CJ's poverty origin.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Yale full scholarship including board and lodging, blocked by US Embassy visa refusal 'due to my student activism' â€” a rare ICE-cold reading of how American institutions screened anti-establishment Filipinos.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "'I buried myself in work as a virtual hermit, shunning social interaction' during SC years â€” the workaholic confession behind 1,200+ signed decisions, one book per year, and chairing most SC committees.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Unanimous Court resolution naming him 'The Renaissance Jurist of the 21st Century' and 'the Court's most prolific writer, bar none' â€” given 'without my participation and vote.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Cayabyab-musical-as-conversion-moment: 'I was inspired by the musical \"Ageless Passion\" composed by national artist Ryan Cayabyab to transform my philosophy from being merely an imbedded \"legal lore\" into a practical reality.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Donating a P100M+ residential lot in Paseo de Magallanes, Makati 'as a major asset of my family' â€” 'to put our money where our mouth is' â€” to be liquified at the appropriate time for the museum and Prosperity Fund.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Closing scripture: Matthew 25:40 â€” 'Whatever you do for the least of my brethren, you do unto me' â€” as the philanthropy's spiritual anchor.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses door-window metaphor to recast setbacks as redirected opportunities",
+    "treats autobiographical-poverty origin as legitimating his philanthropy mission",
+    "structures FLP mission as talented-vs-poor pairing (Museum + Prosperity Fund)",
+    "uses 'embedded legal lore vs practical reality' contrast to justify post-judicial philanthropy",
+    "anchors philanthropy in scripture (Matthew 25:40) for spiritual legitimation",
+    "uses personal-asset donation (Paseo de Magallanes lot) as 'put your money where your mouth is' integrity-proof"
+  ],
+  "target_audience": [
+    "FLP scholars, fellows, and dissertation winners (ceremony audience)",
+    "Aspiring law students and youth from impoverished backgrounds",
+    "Potential FLP donors and partner institutions",
+    "Catholic readers receptive to faith-based philanthropy framing",
+    "Legal community tracking CJ's post-judicial advocacy"
+  ],
+  "register_markers": [
+    "ceremonial-keynote-speech register (reproduced from FLP event)",
+    "philosophy-of-life maxim opening ('Life is a strange interplay...')",
+    "door-window metaphor as recurring structural device",
+    "autobiographical-vignette serial format (UP, FEU, Yale, SC)",
+    "humility-marker density ('humbly earning, though unworthy')",
+    "self-citation register (SC unanimous resolution titles)",
+    "vision-statement register for ultimate projects (Museum, Prosperity Fund)",
+    "Tagalog/Spanish loanwords absent â€” formal register throughout",
+    "scripture-closing register (Matthew 25:40)",
+    "donor-naming and partnership-citation density",
+    "URL self-citation ('Full speech uploaded in cjpanganiban.com and libpros.com')"
+  ],
+  "one_paragraph_summary": "Panganiban delivers a shortened version of his keynote speech at the FLP scholarship ceremony of late July 2023 â€” where Foundation for Liberty and Prosperity awarded 21 legal scholarships (P200,000 each, Tan Yan Kee partnership), five Esmel fellowships (P450,000 each, Metro Pacific partnership), and ten dissertation winners (P1.325M total, Ayala Corp partnership), with CJ Alexander G. Gesmundo as keynote speaker. He frames life as 'a strange interplay of light and shadows, of victories and defeats' and offers his autobiography as evidence of the door-window principle: he won a UP scholarship but couldn't afford the 15-centavo Diliman ride; he therefore enrolled at nearby FEU where he was mentored by Jovito R. Salonga and Alejandro R. Roces, becoming the youngest FEUCSO president, founding NUSP, graduating cum laude, placing sixth in the bar â€” only to be granted a Yale full scholarship that the US Embassy denied a visa for, due to his student activism. He buried himself as 'a virtual hermit' on the SC, producing 1,200+ fully signed decisions, one book per year, chairing most committees, and earning a unanimous Court resolution naming him 'The Renaissance Jurist of the 21st Century' and 'the Court's most prolific writer, bar none.' Five years after retirement, inspired by national artist Ryan Cayabyab's musical 'Ageless Passion,' he resolved to convert his philosophy from 'imbedded legal lore' into 'practical reality... outside the intellectual realm of lawyers into the world of hard knocks and grinding poverty.' He seeded FLP with P2M; companies and foundations he advised gave P50M for the Makati head office and another P50M+ for educational projects. He announces FLP's two 'ultimate projects': a Center for Liberty and Prosperity hosting an interactive, immersive, AI-powered Museum (visitors enter a virtual SC Session Hall and converse with AI robots mimicking justices) dedicated to the talented; and a multibillion-peso Prosperity Fund for MSMEs, nonprofit but financially viable, dedicated to the poor. He donated his family's P100M+ Paseo de Magallanes lot to seed the two projects, anchoring all this in Matthew 25:40: 'Whatever you do for the least of my brethren, you do unto me.'"
+}

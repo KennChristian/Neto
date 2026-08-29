@@ -1,0 +1,315 @@
+{
+  "id": "CA016",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 16,
+  "title": "Rule of, or by, law",
+  "date": "2018-02-02",
+  "year": 2018,
+  "source_url": "https://opinion.inquirer.net/110720/rule-of-or-by-law",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Inquirer Opinion readers concerned with democratic backsliding",
+      "Lawyers and constitutional academics following Charter-change debates",
+      "Civil-society advocates",
+      "Philippine policymakers and legislators",
+      "International observers of Philippine governance"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "rule_of_law",
+      "icc_and_duterte"
+    ]
+  },
+  "keywords": [
+    "World Justice Project",
+    "Rule of Law Index",
+    "rule of, or by, law",
+    "feudal society",
+    "batas",
+    "Philippine drop 18 places",
+    "China rank",
+    "Singapore rank",
+    "Venezuela Cambodia one-party rule",
+    "accountability",
+    "just laws",
+    "open government",
+    "Davao police minors apology",
+    "Charter change"
+  ],
+  "primary_topics": [
+    "Distinction between RULE OF LAW (laws as social contracts protecting human rights and freedom) and RULE BY LAW (laws as instruments imposed by rulers to enforce their will)",
+    "Cultural-historical analysis of Filipino lawlessness — feudal society + impunity for the powerful + 'batas as decree' linguistic inheritance",
+    "World Justice Project's Rule of Law Index — methodology (9 factors, 44 subfactors), four universal principles, general population poll",
+    "Philippines's alarming drop in WJP rankings — 51st of 102 (2015) ? 70th of 113 (2016) ? 88th of 113 (recent) — 'the worst in the world'",
+    "Comparative-rankings analysis — China 75th, Singapore 13th; lowest-ranked Venezuela and Cambodia also have one-party rule (so authoritarianism alone doesn't explain)",
+    "The Davao police incident (January 21) where three minors were arrested, mauled, and made to kneel apologizing to Duterte's photograph — symbol of rule-of-law dismantling",
+    "Concern about Charter change concentrating power away from legislature, judiciary, and media"
+  ],
+  "sub_topics": [
+    "Tagalog 'batas' etymology — 'to decree'; something imposed by rulers/the powerful",
+    "English 'law' from old Norse — 'that which is set, or laid down'",
+    "Feudal-era law as codified system defining what rulers want and prescribing punishments for going against ruler's will",
+    "Modern (last three centuries) shift to rule of law alongside human rights and freedom",
+    "WJP since 2010 — annual Rule of Law Index reports",
+    "Methodology — 9 factors ? 44 subfactors ? identified by academics, practitioners, community leaders",
+    "Four WJP universal principles: accountability, just laws, open government, accessible and impartial dispute resolution",
+    "Open government — 'processes by which the laws are enacted, administered, and enforced are accessible, fair and efficient'",
+    "General population poll — 1,000 respondents in Manila, Cebu, Davao for Philippines",
+    "Qualified respondents questionnaires — experts in civil/commercial law, criminal justice, labor law, public health",
+    "Examples — home burglary experience question + reporting behavior",
+    "China rank: 75th",
+    "Singapore rank: 13th (associated with authoritarianism)",
+    "Venezuela and Cambodia — lowest-ranked, both one-party rule",
+    "Marcos martial law era as Philippine example of rule-by-law as economic ruin",
+    "January 21 Davao police incident: three minors arrested, mauled, made to kneel before Duterte's photograph",
+    "WJP yearbook: 'effective rule of law reduces corruption, combats poverty and disease, and protects people from injustices large and small'",
+    "Reference to mass transit disaster and vaccine scandal as squandered-public-funds examples",
+    "Charter-change concerns: power being taken away from legislature, judiciary, civil society/media; risk of 'local warlords' enforcing rule-by-law"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Rule of, or by, law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "batas (which actually means 'to decree')",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "we live in a terribly feudal society that encourages impunity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "People in power and people who ride on power can flaunt the law and get away with it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "law as a game",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "If no one's watching, then let's try to get away with breaking it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Our drop of 18 places was the worst in the world",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "even in authoritarian countries, you might find forms of checks and balances",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The totalitarian temptation is always there",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "effective rule of law reduces corruption, combats poverty and disease, and protects people from injustices large and small",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to the edge of the precipice",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an almost playful cat-and-mouse routine to an acceptance of unlawful arrest, detention and execution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Who wins, who loses, in the long run?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (columnist)",
+      "President Rodrigo Duterte (referenced via Davao police incident, Charter-change agenda)",
+      "Ferdinand Marcos Sr. (referenced via martial law era)",
+      "Three unnamed minors (January 21 Davao incident)"
+    ],
+    "institutions": [
+      "World Justice Project (WJP)",
+      "Davao City Police",
+      "Philippine legislature, judiciary, civil society, media (referenced generally)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "Marcos martial law era",
+      "January 21 (2018) Davao police incident with three minors",
+      "WJP Rule of Law Index reports — annual since 2010",
+      "Recent WJP rankings: PH 51st of 102 (2015), 70th of 113 (2016), 88th of 113 (2018)",
+      "Ongoing debates on Charter change",
+      "Mass transit disaster (referenced)",
+      "Vaccine scandal (referenced — likely Dengvaxia)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Filipino lawlessness reflects more than weak discipline — it reflects a feudal society that encourages impunity (the powerful flaunt law and get away; the rest treat law as a game) and a linguistic inheritance where 'batas' literally means 'to decree' (something imposed by rulers, by the powerful). Modern rule of law as social contract developed only in the last three centuries alongside human rights and freedom.",
+      "rhetorical_move": "cultural-linguistic etymology + feudal-society diagnosis",
+      "confidence": "asserted as cultural critique",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Philippines's dramatic drop in the WJP Rule of Law Index — 51st (2015) ? 70th (2016) ? 88th of 113 — represents 'the worst drop in the world.' Comparative analysis disproves the simple 'authoritarianism causes good rule-of-law performance' thesis: while Singapore (13th) and China (75th) outrank PH despite authoritarian characteristics, Venezuela and Cambodia — both one-party — are lowest-ranked. Even authoritarian regimes vary; what matters is whether checks and balances function.",
+      "rhetorical_move": "comparative-rankings analysis disproving simple authoritarianism thesis",
+      "confidence": "asserted with WJP data",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "If law is used to amass more power for a despot and his clique — rule BY law — the country will move quickly toward economic ruin, as the Marcos martial law era demonstrated. Filipinos who view law as an obstacle to development are susceptible to the totalitarian temptation, which becomes especially alluring in times of crisis. But the WJP findings remind us that effective rule of law actually 'reduces corruption, combats poverty and disease, and protects people from injustices large and small.'",
+      "rhetorical_move": "Marcos-era historical lesson + totalitarian-temptation warning",
+      "confidence": "asserted with historical and empirical backing",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The January 21, 2018 incident in Davao — three minors arrested, mauled, and made to kneel apologizing to President Duterte's photograph — shows the dismantling of rule of law moving from 'an almost playful cat-and-mouse routine to an acceptance of unlawful arrest, detention and execution.' Nothing should be considered too trivial in such dismantling.",
+      "rhetorical_move": "specific-incident-as-symptom argument",
+      "confidence": "asserted as evidence of erosion",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Charter change is concerning because it threatens to take power away from the legislature, judiciary, and civil-society media. The critical questions are: Who wins, who loses, in the long run? Will rule of law be strengthened, or will it shift further toward rule BY law, particularly by local warlords?",
+      "rhetorical_move": "rhetorical-question stack closer about Charter change",
+      "confidence": "concerned framing",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Etymology lesson: Tagalog 'batas' actually means 'to decree' — something imposed by rulers; English 'law' from old Norse means 'that which is set, or laid down.' Both languages embed a top-down, ruler-imposed origin.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Religion analogy for Filipino law-as-game culture: 'good behavior tied to God, or a CCTV, watching. If the coast is clear, then make a run for it.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Counter-intuitive comparative finding: 'Would you believe China ranked 75th in the latest report? Singapore, which we associate with authoritarianism, ranked 13th.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "WJP general-population-poll method using everyday experiences (e.g., home-burglary experience + reporting behavior) to gauge people's perception of legal system.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "January 21 Davao police incident: three minors arrested, mauled, made to kneel apologizing to a photograph of President Duterte.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Mass transit disaster and vaccine scandal as concrete instances of rule-of-law erosion squandering public funds and lives.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses the rule-OF-law vs rule-BY-law distinction as the master diagnostic frame",
+    "applies cultural-linguistic etymology as cultural-pathology diagnosis tool",
+    "treats WJP Rule of Law Index data as authoritative empirical anchor",
+    "uses comparative-rankings to disprove simple authoritarianism-causes-good-governance thesis",
+    "applies Marcos-era historical lesson as warning against totalitarian temptation",
+    "treats specific incidents (Davao minors, mass transit, vaccine scandal) as symptoms of structural rule-of-law erosion",
+    "opens Charter-change with stakes-and-winners-losers analytical frame"
+  ],
+  "target_audience": [
+    "Inquirer Opinion readers concerned with democratic backsliding",
+    "Lawyers and constitutional academics following Charter-change debates",
+    "Civil-society advocates",
+    "Philippine policymakers and legislators",
+    "International observers of Philippine governance"
+  ],
+  "register_markers": [
+    "cultural-analytical column register",
+    "etymology-as-diagnosis ('batas' = 'to decree')",
+    "alternative-cultural-theory framing ('alternative mix of cultural and social theories')",
+    "WJP-data anchor (methodology, rankings, principles)",
+    "comparative-rankings analytical use",
+    "Marcos-era historical-lesson invocation",
+    "specific-incident-as-symptom (January 21 Davao)",
+    "rhetorical-question stack closer",
+    "concerned-civic register (not partisan, but warning)",
+    "casual interjection register ('Would you believe China ranked 75th?')"
+  ],
+  "one_paragraph_summary": "Published February 2, 2018, this column dissects the difference between RULE OF LAW (laws as social contracts protecting human rights and freedom) and RULE BY LAW (laws as instruments imposed by rulers to enforce their will). CJP traces the cultural origins of Filipino lawlessness — a feudal society that encourages impunity (the powerful flaunt the law and get away; the rest treat law as a game) — and diagnoses the linguistic inheritance: Tagalog 'batas' actually means 'to decree,' something imposed by rulers; English 'law' from old Norse means 'that which is set, or laid down.' Modern rule of law as social contract developed only in the last three centuries alongside human rights and freedom. The World Justice Project's Rule of Law Index — annual since 2010, with 9 factors broken into 44 subfactors, four universal principles (accountability, just laws, open government, accessible and impartial dispute resolution), and a general-population poll of 1,000 respondents in Manila, Cebu, and Davao — shows the Philippines dropping dramatically: 51st of 102 (2015) ? 70th of 113 (2016) ? 88th of 113 in the latest report. 'Our drop of 18 places was the worst in the world.' Comparative analysis disproves the simple authoritarianism-causes-good-governance thesis: China ranks 75th and Singapore 13th, but the lowest-ranked countries (Venezuela and Cambodia) also have one-party rule. What matters is whether checks and balances function. The Marcos martial law era is the Philippine cautionary tale of rule BY law leading to economic ruin. The totalitarian temptation grows in crisis. The January 21, 2018 Davao police incident — three minors arrested, mauled, made to kneel apologizing to President Duterte's photograph — shows the dismantling of rule of law moving 'from an almost playful cat-and-mouse routine to an acceptance of unlawful arrest, detention and execution.' Mass transit disasters and the vaccine scandal are concrete cases of squandered public funds and endangered lives. The column closes with stakes-and-winners-losers questions about ongoing Charter-change debates: will rule of law be strengthened, or will rule BY law — particularly by local warlords — gain ground?"
+}

@@ -1,0 +1,318 @@
+{
+  "id": "CA022",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 22,
+  "title": "Yes, the Supreme Court can!",
+  "date": "2014-06-01",
+  "year": 2014,
+  "source_url": "https://opinion.inquirer.net/75174/yes-the-supreme-court-can",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Inquirer general readership",
+      "Lawyers and law students (due-process/equal-protection primer)",
+      "Civic-minded Filipinos frustrated by procedural complexity",
+      "Authoritarianism-curious readers (Singapore/Malaysia-as-model proponents)",
+      "Sandiganbayan watchers"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine",
+      "due_process"
+    ],
+    "secondary": [
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "due process",
+    "equal protection",
+    "Supreme Court",
+    "constitution",
+    "rule of law"
+  ],
+  "primary_topics": [
+    "Due process and equal protection as Bill of Rights twin guarantees protecting people from government tyranny",
+    "Five-element legal due process: impartial court + jurisdiction over subject matter + jurisdiction over person + opportunity to be heard + judgment after trial",
+    "Substantive vs procedural due process distinction",
+    "Equal protection as guarantee against favoritism Ã¢â‚¬â€� even treatment of similarly situated",
+    "Classification permissibility: aliens vs citizens, senior-citizen discounts, special divisions for specific cases",
+    "Authoritarianism (Singapore/Malaysia model) rejected as solution to legal complexity",
+    "Innovative-courageous judiciary backed by vigilant citizenry Ã¢â‚¬â€� SC can simplify legal processes for good governance and growth"
+  ],
+  "sub_topics": [
+    "No person shall be deprived of life, liberty or property without due process of law Ã¢â‚¬â€� Bill of Rights opening verbatim",
+    "Hears before it condemns, proceeds upon inquiry and renders judgment only after trial Ã¢â‚¬â€� lay-people formulation",
+    "Jinggoy Estrada due-process petition (initial OOO document-request denial) Ã¢â‚¬â€� Ombudsman Morales sent documents promptly to avoid SC reversal",
+    "Sandiganbayan jurisdiction over public officials questioned routinely in client-specific gaps",
+    "Equal-protection challenge to Estrada plunder Special Division Ã¢â‚¬â€� Saguisag still assailing",
+    "Equal-protection challenge to Ampatuan-Solis-Reyes docket-clearance and assisting-judges arrangement",
+    "Jurisprudence must be stable but it cannot stand still Ã¢â‚¬â€� CJP recurring framing",
+    "World Economic Forum sterling-growth-of-economy mention"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "No person shall be deprived of life, liberty or property without due process of law, nor shall any person be denied the equal protection of the laws",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "twin rights are intended to safeguard our people, especially the poor and the powerless, from the tyranny of government",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Substantive refers to the objectives and intrinsic validity of laws",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Good intentions should be attained only by equally good methods",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "hears before it condemns, proceeds upon inquiry and renders judgment only after trial",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the right to be heard prior to being judged",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an impartial court clothed with the legal power or jurisdiction",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Citing gaps in the law, lawyers routinely question the SBN's jurisdiction",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Equal protection is the constitutional guarantee against favoritism and discrimination",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "equality is not absolute because factual situations are not always the same and need classification",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Aping this example",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Why, they ask, should their clients be singled out without any perceptible differentiation from others similarly situated?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Frustrated over the complexities of these twin rights, many readers, citing Singapore and Malaysia as models, pose authoritarianism as the instant solution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "our people will not exchange their hard-won freedoms for the harsh efficiencies of strongman rule",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "An innovative and courageous judiciary, backed by a vigilant citizenry, can redefine these rights",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "jurisprudence must be stable but it cannot stand still",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Supreme Court has the will and the weapons to simplify legal processes",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Yes, the Supreme Court can",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Sen. Jinggoy Estrada (due-process petitioner)",
+      "Ombudsman Conchita Carpio Morales (sent documents promptly)",
+      "Joseph Estrada (plunder Special Division precedent)",
+      "Rene A. V. Saguisag (still assailing Estrada Special Division)",
+      "PJ Jocelyn Solis-Reyes (Ampatuan docket-clearance)",
+      "Ampatuan-case defense lawyers (equal-protection criers)"
+    ],
+    "institutions": [
+      "Supreme Court",
+      "Sandiganbayan (SBN)",
+      "Office of the Ombudsman",
+      "World Economic Forum (sterling-growth mention)",
+      "Singapore and Malaysia governments (authoritarianism rejected models)"
+    ],
+    "cases": [
+      "Estrada plunder Special Division (equal-protection challenge)",
+      "Ampatuan massacre (Solis-Reyes docket-clearance challenge)",
+      "Jinggoy Estrada document-furnishing petition"
+    ],
+    "laws_treaties": [
+      "1987 Constitution Bill of Rights Ã¢â‚¬â€� due process and equal protection clauses (Art III Sec 1)",
+      "RA on senior-citizen 20-percent discount (classification example)"
+    ],
+    "events": [
+      "Ombudsman document-furnishing to Estrada to moot SC petition",
+      "SC creation of Estrada plunder Special Division",
+      "SC clearing of Solis-Reyes Ampatuan docket"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Due process and equal protection are the Bill of Rights twin guarantees safeguarding people Ã¢â‚¬â€� especially the poor and powerless Ã¢â‚¬â€� from government tyranny, and have substantive (objectives and intrinsic validity of laws) and procedural (means and methods) aspects.",
+      "rhetorical_move": "twin-rights-foundational doctrinal framing",
+      "confidence": "asserted as Charter doctrine",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Legal due process requires five elements: impartial court, jurisdiction over subject matter, jurisdiction over person of defendant, opportunity to be heard, and judgment only after hearing.",
+      "rhetorical_move": "five-element-doctrinal-framework",
+      "confidence": "asserted as black-letter law",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Equal protection is not absolute Ã¢â‚¬â€� factual situations differ and need classification (aliens vs citizens, senior-citizen discounts, special divisions for specific cases) Ã¢â‚¬â€� and the SC has wide latitude to interpret these rights according to the peculiar needs of each case.",
+      "rhetorical_move": "permissible-classification + case-by-case-discretion framing",
+      "confidence": "asserted as Charter-and-jurisprudence-supported",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Authoritarianism (Singapore/Malaysia model) is not the solution to twin-rights complexity Ã¢â‚¬â€� we tried it during martial law and it failed in our milieu, causing more injustices; Filipinos will not exchange hard-won freedoms for harsh efficiencies of strongman rule.",
+      "rhetorical_move": "anti-authoritarian-rejection-via-historical-experience",
+      "confidence": "asserted with martial-law precedent",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "An innovative and courageous judiciary backed by a vigilant citizenry can redefine these rights, simplify legal processes, and allow good governance and sterling economic growth to take root and endure changes in political leadership Ã¢â‚¬â€� Yes, the Supreme Court can.",
+      "rhetorical_move": "judiciary-as-redefining-engine + jurisprudence-must-be-stable-but-cannot-stand-still",
+      "confidence": "asserted as titular thesis",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Jinggoy Estrada's due-process petition over the OOO's initial document-furnishing denial Ã¢â‚¬â€� and Ombudsman Conchita Carpio Morales's prompt reversal sending the documents to moot the SC petition Ã¢â‚¬â€� used as a live example of due-process self-correction within the executive branch avoiding judicial intervention.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Saguisag's ongoing challenge to the Estrada plunder Special Division as an equal-protection violation Ã¢â‚¬â€� 'up to this day' Saguisag is still assailing Ã¢â‚¬â€� flagged as the canonical equal-protection challenge to case-specific procedural innovations.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Ampatuan defense-lawyers' equal-protection complaint Ã¢â‚¬â€� why are their clients singled out without perceptible differentiation? Ã¢â‚¬â€� invoked as the next-generation equal-protection challenge to case-specific SC orders.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Singapore-and-Malaysia-authoritarianism rejection Ã¢â‚¬â€� 'we tried that during the martial law years and it did not work in our milieu' Ã¢â‚¬â€� explicit refutation of reader-proposed shortcuts.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses five-element due-process framework as doctrinal anchor (impartial court + dual jurisdiction + opportunity-to-be-heard + judgment-after-hearing)",
+    "applies permissible-classification framework to equal-protection challenges (aliens, seniors, special divisions)",
+    "deploys case-by-case-discretion to interpret twin rights according to peculiar needs",
+    "rejects authoritarianism via historical-experience argument (martial law as failed PH experiment)",
+    "endorses judiciary-as-redefining-engine + jurisprudence-must-be-stable-but-cannot-stand-still living-Charter philosophy",
+    "closes with rallying-cry titular thesis as recurring CJP motto"
+  ],
+  "target_audience": [
+    "Inquirer general readership",
+    "Lawyers and law students (due-process/equal-protection primer)",
+    "Civic-minded Filipinos frustrated by procedural complexity",
+    "Authoritarianism-curious readers (Singapore/Malaysia-as-model proponents)",
+    "Sandiganbayan watchers"
+  ],
+  "register_markers": [
+    "Bill of Rights verbatim opening as anchor",
+    "lay people simplification register (the right to be heard prior to being judged)",
+    "five-requirement legal definition with numbered elements",
+    "Example: bridging device to live cases",
+    "Frustrated over the complexities of these twin rights, many readers, citing Singapore and Malaysia hypothetical-reader voice",
+    "jurisprudence must be stable but it cannot stand still recurring CJP framing",
+    "Yes, the Supreme Court can title-as-rallying-cry closing"
+  ],
+  "one_paragraph_summary": "Panganiban opens with the Bill of Rights verbatim Ã¢â‚¬â€� no person shall be deprived of life, liberty or property without due process of law, nor shall any person be denied the equal protection of the laws Ã¢â‚¬â€� and explains that these twin rights safeguard especially the poor and powerless from government tyranny. He distinguishes substantive (objectives and intrinsic validity of laws) from procedural (means and methods) due process and lays out the five-element legal definition: impartial court, jurisdiction over subject matter, jurisdiction over person, opportunity to be heard, judgment only after hearing. He uses live PDAF examples Ã¢â‚¬â€� Jinggoy Estrada's due-process petition over the OOO's initial document-furnishing denial (mooted when Ombudsman Morales promptly sent the documents) and routine challenges to Sandiganbayan jurisdiction Ã¢â‚¬â€� to ground the framework. On equal protection he explains that equality is not absolute because factual situations differ and need classification (aliens vs citizens, senior-citizen 20-percent discount, the Estrada plunder Special Division still assailed by Saguisag, the Ampatuan-Solis-Reyes docket-clearance now criticized by defense lawyers). He rejects the reader-proposed Singapore/Malaysia authoritarian shortcut Ã¢â‚¬â€� Filipinos tried martial law and it failed in our milieu, causing more injustices, and will not exchange hard-won freedoms for harsh efficiencies of strongman rule. His prescription is an innovative and courageous judiciary backed by vigilant citizenry, redefining the twin rights case-by-case because the Charter left them undefined, with the Court revisiting age-old rights to keep them in step with digital and biotechnological revolutions. He closes with the titular rallying cry: jurisprudence must be stable but it cannot stand still, the Supreme Court has the will and the weapons to simplify legal processes and allow good governance and sterling economic growth to endure Ã¢â‚¬â€� Yes, the Supreme Court can."
+}

@@ -1,0 +1,314 @@
+{
+  "id": "SD021",
+  "type": "speech",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 21,
+  "title": "A Fruitful Past Decade and a Hope-filled New Decade",
+  "date": "2022-08-11",
+  "year": 2022,
+  "source_url": "https://cjpanganiban.com/a-fruitful-past-decade-and-a-hope-filled-new-decade1/",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "The CJ and other Supreme Court and appellate-court justices (sitting and retired)",
+      "Diplomatic corps and CBCP members",
+      "Members of the three FLP Boards of Judges",
+      "FLP's institutional partners (TYKF, MPIC, Ayala, Metrobank)",
+      "FLP scholars, fellows, dissertation-contest winners, and FLPSS members",
+      "Deans and professors of Philippine law and business schools",
+      "Prospective AIM MIBL students and future ESMEL fellowship applicants"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "diplomatic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_donors_and_partners",
+      "flp_scholarship_programs"
+    ],
+    "secondary": [
+      "foundation_for_liberty_and_prosperity",
+      "msme_and_entrepreneurship",
+      "museum_for_liberty_and_prosperity"
+    ]
+  },
+  "keywords": [
+    "FLP first decade",
+    "second decade",
+    "ESMEL Fellowship",
+    "MIBL Master in International Business Law",
+    "Center for Liberty and Prosperity",
+    "Entrepreneurship Fund",
+    "MIBL Miguel Panganiban Sandejas Babson Northwestern",
+    "AIM curriculum",
+    "online awards ceremony",
+    "COVID Omicron face-to-face postponement"
+  ],
+  "primary_topics": [
+    "Closing remarks at FLP's online Awards Ceremony, August 11, 2022, shifted from face-to-face at AIM due to Omicron",
+    "Inventory of FLP's three Board-of-Judges chairs: CJ Gesmundo (Scholarship), J. Hernando (Dissertation), Gov. Tetangco (ESMEL)",
+    "Origin story of the Master in International Business Law (MIBL) program proposed to AIM — derived from grandson Miguel Panganiban Sandejas's Babson MBA + Northwestern MSL trajectory",
+    "Decade-transition framing: FLP's first decade (2011-2021) concentrated on LIBERTY programs; second decade (2021-2031) will add PROSPERITY programs starting with ESMEL fellowships",
+    "Announcement of the two ultimate projects: Center for Liberty and Prosperity (with interactive immersive Museum) in partnership with the SC; and the 'Entrepreneurship Fund' of at least ₱1 billion for MSMEs",
+    "CJ Gesmundo quoted as articulating the FLP symbiosis: 'safeguarding rights go hand in hand with nurturing prosperity'"
+  ],
+  "sub_topics": [
+    "Diplomatic protocol opener — Chief Justice + other justices, three appellate courts, diplomatic corps, CBCP, three FLP Boards of Judges, FLPSS",
+    "Quoted summary from CJ Gesmundo's keynote: 'By safeguarding the rights and freedoms of the individual, the judiciary allows our country to prosper, and in nurturing economic prosperity, rights will also be securely protected. Indeed, it is a symbiotic relationship.'",
+    "Justice Ramon Paul L. Hernando chairing the Dissertation Writing Contest Board of Judges",
+    "Gov. Amando M. Tetangco Jr. chairing the new ESMEL Fellowship Board of Judges, FLP trustee",
+    "ESMEL fellowships at ₱450,000 each — first explicit prosperity-side program",
+    "MIBL (Master in International Business Law) program designed with AIM President/Dean Jikyeong Kang and AIM faculty Professors Olivier Roche and Felipe Calderon over 8 months",
+    "Grandson Miguel Panganiban Sandejas — MBA magna cum laude from Babson College Boston (entrepreneurship), Master of Science in Law (MSL) with honors from Northwestern University Chicago — no undergraduate law degree, cannot take PH bar",
+    "Aspirational curriculum: business + law + technology fusion; obligations and contracts, patents, trademarks, data privacy, property rights, statutory construction",
+    "Hope that Ateneo, La Salle, UP, UST will follow AIM's lead",
+    "Metro Pacific Investments Corporation (MPIC) and MPI Foundation led by MVP as ESMEL partner; CFO Chaye Cabal-Revilla and bar-topper Chief Legal Counsel Ricardo 'Jun' Pilares III drafted the MOA",
+    "Independent-director disclosure: CJP discloses he is an Independent Director of MPIC (corporate governance disclosure)",
+    "Tan Yan Kee Foundation led by Dr. Lucio C. Tan — six years of Scholarship Program funding even through COVID; funded 21 (not 20) scholars to resolve a tie for 10th place",
+    "Ayala Corporation led by Jaime Augusto Zobel de Ayala — five-year Dissertation Writing Contest partner; will expand to ESMEL students next year",
+    "Tony Tan Caktiong and Injap Sia — jointly donated a Hotel 101 Taguig condo to FLP, income for the Panganiban Education Assistance Program",
+    "Professorial Chairs Program with Metrobank Foundation — suspended during COVID, awaiting safe restart for face-to-face lectures",
+    "Justice Angelina Sandoval Gutierrez — Acting FLP President, President of Association of Retired Supreme Court Justices",
+    "Cezar Consing (former BPI/BAP president) — pro bono study of viability and sustainability of the Entrepreneurship Fund"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "a fruitful past decade and a hope-filled new decade",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "safeguarding rights go hand in hand with nurturing prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the best way to nurture prosperity is to help our people help themselves through private entrepreneurship",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the prosperity side of its philosophy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "ultimate project for the liberty side",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "ultimate project for the prosperity side",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "FLP's basic belief that the key to prosperity is to help people help themselves through private entrepreneurship",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Please help us pray for the attainment and success of these two giant ultimate projects",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "as a measure of good corporate governance, may I disclose",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Herculean effort",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "two giant ultimate projects",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (FLP Chairman)",
+      "CJ Alexander G. Gesmundo (keynote speaker; Scholarship Board of Judges chair)",
+      "Justice Ramon Paul L. Hernando (Dissertation Board of Judges chair)",
+      "Gov. Amando M. Tetangco Jr. (ESMEL Board of Judges chair; FLP Trustee; first/only 2-term BSP Governor)",
+      "Dr. Jikyeong Kang (AIM President and Dean)",
+      "Prof. Olivier Roche (AIM faculty, MIBL design)",
+      "Prof. Felipe Calderon (AIM faculty, MIBL design)",
+      "Miguel Panganiban Sandejas (CJP's grandson; Babson MBA magna; Northwestern MSL honors)",
+      "Manuel V. 'MVP' Pangilinan (MPIC/MPI Foundation)",
+      "Chaye Cabal-Revilla (MPIC CFO)",
+      "Ricardo 'Jun' Pilares III (MPIC Chief Legal Counsel; bar topper)",
+      "Dr. Lucio C. Tan (Tan Yan Kee Foundation)",
+      "Jaime Augusto Zobel de Ayala (Ayala Corporation)",
+      "Dr. Tony Tan Caktiong (Hotel 101 condo donor)",
+      "Mr. Injap Sia (Hotel 101 condo donor)",
+      "Justice Angelina Sandoval Gutierrez (Acting FLP President; Assoc. of Retired SC Justices President)",
+      "Cezar Consing (former BPI and BAP president; pro bono Entrepreneurship Fund study)"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Supreme Court of the Philippines",
+      "Asian Institute of Management (AIM)",
+      "Babson College (Boston)",
+      "Northwestern University (Chicago)",
+      "Tan Yan Kee Foundation",
+      "Metro Pacific Investments Corporation (MPIC)",
+      "Metro Pacific Investments Foundation",
+      "Ayala Corporation",
+      "Metrobank Foundation",
+      "Bangko Sentral ng Pilipinas",
+      "Association of Retired Supreme Court Justices",
+      "FLP Scholars Society (FLPSS)",
+      "Catholic Bishops Conference of the Philippines (CBCP)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "FLP online Awards Ceremony, August 11, 2022",
+      "Originally planned face-to-face at AIM; shifted online due to Omicron",
+      "FLP first decade (2011-2021) — liberty focus",
+      "FLP second decade (2021-2031) — adds prosperity programs",
+      "MIBL curriculum design — 8 months pre-2022 with AIM"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "FLP's first decade (2011-2021) was correctly focused on liberty programs (Professorial Chairs, Law Scholarships, Dissertation Contests); the second decade (2021-2031) must broaden to prosperity programs (ESMEL Fellowships, Entrepreneurship Fund) to enact the full twin-beacons philosophy.",
+      "rhetorical_move": "decade-transition framing as the structural argument of the speech",
+      "confidence": "asserted as FLP strategic direction",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The best way to nurture prosperity is to help people help themselves through private entrepreneurship — not state-led intervention, not charity transfers — therefore FLP's ultimate prosperity-side project is an 'Entrepreneurship Fund' of at least ₱1 billion that INVESTS in and helps manage MSMEs, with active assistance from ESMEL fellows.",
+      "rhetorical_move": "self-help-via-entrepreneurship as the prosperity doctrine",
+      "confidence": "asserted as 'FLP's basic belief'",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Filipino business schools should fuse business, law, and technology in their curricula — modeled after CJP's grandson Miguel's Babson MBA + Northwestern MSL trajectory — so that entrepreneurs are armed with both business expertise AND legal grounding in obligations, contracts, patents, trademarks, data privacy, property rights, and statutory construction.",
+      "rhetorical_move": "personal-biographical-example (grandson's trajectory) as proof-of-concept",
+      "confidence": "asserted with named AIM faculty partners",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ Gesmundo's keynote-articulated principle — 'safeguarding the rights and freedoms of the individual, the judiciary allows our country to prosper, and in nurturing economic prosperity, rights will also be securely protected... safeguarding rights go hand in hand with nurturing prosperity' — should be received as the canonical SC-articulation of FLP's symbiotic-philosophy and as evidence that the Chief Justice now subscribes to it.",
+      "rhetorical_move": "endorsement-by-quotation — making the sitting CJ a co-author of the philosophy",
+      "confidence": "asserted with explicit 'and by we I respectfully include him'",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The MIBL origin: CJP's grandson Miguel Panganiban Sandejas finished MBA magna cum laude in entrepreneurship at Babson College Boston, then completed Master of Science in Law (MSL) with honors at Northwestern University Chicago — WITHOUT any prior law degree. He cannot take the PH bar (which requires a four-year law degree). This unusual graduate-level law-without-undergraduate trajectory inspired the AIM MIBL curriculum.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Tan Yan Kee Foundation's gesture: facing a tie for 10th place among scholarship applicants, TYKF added one more third-year slot, raising the annual scholarship count from 20 to 21.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Tony Tan Caktiong and Injap Sia jointly donated a Hotel 101 Taguig City condo to FLP — income to fund the Panganiban Education Assistance Program for poor students.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Cezar Consing, former BPI president and former Bankers Association of the Philippines president, is doing PRO BONO viability-and-sustainability study of the planned ₱1 billion Entrepreneurship Fund.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Quoted institutional crystallization from CJ Gesmundo: 'By safeguarding the rights and freedoms of the individual, the judiciary allows our country to prosper, and in nurturing economic prosperity, rights will also be securely protected. Indeed, it is a symbiotic relationship, safeguarding rights go hand in hand with nurturing prosperity.' CJP comments: 'So well said, Your Honor.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Corporate-governance disclosure interpolated mid-speech: 'As a measure of good corporate governance, may I disclose that I am an Independent Director of MPIC?' — modeling the disclosure norm he wants to inculcate.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses decade-transition framing to structure long-horizon institutional planning",
+    "treats helping-people-help-themselves-via-entrepreneurship as the operative anti-poverty test",
+    "fuses business + law + technology as the new curriculum-design test for graduate management education",
+    "uses sitting-CJ endorsement-by-quotation to legitimize foundation philosophy",
+    "models corporate-governance disclosure ('may I disclose') as itself an FLP value-statement",
+    "scales prosperity-side ambition by ₱-figures (₱450K per fellowship, ₱1B+ for the Entrepreneurship Fund)"
+  ],
+  "target_audience": [
+    "The CJ and other Supreme Court and appellate-court justices (sitting and retired)",
+    "Diplomatic corps and CBCP members",
+    "Members of the three FLP Boards of Judges",
+    "FLP's institutional partners (TYKF, MPIC, Ayala, Metrobank)",
+    "FLP scholars, fellows, dissertation-contest winners, and FLPSS members",
+    "Deans and professors of Philippine law and business schools",
+    "Prospective AIM MIBL students and future ESMEL fellowship applicants"
+  ],
+  "register_markers": [
+    "diplomatic-protocol opener (Chief Justice + justices + appellate courts + diplomatic corps + CBCP)",
+    "online-Awards-Ceremony register (with explicit pandemic-adjustment acknowledgment)",
+    "endorsement-by-quotation device (deploying CJ Gesmundo's keynote for FLP's philosophy)",
+    "corporate-governance-disclosure interpolation as modeling behavior",
+    "decade-transition framing (first decade liberty / second decade prosperity)",
+    "personal-biographical example (grandson's Babson-Northwestern trajectory) as curriculum design proof",
+    "named-roll-call of partners with monetary specificity (₱450K ESMEL, 21 scholars not 20, ₱1B Entrepreneurship Fund)",
+    "prayer-request closer ('Please help us pray for the attainment and success of these two giant ultimate projects')"
+  ],
+  "one_paragraph_summary": "Delivered August 11, 2022 as online closing remarks at FLP's Awards Ceremony — shifted from face-to-face at AIM to virtual format because of the Omicron surge — this speech frames the foundation's decade-transition thesis: the first decade (2011-2021) was concentrated on LIBERTY programs (Professorial Chairs with Metrobank, Scholarship with Tan Yan Kee Foundation, Dissertation Writing with Ayala); the second decade (2021-2031) will broaden into PROSPERITY programs starting with the ESMEL Fellowships at ₱450,000 each (in partnership with MPIC and MVP, MOA drafted by CFO Chaye Cabal-Revilla and bar-topper Chief Legal Counsel Jun Pilares III). CJP discloses his MPIC independent directorship as a corporate-governance modeling. He thanks CJ Alexander G. Gesmundo as Scholarship Board of Judges chair and adopts the CJ's keynote formulation — 'safeguarding rights go hand in hand with nurturing prosperity' — as the canonical SC-articulation of FLP's symbiotic philosophy. He thanks J. Ramon Paul L. Hernando (Dissertation Board) and Gov. Amando 'Say' Tetangco Jr. (ESMEL Board). He then announces the AIM Master in International Business Law (MIBL) curriculum, designed over 8 months with President/Dean Jikyeong Kang and faculty Olivier Roche and Felipe Calderon — inspired by his grandson Miguel Panganiban Sandejas's unusual Babson MBA + Northwestern MSL trajectory (graduate law without undergraduate law) — and invites Ateneo, La Salle, UP, and UST to follow AIM's lead. He acknowledges Tan Yan Kee Foundation (six years of scholarship funding, including 21-slot expansion to resolve a tie), Ayala Corporation (5 years of Dissertation Writing), Tony Tan Caktiong + Injap Sia (Hotel 101 condo donation for poor-student assistance), and Justice Angelina Sandoval Gutierrez (Acting FLP President). He closes by announcing FLP's two ultimate projects — the Center for Liberty and Prosperity with interactive immersive Museum (liberty side, with SC partnership) and the ₱1B+ 'Entrepreneurship Fund' for MSMEs (prosperity side, with pro bono viability study by Cezar Consing) — and asks the audience to pray for their attainment."
+}

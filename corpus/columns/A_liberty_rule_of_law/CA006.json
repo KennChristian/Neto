@@ -1,0 +1,295 @@
+{
+  "id": "CA006",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 6,
+  "title": "Judicial activism in the Philippines",
+  "date": "2023-04-10",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/162259/judicial-activism-in-the-philippines",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Philippine judges and justices at all court levels",
+      "Constitutional law academics and students",
+      "Judge Soliman M. Santos Jr. (subject of the tribute portion)",
+      "Inquirer Opinion readers following the US-PH judicial-philosophy comparison",
+      "Law students preparing for the bar — particularly on Article VIII Section 1 doctrine"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "pedagogical"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine",
+      "bar_exam_and_legal_education"
+    ],
+    "secondary": [
+      "rule_of_law",
+      "impeachment_accountability",
+      "judicial_activism_and_political_question"
+    ]
+  },
+  "keywords": [
+    "judicial activism",
+    "Article VIII Section 1",
+    "grave abuse of discretion",
+    "expanded certiorari jurisdiction",
+    "separation of powers",
+    "Francisco v. House of Representatives",
+    "Hilario G. Davide Jr.",
+    "second impeachment complaint",
+    "libertarian jurisprudence",
+    "Judge Soliman M. Santos Jr.",
+    "Judicial Activist book",
+    "Bill of Rights",
+    "FEU student activism",
+    "NUSP"
+  ],
+  "primary_topics": [
+    "Constitutional comparison of US and Philippine approaches to judicial activism — and why the Philippine Constitution makes activism a DUTY, not a choice",
+    "Article VIII Section 1 of the 1987 Constitution as the explicit textual basis for judicial activism: 'duty of the courts of justice... to determine whether or not there has been a grave abuse of discretion'",
+    "The two-part structure of judicial power: ordinary review (settling actual controversies) + extraordinary/expanded certiorari (grave abuse of discretion)",
+    "Reading the second impeachment complaint case against then-CJ Davide (Francisco v. House of Representatives, November 10, 2003) as the paradigmatic example of expanded-certiorari activism",
+    "The libertarian dimension: Philippine activism is doubly mandated by Bill of Rights protection of civil liberties",
+    "Personal tribute to Judge Soliman M. Santos Jr. — recently retired RTC Naga City judge whose forthcoming book is titled 'Judicial Activist'"
+  ],
+  "sub_topics": [
+    "Continuation of CJP's previous Monday column on US judicial debate",
+    "Two parts of Article VIII Section 1: (1) ordinary judicial review — 'settle actual controversies involving rights which are legally demandable and enforceable'; (2) extraordinary expanded certiorari — 'determine whether or not there has been a grave abuse of discretion amounting to lack or excess of jurisdiction'",
+    "'Duty' (not 'power' or 'authority') — duty cannot be evaded under any circumstance",
+    "Separation of powers — three branches supreme in their own spheres",
+    "Limits: judiciary cannot interfere with Congress's INTERNAL rules of lawmaking or the Presidency's INTERNAL confidential orders",
+    "Exception: when the Constitution imposes 'conditions, limitations, or restrictions' on the exercise of legislative or executive power, the judiciary may review for compliance with those conditions",
+    "Francisco v. House of Representatives (November 10, 2003) — second impeachment complaint against CJ Davide; constitutional ban on more than one impeachment proceeding 'against the same official... within a period of one year' treated as a 'condition or limitation'; House obeyed 'after several days that tested its adherence to the rule of law'",
+    "US Supreme Court libertarian-jurisprudence references: 'separate is not equal' (Brown), 'read him his rights' (Miranda), 'one-man-one-vote', 'fruit of the poisonous tree'",
+    "Philippine judges anchor libertarianism on 'impregnable Constitution' — US judges anchor on jurisprudence (changeable)",
+    "Judge Soliman M. Santos Jr. — Regional Trial Court of Naga City (recently retired); previously written about by CJP on January 21, 2018, October 11, 2020, and November 8, 2020 ('I have never written about any trial judge as many times')",
+    "Judge Santos's forthcoming book 'Judicial Activist'; CJP requested to write the Foreword",
+    "Personal connection: both CJP and Judge Santos were student activists",
+    "CJP as youngest president of FEU Central Student Organization and co-founder/president of National Union of Students of the Philippines (NUSP) — 'the largest student organization in our country since then up to now'",
+    "Mild regret: Judge Santos 'did not get to the Supreme Court where his decisions could have added wisdom and luster to the Philippine Reports and the Supreme Court Reports Annotated'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "by imposing upon all judges the duty to determine issues of grave abuse of discretion, our Constitution has thereby mandated them to be activists",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Power can be relinquished, but a duty cannot under any circumstance be evaded",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the three great branches of our government... are supreme in their own spheres",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "condition or limitation",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "tested its adherence to the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "American magistrates are accorded the luxury of choosing between being passivists or activists",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "This luxury is denied to all Philippine judges",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "impregnable Constitution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "anchor their libertarianism on jurisprudence that can be changed anytime",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "could have added wisdom and luster",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Philippine Reports and the Supreme Court Reports Annotated",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "soulmate",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the largest student organization in our country since then up to now",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (columnist; former CJ)",
+      "CJ Hilario G. Davide Jr. (subject of Francisco v. House)",
+      "Judge Soliman M. Santos Jr. (retired RTC Naga City judge; author of forthcoming 'Judicial Activist')"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "Regional Trial Court of Naga City",
+      "House of Representatives",
+      "Far Eastern University (FEU)",
+      "FEU Central Student Organization",
+      "National Union of Students of the Philippines (NUSP)",
+      "US Supreme Court (cited)",
+      "Philippine Reports / Supreme Court Reports Annotated"
+    ],
+    "cases": [
+      "Francisco v. House of Representatives (November 10, 2003) — second impeachment complaint against CJ Davide; activated expanded certiorari to enforce the one-year impeachment-ban condition",
+      "(Implicitly cited US cases) Brown v. Board ('separate is not equal'), Miranda v. Arizona ('read him his rights'), one-man-one-vote, fruit of the poisonous tree"
+    ],
+    "laws_treaties": [
+      "1987 Philippine Constitution — Article VIII Section 1 (judicial power, duty to determine grave abuse)",
+      "1987 Philippine Constitution — Bill of Rights",
+      "1987 Philippine Constitution — Article XI (impeachment, one-year ban)"
+    ],
+    "events": [
+      "Francisco v. House decision — November 10, 2003",
+      "Judge Santos's recent retirement from RTC Naga City",
+      "Upcoming release of Judge Santos's book 'Judicial Activist'"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Article VIII Section 1 of the 1987 Constitution makes judicial activism a constitutional DUTY for all Philippine judges — not a discretionary philosophical leaning as in the United States. By imposing upon all judges 'the duty to determine issues of grave abuse of discretion,' the Constitution has 'mandated them to be activists.' Power can be relinquished; duty cannot.",
+      "rhetorical_move": "constitutional-textual-mandate argument distinguishing PH from US",
+      "confidence": "asserted as constitutional fact",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Judicial power under the 1987 Constitution has two parts: ORDINARY judicial review of actual controversies, and EXTRAORDINARY (or 'expanded certiorari') review for grave abuse of discretion amounting to lack or excess of jurisdiction. The second part is what makes Philippine activism mandatory.",
+      "rhetorical_move": "two-part textual exegesis as analytical scaffolding",
+      "confidence": "asserted with verbatim constitutional quotation",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The judiciary cannot interfere with Congress's INTERNAL lawmaking rules or with the Presidency's INTERNAL confidential orders — these are the limits of separation of powers. HOWEVER, when the Constitution imposes 'conditions, limitations, or restrictions' on legislative or executive power (e.g., the one-year impeachment ban), the judiciary MAY review for compliance with those conditions. Francisco v. House of Representatives (November 10, 2003) is the paradigm: the SC restrained the House from continuing the second impeachment complaint against CJ Davide within the prohibited one-year period.",
+      "rhetorical_move": "internal-vs-conditional distinction with paradigmatic case",
+      "confidence": "asserted with 'IMHO' qualification",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Philippine judges must be both activist AND libertarian — the Bill of Rights replicates US libertarian jurisprudence (Brown, Miranda, one-man-one-vote, fruit of the poisonous tree) but anchors that libertarianism on the 'impregnable Constitution' rather than jurisprudence that can be changed anytime. American magistrates have the 'luxury' of choosing between passivism and activism; Philippine judges do not.",
+      "rhetorical_move": "comparative-constitutionalism + 'luxury denied' framing",
+      "confidence": "asserted as the speaker's settled jurisprudential reading",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Francisco v. House of Representatives (November 10, 2003) — the House, after the SC restrained continuation of the second impeachment complaint, 'after several days that tested its adherence to the rule of law' obeyed 'reluctantly' — a paradigmatic test of separation-of-powers discipline.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Personal soulmate-disclosure: Judge Soliman M. Santos Jr. 'brought to the bench his activism during his student days' — and CJP, as a soulmate, was also a student activist, serving as the youngest president of the FEU Central Student Organization and as a co-founder and president of NUSP, 'the largest student organization in our country since then up to now.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJP has written about Judge Santos 'at least three times' (January 21, 2018; October 11, 2020; November 8, 2020) and notes: 'I have never written about any trial judge as many times and in as many subjects as I have about him.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Mild regret that Judge Santos 'did not get to the Supreme Court where his decisions could have added wisdom and luster to the Philippine Reports and the Supreme Court Reports Annotated' — partially comforted by the forthcoming book 'Judicial Activist' for which CJP was asked to write the Foreword.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "treats Article VIII Section 1 expanded-certiorari clause as imposing duty (non-relinquishable), not power (relinquishable)",
+    "uses the internal-vs-conditional distinction to allocate judicial interference appropriately",
+    "applies condition-or-limitation analysis (Francisco v. House paradigm) to questions of constitutional separation",
+    "treats the Bill of Rights as the foundation for mandatory libertarian jurisprudence",
+    "uses comparative-constitutionalism to elevate PH activism from optional to obligatory",
+    "frames tribute-within-doctrine as a recurring CJP technique — honoring a colleague while making a constitutional point"
+  ],
+  "target_audience": [
+    "Philippine judges and justices at all court levels",
+    "Constitutional law academics and students",
+    "Judge Soliman M. Santos Jr. (subject of the tribute portion)",
+    "Inquirer Opinion readers following the US-PH judicial-philosophy comparison",
+    "Law students preparing for the bar — particularly on Article VIII Section 1 doctrine"
+  ],
+  "register_markers": [
+    "constitutional-pedagogical register — textual exegesis for lay and professional readers",
+    "comparative-constitutionalism (US-PH side-by-side) as compositional spine",
+    "two-part textual analysis (ordinary vs extraordinary judicial review)",
+    "case-anchor argument (Francisco v. House) as paradigm",
+    "alliterative-Latin doctrinal phrasing ('expanded certiorari', 'grave abuse of discretion')",
+    "personal-soulmate disclosure (CJP and Judge Santos as student activists)",
+    "tribute-block-within-doctrinal-column structure",
+    "regret-tinged hindsight register",
+    "alma-mater pride ('the largest student organization in our country since then up to now')"
+  ],
+  "one_paragraph_summary": "Published April 10, 2023 as a follow-up to CJP's previous Monday column on the US judicial-activism debate, this piece argues that the 1987 Philippine Constitution makes activism a DUTY rather than a philosophical choice. Article VIII Section 1 grants judicial power in two parts: ORDINARY review of actual controversies, and EXTRAORDINARY (expanded certiorari) review of grave abuse of discretion amounting to lack or excess of jurisdiction. By imposing the second as a DUTY ('not just a power or authority'), the Constitution has 'mandated [judges] to be activists' — and 'a duty cannot under any circumstance be evaded.' The judiciary cannot interfere with Congress's INTERNAL lawmaking rules or with confidential executive orders, but when the Constitution imposes 'conditions, limitations, or restrictions' (such as the one-year ban on repeat impeachment proceedings), the judiciary may enforce them. The paradigm is Francisco v. House of Representatives (November 10, 2003): the SC restrained the House from continuing the second impeachment complaint against CJ Hilario G. Davide Jr. — and 'after several days that tested its adherence to the rule of law,' the House 'reluctantly' obeyed. Philippine judges must additionally be libertarian: the Bill of Rights replicates US libertarian jurisprudence (Brown's 'separate is not equal,' Miranda's 'read him his rights,' one-man-one-vote, fruit of the poisonous tree) but anchors it on the 'impregnable Constitution' rather than changeable jurisprudence. 'American magistrates are accorded the luxury of choosing between being passivists or activists in their philosophical leaning. This luxury is denied to all Philippine judges.' The column closes with a personal tribute to recently-retired Judge Soliman M. Santos Jr. of RTC Naga City — a 'soulmate' fellow-student-activist whose forthcoming book is titled 'Judicial Activist' and for which CJP was asked to write the Foreword. CJP recalls his own student activism (youngest president of FEU Central Student Organization; co-founder/president of NUSP, 'the largest student organization in our country since then up to now') and gently regrets that Judge Santos did not reach the Supreme Court."
+}

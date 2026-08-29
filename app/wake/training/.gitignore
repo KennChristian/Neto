@@ -1,0 +1,23 @@
+# Training-time artefacts — never committed.
+#
+# - oww_data/   the negatives slice + validation .npy (~1.7 GB total)
+# - oww_output/ generated positive WAVs (~500 files) and any training
+#               intermediates (the trained .onnx is COPIED into
+#               app/wake/models/hey_cj.onnx, which IS committed)
+# - g2_clips/, g2b_clips/, g2c_clips/, g3_pretrim_clips/ — listening tests
+# - Any *.npy or *.wav that accidentally gets dropped here
+#
+# The trained model itself lives in app/wake/models/ and IS committed.
+
+oww_data/
+oww_output/
+g2_clips/
+g2b_clips/
+g2c_clips/
+g3_pretrim_clips/
+*.npy
+*.wav
+
+# Training-run logs (e.g. g5_train_v2.log) — verbose tqdm + warnings,
+# regenerated on every run.
+*.log

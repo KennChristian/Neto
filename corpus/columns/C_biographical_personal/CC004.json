@@ -1,0 +1,53 @@
+{
+  "id": "CC004",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 4,
+  "title": "Diokno, Salonga and Teehankee",
+  "date": "2018-04-29",
+  "year": 2018,
+  "source_url": "https://opinion.inquirer.net/112794/diokno-salonga-teehankee",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "mentors_and_legal_lineage"
+    ],
+    "secondary": [
+      "bar_exam_and_legal_education"
+    ]
+  },
+  "keywords": [
+    "Estelito P. Mendoza",
+    "constructive resignation doctrine (Puno authorship)",
+    "CJ Claudio Teehankee",
+    "Jose W. Diokno",
+    "Jovito R. Salonga",
+    "1944 bar exam tie",
+    "FEU mentorship"
+  ],
+  "primary_topics": [],
+  "sub_topics": [],
+  "signature_phrases": [],
+  "entities": {
+    "people": [],
+    "institutions": [],
+    "cases": [],
+    "laws_treaties": [],
+    "events": []
+  },
+  "stances": [],
+  "notable_anecdotes": [],
+  "decision_framework_signals": [],
+  "target_audience": [],
+  "register_markers": [],
+  "one_paragraph_summary": ""
+}

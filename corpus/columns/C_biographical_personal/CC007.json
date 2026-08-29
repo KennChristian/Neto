@@ -1,0 +1,522 @@
+{
+  "id": "CC007",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 7,
+  "title": "Bar exams and legal education (1)",
+  "date": "2014-09-07",
+  "year": 2014,
+  "source_url": "https://opinion.inquirer.net/78226/bar-exams-and-legal-education-1",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Inquirer readership in lead-up to October 2014 bar exam",
+      "Bar examinees and bar candidates' families",
+      "Law students and law school deans",
+      "FEU (CJP alma mater) + University of the East (1960 venue) communities",
+      "University of Cebu (top-10 brand-new-cars gifting school)",
+      "Bar topnotchers and their employers (top law firms, best-managed companies)",
+      "Justice Diosdado M. Peralta and 2014 bar committee",
+      "Retired Justices Mendoza, Herrera, Vitug (Bar Matter 1161 reformers)",
+      "Raul C. Pangalangan and Inquirer Opinion community",
+      "Comelec commissioners (postscript)",
+      "Constitutional law and election law scholars (TV-radio-ads case)"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "mentors_and_legal_lineage",
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "bar_exam_and_legal_education",
+      "early_life_sampaloc",
+      "eulogies_and_passing"
+    ]
+  },
+  "keywords": [
+    "bar exam",
+    "legal education",
+    "bar mystique",
+    "1960 exam",
+    "Salonga",
+    "FEU",
+    "intestinal flu",
+    "Pangalangan",
+    "Bar Matter 1161",
+    "Peralta",
+    "Comelec postscript"
+  ],
+  "primary_topics": [
+    "Bar exams and legal education trilogy part 1 â€” September 7, 2014; opening column of three-part legal-education series",
+    "URL slug 'bar-exams-and-legal-education-1' uses plural 'exams' + parenthetical '(1)' (parts 2-3 use singular 'exam' + bare-digit suffix); annual bar exam on four Sundays of October",
+    "PRC supervises all professions in PH EXCEPT legal which is reserved by Constitution for SC; PRC-administered tests called 'licensure examinations' but lawyer-crucible called 'bar' exam",
+    "Bar/bench metaphor origin: 'courtroom railing or bar that separates the lawyers' table and the judges' bench from the seats used by the general public'",
+    "Opening-day fanfare (parades, motorcades, marching bands, cheering squads) banned by SC during last several years; University of Cebu gifts top-10 with brand-new cars",
+    "CJP's 1960 bar exam personal experience â€” waded alone in rain-induced knee-deep flood on R. Papa Street, Sampaloc Manila from FEU Hospital (where confined for intestinal flu) to University of the East exam venue",
+    "Dean Jovito R. Salonga's pep talk when CJP nearly quit + Salonga's January 22, 2008 FEU speech quote: 'CJ Panganiban could have landed first place (instead of sixth) had he not been sick and hospitalized during the first week of the 1960 bar exam'",
+    "Classmate comparison showing examiner's evaluation favored CJP's essayed opinions over classmate's more-impressive citation of authorities â€” 'placing in the top 10 is not always a reliable measure of achievement' aphorism",
+    "Bar exam 2014 methodology: 20% MCQ + 80% essay; two new subjects added (taxation + labor law); Bar Matter 1161 (June 8, 2004) reforms by retired Justices Vicente V. Mendoza + Ameurfina M. Herrera + Jose C. Vitug; January 18, 2011 SC resolution with 60% MCQ + 40% essay (later reverted to bar-subject-specific essays at 40% in 2012); Justice Diosdado M. Peralta as 2014 bar chair; Raul C. Pangalangan November 25, 2011 column quote on '50-year-unchanged template'",
+    "Asterisk-divider postscript: SC unanimously voided Comelec's edict reducing TV-radio ads to aggregate-total 120-min TV + 180-min radio per national candidate; Feb 24, 2013 CJP column on 'draconian reduction' back-reference; Comelec accepted defeat graciously, will not ask for reconsideration"
+  ],
+  "sub_topics": [
+    "Conducted annually on four Sundays of October, bar examinations determine who will be blessed to carry exalted title of 'attorney-at-law' and allowed to practice law in all PH courts",
+    "PRC (Professional Regulation Commission) supervises entry to all professions in PH, except legal profession which is reserved by Constitution for SC",
+    "PRC-administered tests called 'licensure examinations'",
+    "Crucible of lawyers referred to as 'bar' exam, not because addicted to alcoholic drinks, but because only those who pass it may cross courtroom railing or bar that separates lawyers' table and judges' bench from seats used by general public",
+    "Hence lawyers collectively referred to as 'bar' and judges as 'bench'",
+    "Bar exam used to be attended by fanfare galore",
+    "Undergraduates held parades and motorcades complete with marching bands and cheering squads that accompanied school candidates' rides to exam venue",
+    "Gaudy practice banned by SC during last several years",
+    "Mystique explodes when results released â€” traditional and social media herald passers, complete with pictures of topnotchers plastered on front pages of newspapers and interviewed over radio and TV",
+    "Law schools take enormous pride in their bar placers and average passing rates",
+    "University of Cebu gifts its top 10 with brand-new cars",
+    "Most prestigious law firms and best-managed companies offer fantastic opportunities and compensation to top placers",
+    "CJP took bar exam in 1960 without this opening-day fanfare",
+    "On first day of exam, CJP had to wade alone in rain-induced, knee-deep flood on R. Papa Street, Sampaloc, Manila",
+    "Connected then Far Eastern University Hospital (where confined for intestinal flu) and University of the East (situs of exam)",
+    "Because of illness, CJP felt he may have failed first-day subjects and seriously thought of quitting",
+    "Dean Jovito R. Salonga pepped CJP up and urged him to go on",
+    "Recalling this incident in speech on Jan 22, 2008 at FEU, Salonga opined: 'CJ Panganiban could have landed first place (instead of sixth) had he not been sick and hospitalized during the first week of the 1960 bar exam'",
+    "CJP mentions this because he believes placing in top 10 not always reliable measure of achievement",
+    "In fact, classmate and CJP compared answers after each exam day; CJP was so impressed with friend's answers that he expected friend to fare better",
+    "Questions during CJP's time called mostly for essay answers and memory work",
+    "CJP thought classmate's citation of authorities was more impressive â€” but apparently examiner's evaluation was quite subjective and probably veered toward CJP's essayed opinions; hence CJP's grades higher",
+    "Subjective methodology and scope of bar exam have not improved much since CJP took it",
+    "Basic subjects the same, except for this year, two subjects â€” taxation and labor law â€” added",
+    "Methodology changed to 20% MCQ + 80% essay",
+    "Inquirer publisher Raul C. Pangalangan lamented in column Nov 25, 2011: 'The bar exams have been administered on basically the same template... The model remained unchanged at least for the last 50 years...'",
+    "To be fair, during last decade SC tried to improve bar exam",
+    "In resolution issued June 8, 2004 (Bar Matter 1161), Court favorably acted on reforms proposed by retired Justices Vicente V. Mendoza, Ameurfina M. Herrera and Jose C. Vitug (see CJP's April 22, 2007 column for details)",
+    "Court instituted more reforms in another resolution Jan 18, 2011, with MCQ at 60% of total exams to measure 'knowledge and recall of laws, doctrines and jurisprudence', plus 40% essay-type questions to test 'skill in writing in English, sorting out the relevant facts in a legal dispute... organizing [their] thoughts, constructing [their] arguments, and persuading readers to [their] point of view'",
+    "However, essays were not 'bar subject specific', igniting fiery howling from candidates",
+    "In 2012, SC reverted to 'bar subject specific' essays at 40% and MCQs at 60%",
+    "In 2013 exam, this was changed to 20% MCQ and 80% essay â€” same format for next month's exam, chaired by Justice Diosdado M. Peralta",
+    "Postscript: SC unanimously voided Comelec's edict reducing TV-radio ads during elections to 'aggregate total' of only 120 minutes for TV and 180 minutes for radio per national candidate",
+    "As CJP argued in Feb 24, 2013 column, this 'draconian reduction suppressed the people's right to know their candidates, and the aspirants' rights to inform the electorate of their qualifications and programs of government'",
+    "Good news: Comelec accepted defeat graciously and will not ask for reconsideration",
+    "Better news: it will, as it should, enforce strictly the legal limits on candidates' campaign [text cut off mid-sentence]"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "in my humble view (implied)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "fanfare galore",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "exalted title",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the bar mystique",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "near-drowning experiences (related to C102 register)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "draconian reduction",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the people's right to know",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "gaudy practice",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "fiery howling",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "CJP (1960 bar examinee, 6th place; FEU alumnus)",
+      "Dean Jovito R. Salonga (CJP's dean at FEU; January 22, 2008 FEU speech)",
+      "Justice Diosdado M. Peralta (2014 bar chair)",
+      "Raul C. Pangalangan (Inquirer publisher, Nov 25, 2011 column)",
+      "Retired Justice Vicente V. Mendoza (Bar Matter 1161 reformer)",
+      "Retired Justice Ameurfina M. Herrera (Bar Matter 1161 reformer)",
+      "Retired Justice Jose C. Vitug (Bar Matter 1161 reformer)",
+      "CJP's classmate (unnamed; comparison-of-answers anecdote)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "Professional Regulation Commission (PRC)",
+      "Far Eastern University (CJP alma mater + FEU Hospital)",
+      "University of the East (1960 bar exam venue)",
+      "University of Cebu (top-10 brand-new-cars gift practice)",
+      "Commission on Elections (Comelec, postscript context)",
+      "Philippine Daily Inquirer (Pangalangan publisher context)"
+    ],
+    "cases": [
+      "Comelec aggregate-time-limit edict voided (postscript; CJP's Feb 24, 2013 column back-referenced)"
+    ],
+    "laws_treaties": [
+      "1987 Constitution (legal-profession reserved for SC)",
+      "Bar Matter 1161 (June 8, 2004) â€” Mendoza+Herrera+Vitug reform proposals",
+      "SC Resolution January 18, 2011 â€” 60% MCQ + 40% essay methodology",
+      "SC Resolution 2012 â€” reverted to bar-subject-specific 40% essay + 60% MCQ",
+      "SC Resolution 2013 â€” 20% MCQ + 80% essay (carried over to 2014)"
+    ],
+    "events": [
+      "Annual bar exam on four Sundays of October (Oct 5, 12, 19, 26, 2014)",
+      "1960 bar exam â€” CJP took with intestinal-flu hospitalization at FEU Hospital",
+      "January 22, 2008 â€” Salonga's FEU speech quoting CJP's 1960 bar performance",
+      "November 25, 2011 â€” Pangalangan column on 50-year-unchanged template",
+      "June 8, 2004 â€” Bar Matter 1161 reforms",
+      "January 18, 2011 â€” SC resolution with 60% MCQ + 40% essay",
+      "2012 â€” SC reverted to bar-subject-specific 40% essay + 60% MCQ",
+      "2013 â€” 20% MCQ + 80% essay format established",
+      "October 2014 â€” bar exam chaired by Justice Peralta",
+      "Comelec TV-radio aggregate-time-limit edict voided by SC unanimous (postscript)",
+      "February 24, 2013 â€” CJP's column on 'draconian reduction'"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Conducted annually on the four Sundays of October, the bar examinations determine who will be blessed to carry the exalted title of 'attorney-at-law' and be allowed to practice law in all courts in our country",
+      "rhetorical_move": "annual-bar-exam thesis opening with exalted-title framing",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Bar mystique: the PRC supervises entry to all professions in the Philippines EXCEPT the legal profession, which is reserved by the Constitution for the SC; the PRC-administered tests are called 'licensure examinations' but the crucible of lawyers is referred to as the 'bar' exam â€” not because they are more addicted to alcoholic drinks, but because only those who pass it may cross the courtroom railing or bar that separates the lawyers' table and the judges' bench from the seats used by the general public; hence lawyers are collectively referred to as the 'bar' and judges as the 'bench'",
+      "rhetorical_move": "bar-mystique etymological-explanation with PRC-vs-SC distinction",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The bar exam used to be attended by fanfare galore â€” undergraduates held parades and motorcades complete with marching bands and cheering squads accompanying their school candidates' rides to the exam venue; this gaudy practice had been banned by the SC during the last several years; the mystique explodes when results are released â€” traditional and social media herald passers, complete with topnotchers' pictures plastered on front pages and TV/radio interviews; law schools take enormous pride in their bar placers and passing rates; one institution, the University of Cebu, gifts its top 10 with brand-new cars; the most prestigious law firms and best-managed companies offer fantastic opportunities and compensation to top placers",
+      "rhetorical_move": "fanfare-galore + gaudy-practice-banned + results-mystique enumeration",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Personal experience: CJ took the bar exam in 1960 without this opening-day fanfare â€” in fact, on the first day of the exam, he had to wade alone in rain-induced knee-deep flood on R. Papa Street, Sampaloc, Manila, which connected the then Far Eastern University Hospital (where he was confined for intestinal flu) and the University of the East (the situs of the exam); because of his illness, he felt he may have failed the first-day subjects and seriously thought of quitting â€” but Dean Jovito R. Salonga pepped him up and urged him to go on; recalling this incident in a speech on Jan 22, 2008 at FEU, Dr. Salonga opined: 'CJ Panganiban could have landed first place (instead of sixth) had he not been sick and hospitalized during the first week of the 1960 bar exam'",
+      "rhetorical_move": "personal-1960-bar-experience biographical disclosure + Salonga-2008-FEU-speech direct-quote",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ mentions this because he believes placing in the top 10 is not always a reliable measure of achievement â€” in fact, a classmate and CJ compared their answers after each exam day; CJ was so impressed with his friend's answers that he expected him to fare better; the point is that the questions during CJ's time called mostly for essay answers and memory work; CJ thought his classmate's citation of authorities was more impressive than his own â€” but apparently the examiner's evaluation of their answers was quite subjective and probably veered toward CJ's essayed opinions; hence, CJ's grades were higher",
+      "rhetorical_move": "top-10-not-reliable-measure aphorism + classmate-comparison anecdote",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Exam scope and methodology: the subjective methodology and scope of the bar exam have not improved much since CJ took it â€” the basic subjects are the same, except for this year, two subjects (taxation and labor law) were added, and the methodology changed to 20% MCQ + 80% essay; Inquirer publisher Raul C. Pangalangan lamented in his Nov 25, 2011 column that 'the bar exams have been administered on basically the same template... The model remained unchanged at least for the last 50 years...'",
+      "rhetorical_move": "subjective-methodology critique + Pangalangan-50-year-template quote",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "To be fair, during the last decade the SC tried to improve the bar exam: in Bar Matter 1161 (June 8, 2004), the Court favorably acted on reforms proposed by retired Justices Vicente V. Mendoza, Ameurfina M. Herrera and Jose C. Vitug (see CJ's April 22, 2007 column for details); the Court instituted more reforms in another resolution on January 18, 2011 with MCQ at 60% of total exams to measure 'knowledge and recall' plus 40% essay-type questions to test 'skill in writing in English, sorting out the relevant facts in a legal dispute... organizing thoughts, constructing arguments, and persuading readers'; however, the essays were not 'bar subject specific,' igniting fiery howling from candidates; in 2012 the SC reverted to 'bar subject specific' essays at 40% and MCQs at 60%; in the 2013 exam this was changed to 20% MCQ and 80% essay â€” the same format for next month's exam, chaired by Justice Diosdado M. Peralta",
+      "rhetorical_move": "SC-reforms historical-walkthrough (Bar Matter 1161 â†’ Jan 18 2011 â†’ 2012 â†’ 2013 â†’ 2014)",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Postscript: the SC unanimously voided the Comelec's edict reducing TV-radio ads during elections to an 'aggregate total' of only 120 minutes for TV and 180 minutes for radio per national candidate; as CJ argued in his Feb 24, 2013 column, this 'draconian reduction suppressed the people's right to know their candidates, and the aspirants' rights to inform the electorate of their qualifications and programs of government'; the good news is that the Comelec accepted its defeat graciously and will not ask for reconsideration; the better news is that it will, as it should, enforce strictly the legal limits on the candidates' campaign",
+      "rhetorical_move": "asterisk-divider Comelec-postscript with Feb 24 2013 column back-reference",
+      "confidence": "high",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Annual bar exam on four Sundays of October",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "PRC supervises all professions except legal (reserved for SC by Constitution)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Bar/bench metaphor origin from courtroom railing",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "'Not because more addicted to alcoholic drinks' aside on bar etymology",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Fanfare galore: parades, motorcades, marching bands, cheering squads â€” now banned by SC",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "University of Cebu top-10 brand-new-cars gift practice",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJP's 1960 bar exam â€” intestinal flu hospitalization at FEU Hospital",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Wade alone in rain-induced knee-deep flood on R. Papa Street, Sampaloc Manila",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "FEU Hospital â†’ University of the East exam venue route",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Nearly quit after first day; Dean Salonga pep-talk",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Salonga Jan 22, 2008 FEU speech: '1st place instead of 6th had he not been sick'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Classmate comparison anecdote â€” citation-of-authorities vs essayed-opinions evaluation difference",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Top-10 not always reliable measure of achievement aphorism",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Bar exam 2014 methodology: 20% MCQ + 80% essay, two new subjects (taxation + labor law)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Pangalangan Nov 25, 2011 column on 50-year-unchanged template",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Bar Matter 1161 (June 8, 2004) â€” Mendoza+Herrera+Vitug reforms",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "SC April 22, 2007 column-back-reference (CJP)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "January 18, 2011 SC resolution: 60% MCQ + 40% essay (essays not bar-subject-specific)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Fiery howling from candidates against non-bar-subject-specific essays",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "2012 SC reversion to bar-subject-specific 40% essay + 60% MCQ",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "2013 â†’ 20% MCQ + 80% essay format",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Justice Diosdado M. Peralta as 2014 bar chair",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Postscript: SC unanimously voided Comelec aggregate-time-limit edict (120-min TV + 180-min radio)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Feb 24, 2013 CJP column on 'draconian reduction' back-reference",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Comelec accepted defeat graciously, will not ask for reconsideration",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "Constitution-reserves-legal-profession-for-SC principle (vs PRC for all other professions)",
+    "Bar/bench-as-courtroom-railing etymological framework",
+    "Top-10-not-reliable-measure-of-achievement aphorism (subjective-examiner-evaluation critique)",
+    "Essay-vs-citation-of-authorities evaluation-divergence observation",
+    "Bar Matter 1161 (Mendoza/Herrera/Vitug) reform-genealogy framework",
+    "20%-80% / 60%-40% / 40%-60% MCQ-essay methodology iteration",
+    "Bar-subject-specific vs not-bar-subject-specific essay-design debate",
+    "50-year-template Pangalangan-critique baseline",
+    "Comelec aggregate-time-limit edict 'draconian reduction' free-speech test"
+  ],
+  "target_audience": [
+    "Inquirer readership in lead-up to October 2014 bar exam",
+    "Bar examinees and bar candidates' families",
+    "Law students and law school deans",
+    "FEU (CJP alma mater) + University of the East (1960 venue) communities",
+    "University of Cebu (top-10 brand-new-cars gifting school)",
+    "Bar topnotchers and their employers (top law firms, best-managed companies)",
+    "Justice Diosdado M. Peralta and 2014 bar committee",
+    "Retired Justices Mendoza, Herrera, Vitug (Bar Matter 1161 reformers)",
+    "Raul C. Pangalangan and Inquirer Opinion community",
+    "Comelec commissioners (postscript)",
+    "Constitutional law and election law scholars (TV-radio-ads case)"
+  ],
+  "register_markers": [
+    "annual-bar-exam thesis opening with 'exalted title' framing",
+    "bar-mystique etymological-explanation discipline",
+    "'not because more addicted to alcoholic drinks' aside as register marker (lawyer-humor)",
+    "'fanfare galore' aesthetic phrasing",
+    "'gaudy practice' adjective register",
+    "fanfare-banned-by-SC observation",
+    "personal-1960-bar-experience biographical disclosure (signature CJP autobiographical device)",
+    "intestinal-flu detail (humanizing humility)",
+    "Salonga-2008-FEU-speech direct-quote (sixth-instead-of-first counterfactual)",
+    "top-10-not-reliable-measure aphorism",
+    "classmate-comparison anecdote with subjective-examiner-evaluation observation",
+    "Pangalangan-Nov-25-2011 column quote with '50-year-template' framing",
+    "SC-reforms historical-walkthrough discipline (Bar Matter 1161 â†’ 2011 â†’ 2012 â†’ 2013 â†’ 2014)",
+    "'fiery howling' from candidates aesthetic phrasing",
+    "named-justices roster (Mendoza, Herrera, Vitug)",
+    "April 22 2007 self-back-reference",
+    "asterisk-divider postscript structure",
+    "Comelec postscript with 'draconian reduction' direct self-quote",
+    "good-news-better-news close",
+    "section labels (Bar mystique, My personal experience, Exam scope and methodology)"
+  ],
+  "one_paragraph_summary": "Panganiban opens the three-part bar-exam-and-legal-education trilogy with this first installment. Conducted annually on the four Sundays of October, the bar examinations determine who will be blessed to carry the exalted title of 'attorney-at-law' and be allowed to practice law in all courts in our country. Bar mystique: the Professional Regulation Commission (PRC) supervises the entry to all professions in the Philippines, except the legal profession which is reserved by the Constitution for the Supreme Court. The PRC-administered tests are called 'licensure examinations.' However, the crucible of lawyers is referred to as the 'bar' exam, not because they are more addicted to alcoholic drinks, but because only those who pass it may cross the courtroom railing or bar that separates the lawyers' table and the judges' bench, on one hand, from the seats used by the general public, on the other. Hence, lawyers are collectively referred to as the 'bar' and judges, the 'bench.' The bar exam used to be attended by fanfare galore. Undergraduates held parades and motorcades complete with marching bands and cheering squads that accompanied their school candidates' rides to the exam venue. This gaudy practice had been banned by the Supreme Court during the last several years. But the mystique explodes when the results are released. Traditional and social media herald the passers, complete with the pictures of the topnotchers plastered on the front pages of newspapers and interviewed over radio and television. Law schools take enormous pride in their bar placers and average passing rates. One institution, the University of Cebu, gifts its top 10 with brand-new cars. The most prestigious law firms and best-managed companies offer fantastic opportunities and compensation to the top placers. My personal experience: CJ took the bar exam in 1960 without this opening-day fanfare. In fact, on the first day of the exam, he had to wade alone in rain-induced, knee-deep flood on R. Papa Street, Sampaloc, Manila, which connected the then Far Eastern University Hospital (where he was confined for intestinal flu) and the University of the East, the situs of the exam. Because of his illness, he felt he may have failed the first-day subjects and seriously thought of quitting. But his dean, Dr. Jovito R. Salonga, pepped him up and urged him to go on. Recalling this incident in a speech on Jan 22, 2008, at FEU, Dr. Salonga opined that 'CJ Panganiban could have landed first place (instead of sixth) had he not been sick and hospitalized during the first week of the 1960 bar exam.' CJ mentions this because he believes that placing in the top 10 is not always a reliable measure of achievement. In fact, a classmate and CJ compared their answers after each exam day. CJ was so impressed with his friend's answers that he expected him to fare better than CJ. The point is that the questions during CJ's time called mostly for essay answers and memory work. CJ thought his classmate's citation of authorities was more impressive than his own. But apparently, the examiner's evaluation of their answers was quite subjective and probably veered toward CJ's essayed opinions. Hence, his grades were higher. Exam scope and methodology: the subjective methodology and scope of the bar exam have not improved much since CJ took it. The basic subjects are the same, except that for this year, two subjects â€” taxation and labor law â€” were added, and the methodology changed to 20 percent multiple choice questions (MCQ) and 80 percent essay. Inquirer publisher Raul C. Pangalangan lamented in his column on Nov 25, 2011, that 'the bar exams have been administered on basically the same template... The model remained unchanged at least for the last 50 years...' To be fair, however, let it be said that during the last decade, the Supreme Court tried to improve the bar exam. Thus, in a resolution issued on June 8, 2004 (Bar Matter 1161), the Court favorably acted on the reforms proposed by retired Justices Vicente V. Mendoza, Ameurfina M. Herrera and Jose C. Vitug (see CJ's April 22, 2007 column for details). Moreover, the Court instituted more reforms in another resolution on Jan 18, 2011, with MCQ at 60 percent of the total exams to measure the 'knowledge and recall of laws, doctrines and jurisprudence' of the candidates plus 40 percent essay-type questions to test their 'skill in writing in English, sorting out the relevant facts in a legal dispute... organizing [their] thoughts, constructing [their] arguments, and persuading readers to [their] point of view.' However, the essays were not 'bar subject specific,' igniting fiery howling from the candidates. In 2012, the Supreme Court reverted to the 'bar subject specific' essays at 40 percent and MCQs at 60 percent. In the 2013 exam, this was changed to 20 percent MCQ and 80 percent essay â€” the same format for next month's exam, chaired by Justice Diosdado M. Peralta. Postscript: the Supreme Court unanimously voided the Commission on Elections' edict reducing TV-radio ads during elections to an 'aggregate total' of only 120 minutes for TV and 180 minutes for radio per national candidate. As CJ argued in his Feb 24, 2013 column, this 'draconian reduction suppressed the people's right to know their candidates, and the aspirants' rights to inform the electorate of their qualifications and programs of government.' The good news, however, is that the Comelec accepted its defeat graciously and will not ask for reconsideration. And the better news is that it will, as it should, enforce strictly the legal limits on the candidates' campaign."
+}

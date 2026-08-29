@@ -1,0 +1,307 @@
+{
+  "id": "CA017",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 17,
+  "title": "ICC: The temporal vs the strategic",
+  "date": "2023-08-07",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/165376/icc-the-temporal-vs-the-strategic",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Philippine government legal counsel and foreign-affairs officials",
+      "International-law academics and practitioners",
+      "Inquirer Opinion readers following the ICC case against PH",
+      "Justice and human-rights communities concerned with war-on-drugs accountability",
+      "Anti-impunity advocates"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "icc_and_duterte"
+    ],
+    "secondary": []
+  },
+  "keywords": [
+    "International Criminal Court",
+    "ICC Appeals Chamber",
+    "Karim Khan",
+    "Fatou Bensouda",
+    "war on drugs",
+    "complementarity",
+    "ICC jurisdiction",
+    "Philippine withdrawal from ICC",
+    "Pre-Trial Chamber",
+    "Rome Statute Article 17",
+    "Rodrigo Duterte",
+    "preliminary examination vs preliminary investigation",
+    "statutory construction"
+  ],
+  "primary_topics": [
+    "Analysis of the July 18, 2023 ICC Appeals Chamber 3-2 ruling authorizing ICC Chief Prosecutor Karim Khan to resume his investigation of the 'crime against humanity of murder' in the Philippine 'war on drugs' (November 1, 2011 - March 16, 2019)",
+    "Distinction between the TEMPORAL victory (Khan's authorization to resume) and the STRATEGIC victory (the Philippine government's exposure of jurisdiction weakness in the appeal record)",
+    "Chronology of the case: Bensouda's February 8, 2018 preliminary examination ? Duterte's March 17, 2018 ICC withdrawal ? effective March 17, 2019 ? Bensouda's May 24, 2021 request for formal investigation authority ? Pre-Trial Chamber's September 15, 2021 authorization ? Philippine self-investigation pause ? Khan's January 26, 2023 resumption-of-investigation grant ? Philippine appeal ? AC's July 18, 2023 ruling",
+    "Two main issues in the Philippine appeal: COMPLEMENTARITY (Article 17 Rome Statute) and JURISDICTION",
+    "The Appeals Chamber majority's refusal to tackle jurisdiction (raising it should have been done in appeal of September 15, 2021 decision, not January 26, 2023 decision); the minority of two insisted majority erred",
+    "CJP's predicted resolution: the jurisdiction question hinges on statutory construction — 'is the preliminary examination of Bensouda in 2018 an integral part of the preliminary investigation authorized by the ICC?' CJP's short answer: 'No'"
+  ],
+  "sub_topics": [
+    "ICC Appeals Chamber 3-2 vote authorizing Khan to resume investigation",
+    "Khan as 'celebrated Queen's Counsel in the United Kingdom'",
+    "Khan has not publicly resumed investigation nor asked for warrants of arrest after the ruling",
+    "February 8, 2018: Bensouda announces preliminary examination of the 'Philippine situation'",
+    "March 17, 2018: Duterte announces withdrawal from ICC",
+    "March 17, 2019: Withdrawal takes effect (under Rome Statute, withdrawal is one year after notice)",
+    "May 24, 2021: Bensouda files request in Pre-Trial Chamber for authority to commence formal preliminary investigation",
+    "September 15, 2021: PTC grants Bensouda's request, authorizes Khan's office",
+    "Khan agrees to suspend investigation at Philippine government's request to allow domestic inquiry",
+    "January 26, 2023: PTC grants Khan permission to continue work after deeming Philippine investigation insufficient",
+    "Article 17 Rome Statute — complementarity: ICC declines if state already investigating/prosecuting, UNLESS state 'unwilling or unable genuinely to carry out the investigation'",
+    "AC sided with Khan on complementarity — government had not shown genuine willingness/ability",
+    "AC majority of 3 skirted jurisdiction issue — held appeal procedurally limited to the January 26, 2023 decision",
+    "Minority of 2 — majority erred in refusing to take up jurisdiction; the issue would inevitably resurface when arrest warrants are issued",
+    "Minority's substantive position: ICC did not acquire jurisdiction because Bensouda petitioned PTC for authority only on May 24, 2021, and PTC granted only on September 15, 2021 — both more than two years AFTER the Philippine ICC withdrawal took effect on March 17, 2019",
+    "Khan's strategic calculus — may abandon case to pursue 'situations like Russia's unprovoked war on Ukraine'",
+    "Philippine government's strategic gain — 2 of 5 ICC judges minded to dismiss; none of the 3 majority took an opposing stance on jurisdiction"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "ICC: The temporal vs the strategic",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "TO ANSWER THE QUESTION, LET US FIRST RECALL SOME RELEVANT FACTS AND DATES",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Please note the dates carefully",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "TWO MAIN ISSUES WERE TACKLED IN THE PHILIPPINE APPEAL",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "complementarity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "jurisdiction",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "celebrated Queen's Counsel",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "TEMPORARY, I BELIEVE, WAS THE VICTORY SECURED BY THE CHIEF PROSECUTOR",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "strategic knowledge",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Philippine government may have won strategic knowledge",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the jurisdiction issue hinges on statutory construction",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "My short answer is 'No'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Otherwise stated",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (columnist)",
+      "Karim Khan (ICC Chief Prosecutor; celebrated Queen's Counsel in the UK)",
+      "Fatou Bensouda (former ICC Chief Prosecutor)",
+      "President Rodrigo Duterte"
+    ],
+    "institutions": [
+      "International Criminal Court (ICC)",
+      "ICC Appeals Chamber",
+      "ICC Pre-Trial Chamber",
+      "ICC Office of the Prosecutor",
+      "Philippine government",
+      "United Kingdom (Khan's national qualification)"
+    ],
+    "cases": [
+      "ICC investigation of Philippine 'war on drugs' (November 1, 2011 - March 16, 2019) — alleged crime against humanity of murder",
+      "Russia's war on Ukraine (referenced as alternative ICC priority)"
+    ],
+    "laws_treaties": [
+      "Rome Statute (created the ICC)",
+      "Rome Statute Article 17 (complementarity)"
+    ],
+    "events": [
+      "Bensouda's preliminary examination announcement — February 8, 2018",
+      "Duterte's ICC withdrawal announcement — March 17, 2018",
+      "Philippine ICC withdrawal effective — March 17, 2019",
+      "Bensouda's PTC request for formal investigation authority — May 24, 2021",
+      "PTC grant of Bensouda request — September 15, 2021",
+      "Khan's resumption-of-investigation grant by PTC — January 26, 2023",
+      "Philippine appeal to AC of January 26, 2023 decision",
+      "AC ruling 3-2 authorizing Khan to resume — July 18, 2023"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The chief prosecutor's victory at the ICC Appeals Chamber on July 18, 2023 (3-2 authorizing resumption of the war-on-drugs investigation) is TEMPORARY only. The ICC may yet dismiss the complaints or warrants-of-arrest petitions Khan may file for lack of jurisdiction, given that two ICC judges already publicly questioned jurisdiction and none of the three majority judges took an opposing stance on it.",
+      "rhetorical_move": "temporal-vs-strategic distinction as the column's organizing frame",
+      "confidence": "asserted as predicted outcome",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Conversely, the Philippine government — though suffering a TEMPORARY defeat — may have won STRATEGIC knowledge: it now knows that at least two ICC judges are minded to dismiss the suit on jurisdictional grounds, and that none of the three majority judges took an opposing position on jurisdiction. The procedural defeat thus generated a substantive intelligence asset.",
+      "rhetorical_move": "loss-as-strategic-gain reframing",
+      "confidence": "asserted as analytical inference",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The AC majority of three erred in skirting the jurisdiction issue by saying it was not part of the appealed January 26, 2023 decision. The minority of two correctly noted that 'should the PTC issue warrants against the alleged perpetrators, the said perpetrators can raise the issue and the ICC shall be forced to take it up.' Allowing the prosecutor to proceed without ruling on jurisdiction merely wastes time and resources.",
+      "rhetorical_move": "siding-with-the-minority on procedural prudence",
+      "confidence": "implicit endorsement of the dissent",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The minority's substantive position is correct: the ICC did not acquire jurisdiction because Bensouda petitioned the PTC for authority to conduct a preliminary investigation only on May 24, 2021, and the PTC granted it only on September 15, 2021 — BOTH dates being more than two years AFTER the Philippine ICC withdrawal took effect on March 17, 2019.",
+      "rhetorical_move": "minority-position substantive adoption",
+      "confidence": "asserted as the correct legal reading",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The jurisdiction issue ultimately hinges on statutory construction: 'Is the preliminary examination of Bensouda in 2018 an integral part of the preliminary investigation authorized by the ICC?' Otherwise stated: 'Is the Office of the Prosecutor an integral part of the ICC?' My short answer is 'No.'",
+      "rhetorical_move": "doctrinal question-frame with one-word answer",
+      "confidence": "asserted as personal opinion",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Khan may strategically abandon the Philippine case, knowing his effort could be wasted and could be better used on new situations 'like Russia's unprovoked war on Ukraine.' The slowdown in publicly visible actions after July 18 supports this reading.",
+      "rhetorical_move": "behavioral-inference from Khan's lack of post-ruling action",
+      "confidence": "speculative but evidentially anchored",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Karim Khan is 'a celebrated Queen's Counsel in the United Kingdom' — yet he has not publicly resumed investigation nor sought arrest warrants after the July 18 ruling. CJP infers: 'Has he changed his mind due to the rather convincing opinion of the two dissenters?'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Critical date arithmetic: Philippine ICC withdrawal effective March 17, 2019; Bensouda's request to PTC May 24, 2021; PTC grant September 15, 2021 — BOTH more than two years AFTER withdrawal took effect. This timing gap is the jurisdictional vulnerability.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "AC majority's procedural skirt: jurisdiction was not part of the January 26, 2023 decision being appealed; should have been appealed from the September 15, 2021 decision (which the Philippines failed to do). Thus, 'by filing an appeal of the Jan. 26, 2023 decision, and not the one of Sept. 15, 2021, the Philippines has waived its right to challenge the ICC's jurisdiction.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Strategic insight: even in defeat, the Philippines learned that 2 of 5 ICC judges already publicly support dismissal on jurisdiction; none of the majority took an opposing stance.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses temporal-vs-strategic distinction to reframe procedural defeat as substantive intelligence gain",
+    "applies date-arithmetic as the operative jurisdictional test (any post-withdrawal authorization is suspect)",
+    "treats statutory-construction question (is preliminary examination part of preliminary investigation?) as the substantive jurisdictional fulcrum",
+    "uses majority-vs-minority case-analytical structure to surface dissent reasoning as the more durable position",
+    "applies behavioral-inference (prosecutor inaction post-ruling) as soft evidence of strategic recalculation"
+  ],
+  "target_audience": [
+    "Philippine government legal counsel and foreign-affairs officials",
+    "International-law academics and practitioners",
+    "Inquirer Opinion readers following the ICC case against PH",
+    "Justice and human-rights communities concerned with war-on-drugs accountability",
+    "Anti-impunity advocates"
+  ],
+  "register_markers": [
+    "case-analytical column register",
+    "ALL-CAPS subheadings (TO ANSWER THE QUESTION..., TWO MAIN ISSUES...) as compositional spine",
+    "temporal-vs-strategic distinction as organizing frame",
+    "date-arithmetic emphasis ('Please note the dates carefully')",
+    "majority-vs-minority case-analytical structure",
+    "behavioral-inference register (Khan's silence after ruling)",
+    "endorsement-of-dissent posture without explicit attack on majority",
+    "statutory-construction question-frame closer",
+    "one-word-answer closer ('My short answer is No')",
+    "Latin/court-rhetorical phrases ('Otherwise stated')"
+  ],
+  "one_paragraph_summary": "Published August 7, 2023, this column analyzes the July 18, 2023 ICC Appeals Chamber 3-2 ruling authorizing Chief Prosecutor Karim Khan ('a celebrated Queen's Counsel in the United Kingdom') to resume his investigation of the alleged 'crime against humanity of murder' in the Philippine 'war on drugs' (November 1, 2011 - March 16, 2019). CJP organizes around the temporal-vs-strategic distinction: Khan's victory is TEMPORAL only, while the Philippine government — though defeated procedurally — won STRATEGIC knowledge. He walks through the chronology with deliberate emphasis ('Please note the dates carefully'): Bensouda's February 8, 2018 preliminary examination announcement; Duterte's March 17, 2018 ICC withdrawal; the March 17, 2019 effective withdrawal; Bensouda's May 24, 2021 PTC request for formal preliminary investigation authority; the PTC's September 15, 2021 grant; Khan's suspension at Philippine request for domestic inquiry; the PTC's January 26, 2023 resumption grant after deeming the PH investigation insufficient; and the AC's July 18, 2023 ruling. The two main appeal issues were COMPLEMENTARITY (under Rome Statute Article 17) and JURISDICTION. On complementarity, the AC sided with Khan: the government had not shown genuine willingness and ability to investigate. On jurisdiction, the AC majority of three skirted the issue procedurally, holding that the Philippines should have appealed the September 15, 2021 decision (which it failed to do) rather than the January 26, 2023 decision — thus the Philippines had waived its right to challenge jurisdiction. The minority of two insisted the majority erred: should arrest warrants be issued, the issue will inevitably resurface, so proceeding without ruling on jurisdiction wastes time and resources. The minority's substantive position: the ICC did not acquire jurisdiction because both Bensouda's May 24, 2021 request and the PTC's September 15, 2021 grant fell MORE THAN TWO YEARS AFTER the Philippine withdrawal took effect on March 17, 2019. CJP predicts Khan may abandon the case to pursue 'situations like Russia's unprovoked war on Ukraine.' The Philippine government, even in defeat, gained strategic knowledge: two of five judges publicly support dismissal on jurisdiction; none of the three majority judges took an opposing position. The column closes with CJP's own doctrinal answer to the question on which the case turns: 'Is the preliminary examination of Bensouda in 2018 an integral part of the preliminary investigation authorized by the ICC?' His short answer: 'No.'"
+}

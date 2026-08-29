@@ -1,0 +1,59 @@
+id: docs-retrieval
+name: Multi-Axis Docs Retrieval
+version: 1.0.0
+description: >
+  Multi-axis orthogonal frontmatter + generated per-axis views for large
+  markdown corpora (plans, ADRs, test specs, lessons, guides). Replaces
+  linear MANIFEST scanning with a 4-tier banded retrieval protocol that
+  keeps future-Claude session reads under a 15K-token budget per query.
+  Ships AVR-driven vocabulary governance, a frontmatter validator, and a
+  hash-header hand-edit detector for generated views.
+
+relevance:
+  file_signals:
+    - pattern: "docs/implementation-plans/**/*.md"
+      weight: 2
+    - pattern: "docs/decisions/ADR-*.md"
+      weight: 2
+    - pattern: "docs/test-specs/TS-*.md"
+      weight: 1
+    - pattern: "docs/lessons/LL-*.md"
+      weight: 1
+    - pattern: "docs/**/00-index.md"
+      weight: 2
+  code_signals:
+    - pattern: "MANIFEST.md|hand-authored index"
+      weight: 1
+  corpus_signals:
+    - metric: markdown_file_count
+      operator: ">="
+      threshold: 100
+      weight: 4
+    - metric: markdown_file_count
+      operator: ">="
+      threshold: 300
+      weight: 2
+  threshold: 6
+  max_score: 15
+
+bootstrap:
+  phase_name: "Docs Retrieval"
+  phase_order: 11
+
+prompt: prompt.md
+
+templates:
+  - frontmatter-schema.md
+  - axis-registry.yaml.tmpl
+  - retrieval-protocol-claude-md.md
+  - avr-template.md
+  - axis-view-index.md.tmpl
+
+scripts:
+  - generate_axis_registry.py
+  - generate_axis_views.py
+  - validate_frontmatter.py
+  - propose_axis_seeds.py
+  - generate-axis-registry.sh
+  - generate-axis-views.sh
+  - detect_hand_edits.sh

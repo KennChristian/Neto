@@ -1,0 +1,188 @@
+{
+  "id": "CE004",
+  "type": "column",
+  "theme": "E",
+  "theme_label": "Signature Current Events Commentary",
+  "number": 4,
+  "title": "RA 6713, the 'Bible' of public officials",
+  "date": "2025-10-27",
+  "year": 2025,
+  "source_url": "https://opinion.inquirer.net/187016/ra-6713-the-bible-of-public-officials",
+  "routing": {
+    "primary_intent": [
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "mentors_and_legal_lineage"
+    ],
+    "secondary": [
+      "lawyer_ethics_initiative"
+    ]
+  },
+  "keywords": [
+    "anti-graft",
+    "public accountability",
+    "governance",
+    "ethics",
+    "Ombudsman"
+  ],
+  "primary_topics": [
+    "RA 6713 (Ethical Standards Law) as 'Bible' of public officials",
+    "anti-corruption legal arsenal alongside the Constitution, RA 3019, and RA 1379",
+    "norms, prohibited acts, SALN obligations, and graduated penalties"
+  ],
+  "sub_topics": [
+    "RA 6713 (Code of Conduct and Ethical Standards for Public Officials and Employees), approved Feb. 20, 1989",
+    "co-sponsors Jovito R. Salonga and Rene A. V. Saguisag",
+    "scope: elective and appointive, permanent or temporary, career or non-career, military and police, compensated or not",
+    "norms and duties: public interest over personal",
+    "justness and sincerity",
+    "no undue favors to relatives (except strictly confidential / co-terminus staff)",
+    "no party discrimination",
+    "prompt courteous adequate service",
+    "transparency",
+    "modest lives",
+    "duty to respond to public communications within 15 working days",
+    "process documents with no more than three official signatures where practicable",
+    "make documents accessible during reasonable working hours",
+    "prohibited acts: direct/indirect financial interest in office transactions, owning/managing regulated enterprises, private practice without authority, recommending to private enterprises with pending business",
+    "one-year cooling-off period after separation",
+    "SALN and disclosure filings (within 30 days of assumption, every April 30, within 30 days of separation)",
+    "general violations: fine â‰¤ six months' salary, suspension â‰¤ 1 year, or removal",
+    "criminal conviction for prohibited acts / SALN failure: imprisonment â‰¤ 5 years, fine â‰¤ P5,000, and/or disqualification",
+    "OMB administrative proceedings as sufficient cause for removal even without criminal prosecution",
+    "private conspirators tried jointly with public officials and subject to the same penalties"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "SPONSORED BY MY GURU",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "PUBLIC OFFICIALS ARE BARRED",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "IN GENERAL, VIOLATIONS OF RA 6713",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "stupefying billion-peso pork barrel, trillion-peso legislative insertions and other mind-bending scams",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Very importantly",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "live modest lives appropriate to their positions and income",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "To stress",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Bible of public officials",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "render public duties and use public funds",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "professional private practitioners (recurring CJ device)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [],
+    "institutions": [],
+    "cases": [],
+    "laws_treaties": [],
+    "events": []
+  },
+  "stances": [],
+  "notable_anecdotes": [
+    {
+      "summary": "CJ's authorial framing: RA 6713 was 'sponsored by my guru, the late Senate President Jovito R. Salonga, the late Senator Rene A. V. Saguisag and others' â€” and approved Feb. 20, 1989",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Topical anchor: 'stupefying billion-peso pork barrel, trillion-peso legislative insertions and other mind-bending scams' â€” the current scandal cycle that the law could have prevented through strict enforcement",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'modest lives' clause cited as 'very importantly' â€” a norm directly implicating the contemporary lifestyle-check controversies CJ has tracked across multiple columns",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "OMB and Civil Service Commission named as the primary enforcement agents",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Joint-liability doctrine: private individuals who conspire with public officials are tried jointly and subject to the same penalties â€” a doctrinal pointer toward the flood-control-scam contractor liability frame",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [],
+  "target_audience": [],
+  "register_markers": [],
+  "one_paragraph_summary": ""
+}

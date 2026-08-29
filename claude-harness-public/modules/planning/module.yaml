@@ -1,0 +1,37 @@
+id: planning
+name: Planning Mode Enhancement
+version: 1.0.0
+description: >
+  Layers project-aware context on top of Claude Code's built-in Plan mode.
+  Automatically injects planning constraints, output structure, and prior-work
+  discovery when EnterPlanMode is invoked. Produces plans, ADRs, test specs,
+  lessons, and guides — all as markdown, designed for later execution via the
+  orchestration prompt.
+
+relevance:
+  file_signals:
+    - pattern: "**/00-index.md"
+      weight: 3
+    - pattern: "docs/plans/**"
+      weight: 3
+    - pattern: "docs/decisions/**"
+      weight: 2
+    - pattern: "docs/lessons/**"
+      weight: 1
+  code_signals:
+    - pattern: "orchestration-prompt|planning.protocol"
+      weight: 2
+  threshold: 3
+  max_score: 9
+
+bootstrap:
+  phase_name: "Planning Mode"
+  phase_order: 9
+
+prompt: prompt.md
+
+templates:
+  - planning-protocol-claude-md.md
+
+hooks:
+  - settings-fragment.json

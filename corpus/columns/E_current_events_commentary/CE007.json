@@ -1,0 +1,515 @@
+{
+  "id": "CE007",
+  "type": "column",
+  "theme": "E",
+  "theme_label": "Signature Current Events Commentary",
+  "number": 7,
+  "title": "Liberalism vs conservatism",
+  "date": "2024-09-30",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/177172/liberalism-vs-conservatism",
+  "routing": {
+    "primary_intent": [
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Catholic clergy and lay leaders",
+      "Constitutional-law and family-law practitioners",
+      "Members of the Philippine bench and bar",
+      "Inquirer general readership",
+      "Filipino observers of US politics",
+      "Scholars of comparative religious and constitutional liberalization"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine",
+      "faith_journey"
+    ],
+    "secondary": [
+      "global_geopolitics",
+      "rule_of_law",
+      "supreme_court_history"
+    ]
+  },
+  "keywords": [
+    "PH SC liberalism",
+    "SCOTUS conservatism",
+    "Republic v Ng",
+    "Pulido v People",
+    "Vatican II",
+    "PCP2",
+    "Pope Francis Singapore",
+    "Roe v Wade",
+    "Dobbs v Jackson",
+    "Trump dictator fear"
+  ],
+  "primary_topics": [
+    "Inversion of stereotypes: PH SC and Catholic Church moving toward liberalism while SCOTUS turns conservative",
+    "Republic v Ng (Feb 27, 2024) â€” recognition of foreign divorces obtained by Filipinos married to foreigners",
+    "Pulido v People (July 27, 2021) â€” bigamy acquittal even without judicial declaration of nullity of first marriage",
+    "PH SC's insider-majority composition surprising CJ with its liberal turn",
+    "Vatican II â†’ PCP2 â†’ Pope John Paul II â†’ Pope Francis's Singapore 'all religions are paths to reach God' remarks",
+    "SCOTUS conservatism via Trump's three appointees; Dobbs v Jackson reversing Roe v Wade",
+    "Liberal-conservative divide shaping global wars and tensions",
+    "CJ's hope that liberalism not become licentiousness, conservatism not become Nazism-style authoritarianism; explicit fear of Trump-as-dictator"
+  ],
+  "sub_topics": [
+    "Republic v Ng â€” J Japar B. Dimaampao, en banc, 13-2; recognition of administrative and mutual-agreement divorces (Japan, Korea practice)",
+    "Statutory interpretation: spirit-and-intent over literalism; Article 26(2) Family Code",
+    "Pulido v People â€” J Hernando, en banc, 15-0; void ab initio first marriage need not be judicially declared; judicial declaration still needed for remarriage and civil rights",
+    "13 insiders vs 2 outsiders (UP, DOJ) on the Court",
+    "Vatican II reforms (1962-1965) â€” vernacular masses, priest facing the faithful",
+    "PCP2 implementation in the Philippines",
+    "Pope John Paul II's gradual reforms",
+    "Pope Francis as first non-European pontiff; 12-day journey through Indonesia, Papua New Guinea, Timor-Leste, Singapore",
+    "Sept 13 Singapore remarks: 'All religions are paths to reach God'",
+    "Traditionalists' opposition to Vatican II, St. John Paul II, and now Francis",
+    "SCOTUS Trump appointees: Neil Gorsuch, Brett Kavanaugh, Amy Coney Barrett â€” 5-4 balance to 6-3 conservative",
+    "Roe v Wade (Jan 22, 1973) reversed by Dobbs v Jackson (June 24, 2022) 6-3",
+    "Abortion plus immigration, democracy, jobs, economy as the US presidential-election issues",
+    "Global stakes: Ukraine, Gaza, Lebanon wars; North/South China Sea; Israel-Iran",
+    "CJ's twin caveats: licentiousness vs Hitler's Nazism; Trump-as-dictator fear"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Our Supreme Court and the Catholic Churchâ€”the bulwarks of conservatism and traditionâ€”are moving progressively on a crucial but rocky road to liberalism",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Supreme Court of the United States (Scotus), the traditional bastion of liberalism, has turned conservative",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "US citizens will face a crossroad",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "AN EXAMPLE OF THE COURT'S TREK TO LIBERALISM",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Philippine courts can recognize divorces obtained abroad by a Filipino married to a foreigner",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a statute cannot always be interpreted literally; rather it 'must be read according to its spirit or intent'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Courts ought not to â€¦ accept an interpretation that would defeat the intent of the law and its legislators",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the legislative spirit animating Article 26(2) of the Family Code",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "it would be unjust for a Filipino spouse to be prohibited by [his/her] national laws from something that a foreign law may allow",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "our laws should not be intended to put Filipinos at a disadvantage",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Another example: Pulido v. People",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an accused may be acquitted of bigamy 'even without obtaining a judicial declaration of absolute nullity'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Frankly, I am surprised at the liberal path of the Court",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "13 members are 'insiders' who, having risen from the judicial ranks, are expected to be conservative",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Only two members are 'outsiders'â€”from the University of the Philippines College of Law and the Department of Justice, who, to no surprise, are liberals",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "THE CATHOLIC CHURCH HAS ALSO BEEN LIBERALIZING",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "When I was a student, priests faced the altar during masses, mumbling unintelligible (to the faithful) Latin that frankly turned me off",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Vatican II (1962-1965) has made the Church more humane and ecumenical",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Masses are now celebrated by priests facing the faithful and in languages understood by them",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Pope (now Saint) John Paul II slowlyâ€”but with grit and determination",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Pope Francis, the first non-European pontiff",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "All religions are paths to reach God",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "They are like different languages in order to arrive at God, but God is God for all",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "These extemporaneous remarks will surely rock the rafters of the Catholic Church",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "IN CONTRAST, THE LIBERALISM OF THE SCOTUS has forked to conservatism",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Neil Gorsuch, Brett Kavanaugh, and Amy Coney Barrett",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "upsetting the usual 5-4 Scotus balance to 6-3 in favor of the conservatives",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Roe v. Wade",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Dobbs v. Jackson",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an acrimonious combat between liberals and conservatives",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the liberal-conservative divide will shake the whole world",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "My fervent hope is that liberalism would not transform into licentiousness for that would subvert the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "conservatism would not convert to authoritarianism like Hitler's Nazism for that would violate individual liberty",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I am terrified by the rants of Trump that, if elected, he would become a dictator",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Heaven forbid!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Japar B. Dimaampao (Justice; Republic v Ng ponente)",
+      "Ramon Paul I. Hernando (Justice; Pulido v People ponente)",
+      "Pope John Paul II",
+      "Pope Francis",
+      "Donald J. Trump",
+      "Neil Gorsuch (SCOTUS Justice)",
+      "Brett Kavanaugh (SCOTUS Justice)",
+      "Amy Coney Barrett (SCOTUS Justice)",
+      "Kamala D. Harris (Democratic nominee)",
+      "Adolf Hitler (referenced)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines (en banc)",
+      "Supreme Court of the United States (Scotus)",
+      "Catholic Church",
+      "Vatican II",
+      "Second Plenary Council of the Philippines (PCP2)",
+      "University of the Philippines College of Law",
+      "Department of Justice (Philippines)"
+    ],
+    "cases": [
+      "Republic v Ng (Feb 27, 2024) â€” J Dimaampao, en banc, 13-2",
+      "Pulido v People (July 27, 2021) â€” J Hernando, en banc, 15-0",
+      "Roe v Wade (Jan 22, 1973)",
+      "Dobbs v Jackson (June 24, 2022) â€” 6-3"
+    ],
+    "laws_treaties": [
+      "Family Code of the Philippines, Article 26(2)",
+      "1987 Philippine Constitution",
+      "US Constitution"
+    ],
+    "events": [
+      "Vatican II (1962-1965)",
+      "Pope Francis's 12-day journey to Indonesia, Papua New Guinea, Timor-Leste, and Singapore",
+      "Sept 13, 2024 â€” Pope Francis's Singapore extemporaneous remarks",
+      "Nov 5, 2024 â€” US presidential election",
+      "Wars in Ukraine, Gaza, Lebanon; tensions in North/South China Sea and Israel-Iran"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The Philippine Supreme Court and the Catholic Church â€” traditional bulwarks of conservatism â€” are moving progressively along a rocky road to liberalism, while SCOTUS, the traditional bastion of liberalism, has turned conservative.",
+      "rhetorical_move": "title-as-thesis inversion",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Republic v Ng (Feb 27, 2024, J Dimaampao, en banc, 13-2) recognized that Philippine courts can give effect to divorces obtained abroad by Filipinos married to foreigners through legal, administrative, or mutual-agreement processes â€” not requiring a foreign court judgment â€” by reading the statute according to its spirit and intent, which is to spare Filipino spouses from disadvantage when the foreign spouse is already free to remarry.",
+      "rhetorical_move": "case-summary as liberal-exemplar",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Pulido v People (July 27, 2021, J Hernando, en banc, 15-0) further illustrates the liberal trek by holding that an accused may be acquitted of bigamy even without a judicial declaration of absolute nullity of a void-ab-initio first marriage â€” though judicial declaration is still needed for remarriage and for civil-rights determinations like heirship, legitimacy of children, and property regimes.",
+      "rhetorical_move": "case-summary as liberal-exemplar",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ is surprised by the SC's liberal path because 13 of its 15 members are 'insiders' who rose from the judicial ranks and would be expected to be conservative; only two outsiders (UP and DOJ) are predictably liberal.",
+      "rhetorical_move": "compositional-paradox observation",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Catholic Church has been liberalizing through Vatican II (1962-1965) â€” vernacular masses, priests facing the faithful â€” implemented in the Philippines via PCP2; Pope John Paul II carried it forward slowly but determinedly; Pope Francis as the first non-European pontiff is even more determined, and his Sept 13 Singapore extemporaneous remarks ('All religions are paths to reach Godâ€¦ God is God for all') 'will surely rock the rafters' and intensify traditionalist opposition.",
+      "rhetorical_move": "ecclesial-history arc with current-papal datum",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "SCOTUS, by contrast, was tipped from 5-4 to 6-3 conservative by Trump's three appointees (Gorsuch, Kavanaugh, Barrett); Dobbs v Jackson (June 24, 2022) reversed Roe v Wade (Jan 22, 1973) and held no constitutional right to abortion exists in the US Constitution's text.",
+      "rhetorical_move": "tipping-point doctrinal narration",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Together with immigration, democracy, jobs, and the economy, the conservative SCOTUS shift on abortion has turned the Nov 5 Harris-Trump contest into 'acrimonious combat between liberals and conservatives' whose ramifications will shake the wars in Ukraine, Gaza, and Lebanon, the tensions in the North and South China Sea, and the Israel-Iran standoff.",
+      "rhetorical_move": "global-stakes amplification",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ's fervent hope is that liberalism not become licentiousness subverting the rule of law, and that conservatism not become Hitler-style Nazism violating individual liberty â€” but he is 'terrified' by Trump's rants that, if elected, 'he would become a dictator.' 'Heaven forbid!'",
+      "rhetorical_move": "twin-warning close with explicit fear-disclosure",
+      "confidence": "asserted with personal-fear marker",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The title-as-thesis inversion â€” 'Our Supreme Court and the Catholic Churchâ€¦ are moving progressively on a crucial but rocky road to liberalism. In contrast, the Supreme Court of the United Statesâ€¦ has turned conservative.' â€” a paragraph that distills the entire column's structural argument.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ's autobiographical 'When I was a student, priests faced the altar during masses, mumbling unintelligible (to the faithful) Latin that frankly turned me off' â€” a rare personal admission of pre-Vatican-II alienation as the experiential warrant for the liberalization narrative.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Pope Francis's Singapore quote rendered verbatim â€” 'All religions are paths to reach Godâ€¦ They are like different languages in order to arrive at God, but God is God for allâ€¦ Since God is God for all, then we are all children of God' â€” with explicit prediction that the remarks 'will surely rock the rafters.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 13-insider vs 2-outsider SC compositional observation â€” CJ's surprise that judicial-rank insiders nonetheless trended liberal, contradicting the easy career-tenure-equals-conservatism heuristic.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Trump-as-dictator fear-disclosure â€” 'I am terrified by the rants of Trump that, if elected, he would become a dictator. Heaven forbid!' â€” one of the most personally direct political-warning closes in this set.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Nazism-as-warning frame â€” invoking Hitler explicitly as the conservatism-gone-wrong endpoint, paired with licentiousness as the liberalism-gone-wrong endpoint, modeling CJ's twin-warning approach.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Sept 13 dating of Francis's Singapore remarks at the end of a 12-day journey through Indonesia, Papua New Guinea, Timor-Leste â€” concrete itinerary as context, not just headline.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies the title-as-thesis inversion device (PH/Church liberal vs SCOTUS conservative)",
+    "uses the spirit-and-intent-over-literalism canon of statutory construction (Republic v Ng)",
+    "applies the void-ab-initio doctrine distinction (Pulido â€” criminal acquittal vs civil-rights consequences)",
+    "uses the compositional-paradox heuristic (insiders unexpectedly liberal)",
+    "applies the ecclesial-history-arc framing (Vatican II â†’ PCP2 â†’ JPII â†’ Francis)",
+    "uses the tipping-point doctrinal narration (Trump's three appointees shifting SCOTUS 5-4 to 6-3)",
+    "applies the global-stakes amplification device (US election ramifications for Ukraine, Gaza, Lebanon, China Sea, Israel-Iran)",
+    "uses the twin-warning close (liberalismâ†’licentiousness; conservatismâ†’Nazism) as the operative civic-virtue boundary",
+    "applies the personal-fear-disclosure as an authentic political-warning register"
+  ],
+  "target_audience": [
+    "Catholic clergy and lay leaders",
+    "Constitutional-law and family-law practitioners",
+    "Members of the Philippine bench and bar",
+    "Inquirer general readership",
+    "Filipino observers of US politics",
+    "Scholars of comparative religious and constitutional liberalization"
+  ],
+  "register_markers": [
+    "title-as-thesis inversion register",
+    "ALL-CAPS section openers ('AN EXAMPLE OF THE COURT'S TREK TO LIBERALISM,' 'THE CATHOLIC CHURCH HAS ALSO BEEN LIBERALIZING,' 'IN CONTRAST, THE LIBERALISM OF THE SCOTUS')",
+    "autobiographical-warrant insertion (Latin-mass alienation)",
+    "papal-quotation verbatim block",
+    "compositional-paradox observation",
+    "twin-warning close (licentiousness vs Nazism)",
+    "fear-disclosure register ('I am terrified')",
+    "exclamation close ('Heaven forbid!')",
+    "comparative-civics framing (PH vs US trajectories)",
+    "global-stakes amplification (Ukraine, Gaza, Lebanon, China Sea, Israel-Iran)",
+    "ecclesial-history arc (Vatican II â†’ PCP2 â†’ JPII â†’ Francis)"
+  ],
+  "one_paragraph_summary": "Inverting the usual stereotype, Panganiban argues that the Philippine Supreme Court and the Catholic Church â€” traditional bulwarks of conservatism â€” are moving progressively on a 'rocky road to liberalism,' while the US Supreme Court (Scotus), traditional bastion of liberalism, has turned conservative. The PH SC's liberal trek is illustrated by Republic v Ng (Feb 27, 2024, J Dimaampao, en banc, 13-2), which recognized foreign divorces â€” even by administrative process or mutual agreement (as practiced in Japan and Korea) â€” by reading Article 26(2) of the Family Code according to its spirit and intent (sparing Filipino spouses from disadvantage when foreign spouses are already free to remarry), and by Pulido v People (July 27, 2021, J Hernando, en banc, 15-0), which acquitted an accused of bigamy even without a judicial declaration of nullity of a void-ab-initio first marriage (though judicial declaration is still needed for remarriage and civil-rights questions like heirship). CJ is surprised that 13 insider-justices trended liberal, with only two outsiders (UP, DOJ) predictably liberal. The Catholic Church has likewise been liberalizing â€” Vatican II (1962-1965) made it more humane and ecumenical (vernacular masses, priests facing the faithful), PCP2 implemented this in the Philippines, Pope John Paul II carried it forward, and Pope Francis as the first non-European pontiff is even more determined; his Sept 13 Singapore extemporaneous remarks ('All religions are paths to reach Godâ€¦ God is God for all, then we are all children of God') will 'rock the rafters' and intensify traditionalist opposition. By contrast, Scotus tipped from 5-4 to 6-3 conservative with Trump's three appointees (Gorsuch, Kavanaugh, Barrett), and Dobbs v Jackson (June 24, 2022) reversed Roe v Wade (Jan 22, 1973). Combined with immigration, democracy, jobs, and the economy, abortion has turned the Nov 5 Harris-Trump contest into 'acrimonious combat between liberals and conservatives' whose ramifications will shake the wars in Ukraine, Gaza, and Lebanon, the tensions in the North and South China Sea, and the Israel-Iran standoff. CJ's fervent hope is that liberalism not become 'licentiousness' subverting the rule of law, and that conservatism not become Hitler-style Nazism violating individual liberty â€” but he is 'terrified by the rants of Trump that, if elected, he would become a dictator. Heaven forbid!'"
+}

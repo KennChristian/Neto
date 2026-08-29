@@ -1,0 +1,295 @@
+{
+  "id": "SB085",
+  "type": "speech",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 85,
+  "title": "How the Judiciary Can Help the Economy",
+  "date": "2012-11-29",
+  "year": 2012,
+  "source_url": "https://cjpanganiban.com/how-the-judiciary-can-help-the-economy-2/",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "ACCRA Law Office partners and senior associates (40th anniversary audience)",
+      "Management Association of the Philippines members (business leaders)",
+      "BPI executives and bank-affiliated lawyers",
+      "Legal academics and law students interested in economic-constitutional interpretation",
+      "Mining-industry, telecoms, and public-utility executives concerned with 60-40 rule and FTAA enforcement"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "diplomatic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine",
+      "economic_governance_and_business_law"
+    ],
+    "secondary": [
+      "supreme_court_history",
+      "rule_of_law",
+      "twin_beacons_doctrine"
+    ]
+  },
+  "keywords": [
+    "ACCRA Law",
+    "MAP BusinessLaw Forum",
+    "deferential interpretation",
+    "strict scrutiny",
+    "Tanada vs Angara",
+    "WTO ratification",
+    "La Bugal-B'laan vs Ramos",
+    "Mining Law",
+    "Gamboa vs Teves",
+    "60-40 rule",
+    "public utilities",
+    "judicial restraint"
+  ],
+  "primary_topics": [
+    "Address at the 2012 ACCRA LAW-MAP BusinessLaw Forum commemorating ACCRA's 40th anniversary",
+    "Symbiotic calibration of law and business — judiciary's proper role in matters affecting the economy",
+    "Two-track interpretive doctrine: strict scrutiny in liberty/civil-rights cases, deferential interpretation in economic/policy cases",
+    "Three landmark economic decisions Panganiban personally wrote or shaped: Tanada vs Angara (1997, WTO), La Bugal-B'laan vs Ramos (2004, Mining Law), Gamboa vs Teves (2011, 60-40 rule)",
+    "Liberty and prosperity under the rule of law as the speaker's settled legal philosophy",
+    "Implicit critique of the Gamboa majority for departing from deferential interpretation"
+  ],
+  "sub_topics": [
+    "Ave V. Cruz (ACCRA chair) — declined SC seat in 1986 to remain Deputy Prime Minister",
+    "Aurelio R. Montinola (BPI President/CEO) — MAP Management Man of the Year 2012",
+    "Global Forum on Liberty and Prosperity (Oct 18-20, 2006) attended by CJ Beverley McLachlin of Canada",
+    "Philippine economic performance 2012: 6.3% Q1, 5.9% Q2, 7.1% Q3 — second only to China in Asia, best in ASEAN",
+    "Tanada vs Angara (May 2, 1997) — unanimous SC upheld Senate's WTO ratification using deferential interpretation",
+    "Constitutional bias for Filipino goods/services balanced against equality/reciprocity in global trade",
+    "La Bugal-B'laan vs Ramos — original Jan 27, 2004 decision (8-5) struck down Mining Law; reconsideration Dec 1, 2004 (10-4) upheld it; Panganiban as ponente",
+    "Constitution should be read 'in broad, life-giving strokes,' not strangulating economic growth",
+    "Gamboa vs Teves (June 28, 2011) — 'capital' in Art XII Sec 11 limited to voting common shares only",
+    "Dissenters' position: 'capital' should mean all shares (consistent with 1935 and prior framers' intent)",
+    "Panganiban's critique: SC majority departed from deferential interpretation principle in Gamboa"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "liberty and prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "symbiotic calibration of the relationship of law and business",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "good governance and good economics",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "justice and jobs; freedom and food; ethics and economics; democracy and development",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Liberty and prosperity must always go together; one is useless without the other",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "doctrine of strict scrutiny",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "principle of deferential interpretation of laws and executive issuances",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in the absence of grave abuse of discretion and a blatant violation of our Constitution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "What the Senate did in ratifying the WTO Treaty was a valid exercise of its authority",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Constitution should be read in broad, life-giving strokes",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the judiciary does not have the mandate, not to say the expertise, to decide on matters relating to the economy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the recognized engine of growth in a regime of free enterprise",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (speaker, former CJ; ponente of Tanada and La Bugal-B'laan)",
+      "Atty. Avelino V. Cruz (ACCRA Law chair)",
+      "Aurelio 'Gigi' R. Montinola (BPI President/CEO; MAP Management Man of the Year 2012)",
+      "President Corazon Aquino (offered SC seat to Cruz in 1986)",
+      "CJ Hilario G. Davide Jr.",
+      "CJ Beverley McLachlin (Canada)",
+      "Justice Antonio T. Carpio (Gamboa ponente, dissenter not in this list but referenced via majority)",
+      "Senate minority challenging WTO ratification (unnamed)"
+    ],
+    "institutions": [
+      "ACCRA Law Office",
+      "Management Association of the Philippines (MAP)",
+      "Manila Golf Club (venue)",
+      "Bank of the Philippine Islands (BPI)",
+      "Supreme Court of the Philippines",
+      "World Trade Organization",
+      "Senate of the Philippines"
+    ],
+    "cases": [
+      "Tanada vs Angara (May 2, 1997) — unanimous; Panganiban as ponente; WTO ratification upheld",
+      "La Bugal-B'laan Tribal Association vs Ramos (Jan 27, 2004 original 8-5; Dec 1, 2004 MR 10-4) — Panganiban as ponente of MR upholding Mining Law",
+      "Gamboa vs Teves (June 28, 2011) — Carpio ponente; 60-40 rule limited to voting common shares"
+    ],
+    "laws_treaties": [
+      "1987 Constitution, Article XII Section 11 — 60% Filipino capital for public utilities",
+      "Mining Law of 1995 (Republic Act 7942)",
+      "FTAA (Financial or Technical Assistance Agreement) under Mining Law",
+      "WTO Treaty (ratified by Senate)"
+    ],
+    "events": [
+      "EDSA People Power Revolution (1986)",
+      "Senate ratification of WTO Treaty (challenged in Tanada vs Angara)",
+      "Global Forum on Liberty and Prosperity (October 18-20, 2006)",
+      "ACCRA Law's 40th Anniversary Forum, November 29, 2012, Manila Golf Club"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The proper interpretive posture of the Philippine judiciary is bipartite: in cases involving political and civil liberties, the scales weigh heavily against the government and in favor of the people under the doctrine of strict scrutiny; but in matters affecting the economy and the prosperity of the people, courts must defer to the Executive and Legislative branches in the absence of grave abuse of discretion or blatant constitutional violation.",
+      "rhetorical_move": "two-track interpretive doctrine as the speaker's signature jurisprudential philosophy",
+      "confidence": "asserted as personal judicial philosophy, with three case demonstrations",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Tanada vs Angara (1997) was correctly decided — the Constitution's bias for Filipino goods/services must be reconciled with its acknowledgment of business exchange on equality and reciprocity bases; the wisdom or viability of deregulation/globalization is 'outside the realm of judicial inquiry and review.'",
+      "rhetorical_move": "self-citation of own ponencia as exemplar of deferential interpretation",
+      "confidence": "asserted (he wrote it)",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "La Bugal-B'laan vs Ramos (MR Dec 1, 2004) correctly upheld the Mining Law, IRR, and FTAA — the Constitution must be read 'in broad, life-giving strokes,' not used to strangulate economic growth or serve narrow parochial interests; Congress and the President need sufficient discretion to attract foreign investments.",
+      "rhetorical_move": "self-citation again of own MR ponencia + 'broad life-giving strokes' as interpretive metaphor",
+      "confidence": "asserted (he wrote it)",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Gamboa vs Teves (2011) — the SC's reinterpretation of 'capital' in Art XII Sec 11 to mean only voting common shares — departs from deferential interpretation; the dissenters had the better of the framers'-intent argument (capital meant all shares since 1935), and how government handles this decision will affect the country's economic momentum.",
+      "rhetorical_move": "diplomatic critique-by-implication of a colleagues' decision while affirming the dissent",
+      "confidence": "asserted with 'my own position should be clear by this time'",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Jurists and lawyers should pursue the dual objective of justice AND jobs, freedom AND food, ethics AND economics, democracy AND development — liberty and prosperity must always go together; one is useless without the other.",
+      "rhetorical_move": "twin-beacons declaration as the speaker's settled credo",
+      "confidence": "asserted as personal credo",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Counterfactual on judicial succession: after EDSA 1986, President Corazon Aquino offered Ave V. Cruz a Supreme Court seat, which he declined to remain Deputy Prime Minister. 'Had he accepted... he could have been Chief Justice a decade later. And there would have been no Chief Justice Hilario G. Davide Jr. and Chief Justice Artemio V. Panganiban.' Panganiban owes Cruz, indirectly, the chance to be Chief Magistrate.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Canada's Chief Justice Beverley McLachlin so enjoyed the October 2006 Global Forum on Liberty and Prosperity that she and her husband stayed three extra days; she said the speaker's legal philosophy 'works best under the rule of law' (which she espouses) — leading to the now-canonical phrasing 'liberty and prosperity under the rule of law.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Philippines posted 6.3% / 5.9% / 7.1% GDP growth in Q1/Q2/Q3 of 2012, making it 'the best performer in the ASEAN Region and the second best in Asia, second only to China' — used as backdrop to argue that the SC should not derail this momentum via Gamboa-style activism.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "La Bugal-B'laan reversal: original SC decision (Jan 27, 2004) struck down the Mining Law 8-5; on motion for reconsideration (Dec 1, 2004), the Court reversed itself 10-4 — a 'more definitive vote' upholding the law, with Panganiban as ponente.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies the strict-scrutiny / deferential-interpretation dichotomy as a single jurisprudential test",
+    "treats 'grave abuse of discretion' and 'blatant constitutional violation' as the only two triggers for economic-case intervention",
+    "uses 'broad life-giving strokes' as interpretive metaphor against 'strangulation' interpretations",
+    "frames judicial humility on economic matters as an expertise-and-mandate question, not merely a separation-of-powers question",
+    "anchors twin-beacons philosophy in three named-case demonstrations rather than abstract argument"
+  ],
+  "target_audience": [
+    "ACCRA Law Office partners and senior associates (40th anniversary audience)",
+    "Management Association of the Philippines members (business leaders)",
+    "BPI executives and bank-affiliated lawyers",
+    "Legal academics and law students interested in economic-constitutional interpretation",
+    "Mining-industry, telecoms, and public-utility executives concerned with 60-40 rule and FTAA enforcement"
+  ],
+  "register_markers": [
+    "businesslaw-forum address register — formal but with light openers and named name-drops",
+    "self-citation as authoritative-interpretive register",
+    "case-analytical structure (three landmark cases enumerated)",
+    "doctrinal-coinage repetition ('strict scrutiny,' 'deferential interpretation') for naming the speaker's two-track theory",
+    "metaphor as interpretive philosophy ('broad, life-giving strokes')",
+    "diplomatic understatement when critiquing a sitting court ('with due respect, I submit')",
+    "macroeconomic-data anchoring (Q1/Q2/Q3 GDP) as backdrop for legal argument",
+    "counterfactual historical aside (Cruz declining 1986 SC offer) as honoring-the-host pleasantry"
+  ],
+  "one_paragraph_summary": "Delivered November 29, 2012 at Manila Golf Club for ACCRA Law's 40th Anniversary BusinessLaw Forum jointly with the Management Association of the Philippines, Panganiban uses three of his own landmark ponencias to lay out his settled jurisprudential philosophy of 'liberty and prosperity under the rule of law' — a phrase he credits to Canada's CJ Beverley McLachlin after the 2006 Global Forum. His two-track theory: in political/civil-liberty cases the scales weigh heavily against the government via strict scrutiny; in economic/policy cases courts must defer to the Executive and Congress unless there is grave abuse of discretion or blatant constitutional violation. He demonstrates this with (1) Tanada vs Angara (1997), the unanimous decision he authored upholding the Senate's WTO Treaty ratification by holding that the Constitution balances bias-for-Filipino-goods against business reciprocity, and that the 'wisdom or viability' of globalization is outside judicial review; (2) La Bugal-B'laan vs Ramos (Dec 1, 2004 MR 10-4 reversing the Jan 27, 2004 original 8-5 ruling), where he authored the reconsideration upholding the Mining Law, the IRR, and the FTAA on the principle that the Constitution must be read 'in broad, life-giving strokes' rather than to 'strangulate economic growth'; and (3) Gamboa vs Teves (June 28, 2011), where he diplomatically critiques the SC majority for departing from deferential interpretation by reading 'capital' in Art XII Sec 11 to mean only voting common shares — siding implicitly with the dissenters who argued the 1935 framers' intent covered all shares. He notes that 2012 Philippine GDP growth (6.3%/5.9%/7.1% across Q1/Q2/Q3, best in ASEAN, second in Asia after China) shows the country's economic momentum is real and worth protecting — and closes by reiterating that the recognized engine of growth in a free enterprise regime is the private sector, to which the judiciary should defer."
+}

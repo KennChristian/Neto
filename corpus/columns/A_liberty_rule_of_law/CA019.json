@@ -1,0 +1,257 @@
+{
+  "id": "CA019",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 19,
+  "title": "President Marcos' ICC options",
+  "date": "2023-12-11",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/168916/president-marcos-icc-options",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "President Marcos and his foreign-policy advisers",
+      "DOJ and OSG officials deliberating cooperation policy",
+      "Senators considering possible re-ratification debates",
+      "Civic-minded readers tracking the ICC question",
+      "Legal academics engaging with Pangilinan v. Cayetano obiter doctrine"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "diplomatic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "icc_and_duterte"
+    ],
+    "secondary": [
+      "philippine_political_landscape"
+    ]
+  },
+  "keywords": [
+    "ICC Appeals Chamber 3-2 decision",
+    "Pangilinan v. Cayetano obiter dictum",
+    "rejoining ICC without Senate concurrence",
+    "diplomatic comity option",
+    "VP Sara Duterte non-cooperation stance",
+    "reglementary 2-year period issue"
+  ],
+  "primary_topics": [
+    "Three Marcos options on the ICC investigation: (1) status quo, (2) rejoin the ICC, (3) cooperate without rejoining",
+    "ICC Appeals Chamber 3-2 decision (July 18, 2023) authorizing Khan to resume investigation",
+    "Constitutional question: can the President unilaterally recall the withdrawal letter without new Senate ratification?",
+    "VP Sara Duterte's formal request to DOJ not to cooperate with Khan and the ICC"
+  ],
+  "sub_topics": [
+    "Status quo: no rejoining; respect for the AC decision; SolGen Guevarra's policy that Khan investigators may enter PH 'in accordance with our laws' without cooperation",
+    "Majority of three in AC: agreed our government had not shown genuine willingness or ability to prosecute the 'brains' of the alleged crimes",
+    "Vocal minority of two (CJ agrees): ICC did not acquire jurisdiction â€” Bensouda's petition (May 24, 2021) and PTC grant (Sept 15, 2021) both fell outside the two-year reglementary period after PH withdrawal took effect March 17, 2019",
+    "Majority simply ignored the jurisdiction-by-period issue by treating it as waived",
+    "Khan's silence after the 3-2 ruling â€” has not publicly announced resumption",
+    "Rejoin option: President's plenary foreign-affairs power; withdrawal was unilateral so reversal can be unilateral; Senate Resolution No. 57 of Aug 23, 2011 still stands",
+    "Pangilinan v. Cayetano (March 16, 2021, J Leonen) obiter backing unilateral reversal with 'logic, reason, and wisdom'",
+    "Third option: cooperation without rejoining â€” open NBI, PNP, DOJ Chief Prosecutor facilities; possible outcomes (ICC concludes PH is genuinely willing/able, or ICC ensnares culprits via its own findings)",
+    "VP Sara Duterte's stance for status quo: 'upholding the self-respect and dignity of our country'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Maintain the status quo, Rejoin the ICC, and Cooperate without rejoining the international tribunal",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the vocal minority of two insisted, and I respectfully agree",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "it simply ignored this issue, saying that our government has waived its right to pose it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the President (regardless of who the incumbent is) may simply reverse his own act by recalling the letter of withdrawal without need of a new Senate ratification",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rendered merely via an obiter dictum (side remark)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "backed up this obiter with logic, reason, and wisdom",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "comity of nations and our abiding respect for the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "ensnare the alleged perpetrators into the sticky ICC web",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "demonstrating the viability and capacity of our local institutions to render justice though the heavens may fall",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Which option will the President take? Abangan.",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author)",
+      "President Ferdinand 'Bongbong' Marcos Jr.",
+      "Former president Rodrigo R. Duterte",
+      "ICC Chief Prosecutor Karim Khan",
+      "Former ICC chief prosecutor Fatou Bensouda",
+      "Solicitor General Menardo I. Guevarra",
+      "Vice President Sara Duterte",
+      "Senior Associate Justice Marvic M.V.F. Leonen"
+    ],
+    "institutions": [
+      "International Criminal Court (ICC)",
+      "ICC Appeals Chamber (AC)",
+      "ICC Pre-Trial Chamber (PTC)",
+      "Philippine Department of Justice (DOJ)",
+      "Office of the Solicitor General (OSG)",
+      "National Bureau of Investigation (NBI)",
+      "Philippine National Police (PNP)",
+      "Philippine Supreme Court",
+      "Philippine Senate",
+      "House of Representatives"
+    ],
+    "cases": [
+      "Pangilinan v. Cayetano (March 16, 2021, J Leonen) â€” obiter on Senate concurrence in treaty withdrawal",
+      "ICC Appeals Chamber decision July 18, 2023 (3-2)"
+    ],
+    "laws_treaties": [
+      "Rome Statute",
+      "Senate Resolution No. 57 (Aug 23, 2011) ratifying Rome Statute",
+      "Unilateral PH withdrawal from ICC (effective March 17, 2019)"
+    ],
+    "events": [
+      "Nov 1, 2011-March 16, 2019 â€” covered ICC investigation period",
+      "March 17, 2019 â€” PH withdrawal from ICC took effect",
+      "May 24, 2021 â€” Bensouda petition to PTC for preliminary examination authority",
+      "Sept 15, 2021 â€” PTC grant of preliminary examination",
+      "July 18, 2023 â€” ICC AC 3-2 decision authorizing Khan to resume",
+      "House of Representatives hearings on ICC question"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "President Marcos has three major options on the ICC question: maintain status quo (no rejoining but respect AC decision; Khan investigators may enter PH without government cooperation per SolGen Guevarra); rejoin the ICC (using plenary foreign-affairs power to recall the withdrawal letter); or cooperate without rejoining (open NBI, PNP, DOJ Chief Prosecutor facilities to Khan under comity of nations).",
+      "rhetorical_move": "three-option taxonomy framework for executive deliberation",
+      "confidence": "asserted as analytical structure",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The ICC Appeals Chamber's 3-2 majority of July 18, 2023 agreed only that the government had not shown genuine willingness or ability to prosecute the 'brains' of the alleged crimes, but did NOT rule on the more fundamental issue of whether the petition was filed within the undisputed two-year reglementary period after the March 17, 2019 withdrawal took effect â€” simply ignoring it by saying the government had waived its right to pose it.",
+      "rhetorical_move": "exposing-the-unresolved-jurisdictional-question argument",
+      "confidence": "asserted with respectful agreement with the minority of two",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Since PH withdrawal from the ICC was made unilaterally by the President without Senate concurrence, the President (regardless of incumbent) may simply reverse his own act by recalling the withdrawal letter without need of a new Senate ratification â€” the Senate's concurrence in Resolution No. 57 (Aug 23, 2011) was never reversed and 'still mightily stands.'",
+      "rhetorical_move": "symmetric-unilateral-action doctrine grounded in Pangilinan v. Cayetano obiter",
+      "confidence": "humble opinion + obiter-backed",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The third option (cooperation without rejoining) can end in either of two seemingly disparate results â€” ICC investigators may conclude that PH is genuinely willing and able to investigate, OR they may rely on their own findings and ensnare the alleged perpetrators into 'the sticky ICC web' â€” and either outcome can be justified under the comity of nations and PH's respect for the rule of law.",
+      "rhetorical_move": "double-edged-outcome argument that frames cooperation as institutional self-test",
+      "confidence": "predictive",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Khan's revealing public silence â€” 'until now, and despite the 3-2 ruling of the AC, Khan has not publicly announced the resumption of his investigation' â€” used by CJ to suggest the unresolved reglementary-period issue may still be haunting the prosecutor.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "VP Sara Duterte's formal request to the DOJ not to cooperate with Khan, framed by her as 'upholding the self-respect and dignity of our country and demonstrating the viability and capacity of our local institutions to render justice though the heavens may fall' â€” quoted as the political articulation of the status-quo option.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing one-word Tagalog cliffhanger: 'Abangan.' â€” a rare conversational tonal break in a doctrinal column.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "structures executive deliberation as three-option taxonomy rather than binary",
+    "uses reglementary-period jurisdiction-acquisition test as latent dispositive issue ignored by AC majority",
+    "applies symmetric-unilateral-action doctrine to treaty withdrawal/rejoinder",
+    "treats Senate concurrence as durable absent express Senate reversal",
+    "uses obiter dicta from PH Supreme Court as persuasive authority even where not binding",
+    "frames cooperation as institutional self-test with double-edged outcomes"
+  ],
+  "target_audience": [
+    "President Marcos and his foreign-policy advisers",
+    "DOJ and OSG officials deliberating cooperation policy",
+    "Senators considering possible re-ratification debates",
+    "Civic-minded readers tracking the ICC question",
+    "Legal academics engaging with Pangilinan v. Cayetano obiter doctrine"
+  ],
+  "register_markers": [
+    "executive-options-taxonomy register (status quo / rejoin / cooperate)",
+    "respectful-agreement-with-minority marker ('the vocal minority of two insisted, and I respectfully agree')",
+    "obiter-dictum doctrinal hedge ('rendered merely via an obiter dictum (side remark)')",
+    "humility marker ('My humble opinion is that...')",
+    "Tagalog-cliffhanger closing ('Abangan.')",
+    "named-justice attribution as authority device ('fittingly penned by Senior Associate Justice Marvic M.V.F. Leonen')",
+    "vivid-metaphor register ('ensnare the alleged perpetrators into the sticky ICC web')",
+    "comity-of-nations diplomatic vocabulary"
+  ],
+  "one_paragraph_summary": "Panganiban maps President Marcos' three options on the ICC question prompted by recent House hearings: (1) maintain the status quo â€” no rejoining but respect for the July 18, 2023 ICC Appeals Chamber decision (3-2) authorizing Karim Khan to resume investigation of alleged crimes committed Nov 1, 2011 to March 16, 2019, with SolGen Guevarra's policy that Khan investigators may enter the country 'in accordance with our laws' but without government cooperation; (2) rejoin the ICC by recalling the withdrawal letter â€” feasible without new Senate ratification because the original withdrawal was unilateral and Senate Resolution No. 57 of Aug 23, 2011 was never reversed (Pangilinan v. Cayetano, March 16, 2021, J Leonen, backed this via obiter); or (3) cooperate without rejoining â€” opening NBI, PNP, and DOJ Chief Prosecutor facilities under comity of nations, an option that could end either in ICC concluding the Philippines is genuinely willing and able, or in ICC investigators ensnaring perpetrators 'into the sticky ICC web.' He respectfully agrees with the AC's vocal minority of two that the ICC may not have acquired jurisdiction because Bensouda's May 24, 2021 petition and the PTC's Sept 15, 2021 grant both fell outside the two-year reglementary period after the March 17, 2019 withdrawal â€” an issue the AC majority simply ignored by holding the government had waived it, which may explain Khan's continuing public silence. VP Sara Duterte has formally asked the DOJ not to cooperate, favoring the status quo. He closes with the Tagalog cliffhanger: 'Abangan.'"
+}

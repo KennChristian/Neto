@@ -1,0 +1,12 @@
+# Raw real-voice recordings used to retrain the "Hey CJ" classifier
+# are too large + speaker-specific to ship in the repo. The trained
+# classifier (app/wake/models/hey_cj.onnx) is what's committed.
+#
+# - real_raw/         operator-recorded WAVs (~10 MB each)
+# - real_split/       per-utterance splits produced by phase1_split.py
+# - real_positives/   final 16 kHz mono positives ready for training
+
+real_raw/
+real_split/
+real_positives/
+*.wav

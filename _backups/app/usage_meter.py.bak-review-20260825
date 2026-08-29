@@ -1,0 +1,83 @@
+"""Persistent API usage tally for the maintenance page (2026-08-25, user:
+"show the update of the tokens from Claude and ElevenLabs").
+
+One JSON file (CJ_USAGE_PATH, default ~/cj_usage.json) with two counters
+per provider: `lifetime` (survives restarts and reboots) and `session`
+(reset when the service process starts). Every hook fails open — the tally
+must never break a turn.
+
+  anthropic[label]  calls, input, cache_write, cache_read, output, cost_usd
+  elevenlabs        requests, chars (billed — cache misses only), cache_hits,
+                    cache_chars (served from ~/.voice_cache, not billed)
+  openai            stt_calls, stt_seconds
+"""
+import json, os, threading, time
+
+PATH = os.environ.get("CJ_USAGE_PATH", os.path.expanduser("~/cj_usage.json"))
+SESSION_START = time.time()
+_lock = threading.Lock()
+
+# $/MTok: regular input, cache write, cache read, output (late-2025 pricing)
+PRICES = {"router": (1.00, 1.25, 0.10, 5.00),      # Haiku 4.5
+          "inference": (3.00, 3.75, 0.30, 15.00)}  # Sonnet 4.6
+
+
+def _load():
+    try:
+        with open(PATH) as f:
+            doc = json.load(f)
+    except (OSError, ValueError):
+        doc = {}
+    doc.setdefault("lifetime", {})
+    if doc.get("session_start") != SESSION_START:
+        doc["session"] = {}
+        doc["session_start"] = SESSION_START
+    return doc
+
+
+def _save(doc):
+    doc["updated"] = time.time()
+    tmp = f"{PATH}.{threading.get_ident()}.tmp"
+    with open(tmp, "w") as f:
+        json.dump(doc, f)
+    os.replace(tmp, PATH)
+
+
+def _bump(path, **fields):
+    """Add numeric fields at doc[scope][*path] for both scopes."""
+    with _lock:
+        doc = _load()
+        for scope in ("lifetime", "session"):
+            node = doc.setdefault(scope, {})
+            for k in path:
+                node = node.setdefault(k, {})
+            for f, v in fields.items():
+                node[f] = round(node.get(f, 0) + v, 6)
+        _save(doc)
+
+
+def anthropic(label, regular=0, creation=0, read=0, output=0):
+    try:
+        p_in, p_write, p_read, p_out = PRICES.get(label, (0, 0, 0, 0))
+        cost = (regular * p_in + creation * p_write + read * p_read + output * p_out) / 1e6
+        _bump(("anthropic", label), calls=1, input=regular, cache_write=creation,
+              cache_read=read, output=output, cost_usd=cost)
+    except Exception:
+        pass
+
+
+def elevenlabs(chars, cached=False):
+    try:
+        if cached:
+            _bump(("elevenlabs",), cache_hits=1, cache_chars=chars)
+        else:
+            _bump(("elevenlabs",), requests=1, chars=chars)
+    except Exception:
+        pass
+
+
+def openai_stt(seconds=0.0):
+    try:
+        _bump(("openai",), stt_calls=1, stt_seconds=float(seconds or 0.0))
+    except Exception:
+        pass

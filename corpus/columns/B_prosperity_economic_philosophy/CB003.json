@@ -1,0 +1,265 @@
+{
+  "id": "CB003",
+  "type": "column",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 3,
+  "title": "Law scholarships with a difference",
+  "date": "2019-02-17",
+  "year": 2019,
+  "source_url": "https://opinion.inquirer.net/119605/law-scholarships-with-a-difference",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Outstanding law students considering FLP application",
+      "Law school deans and faculty",
+      "Philanthropic donors and foundation board members",
+      "Civic readers tracking legal-profession reform",
+      "Liberty-and-prosperity philosophy adherents"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "twin_beacons_doctrine",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "bar_exam_and_legal_education",
+      "family_and_marriage",
+      "flp_donors_and_partners"
+    ]
+  },
+  "keywords": [
+    "FLP law scholarships",
+    "Foundation for Liberty and Prosperity",
+    "Tan Yan Kee Foundation",
+    "liberty and prosperity philosophy",
+    "legal education",
+    "rule of law",
+    "J. Antonio T. Carpio",
+    "J. Sandoval-Gutierrez"
+  ],
+  "primary_topics": [
+    "FLP-TYKF law scholarships granted on pure merit, not financial need",
+    "Liberty and Prosperity philosophy as required intellectual commitment",
+    "Complete current scholar roster (third and fourth year) and bar exam takers",
+    "TYKF and FLP board compositions"
+  ],
+  "sub_topics": [
+    "P200,000/year scholarship covering tuition, books, monthly stipends",
+    "Foundation for Liberty and Prosperity (FLP) â€” donor entity",
+    "Tan Yan Kee Foundation (TYKF) â€” funder",
+    "Merit-first criterion; financial need only as tiebreaker among equally excellent applicants",
+    "Required commitment: espouse, promote, fulfill liberty-and-prosperity philosophy",
+    "Beyond political freedoms: economic and social freedoms (right to be free of hunger and want)",
+    "Right to pursue entrepreneurship and innovation",
+    "Right to conquer poverty through rule of law",
+    "Corollary duty to share prosperity with the needy",
+    "Equitable distribution of fruits of labor and capital",
+    "Selection process: competitive + personal interviews",
+    "Board of judges: Justice Carpio (chair) + de Jesus + Largo + Alba + Lat",
+    "Third-year roster: 10 scholars from U of Cordilleras, FEU, San Beda U, Ateneo, U of San Carlos, UST",
+    "Fourth-year roster: 10 scholars from Ateneo, U of San Carlos, U of Cordilleras, UST, U of Cebu, PUP, La Salle, San Beda",
+    "Latin-honors graduates receive extra cash prizes",
+    "Fifteen past FLP scholars took the last bar exam (May 2018 takers, results May 3)",
+    "Bar topnotcher rewards: P200,000 (1st place), P100,000 (2nd-10th place)",
+    "TYKF board: Dr. Lucio C. Tan (chair) + 14 trustees",
+    "FLP board: Panganiban (chair) + 8 trustees"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "freedom and food, justice and jobs, ethics and economics, nay, liberty and prosperity are equally important",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "one is useless without the other",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the singular truth that the best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "freedom and the tools to help themselves and society",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "they are given on the basis of pure merit",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "paucity of funds will be considered only in case of equality in excellence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the philosophy of liberty and prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (FLP chair, TYKF trustee)",
+      "Justice Antonio T. Carpio (FLP board of judges chair)",
+      "Edilberto C. de Jesus (former education secretary)",
+      "Joan S. Largo (PALS president)",
+      "Elizabeth T. Alba (TYKF executive)",
+      "Prof. Tanya Karina Lat (FLP board of judges member, FLP trustee)",
+      "Dr. Lucio C. Tan (TYKF chair)",
+      "Harry C. Tan (TYKF vice chair)",
+      "Joaquin Bernas (TYKF trustee)",
+      "Frank Chan (TYKF trustee)",
+      "Shirley Chua (TYKF trustee)",
+      "Lawrence Chew (TYKF trustee)",
+      "Emil Q. Javier (TYKF trustee)",
+      "Marixi R. Prieto (TYKF trustee)",
+      "Carmen Tan (TYKF trustee)",
+      "Tan Eng Chan (TYKF trustee)",
+      "Tan Hui Bin (TYKF trustee)",
+      "Mariano Tanenglian (TYKF trustee)",
+      "Amando M. Tetangco Jr. (TYKF trustee)",
+      "Cesar E. A. Virata (TYKF trustee)",
+      "Evelyn T. Dumdum (FLP trustee)",
+      "Rebecca G. Felix (FLP trustee)",
+      "Joel Emerson J. Gregorio (FLP trustee)",
+      "Angelina Sandoval-Gutierrez (FLP trustee)",
+      "Elenita C. Panganiban (FLP trustee, CJ's late wife Leni)",
+      "Maria Elena P. S. Yaptangco (FLP trustee)",
+      "Third-year scholars: Banoar Abratique, Pamela Camille Barredo, Angelette Bulacan, Stephanie May Domingo, Maria Carissa Guinto, Patrick Angelo Gutierrez, Mayumi Matsumura, Juralyn Lilian Obra, Carmella Gaye Perez, Edrea Jean Ramirez",
+      "Fourth-year scholars: Leo Francis Abot, John Anthony Almerino, Arvin Paolo Cortez, Mikael Gabrielle Ilao, Kenneth Glenn Manuel, King Anthony Perez, Jun Dexter Rojas, Ma. Vida Malaya Villarico, Micah Celine Carpio, Alimar Mohammad Malabad",
+      "2018 bar takers (15 past FLP scholars): Karina Mae Badua, Sean James Borja, Ervin Fredrick Dy, Rexlyn Anne Evora, Kevin Ken Ganchero, Katrina Monica Gaw, Jose Noel Hilario, Summerson Macasarte, Violeta Najarro, Ma. Janine Pedernal, Nigel Carmelo Reago, Tess Marie Tan, Jose Angelo Tiglao, Althea Vergara, Vanessa Gloria Vergara"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Tan Yan Kee Foundation (TYKF)",
+      "Philippine Association of Law Schools (PALS)",
+      "Ateneo de Manila School of Law",
+      "University of San Carlos",
+      "University of Cordilleras",
+      "Far Eastern University",
+      "San Beda University",
+      "University of Santo Tomas",
+      "University of the Philippines",
+      "De La Salle University",
+      "PUP (Polytechnic University of the Philippines)",
+      "University of Cebu",
+      "St. Thomas More",
+      "San Beda-Alabang"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "Annual FLP scholarship selection",
+      "May 2018 bar examination",
+      "May 3 â€” expected 2018 bar results"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The FLP-TYKF scholarships are unique among PH law scholarships because they are granted on pure merit rather than financial need â€” financial need enters only as a tiebreaker among applicants of equal excellence â€” reversing the conventional welfare-based assumption that scholarships exist primarily for the poor.",
+      "rhetorical_move": "distinctive-criterion framing (merit-first vs need-first inversion)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Legal education in PH overemphasizes political freedoms (due process, equal protection, free speech, free assembly, presumption of innocence) and under-emphasizes economic and social freedoms (freedom from hunger, entrepreneurship, innovation, conquering poverty through rule of law) plus the corollary duty to share prosperity â€” and the FLP scholarship corrects this imbalance by requiring commitment to the integrated philosophy.",
+      "rhetorical_move": "asymmetry-diagnosis-with-corrective-philosophy (the curriculum gap and FLP's response)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Liberty and prosperity are equally important and mutually reinforcing â€” 'freedom and food, justice and jobs, ethics and economics' â€” and the best way to conquer poverty is to 'unleash the entrepreneurial genius of people by granting them the freedom and the tools to help themselves and society' rather than to subsidize them into dependency.",
+      "rhetorical_move": "twin-pillar philosophical assertion with libertarian-entrepreneurial bent",
+      "confidence": "asserted as 'singular truth'",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The merit-first/need-second criterion stated explicitly: 'paucity of funds will be considered only in case of equality in excellence' â€” the most consequential single sentence about FLP scholarship philosophy, reversing the usual scholarship logic.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The alphabetical roster of 20 current scholars (10 third-year, 10 fourth-year) plus 15 past bar takers â€” the most comprehensive single inventory of FLP scholars in any column to date, providing a complete pipeline snapshot.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Elenita C. Panganiban listed as an FLP trustee â€” CJ's late wife Leni, named here as institutional co-builder rather than memorialized as a deceased spouse, the most quietly biographical entity in the column.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The TYKF board composition spanning Dr. Lucio C. Tan as chair through 14 trustees including Joaquin Bernas, Amando Tetangco Jr., and Cesar Virata â€” making the funding source a coalition of philanthropic, academic, and former-public-official elites rather than a single donor.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies merit-first / need-second criterion as scholarship-allocation principle",
+    "treats political freedoms and economic-social freedoms as equally weighted philosophical commitments",
+    "uses entrepreneurial-genius framing rather than dependency-relief framing for poverty intervention",
+    "treats philosophical-commitment requirement as legitimate scholarship eligibility filter",
+    "anchors institutional credibility in board composition disclosure (full TYKF and FLP rosters)"
+  ],
+  "target_audience": [
+    "Outstanding law students considering FLP application",
+    "Law school deans and faculty",
+    "Philanthropic donors and foundation board members",
+    "Civic readers tracking legal-profession reform",
+    "Liberty-and-prosperity philosophy adherents"
+  ],
+  "register_markers": [
+    "FLP announcement / institutional-promotion register",
+    "alphabetical-roster format (recurring CJ device)",
+    "distinctive-criterion framing ('Unique, however, are the full scholarships')",
+    "philosophical-twin-pillar register ('freedom and food, justice and jobs')",
+    "libertarian-entrepreneurial vocabulary ('unleash the entrepreneurial genius')",
+    "full board composition listings (TYKF and FLP)",
+    "school-credentialing in parentheses (every name with institutional affiliation)",
+    "merit-vs-need explicit contrast"
+  ],
+  "one_paragraph_summary": "Panganiban introduces the unique character of the Foundation for Liberty and Prosperity (FLP) law scholarships â€” fully funded by the Tan Yan Kee Foundation at P200,000 per scholar per year (tuition, books, monthly stipends) â€” which are granted on pure merit rather than financial need, with paucity of funds considered only as a tiebreaker among equally excellent applicants. The scholarship requires recipients to espouse, promote, and fulfill the liberty-and-prosperity philosophy: that legal education has overemphasized political freedoms (due process, equal protection, free speech, free assembly, presumption of innocence) and underemphasized economic and social freedoms (freedom from hunger and want, the right to pursue entrepreneurship and innovation, the right to conquer poverty through the rule of law) plus the corollary responsibility to share prosperity and equitably distribute the fruits of labor and capital. He asserts that 'freedom and food, justice and jobs, ethics and economics, nay, liberty and prosperity are equally important; one is useless without the other,' and that 'the best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people.' He provides the complete alphabetical roster of twenty current scholars (ten third-year and ten fourth-year, drawn from U of Cordilleras, FEU, San Beda, Ateneo de Manila, U of San Carlos, UST, U of Cebu, PUP, and De La Salle), the fifteen past FLP scholars taking the May 2018 bar (results expected May 3), the cash prize structure for bar topnotchers (P200,000 for first place, P100,000 each for second through tenth), and the full TYKF board (Dr. Lucio C. Tan as chair plus 14 trustees including Joaquin Bernas, Amando Tetangco Jr., and Cesar Virata) and FLP board (CJ as chair plus 8 trustees including his late wife Leni)."
+}

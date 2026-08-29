@@ -1,0 +1,253 @@
+{
+  "id": "SE013",
+  "type": "speech",
+  "theme": "E",
+  "theme_label": "Signature Current Events Commentary",
+  "number": 13,
+  "title": "Three AI Takeaways",
+  "date": "2023-11-09",
+  "year": 2023,
+  "source_url": "https://cjpanganiban.com/three-ai-takeaways1/",
+  "routing": {
+    "primary_intent": [
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "MVP Group executives, directors, and employees at the Annual Corporate Governance Enhancement Session",
+      "PLDT Board and Governance, Nomination and Sustainability Committee members",
+      "Conglomerate-affiliated leadership (Meralco, Maynilad, MPH, tollways)",
+      "Guest speakers Dr. Max Tegmark and Paco Sandejas",
+      "Corporate governance practitioners in the Philippines"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "friendships_and_civic_circles",
+      "ai_and_technology"
+    ],
+    "secondary": []
+  },
+  "keywords": [
+    "MVP Group corporate governance",
+    "PLDT Board",
+    "Max Tegmark",
+    "Paco Sandejas",
+    "human intelligence vs AI",
+    "customer-centricity",
+    "MVP Group collective strength",
+    "Annual Governance Learning Session",
+    "Gina Ordonez Cathy Yap Young",
+    "ballpen Grand Hyatt"
+  ],
+  "primary_topics": [
+    "Extemporaneous closing remarks at the MVP Group of Companies Annual Corporate Governance Enhancement Session (Makati Shangri-La, November 9, 2023)",
+    "Three takeaways from the day's AI-themed governance learning session: (1) invest in human intelligence, (2) customer-centricity as North Star, (3) leverage collective strength of the MVP Group",
+    "Self-positioning as 'AVP' (Artemio V. Panganiban) — a fake/lowly 'AVP' vs the real MVP (Manuel V. Pangilinan)",
+    "Pointed framing: 'artificial intelligence is fake. Human intelligence is real. So, we will invest in all of you, in all your brains. We will just make AI our slave.'",
+    "Closing challenge to MVP Group executives on technology, data protection, cybersecurity, fair competition"
+  ],
+  "sub_topics": [
+    "Indomitable PLDT HR Boss Gina Ordonez and multi-awarded emcee Cathy Yap Young (CYY) as the 'ladies-in-charge'",
+    "Self-deprecating opener: 'I made notes with a ballpen while our guest lecturer and the panel of reactors were delivering their pieces. It says Grand Hyatt on the ballpen, and we are in Makati Shangri-La. I borrowed this pen from the owner of the Grand Hyatt who is seated beside me, Alfred Ty.'",
+    "Guest lecturer Dr. Max Tegmark and reactor Paco Sandejas (UP summa, Stanford PhD)",
+    "Family disclosure: Paco Sandejas is brother of CJP's deceased son-in-law Thomas Sandejas; CJP's son and Paco both UP summa and Stanford PhDs; CJP's son in the US while Paco is in PH",
+    "PLDT Board's annual learning charter — staying aware of changes in technology, industries, global markets, customer preferences",
+    "MVP Group portfolio mentioned: PLDT, Meralco, Maynilad, MPH, plus tollways (which Tegmark didn't mention)",
+    "Closing challenge questions: customer data protection, transaction integrity, cyber-security, respectful competition"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "I am not a robot of the great MVP… I'm a fake. I am just a lowly AVP",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "artificial intelligence is fake. Human intelligence is real",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "We will just make AI our slave",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "let's focus on our customers, our North Star",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "We will use artificial intelligence, native intelligence, Filipino intelligence, PLDT intelligence to serve our customers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "take advantage of the collective strength of our group of companies",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "What shape the future will take depends on who takes an active part in shaping it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Are we up to the challenge?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Walang palakpak?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "As your punishment, I'll prolong my talk, so you won't eat",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban ('AVP'; PLDT Board Governance Committee)",
+      "Manuel V. 'MVP' Pangilinan (Group Chairman)",
+      "Gina Ordonez (PLDT HR Boss)",
+      "Cathy Yap Young 'CYY' (emcee)",
+      "Dr. Max Tegmark (guest lecturer, MIT physicist/AI researcher)",
+      "Paco Sandejas (panel reactor; UP summa; Stanford PhD; brother of CJP's deceased son-in-law Thomas Sandejas)",
+      "Alfred Ty (Grand Hyatt owner; ballpen lender)",
+      "Thomas Sandejas (CJP's deceased son-in-law)"
+    ],
+    "institutions": [
+      "MVP Group of Companies",
+      "PLDT and its Governance, Nomination and Sustainability Committee",
+      "Meralco",
+      "Maynilad",
+      "Metro Pacific Hospitals (MPH)",
+      "Metro Pacific Tollways",
+      "Grand Hyatt Manila",
+      "Makati Shangri-La Hotel (venue)",
+      "University of the Philippines",
+      "Stanford University"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "MVP Group Annual Corporate Governance Enhancement Session — November 9, 2023"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "AI is FAKE; human intelligence is REAL. The proper corporate-governance posture is to invest in human brains, treat AI as 'our slave,' invest in local skills and talents, and refuse to be 'empowered only by technology' because technology 'is not reliable as we all know, as demonstrated today.'",
+      "rhetorical_move": "deliberately provocative blunt-frame ('fake vs real') for memorability",
+      "confidence": "asserted with humor as serious governance principle",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Customer-centricity is the North Star of corporate purpose — AI, native intelligence, Filipino intelligence, and 'PLDT intelligence' are means; serving the customer is the end. Technology must remain instrumental to customer service, not its substitute.",
+      "rhetorical_move": "North Star metaphor as corporate-governance compass",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The MVP Group's competitive advantage is its conglomerate breadth — PLDT, Meralco, Maynilad, MPH (Metro Pacific Hospitals), and tollways — which must be leveraged through collective strength rather than each subsidiary acting alone.",
+      "rhetorical_move": "conglomerate-synergy argument as governance principle",
+      "confidence": "asserted with portfolio inventory",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The technology challenge for the MVP Group is governance-defined: customer data protection amid varied data collection, transactional integrity and accountability, cyber-security, and a respectful competitive spirit. Each executive and employee bears responsibility for ensuring technology serves these governance values, not undermines them.",
+      "rhetorical_move": "questions-as-call-to-action closer ('Are we up to the challenge?')",
+      "confidence": "asserted as governance charge",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Self-positioning as the 'lowly AVP' (Artemio V. Panganiban) vs the real MVP (Manuel V. Pangilinan): 'I am not a robot of the great MVP… I'm a fake. I am just a lowly AVP… Walang palakpak? When I said MVP you all clapped, but when I said AVP, you didn't clap. That's unfair! As your punishment, I'll prolong my talk, so you won't eat.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Ballpen anecdote: 'I made notes with a ballpen while our guest lecturer and the panel of reactors were delivering their pieces. It says Grand Hyatt on the ballpen, and we are in Makati Shangri-La. I borrowed this pen from the owner of the Grand Hyatt who is seated beside me, Alfred Ty.' — a one-line celebration of the cross-property reach of conglomerate connections.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Family disclosure on panel reactor Paco Sandejas: brother of CJP's deceased son-in-law Thomas Sandejas; UP summa cum laude (with CJP's son, both same cohort); Stanford PhD (both); 'the better news for Paco, he's in the Philippines while my son is in the United States.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Deliberately provocative blunt-frame: 'artificial intelligence is fake. Human intelligence is real. So, we will invest in all of you, in all your brains. We will just make AI our slave.' — humor masking a serious corporate-governance claim about the primacy of human capital.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies a deliberately blunt human-vs-artificial-intelligence ranking ('AI as slave, humans as masters') as corporate-governance frame",
+    "treats customer-centricity as the North Star test for any deployment of technology",
+    "uses conglomerate-synergy as the operative measure of competitive advantage",
+    "frames technology governance through four named risks: data protection, transactional integrity, cybersecurity, fair competition",
+    "models humor-as-engagement-technique for high-corporate audiences ('AVP' vs 'MVP')"
+  ],
+  "target_audience": [
+    "MVP Group executives, directors, and employees at the Annual Corporate Governance Enhancement Session",
+    "PLDT Board and Governance, Nomination and Sustainability Committee members",
+    "Conglomerate-affiliated leadership (Meralco, Maynilad, MPH, tollways)",
+    "Guest speakers Dr. Max Tegmark and Paco Sandejas",
+    "Corporate governance practitioners in the Philippines"
+  ],
+  "register_markers": [
+    "extemporaneous closing-remarks register",
+    "self-deprecating mock-rank-comparison ('lowly AVP' vs 'great MVP')",
+    "audience-banter opener ('Walang palakpak? ... As your punishment, I'll prolong my talk')",
+    "object-as-anecdote (ballpen)",
+    "three-takeaway compositional structure announced upfront",
+    "deliberately blunt provocative frame ('AI is fake')",
+    "North Star navigational metaphor",
+    "rhetorical-question closer ('Are we up to the challenge?')",
+    "informal Tagalog interjections ('Walang palakpak?')",
+    "family-disclosure transparency (deceased son-in-law, son comparison)"
+  ],
+  "one_paragraph_summary": "Delivered November 9, 2023 at the Makati Shangri-La as extemporaneous closing remarks of the MVP Group's Annual Corporate Governance Enhancement Session, this short address showcases CJP's witty register at a corporate-governance audience. Opening with a self-deprecating mock-rank-comparison — he is not the great MVP (Manuel V. Pangilinan) but a 'lowly AVP' (Artemio V. Panganiban), a 'fake' — he punishes the audience with 'I'll prolong my talk so you won't eat,' then performs an object-anecdote with a borrowed Grand Hyatt ballpen used to take notes at the Makati Shangri-La event, borrowed from the Grand Hyatt's owner Alfred Ty seated beside him. He thanks guest lecturer Dr. Max Tegmark and panel reactor Paco Sandejas (disclosing the family tie: Paco is the brother of CJP's deceased son-in-law Thomas Sandejas; Paco and CJP's son both UP summas and Stanford PhDs). He then delivers three takeaways: (1) invest in human intelligence as contradistinguished from AI — 'artificial intelligence is fake, human intelligence is real. So, we will invest in all of you, in all your brains. We will just make AI our slave'; (2) customer-centricity as North Star — 'we will use artificial intelligence, native intelligence, Filipino intelligence, PLDT intelligence to serve our customers'; and (3) leverage the MVP Group's collective strength across PLDT, Meralco, Maynilad, MPH, and tollways. He closes by posing the governance questions the executives must answer — customer data protection, transactional integrity, cybersecurity, and respectful competition — and asks: 'Are we up to the challenge?'"
+}

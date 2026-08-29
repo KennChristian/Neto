@@ -1,0 +1,279 @@
+{
+  "id": "CA010",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 10,
+  "title": "Understanding the arbitral award",
+  "date": "2019-08-04",
+  "year": 2019,
+  "source_url": "https://opinion.inquirer.net/123043/understanding-the-arbitral-award",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "General Inquirer readership unfamiliar with the award's structure",
+      "Foreign-policy and international-law students",
+      "FLP donors interested in legacy WPS coverage",
+      "Anyone confused by the gap between victory in law and stalemate in fact"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "pedagogical"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes"
+    ],
+    "secondary": []
+  },
+  "keywords": [
+    "arbitral award",
+    "UNCLOS Annex VII",
+    "nine-dash line",
+    "freedom of navigation",
+    "territorial sea",
+    "EEZ",
+    "ECS",
+    "permanent interests"
+  ],
+  "primary_topics": [
+    "Three-part summary of the 501-page arbitral award",
+    "What the award did and did not cover (maritime rights but not land features)",
+    "The enforcement gap â€” great powers enforce the freedom-of-navigation portions in their own interest; the maritime-entitlements portions are left to PH care",
+    "Lord Palmerston's permanent-interests doctrine as the realpolitik frame"
+  ],
+  "sub_topics": [
+    "Tribunal's name: Arbitral Tribunal Constituted Under Annex VII of UNCLOS",
+    "Part 1: nullification of nine-dash line, indisputable-sovereignty claim rejected, freedom of navigation in SCS",
+    "Part 2: PH archipelagic-state maritime entitlements â€” 12-NM territorial sea, 24-NM contiguous zone, 200-NM EEZ, 350-NM extended continental shelf; collectively 'West Philippine Sea'",
+    "Part 3: no disputed feature qualifies as 'island' with maritime rights; Scarborough is high-tide elevation generating 12-NM territorial sea only; traditional fishing area for Filipino, Chinese, and Vietnamese fisherfolk",
+    "Why the arbitration did not cover land (only maritime rights)",
+    "American/Australian/British/Japanese freedom-of-navigation operations",
+    "PH-US and other defense pacts â€” no express WPS obligation",
+    "'America First' as illustrative of permanent-interests doctrine"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "issued unanimously by the five members",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to help readers understand the lengthy 501-page award",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I will try to summarize it into three parts",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "first, it rejected China's 'nine-dash line' and its claim of 'indisputable sovereignty'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "this entire sea area along the west side of our country from Aparri to Sulu is collectively referred to as the West Philippine Sea",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Philippines did not ask for, and the tribunal did not award, any rights over the land areas",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "American, Australian, British and Japanese warships, submarines and warplanes openly roam the SCS",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "neither are these two parts enforced by sheriffs and policemen",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "True indeed is the teaching of Lord Palmerston",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in international relations, there are no permanent friends or permanent enemies, only permanent interests",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "their enemies yesterday are their friends today. And vice versa",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the American people pay taxes to protect their interests, not those of aliens",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "'America First' is their slogan",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Ah, that's a good topic for another column",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Lord Palmerston (Henry John Temple)"
+    ],
+    "institutions": [
+      "Arbitral Tribunal Constituted Under Annex VII of UNCLOS",
+      "United Nations",
+      "United States military",
+      "Australian, British, Japanese forces (FONOPs)",
+      "Chinese military and Coast Guard"
+    ],
+    "cases": [
+      "Republic of the Philippines v. People's Republic of China â€” UNCLOS Annex VII award, July 12, 2016"
+    ],
+    "laws_treaties": [
+      "United Nations Convention on the Law of the Sea (UNCLOS) and Annex VII",
+      "Philippines-United States Mutual Defense Treaty (1951)"
+    ],
+    "events": [
+      "Issuance of arbitral award July 12, 2016",
+      "WWII alliances (Japan/Germany vs US; China/Russia with US) used as historical illustration of shifting interests",
+      "Ongoing US/UK/AU/JP freedom-of-navigation operations in the SCS"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The 501-page arbitral award has three distinguishable parts â€” nullification of the nine-dash line and recognition of freedom of navigation; recognition of PH baseline-derived maritime entitlements (TS, CZ, EEZ, ECS) collectively known as the WPS; and the holding that no disputed maritime feature qualifies as an 'island' with maritime rights of its own.",
+      "rhetorical_move": "three-part structural summary as pedagogical device",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The arbitration did not cover and the tribunal did not award rights over land â€” only maritime rights â€” so the award cannot by itself be used to oust China from rocks above water at high tide or from reclaimed installations.",
+      "rhetorical_move": "scope-clarification to prevent overclaiming",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The freedom-of-navigation portion of the award (Part 1) is being enforced de facto by US, Australian, British, and Japanese forces because doing so serves their permanent interests; the maritime-entitlements portion (Parts 2 and 3) is left to PH care because no other power's permanent interests are engaged.",
+      "rhetorical_move": "permanent-interests realpolitik application of Lord Palmerston",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Mutual defense pacts including the PH-US treaty have no express provisions obligating great-power enforcement of PH maritime rights in the WPS; they will be enforced only when great-power interests are independently engaged.",
+      "rhetorical_move": "treaty-text caveat",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The question of how the PH can enforce its own maritime rights â€” given the realpolitik constraints â€” is the natural next topic, deferred to a subsequent column.",
+      "rhetorical_move": "deferred-question close (forward-looking)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The WWII alliance illustration â€” Japan and Germany as US enemies, China and Russia as US allies â€” invoked to dramatize that 'their enemies yesterday are their friends today. And vice versa,' the most vivid Palmerston-doctrine teaching moment in the entire WPS arc.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'America First' aside â€” 'the American people pay taxes to protect their interests, not those of aliens. America First is their slogan' â€” among the bluntest acknowledgments in CJ's columns that alliance-based enforcement of PH rights cannot be presumed.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'Ah, that's a good topic for another column' close â€” the characteristic CJ teaser to the following week's installment, which became 'WPS is oursâ€¦ no ifs and buts' (A11) and the rest of the arc.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ's pedagogical framing â€” 'to help readers understand the lengthy 501-page award, I will try to summarize it into three parts' â€” the column functioning as a primer for a general audience overwhelmed by the document's length.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies three-part structural summary as the pedagogical entry to a complex 501-page document",
+    "uses scope-clarification to distinguish what the award covers (maritime rights) from what it does not (land features and occupations)",
+    "applies Lord Palmerston's permanent-interests doctrine as the realpolitik diagnostic for who will enforce what",
+    "uses treaty-text close-reading (no express WPS obligation in defense pacts) to disabuse readers of alliance-enforcement assumptions",
+    "applies deferred-question close (set up the enforcement question for next week's column)"
+  ],
+  "target_audience": [
+    "General Inquirer readership unfamiliar with the award's structure",
+    "Foreign-policy and international-law students",
+    "FLP donors interested in legacy WPS coverage",
+    "Anyone confused by the gap between victory in law and stalemate in fact"
+  ],
+  "register_markers": [
+    "doctrinal-formal register with numbered structural summary ('firstâ€¦ secondâ€¦ third')",
+    "pedagogical framing ('to help readers understand')",
+    "explicit Lord Palmerston citation as authority",
+    "WWII alliance illustration as didactic device",
+    "'Ah, that's a good topic for another column' teaser close",
+    "international-English register; no Tagalog markers",
+    "use of italics/quotes around 'island,' 'nine-dash line,' 'indisputable sovereignty' to mark contested terms"
+  ],
+  "one_paragraph_summary": "Panganiban summarizes the July 12, 2016 UNCLOS Annex VII arbitral award in three parts. First, the tribunal rejected China's 'nine-dash line' and its claim of 'indisputable sovereignty' over almost the entire SCS, leaving the sea open to freedom of navigation. Second, it upheld PH maritime entitlements derived from archipelagic-state baselines â€” 12-NM territorial sea, 24-NM contiguous zone, 200-NM EEZ, and 350-NM extended continental shelf â€” collectively known as the West Philippine Sea, the sea area along the west side of the country from Aparri to Sulu. Third, it held that no disputed maritime feature qualifies as an 'island' with its own maritime rights, including Scarborough Shoal, which is merely a high-tide elevation generating only a 12-NM territorial sea around a protruding rock. He clarifies the scope: the arbitration covered only maritime rights, not land features, occupations, reclamations, or installations. The freedom-of-navigation portion is being de facto enforced by US, Australian, British, and Japanese forces because doing so serves their own permanent interests; the maritime-entitlements portions, however, are left to PH care because no other power's interests are independently engaged. Invoking Lord Palmerston â€” 'in international relations there are no permanent friends or permanent enemies, only permanent interests' â€” and pointing to 'America First,' he concludes that mutual defense pacts contain no express PH-maritime-rights obligations; the question of how the PH can enforce its own rights becomes the topic for the next column."
+}

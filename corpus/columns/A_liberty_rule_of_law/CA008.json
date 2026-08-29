@@ -1,0 +1,294 @@
+{
+  "id": "CA008",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 8,
+  "title": "The rule of law in the besieged world",
+  "date": "2024-02-12",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/170774/the-rule-of-law-in-the-besieged-world",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Inquirer Opinion readers following international affairs",
+      "International-law academics and practitioners",
+      "US-affairs-aware Philippine commentators and policymakers",
+      "Diplomatic corps in Manila",
+      "Constitutional law students and bar candidates"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "pedagogical",
+      "diplomatic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "global_geopolitics",
+      "icc_and_duterte"
+    ],
+    "secondary": [
+      "rule_of_law",
+      "faith_journey"
+    ]
+  },
+  "keywords": [
+    "International Court of Justice",
+    "ICJ",
+    "International Criminal Court",
+    "ICC",
+    "Russia Ukraine genocide",
+    "South Africa Israel Gaza",
+    "Donald Trump",
+    "Colorado disqualification",
+    "insurrection or rebellion",
+    "presidential immunity",
+    "Scotus",
+    "Rome Statute",
+    "UN Charter"
+  ],
+  "primary_topics": [
+    "Tour d'horizon of three jurisdictions where the rule of law is besieged: the Philippines (ICC case), the United States (Trump 100+ cases), and the International Court of Justice (genocide cases)",
+    "Clarification of ICJ-vs-ICC distinction — both in The Hague, but ICJ tackles state-vs-state litigations while ICC tackles crimes against humanity against individuals",
+    "ICJ rulings on Russia-Ukraine genocide claim and South Africa-Israel Gaza genocide case (January 26, 2024 — 15-2 ruling; six interim commands)",
+    "Trump's Scotus appeal of the Colorado Supreme Court's 14th Amendment 'insurrection or rebellion' disqualification (oral arguments February 8, 2024)",
+    "Trump's separate appeal of the US Court of Appeals' rejection of presidential-immunity defense (immunity adheres only to an INCUMBENT)",
+    "The strategic question of timing — will US courts decide the Trump cases before the November elections?"
+  ],
+  "sub_topics": [
+    "ICJ as judicial organ of the UN (born October 24, 1945); 193 member states",
+    "ICC created by Rome Statute (entered into force July 1, 2002); 123 member states",
+    "Two most powerful countries (US and China) are members of ICJ but NOT of ICC",
+    "Russia's justification for invading Ukraine — alleged genocide by Ukraine against pro-Russian people in Donetsk and Luhansk",
+    "ICJ March 2022 interim order for Moscow to stop offensive — legally binding but unenforceable by the Court itself",
+    "Interim order emboldened EU, UK, Australia, US, allies to send arms, medicine, food to Ukraine",
+    "South Africa-Israel case: ICJ January 26, 2024 ruling (15-2) accepting jurisdiction over Gaza genocide accusation",
+    "ICJ declined to order ceasefire but issued six commands — equivalent of preliminary mandatory injunction",
+    "Six commands: (1) prevent killing/harming Palestinian civilians; (2) ensure military does not carry out said acts; (3) punish direct and public incitement to commit genocide in Gaza; (4) ensure delivery of basic services to Gaza civilians; (5) prevent destruction of war-crime evidence in Gaza; (6) submit report within 30 days (by February 26) on steps taken",
+    "Trump as 'the most SUIT-able presidential aspirant in US history' (per CJP's January 15 column)",
+    "Trump's appeal of Colorado SC decision disqualifying him under US Constitution's ban on persons who engaged in 'insurrection or rebellion'",
+    "Trump's lawyer at February 8, 2024 oral arguments: January 6, 2021 capitol assault was 'a riot, not an insurrection'",
+    "US CA rejected Trump's presidential-immunity defense — immunity adheres only to INCUMBENT chief executive",
+    "Open question: if Scotus affirms CA and disqualifies Trump, will Trump obey? Or lead more destructive insurrection?",
+    "Strategic timing risk — if courts wait and Trump wins, presidential immunity of an INCUMBENT may drop all cases"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "the rule of law in the besieged world",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the most SUIT-able presidential aspirant in US history",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the equivalent of our preliminary mandatory injunction",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Will Israel follow the rule of law and submit its report",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I will await with bated breath the Jewish response",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a riot, not an insurrection",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "great challenge to the faith of the free world in the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the bigger question is: Will the courts promptly decide the Trump cases before the US elections in November",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the rule of law in the South and North China Sea in a future column",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (columnist)",
+      "Donald Trump (subject of ~100 cases)",
+      "Vladimir Putin / Russia (referenced via state)",
+      "Volodymyr Zelensky / Ukraine (referenced via state)",
+      "Benjamin Netanyahu / Israel (referenced via state)"
+    ],
+    "institutions": [
+      "International Court of Justice (ICJ) — The Hague",
+      "International Criminal Court (ICC) — The Hague",
+      "United Nations",
+      "Supreme Court of the United States (Scotus)",
+      "Colorado Supreme Court",
+      "US Court of Appeals",
+      "European Union",
+      "United Kingdom",
+      "Australia",
+      "Republic of South Africa"
+    ],
+    "cases": [
+      "Russia-Ukraine genocide cross-claims at the ICJ (ICJ accepted jurisdiction)",
+      "South Africa v. Israel — Gaza genocide case at the ICJ (January 26, 2024, 15-2 jurisdiction ruling + six interim commands)",
+      "Trump v. Colorado (Scotus appeal of 14th Amendment disqualification; oral arguments February 8, 2024)",
+      "Trump presidential-immunity appeal (US Court of Appeals rejected; Scotus pending)",
+      "ICC case re Philippine 'war on drugs' (alluded to via 'inability or unwillingness')"
+    ],
+    "laws_treaties": [
+      "United Nations Charter",
+      "Rome Statute (entered into force July 1, 2002)",
+      "US Constitution — 14th Amendment 'insurrection or rebellion' clause",
+      "ICJ Statute"
+    ],
+    "events": [
+      "ICJ March 2022 interim order on Russia-Ukraine",
+      "ICJ January 26, 2024 ruling on South Africa v. Israel (15-2)",
+      "Israel's reporting deadline — February 26, 2024",
+      "January 6, 2021 US Capitol assault",
+      "Scotus oral arguments on Trump-Colorado — February 8, 2024",
+      "Upcoming US elections — November 2024",
+      "CJP prior columns — September 4, 2023 and January 15, 2024"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The rule of law is besieged in three jurisdictions simultaneously: the Philippines (alleged inability/unwillingness to investigate war-on-drugs crimes against humanity), the United States (~100 cases against Trump), and the International Court of Justice (genocide claims by Ukraine against Russia and by South Africa against Israel).",
+      "rhetorical_move": "three-jurisdiction-comparative-frame as the column's organizing structure",
+      "confidence": "asserted as factual description",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The ICJ-vs-ICC distinction is constitutive and often confused: both in The Hague, but ICJ (under UN, born October 24, 1945, 193 members) tackles STATE-vs-STATE litigations; ICC (under Rome Statute, in force July 1, 2002, 123 members) tackles crimes against humanity against INDIVIDUALS. The two most powerful countries (US, China) are ICJ members but NOT ICC members.",
+      "rhetorical_move": "institutional-distinction pedagogy",
+      "confidence": "asserted as legal classification",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The ICJ's six commands to Israel (January 26, 2024) function as 'the equivalent of our preliminary mandatory injunction.' Whether Israel will submit its compliance report by February 26 is a great challenge to the faith of the free world in the rule of law — and if it does not, will America and its allies enforce the ICJ ruling?",
+      "rhetorical_move": "PH-domestic-legal-analogue + open-question framing",
+      "confidence": "asserted with awaiting-with-bated-breath framing",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Trump cases test US judicial faithfulness on two fronts: (1) whether the Scotus will uphold the 14th Amendment 'insurrection or rebellion' disqualification (contra Trump's lawyer's incredible argument that January 6 was 'a riot, not an insurrection'); and (2) whether the Scotus will affirm the CA's rejection of presidential immunity (which the CA correctly held adheres only to INCUMBENT chief executives).",
+      "rhetorical_move": "two-front-test framing for Trump's legal exposure",
+      "confidence": "asserted with diplomatic critique of Trump's lawyer",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The bigger question is timing: 'Will the courts promptly decide the Trump cases before the US elections in November, or will they just procrastinate and wait?' If they wait and Trump wins, presidential immunity of an INCUMBENT may drop all cases — making the procedural pace itself constitutionally consequential.",
+      "rhetorical_move": "timing-as-substance argument elevating procedure to a rule-of-law test",
+      "confidence": "asserted as the bigger question",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Trump as 'the most SUIT-able presidential aspirant in US history' — wordplay between 'lawsuit' and 'suitable.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Trump's lawyer at February 8, 2024 Scotus oral arguments: 'incredibly argued that the January 6, 2021 assault on the US capitol was a riot, not an insurrection.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "ICJ ruled 15-2 on January 26, 2024 accepting jurisdiction over South Africa's Gaza genocide claim — declined to order ceasefire but issued six commands (equivalent of preliminary mandatory injunction).",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "ICJ's March 2022 interim order for Moscow to stop the Ukraine offensive — legally binding but unenforceable by the Court — yet emboldened the EU, UK, Australia, US, and allies to send arms, medicine, food.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJP awaits Israel's February 26 reporting deadline 'with bated breath' as a test of the free world's faith in the rule of law.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses three-jurisdiction-comparative-sweep to frame rule-of-law as global rather than local concern",
+    "treats ICJ-vs-ICC institutional distinction as essential prerequisite for serious commentary",
+    "applies PH-domestic-legal-analogues to make international procedure intelligible to Filipino readers",
+    "treats timing of judicial decisions as substantively constitutive of rule-of-law outcomes",
+    "uses awaiting-with-bated-breath register to model engaged-citizen posture",
+    "compounds open questions at the close to leave readers with the analytical agenda"
+  ],
+  "target_audience": [
+    "Inquirer Opinion readers following international affairs",
+    "International-law academics and practitioners",
+    "US-affairs-aware Philippine commentators and policymakers",
+    "Diplomatic corps in Manila",
+    "Constitutional law students and bar candidates"
+  ],
+  "register_markers": [
+    "world-affairs-survey register",
+    "ICJ-vs-ICC pedagogical distinction as setup",
+    "three-jurisdiction sweep as compositional spine",
+    "PH-domestic-legal-analogue (preliminary mandatory injunction) translating international procedure",
+    "self-referential column-series markers (prior columns on September 4, 2023 and January 15, 2024)",
+    "(The rule of law in the South and North China Sea in a future column) — series-continuation marker",
+    "wordplay-as-summary ('most SUIT-able')",
+    "open-question-stack closer (Will Israel follow? Will Scotus disqualify? Will Trump obey? Will the courts decide before November?)",
+    "diplomatic critique of named counsel ('Trump's lawyer incredibly argued')"
+  ],
+  "one_paragraph_summary": "Published February 12, 2024, this column surveys three jurisdictions where the rule of law is besieged: the Philippines (with its alleged inability or unwillingness to investigate war-on-drugs crimes against humanity), the United States (with ~100 cases against former President Donald Trump — 'the most SUIT-able presidential aspirant in US history'), and the International Court of Justice (with complicated genocide cases). CJP first clarifies a constitutive distinction: both the ICJ and ICC sit in The Hague, but the ICJ (UN judicial organ, born October 24, 1945, 193 members) handles STATE-vs-STATE litigations while the ICC (under the Rome Statute, in force July 1, 2002, 123 members) handles crimes against humanity against INDIVIDUALS — and the two most powerful countries (US, China) are ICJ members but NOT ICC members. The ICJ recently accepted jurisdiction over Russia's claim that Ukraine committed genocide against pro-Russian populations in Donetsk and Luhansk (Russia's stated justification for invasion); its March 2022 interim order for Moscow to halt was legally binding but unenforceable, though it emboldened Western allies to send arms, medicine, and food. On January 26, 2024, the ICJ ruled 15-2 that it has jurisdiction over South Africa's accusation that Israel is committing genocide against Palestinians in Gaza — declining to order a ceasefire but issuing six commands (equivalent to a preliminary mandatory injunction) covering prevention of civilian killing, military restraint, punishing incitement, ensuring basic services, preserving war-crime evidence, and submitting a compliance report by February 26. CJP awaits with bated breath whether Israel will comply, framing the question as a test of 'the faith of the free world in the rule of law.' On the US front, Scotus's oral arguments on February 8, 2024 saw Trump's lawyer 'incredibly argue' that the January 6, 2021 Capitol assault was 'a riot, not an insurrection' — and Scotus will also rule on the US Court of Appeals' rejection of Trump's presidential-immunity defense (which the CA correctly limited to INCUMBENT chief executives). The bigger question is timing: if the courts wait until after the November elections and Trump wins, presidential immunity of an INCUMBENT may moot all the cases. The column closes with a forward marker — '(The rule of law in the South and North China Sea in a future column.)' — explicitly setting up CA07."
+}

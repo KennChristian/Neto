@@ -1,0 +1,571 @@
+{
+  "id": "CC002",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 2,
+  "title": "Jovito R. Salonga, my guru and surrogate father",
+  "date": "2016-03-20",
+  "year": 2016,
+  "source_url": "https://opinion.inquirer.net/93911/jovito-r-salonga-my-guru-and-surrogate-father",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Salonga family and his wake attendees",
+      "Liberal Party members and pre-EDSA political community",
+      "FEU law alumni community and contemporaries",
+      "Catholic and Protestant interfaith dialogue community",
+      "Law students and young lawyers seeking mentor models",
+      "Civic readers tracking Salonga's national legacy",
+      "Inquirer general readership"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "mentors_and_legal_lineage",
+      "faith_journey"
+    ],
+    "secondary": [
+      "bar_exam_and_legal_education",
+      "early_life_sampaloc",
+      "jbc_discernment_and_appointment"
+    ]
+  },
+  "keywords": [
+    "Eulogy at Salonga wake (full version at cjpanganiban.com)",
+    "1956 FEU strike defused by 36-year-old Dean Salonga",
+    "CJP as 'most outstanding student' and Latin honors",
+    "1960 bar 6th place after FEU Hospital confinement",
+    "Yale scholarship/no travel funds story",
+    "Salonga law office tutelage",
+    "'You now have formidable wings' farewell blessing",
+    "Senate President/LP counsel as 'greatest honor'",
+    "Salonga divestment ethic emulated by CJP on SC appointment",
+    "Romans 8:28 JBC encouragement",
+    "'A Test of Courage' 2007 Salonga-Feliciano tribute book"
+  ],
+  "primary_topics": [
+    "Eulogy delivered at Jovito R. Salonga's wake",
+    "Salonga as CJ's guru and surrogate father â€” from FEU strike (1956-57) through law-office mentorship",
+    "Bar exam triumph (sixth place, 1960) under Salonga's encouragement",
+    "Yale scholarship + American Embassy travel-grant denial + Salonga law-office tutelage",
+    "Greatest honor: serving as Salonga's legal counsel when Senate president + LP chief counsel"
+  ],
+  "sub_topics": [
+    "Eulogy delivered at Salonga's wake (full version at cjpanganiban.com)",
+    "1956-57 school year FEU law student strike",
+    "Old dean's perceived unjustified retirement",
+    "FEU auditorium filled with clenched fists + 'persecution!' cries",
+    "New dean Dr. Salonga at age 36 â€” bespectacled, single-handedly faced hostile crowd",
+    "Forceful tremolo + 30 minutes returning strikers to classrooms",
+    "Founding guru moment â€” convinced of error, of wisdom/honesty/sincerity",
+    "CJ very active in extracurricular activities â€” FEU Central Student Organization president, National Union of Students founder/president",
+    "Salonga's constant reminders that first duty was academic excellence",
+    "Recitation testing during peak student-activity",
+    "'Most outstanding student' third year + Latin honors graduation",
+    "1960 bar exams â€” sickness + flooding rainstorm",
+    "Waded knee-deep water from FEU Hospital to UE exam venue",
+    "Lackluster first day â€” wanted to quit; Salonga encouraged continuation",
+    "Result: sixth highest place",
+    "Yale Law School scholarship recommended by Salonga",
+    "No funds to fly â€” American Embassy turned down travel-grant application (possibly due to student activism)",
+    "Salonga's consolation: 'Come, join my law office and I will teach you what I learned from the University of the Philippines, Yale and Harvard'",
+    "Surrogate father tutorship â€” biological father passed when CJ was first-year prelaw",
+    "Salonga taught rudiments + life-defining values of integrity, prudence, fairness",
+    "Led by example, not by words",
+    "Dedicated husband, caring father, faithful friend, devoted man of God",
+    "Did not smoke, drink, gamble",
+    "Wealth, power, worldly pleasures, titles, honors did not fascinate him",
+    "Religious-faith difference: Salonga devout Protestant, CJ fledgling Catholic",
+    "50+ years surrogate father-son relationship undiminished",
+    "Reason: never discussed what separated us, only what truly bound us",
+    "After 3 years assistant, CJ asked permission to form own law firm",
+    "Salonga's blessing: 'You now have formidable wings, go and soar the limitless sky!'",
+    "Salonga as Senate president â€” retained CJ as legal counsel + LP chief counsel",
+    "'Nothing is more fulfilling, more exhilarating, than the honor of being counsel to one's guru and former boss!'",
+    "Before joining Cory Aquino's 1986 Cabinet, Salonga divested + dissolved prestigious law firm",
+    "Not because mandated by law but strict personal ethic of being 'beyond suspicion in serving government'",
+    "CJ dissolved their law firm similarly when joining Supreme Court",
+    "Several JBC screening failures before ascending to Court",
+    "Salonga constantly cheered CJ + Romans 8:28 reminder: 'God makes all things work together for the good of those who love Him and are called according to His purpose'",
+    "Salonga + Evelyn Miranda-Feliciano published 'A Test of Courage' (late 2007) â€” tribute to Panganiban Court justices",
+    "CJ's writings reflect Salonga's legal philosophy + life values",
+    "Salonga teaching: law cannot be separated from life, used as brick in social edifice + means to fulfill deepest human aspirations",
+    "Closing: 'mortal body may have perished but his legacy and memory will live forever. Alleluia!'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Much has been said about Jovito R. Salonga",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Let me add my humble voice via a eulogy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the law students of the Far Eastern University declared a 'strike'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "clenched fists and anguished cries of 'persecution!'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a youngish 36-year-old, bespectacled professor walked to center stage",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "spoke with a forceful tremolo and held the rambunctious crowd spellbound",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Thus did I find the guru",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the wisdom, honesty and sincerity of their new dean",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "my first duty was to excel in academics",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "graduated with Latin honors",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I had to wade in knee-deep water",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I wanted to quit the remaining exam days",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "But Dr. Salonga would not hear of it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "copping the sixth highest place",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "perhaps because of my student activism",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Come, join my law office and I will teach you",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Thus began his tutorship as my surrogate father",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "He led by example, not by words",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Wealth, power, worldly pleasures, titles and honors did not fascinate him",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "we never discussed what separated us, only what truly bound us",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "You now have formidable wings, go and soar the limitless sky!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the greatest honor in my legal career",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Nothing is more fulfilling, more exhilarating",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "beyond suspicion in serving government",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Romans 8:28",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "God makes all things work together for the good of those who love Him",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "A Test of Courage",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "echo, even if unworthily and faintly",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "law cannot be separated from life",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "as a brick in building the social edifice",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "his legacy and memory will live forever. Alleluia!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (eulogist)",
+      "Jovito R. Salonga (deceased subject â€” guru, surrogate father, former Senate president, LP head)",
+      "Evelyn Miranda-Feliciano (co-author of 'A Test of Courage')",
+      "President Cory Aquino (Salonga joined her 1986 Cabinet)"
+    ],
+    "institutions": [
+      "Far Eastern University (FEU â€” CJ's law school)",
+      "FEU Central Student Organization",
+      "National Union of Students (CJ founder/president)",
+      "FEU Hospital (CJ's 1960 confinement)",
+      "University of the East (1960 bar exam venue)",
+      "Yale Law School (Salonga + CJ scholarship)",
+      "Harvard University (Salonga study)",
+      "University of the Philippines (Salonga study)",
+      "American Embassy (denied CJ travel grant)",
+      "Salonga & Panganiban Law Office (former)",
+      "Liberal Party (LP â€” Salonga headed)",
+      "Philippine Senate (Salonga as president)",
+      "Cabinet of President Cory Aquino (Salonga member 1986)",
+      "Judicial and Bar Council (JBC â€” multiple CJ screening failures)",
+      "Supreme Court of the Philippines"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "Romans 8:28 (Bible â€” Salonga's frequent encouragement)"
+    ],
+    "events": [
+      "1956-57 â€” FEU law students' strike + Salonga's quelling speech",
+      "1960 â€” CJ's bar exam (sixth place)",
+      "March 2016 â€” Salonga's death + wake (eulogy occasion)",
+      "Late 2007 â€” 'A Test of Courage' book publication",
+      "1986 â€” Salonga joining Cory Aquino's Cabinet",
+      "CJ's appointment to Supreme Court (with JBC screening failures preceding)",
+      "CJ's retirement as Chief Justice"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "CJ found his guru in Dr. Jovito R. Salonga at the 1956-57 FEU law students' strike: 'a youngish 36-year-old, bespectacled professor walked to center stage, took the microphone, and single-handedly faced the hostile crowd. The new dean, Dr. Salonga, spoke with a forceful tremolo and held the rambunctious crowd spellbound. In 30 minutes flat, the strikers trooped back to their classrooms, convinced of the error in their mass action, and of the wisdom, honesty and sincerity of their new dean.' This was the formative moment that defined CJ's lifelong relationship.",
+      "rhetorical_move": "founding-moment narration with sensory specificity",
+      "confidence": "asserted as first-person testimony",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Salonga balanced CJ's extracurricular activism (FEU Central Student Organization president, National Union of Students founder/president) with discipline through unscheduled recitation tests during peak student-activity periods â€” producing 'most outstanding student' in third year and Latin honors graduation; during the 1960 bar exams (sickness + flooding rainstorm), Salonga's encouragement prevented CJ from quitting and led to sixth highest place.",
+      "rhetorical_move": "discipline-with-care characterization of mentorship",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "After Yale Law School scholarship recommendation but failed travel grant from American Embassy (possibly due to student activism), Salonga's offer to teach CJ in his law office began the surrogate-father tutorship â€” CJ's biological father having passed during first-year prelaw â€” and the values of integrity, prudence, fairness were taught by example, with Salonga embodying simplicity (no smoking, drinking, gambling; unfascinated by wealth, power, worldly pleasures, titles, honors).",
+      "rhetorical_move": "surrogate-father designation with character-by-example transmission",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The religious-faith difference (Salonga devout Protestant, CJ fledgling Catholic) 'did not diminish our over 50 years of surrogate father-son relationship, or my awe, esteem and affection for him. This is probably because we never discussed what separated us, only what truly bound us' â€” making interfaith-cordiality-through-focus-on-bonds a transmissible lesson.",
+      "rhetorical_move": "interfaith-cordiality framing (focus on bonds, not separations)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Salonga's blessing on CJ's law-firm independence â€” 'You now have formidable wings, go and soar the limitless sky!' â€” exemplified his unselfish patronage; and retaining CJ as legal counsel when Senate president + LP chief counsel was 'the greatest honor in my legal career, not by awarding me a plaque of gold or conferring on me an honorary degree, but by retaining me as his legal counsel.'",
+      "rhetorical_move": "anti-trophy framing of greatest-honor recognition",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Salonga's divestment of conflicting interests and dissolution of his prestigious law firm before joining Cory Aquino's 1986 Cabinet was 'not because this was mandated by law but because of his strict personal ethic of being beyond suspicion in serving government' â€” a model CJ emulated by dissolving their law firm when joining the Supreme Court.",
+      "rhetorical_move": "ethics-beyond-law-requirement framing with explicit emulation disclosure",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Through multiple JBC screening failures, Salonga 'constantly cheered me up and tirelessly lifted my sagging spirit,' patiently reminding CJ of Romans 8:28: 'God makes all things work together for the good of those who love Him and are called according to His purpose' â€” making Scripture-grounded encouragement central to the mentor-disciple bond.",
+      "rhetorical_move": "Scripture-grounded encouragement disclosure (Romans 8:28)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ's writings reflect Salonga's legal philosophy and life values: 'law cannot be separated from life, that it should be used as a brick in building the social edifice and as a means to fulfill the deepest aspirations of man' â€” making Salonga's teaching the foundation of the Panganiban judicial corpus.",
+      "rhetorical_move": "legacy-transmission framing with explicit-attribution",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The founding-moment narration of the 1956-57 FEU strike: 'a youngish 36-year-old, bespectacled professor walked to center stage, took the microphone, and single-handedly faced the hostile crowdâ€¦ spoke with a forceful tremolo and held the rambunctious crowd spellbound. In 30 minutes flat, the strikers trooped back to their classrooms' â€” CJ's single most vivid origin-story passage about meeting his guru.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'clenched fists and anguished cries of persecution!' student-strike imagery â€” capturing the dramatic stakes that Salonga single-handedly defused.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 1960 bar-exam ordeal: sick CJ wading 'in knee-deep water from the then FEU Hospital, where I was confined, to the University of the East, the exam venue' â€” physical-condition reportage transforming a personal struggle into vivid scene.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Wanted to quit after lackluster first day â†’ Salonga 'would not hear of it' â†’ 'copping the sixth highest place' â€” the encourager-pushes-through-to-success narrative.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "American Embassy travel-grant denial: 'perhaps because of my student activism' â€” the most CJ ever discloses about his political-history complications with US authorities.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Salonga's law-office invitation: 'Come, join my law office and I will teach you what I learned from the University of the Philippines, Yale and Harvard' â€” captured verbatim as the surrogate-fatherhood inauguration.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Salonga's character catalog: 'He did not smoke, drink or gamble. Wealth, power, worldly pleasures, titles and honors did not fascinate him.' â€” five-trait simplicity description.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The interfaith-cordiality formulation: 'we never discussed what separated us, only what truly bound us' â€” a single-sentence credo for friendship across religious lines.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The independence-blessing: 'You now have formidable wings, go and soar the limitless sky!' â€” Salonga's verbatim valediction preserved with bird-flight imagery.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The greatest-honor anti-trophy framing: 'not by awarding me a plaque of gold or conferring on me an honorary degree, but by retaining me as his legal counsel' â€” using contrast with conventional honors to elevate the true honor.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Salonga's pre-1986-Cabinet divestment: 'he divested himself of conflicting financial interestsâ€¦ and dissolved his prestigious law firm, not because this was mandated by law but because of his strict personal ethic of being beyond suspicion in serving government' â€” model of supererogatory ethics.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ's emulation: 'when I joined the Supreme Court, I also dissolved our law firm in obedience to his example' â€” explicit imitatio sequenced as direct response to Salonga's example.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Romans 8:28 preserved as the recurring Scripture-anchor of mentor-encouragement.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Closing 'Alleluia!' â€” single-word Hebrew-religious valediction, unusual in CJ columns, marking the eulogy's liturgical register.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies founding-moment narration for guru/mentor-relationship origin stories",
+    "uses discipline-with-care characterization for mentorship description",
+    "deploys interfaith-cordiality framing for cross-religion bonds (focus on bonds, not separations)",
+    "treats anti-trophy framing as legitimate honor-recognition pattern",
+    "applies ethics-beyond-law-requirement framing for supererogatory professional conduct",
+    "uses Scripture-grounded encouragement (Romans 8:28) for setback-resilience",
+    "structures eulogies through biographical-arc with key-moments selection",
+    "applies imitatio-disclosure to make mentor-influence explicit and attributable"
+  ],
+  "target_audience": [
+    "Salonga family and his wake attendees",
+    "Liberal Party members and pre-EDSA political community",
+    "FEU law alumni community and contemporaries",
+    "Catholic and Protestant interfaith dialogue community",
+    "Law students and young lawyers seeking mentor models",
+    "Civic readers tracking Salonga's national legacy",
+    "Inquirer general readership"
+  ],
+  "register_markers": [
+    "eulogy-recap register",
+    "labeled-subhead structure ('Finding my guru', 'Surrogate father', 'Greatest honor')",
+    "first-person personal-narrative voice",
+    "founding-moment narration with sensory specificity",
+    "named-mentor + surrogate-father designation",
+    "discipline-with-care characterization",
+    "physical-condition reportage (sickness + flooding)",
+    "verbatim-mentor-quote preservation",
+    "interfaith-cordiality framing",
+    "anti-trophy framing of greatest-honor",
+    "ethics-beyond-law-requirement framing",
+    "Scripture-grounded encouragement (Romans 8:28)",
+    "legacy-transmission with explicit-attribution",
+    "imitatio-disclosure of mentor's example",
+    "'Alleluia!' closing valediction (rare in CJ)",
+    "biographical-arc structure (1956 strike â†’ 1960 bar â†’ law-office â†’ Senate counsel â†’ SC ascension â†’ eulogy)",
+    "speech-self-citation (cjpanganiban.com)",
+    "religious-difference disclosure (Protestant vs Catholic)",
+    "'A Test of Courage' book reference (Salonga + Evelyn Miranda-Feliciano, 2007)"
+  ],
+  "one_paragraph_summary": "Panganiban delivers a eulogy at the wake of Jovito R. Salonga, his guru and surrogate father. The 1956-57 school year FEU law students' strike protested the 'unjustified retirement' of their old dean â€” and a 'youngish 36-year-old, bespectacled professor walked to center stage, took the microphone, and single-handedly faced the hostile crowd. The new dean, Dr. Salonga, spoke with a forceful tremolo and held the rambunctious crowd spellbound. In 30 minutes flat, the strikers trooped back to their classrooms, convinced of the error in their mass action, and of the wisdom, honesty and sincerity of their new dean.' Active as FEU Central Student Organization president and National Union of Students founder/president, CJ gave secondary importance to academics â€” but Salonga's constant recitation-testing during peak student-activity periods produced 'most outstanding student' in third year and Latin honors graduation. Before the 1960 bar exams CJ got sick and faced a flooding rainstorm â€” wading 'in knee-deep water from the then FEU Hospitalâ€¦ to the University of the East, the exam venue' â€” and after a lackluster first day wanted to quit; but Salonga 'would not hear of it,' and CJ ended up 'copping the sixth highest place.' On Salonga's recommendation, CJ won a Yale Law School scholarship but lacked funds to fly â€” the American Embassy denied a travel grant, 'perhaps because of my student activism.' Salonga consoled him: 'Come, join my law office and I will teach you what I learned from the University of the Philippines, Yale and Harvard.' Thus began the surrogate-father tutorship â€” CJ's biological father having passed during first-year prelaw â€” and Salonga taught the rudiments of law practice and 'the life-defining values of integrity, prudence and fairness. He led by example, not by words. He was a dedicated husband, a caring father, a faithful friend and a devoted man of God. He did not smoke, drink or gamble. Wealth, power, worldly pleasures, titles and honors did not fascinate him.' The religious-faith difference (Salonga devout Protestant, CJ fledgling Catholic) 'did not diminish our over 50 years of surrogate father-son relationship, or my awe, esteem and affection for him. This is probably because we never discussed what separated us, only what truly bound us.' After three years as Salonga's law-office assistant, CJ asked permission to form his own law firm, receiving the blessing 'You now have formidable wings, go and soar the limitless sky!' The greatest honor in CJ's legal career came when Salonga, as Senate president and LP chief, retained CJ as his legal counsel â€” 'not by awarding me a plaque of gold or conferring on me an honorary degree, but by retaining me as his legal counselâ€¦ Nothing is more fulfilling, more exhilarating, than the honor of being counsel to one's guru and former boss!' Before joining Cory Aquino's 1986 Cabinet, Salonga divested conflicting financial interests and dissolved his prestigious law firm 'not because this was mandated by law but because of his strict personal ethic of being beyond suspicion in serving government' â€” and CJ followed his example by dissolving their law firm when joining the Supreme Court. Through multiple JBC screening failures preceding the SC appointment, Salonga 'constantly cheered me up and tirelessly lifted my sagging spirit,' patiently reminding him of Romans 8:28: 'God makes all things work together for the good of those who love Him and are called according to His purpose.' Upon CJ's retirement as Chief Justice, Salonga and Evelyn Miranda-Feliciano published 'A Test of Courage' (late 2007) as a tribute to the Panganiban Court. 'Those who have read my decisions and writings will surely detect the legal philosophy and life values of Dr. Salonga. Indeed, I try to echo, even if unworthily and faintly, his teaching that law cannot be separated from life, that it should be used as a brick in building the social edifice and as a means to fulfill the deepest aspirations of man. The mortal body of Dr. Salonga may have perished but his legacy and memory will live forever. Alleluia!'"
+}

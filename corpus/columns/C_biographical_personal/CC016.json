@@ -1,0 +1,369 @@
+{
+  "id": "CC016",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 16,
+  "title": "New evangelization of Catholic Church",
+  "date": "2016-07-24",
+  "year": 2016,
+  "source_url": "https://opinion.inquirer.net/95902/new-evangelization-of-catholic-church",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "PCNE III participants and PH Catholic laity",
+      "Cardinal Tagle and Catholic hierarchy",
+      "Catholic civil servants and politicians",
+      "Constitutional convention/assembly Catholic delegates (future)",
+      "Civic readers of CJ's faith-and-public-life columns",
+      "Anti-death-penalty and anti-EJK advocates"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine",
+      "faith_journey"
+    ],
+    "secondary": [
+      "due_process",
+      "family_and_marriage",
+      "icc_and_duterte"
+    ]
+  },
+  "keywords": [
+    "[Pre-existing demo file C16 - skipped this batch] PCNE III at UST Quadricentennial Pavilion July 15-17 2016",
+    "Cardinal Tagle invitation",
+    "separation of church and state explained",
+    "Evangelii Gaudium No. 182",
+    "pro-God Constitution preamble",
+    "new evangelization in governance and public service"
+  ],
+  "primary_topics": [
+    "Third Philippine Conference on New Evangelization (PCNE III) at UST Quadricentennial Pavilion, July 15-17",
+    "Cardinal Tagle's invitation for CJ to speak on Catholic evangelization in governance",
+    "Church-state separation doctrine â€” neutrality requirement vs prohibition on advocacy",
+    "Federalism Cha-cha as immediate civic-Catholic challenge (Con-ass vs Con-con)",
+    "Death penalty revival + summary execution as 'end never justifies means' concern"
+  ],
+  "sub_topics": [
+    "PCNE III at UST Quadricentennial Pavilion, July 15-17, 2016",
+    "Over 5,000 faithful from all over",
+    "Cardinal Tagle's speaking invitation to CJ on evangelization in governance and public service",
+    "Church-state separation does NOT prohibit clergy/laity advocacy of pro-Christian tenets",
+    "Government must be neutral in religious 'competition'",
+    "Forbidden: appropriating funds for one group's basilica; promoting one's dogma; paying priest/imam salaries for religious duties",
+    "Cannot use religion as condition for civil/political right",
+    "Separation of church from state â‰  separation of state from God",
+    "PH is theist, monotheist â€” not atheist, not even agnostic",
+    "Constitutional preamble: 'We, the sovereign Filipino people, imploring the aid of Almighty God'",
+    "Both Congress chambers + Cabinet preface meetings with prayers",
+    "SC + other courts use 'Centennial Prayer for the Courts'",
+    "Constitution/laws don't bar priests/nuns from public office; Canon Law sometimes limits them",
+    "Pope Francis, Evangelii Gaudium No. 182, quoted on Church right to opine on public matters",
+    "Pope: 'integral promotion of each human being' as evangelization task",
+    "No longer possible to claim religion restricted to private sphere",
+    "God wants his children happy in this world too",
+    "Catechism + Vatican II urge Gospel values in public/private life",
+    "Federalism as most crucial temporal matter â€” Constitution will be overhauled, not just amended",
+    "First challenge: Con-ass vs Con-con method",
+    "Second challenge: make new Constitution pro-God, pro-faith, pro-life, pro-prayer, pro-family, pro-human rights",
+    "Vigilance across stages: method, delegate election, deliberations, plebiscite campaign",
+    "Death penalty revival (hanging or musketry) concern",
+    "Summary execution of alleged criminals without due process",
+    "'the end never justifies the means'",
+    "Positive supports without violating fundamental rights: anti-crime/drugs/corruption drive, calamity relief, free education for poor, job creation with just wages, peace process, credible elections",
+    "Use freedom of speech to assert, argue, denounce",
+    "Civil servants may need to uphold Christian values at risk of job loss",
+    "Closing benediction: God always with us (above, behind, before, within) to make us another Christ â€” humble, loving, sacrificing"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Hardly noticed by the media",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the doctrine of separation of church and state does not prohibit the clergy and the laity from advocating",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the government to be neutral in the 'competition'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "While there is separation of church from state, there is no separation of the state from God",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The Philippines is theist, not atheist, not even agnostic",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "imploring the aid of Almighty God",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Centennial Prayer for the Courts",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "as Catholics, we take our bearings from Pope Francis",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the integral promotion of each human being",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the most crucial topic in governance and public service",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "pro-God, pro-faith, pro-life, pro-prayer, pro-family and pro-human rights",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the end never justifies the means",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "workers in the vineyard of the Lord",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "freedom of speech to assert, to argue and to denounce",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "at the risk of ridicule, censure, or even of losing our jobs",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "trials and triumphs, defeats and victories, frustrations and exaltations, pains and gains, crucifixions and resurrections",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "above us to inspire us, behind us to strengthen us, before us to lead us, and within us to transform us",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "another Christ â€” humble, loving, and sacrificing",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (PCNE III speaker)",
+      "Luis Antonio Cardinal Tagle (invited CJ)",
+      "Pope Francis (Evangelii Gaudium quoted)",
+      "President Rodrigo Duterte (federalism + death penalty + drug war context)"
+    ],
+    "institutions": [
+      "Third Philippine Conference on New Evangelization (PCNE III)",
+      "University of Santo Tomas (UST Quadricentennial Pavilion)",
+      "Roman Catholic Church (PH and universal)",
+      "Vatican II / Second Vatican Council",
+      "Philippine Congress (House and Senate, prayer-prefacing)",
+      "Cabinet (prayer-prefacing)",
+      "Supreme Court and lower courts (Centennial Prayer for the Courts)"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "1987 Constitution Preamble â€” 'imploring the aid of Almighty God'",
+      "1987 Constitution â€” church-state separation clause",
+      "Canon Law (clerical political participation limits)",
+      "Catechism of the Catholic Church",
+      "Pope Francis, Evangelii Gaudium No. 182",
+      "Vatican II reforms"
+    ],
+    "events": [
+      "PCNE III at UST, July 15-17, 2016",
+      "Duterte's federalism proposal (ongoing)",
+      "Duterte administration drug-war + death-penalty revival proposals"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The doctrine of separation of church and state does not prohibit clergy and laity from advocating pro-Christian tenets and opposing anti-Christian policies â€” it merely requires government neutrality in religious 'competition' (no funding one group's basilica, no promoting one dogma, no paying religious-duty salaries, no using religion as condition for rights); while there is separation of church FROM state, there is no separation of the STATE FROM GOD because the Philippines is theist, monotheist â€” not atheist, not even agnostic.",
+      "rhetorical_move": "doctrinal-clarification with constitutional-textual anchoring (preamble + prayer practices)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Pope Francis's Evangelii Gaudium No. 182 affirms the traditional teaching that Catholics must bear witness to faith not only internally but in political and social spheres â€” 'It is no longer possible to claim that religion should be restricted to the private sphere and that it exists only to prepare souls for heaven' â€” and the Catechism and Vatican II urge bringing Gospel values into public life.",
+      "rhetorical_move": "papal-authority + magisterial-authority anchoring of public-engagement mandate",
+      "confidence": "asserted via Evangelii Gaudium quotation",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Federalism is the most crucial temporal matter in current governance, requiring a constitutional overhaul (not mere amendment); Catholics must engage from method-of-amendment (Con-ass vs Con-con) through delegate election, deliberations, and plebiscite campaign to ensure the new Constitution is 'as pro-God, pro-faith, pro-life, pro-prayer, pro-family and pro-human rights as possible.'",
+      "rhetorical_move": "stage-by-stage civic-engagement framework + six-pro values catalog",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The proposed revival of the death penalty (by hanging or musketry) and the summary execution of alleged criminals without due process must be resisted as 'workers in the vineyard of the Lord' â€” for we know that 'the end never justifies the means' â€” while still supporting (without violating fundamental rights) the government's drive against criminality, drugs, and corruption, calamity relief, free education for the poor, job creation with just wages, peace process, and credible elections.",
+      "rhetorical_move": "principled-opposition + supportive-alternative framing (means-ends ethics)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Civil servants must sometimes use 'freedom of speech to assert, to argue and to denounce,' and must be willing to uphold Christian values 'at the risk of ridicule, censure, or even of losing our jobs' â€” making professional cost-acceptance part of the evangelization mandate.",
+      "rhetorical_move": "vocational-cost acknowledgment for ethical witness",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The PCNE III event positioning: 'Hardly noticed by the mediaâ€¦ It was a huge gathering, attended by over 5,000 faithful from all over' â€” using a media-coverage gap to elevate the event's significance.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The constitutional-preamble citation: 'We, the sovereign Filipino people, imploring the aid of Almighty God' â€” used as proof-text that PH is constitutionally theist, monotheist.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The cross-institutional prayer-practice catalog: Congress chambers preface meetings with prayers, the Cabinet does too, and the SC uses the 'Centennial Prayer for the Courts' â€” physicalizing the no-separation-of-state-from-God doctrine.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Evangelii Gaudium No. 182 quoted at length: 'The Church's pastors, taking into account the contributions of the different sciences, have the right to offer opinions on all that affects people's livesâ€¦ It is no longer possible to claim that religion should be restricted to the private sphere.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The six-pro values catalog: 'pro-God, pro-faith, pro-life, pro-prayer, pro-family and pro-human rights' â€” using parallel-construction to compress the entire constitutional-engagement program.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'end never justifies the means' aphorism deployed as the universal test for evaluating both death-penalty revival and summary execution.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing benediction structure: 'in all our trials and triumphs, defeats and victories, frustrations and exaltations, pains and gains, crucifixions and resurrections, God will never abandon us. He will always be with us: above us to inspire us, behind us to strengthen us, before us to lead us, and within us to transform us to be another Christ â€” humble, loving, and sacrificing' â€” one of CJ's most theologically-extended column-closings, with quadruple parallel structure.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies doctrinal-clarification with constitutional-textual anchoring",
+    "deploys papal/magisterial-authority anchoring for Catholic public-engagement mandates",
+    "uses stage-by-stage civic-engagement framework for political processes",
+    "applies 'end never justifies means' aphorism as universal moral test",
+    "treats principled-opposition + supportive-alternative as paired analytical move",
+    "uses vocational-cost acknowledgment when ethical witness conflicts with employment",
+    "structures closing benedictions with quadruple parallel theological architecture"
+  ],
+  "target_audience": [
+    "PCNE III participants and PH Catholic laity",
+    "Cardinal Tagle and Catholic hierarchy",
+    "Catholic civil servants and politicians",
+    "Constitutional convention/assembly Catholic delegates (future)",
+    "Civic readers of CJ's faith-and-public-life columns",
+    "Anti-death-penalty and anti-EJK advocates"
+  ],
+  "register_markers": [
+    "speaking-engagement-recap register",
+    "labeled-subhead structure ('Separation of church and state', 'Church's teaching', 'Temporal matters')",
+    "papal-authority + magisterial-authority anchoring",
+    "constitutional-textual anchoring (preamble + prayer practices)",
+    "six-pro values catalog ('pro-God, pro-faith, pro-life...')",
+    "stage-by-stage civic-engagement framework",
+    "'workers in the vineyard of the Lord' biblical-imagery framing",
+    "extended-quadruple-parallel theological closing",
+    "Pope Francis Evangelii Gaudium citation",
+    "'the end never justifies the means' moral-test aphorism",
+    "vocational-cost acknowledgment framing"
+  ],
+  "one_paragraph_summary": "Panganiban recounts his speaking engagement at the Third Philippine Conference on New Evangelization (PCNE III) at the UST Quadricentennial Pavilion (July 15-17, 2016), attended by over 5,000 faithful, where Cardinal Tagle invited him to speak on how Catholics can evangelize in governance and public service. He clarifies that the doctrine of separation of church and state does NOT prohibit clergy and laity from advocating pro-Christian tenets â€” it merely requires government neutrality in religious 'competition' (no public funds for one group's basilica, no promotion of one's dogma, no salaries for strictly religious duties, no religion as condition for civil/political right). While there is separation of church FROM state, there is no separation of the STATE FROM GOD: the Philippines is theist, monotheist â€” not atheist, not even agnostic â€” as evidenced by the constitutional preamble 'We, the sovereign Filipino people, imploring the aid of Almighty God,' the prayer-prefacing practices of both Congress chambers and the Cabinet, and the 'Centennial Prayer for the Courts' used by the Supreme Court. Constitution and laws do not bar priests and nuns from public office; only Canon Law sometimes limits clerical political participation. As Catholics, the bearings come from Pope Francis's Evangelii Gaudium No. 182: 'The Church's pastors, taking into account the contributions of the different sciences, have the right to offer opinions on all that affects people's lives, since the task of evangelization implies and demands the integral promotion of each human being. It is no longer possible to claim that religion should be restricted to the private sphere and that it exists only to prepare souls for heaven.' The Catechism and Vatican II urge bringing Gospel values into public and private life. The most crucial temporal matter is federalism, which requires constitutional overhaul (not amendment) â€” first challenge is method (Con-ass vs Con-con) and second is making the new Constitution 'as pro-God, pro-faith, pro-life, pro-prayer, pro-family and pro-human rights as possible,' with vigilance from method-decision through delegate-election, deliberations, and plebiscite. The proposed revival of death penalty (by hanging or musketry) and summary execution of alleged criminals without due process must be resisted â€” 'we know that the end never justifies the means.' Catholics should support (without violating fundamental rights) the drive against criminality, drugs, and corruption; calamity relief; free education for the poor; job creation with just wages; the peace process; and credible elections. Civil servants may need to use 'freedom of speech to assert, to argue and to denounce' and uphold Christian values 'at the risk of ridicule, censure, or even of losing our jobs.' He closes: 'in all our trials and triumphs, defeats and victories, frustrations and exaltations, pains and gains, crucifixions and resurrections, God will never abandon us. He will always be with us: above us to inspire us, behind us to strengthen us, before us to lead us, and within us to transform us to be another Christ â€” humble, loving, and sacrificing.'"
+}

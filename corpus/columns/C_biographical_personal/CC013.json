@@ -1,0 +1,570 @@
+{
+  "id": "CC013",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 13,
+  "title": "Why my best friends are my best critics",
+  "date": "2019-11-17",
+  "year": 2019,
+  "source_url": "https://opinion.inquirer.net/125281/why-my-best-friends-are-my-best-critics",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Inquirer general readership",
+      "Readers who wrote in response to the Oct 27 Carpio column",
+      "Personal-essay following of CJ",
+      "Catholic and ecumenical readers (the Romans 12 and inter-faith disclosure)",
+      "Law-school cohorts familiar with the Salonga biographical legend",
+      "Readers interested in marriage-as-partnership wisdom (Leni's role)"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "mentors_and_legal_lineage",
+      "faith_journey"
+    ],
+    "secondary": [
+      "family_and_marriage",
+      "supreme_court_history",
+      "bar_exam_and_legal_education"
+    ]
+  },
+  "keywords": [
+    "Carpio",
+    "Salonga",
+    "Legaspi",
+    "Leni Panganiban",
+    "criticism",
+    "friendship",
+    "faith",
+    "mentors"
+  ],
+  "primary_topics": [
+    "Reader response to CJ's 'Agreeing to disagree with Justice Carpio' (Oct 27)",
+    "Differing in good faith without becoming difficult â€” CJ's universal pattern with best friends",
+    "Self-care principle: ignoring offensive criticism from malicious schemers; trusting track record",
+    "Romans 12:17-19 as the canonical CJ scripture for handling enmity",
+    "Salonga as guru and surrogate father â€” Cosmopolitan Church Protestant counsel to fledgling Catholic CJ",
+    "Archbishop Legaspi as 1991 PCP II presiding officer who ruled CJ out of order yet later sponsored his Vatican appointment",
+    "Wife Leni Panganiban as closest friend and beloved who critiques CJ's writing, speech, looks and dress"
+  ],
+  "sub_topics": [
+    "Prior column (Oct 27) â€” 'Agreeing to disagree with Justice Carpio' â€” 95% harmony, 5% cacophony",
+    "Reader objection: how can you be close friends when you disagree on fundamental things?",
+    "Distinction: good-faith divergence vs malicious offensive criticism aimed at imagined defects",
+    "Strategy: refuse to engage; 'let them sink in their own mud'; trust track record and let true friends judge/defend",
+    "Romans 12:17-19 â€” Do not repay evil for evil; live at peace with all; vengeance belongs to the Lord",
+    "Salonga biography: bar exam topper; UP LLB, Harvard LLM, Yale JSD; three-time senatorial topper",
+    "Self-deprecation: CJ as 'poor newsboy born in squalid Tondo, Manila'; FEU LLB; bar 6th place",
+    "Salonga's foremost teaching: rare gems money cannot buy â€” excellence, integrity, honor, dignity, reverential regard for God",
+    "Salonga's co-authored book 'A Test of Courage' (Jan 22, 2008) honoring CJ and the Panganiban Court â€” Carpio was guest speaker",
+    "Salonga's launch speech: comparing CJ to St. Paul on the road to Damascus â€” inward journey, blinding light, transformation",
+    "Salonga's confession: 'In a deeper sense, Art is my mentor'",
+    "Substantive disagreement with Salonga: Protestant pastor at Cosmopolitan Church vs CJ as fledgling Catholic",
+    "Archbishop Legaspi as CBCP president presiding over PCP II final sessions (mid-Feb 1991)",
+    "CJ's PCP II proposal: priests and nuns should be allowed to marry â€” repeatedly ruled out of order",
+    "Despite stubbornness, Legaspi joined Ambassador 'Tita' de Villa in recommending CJ to Pope John Paul II",
+    "1996-2001 â€” sole Filipino member of Pontifical Council of the Laity",
+    "Leni Panganiban critiques writing, speech, looks and dress â€” 'every critical word is uttered with unconditional love'",
+    "Closing principle: 'Friend first before critic, and love first before criticism'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "My columns on Senior Justice Antonio T. Carpio attracted a lot of comments",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Despite these differences, he and I (and our spouses) remain the best of personal friends",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "enjoying our 95-percent harmony and overlooking our 5-percent cacophony",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "How can you be close friends when you disagree on fundamental things?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I have differed without being difficult with all, repeat all, of my best friends",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I am grateful for their divergences made in good faith",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "gentle, though at times emphatic, language",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I ignore offensive criticisms",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "imagined, false and/or misleading personal defects",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "conceived in malice and in bad faith",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I won't let schemers and kibitzers disrupt my goals",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I will simply let them sink in their own mud",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I stand on my track record",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "allow only those who truly know me to judge and defend me",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I take refuge in Romans 12:17-19",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Do not repay anyone evil for evil",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "be concerned for what is noble in the sight of all",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "live at peace with all",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Beloved, do not look for revenge but leave room for the wrath",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Vengeance is Mine",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Let me cite other close friends",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "my guru, dean and surrogate father",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "He excelled in everything he did",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the best president our country never had",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I pale utterly",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "poor newsboy born in squalid Tondo, Manila",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "barely reached basic schools",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "masa-based Far Eastern University",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the rare gems that money CANNOT buy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "excellence, integrity, honor, dignity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "reverential regard and love for God",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Source of all that is true, good and beautiful",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "A Test of Courage",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Like St. Paul who saw the blinding light on the road to Damascus",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Art embarked on his own inward journey, saw the light and was transformed",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "agreed to disagree on something very fundamental",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "fledgling Catholic",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "He repeatedly ruled me out of order",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "priests and nuns should be allowed to marry",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Despite my stubbornness",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "though unworthy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the only Filipino member of the Pontifical Council of the Laity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "she remains my closest friend and beloved",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "every critical word is uttered with unconditional love",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Please note the sequence: Friend first before critic, and love first before criticism",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (former CJ, columnist)",
+      "Justice Antonio T. Carpio (Senior SC Justice; 95%-harmony co-disagreer)",
+      "Dr. Jovito R. Salonga (late; 'guru, dean and surrogate father'; UP LLB, Harvard LLM, Yale JSD; bar 1st place; 3-time senatorial topper; Cosmopolitan Church pastor)",
+      "Evelyn Miranda-Feliciano (Protestant co-author of 'A Test of Courage')",
+      "Archbishop Leonardo Z. Legaspi (CBCP president; PCP II presiding officer; recommender to Pope John Paul II)",
+      "Ambassador Henrietta 'Tita' de Villa (co-recommender to Pope John Paul II)",
+      "Pope John Paul II (named CJ to Pontifical Council of the Laity 1996-2001)",
+      "Leni Panganiban (CJ's wife; closest friend; critic-with-love)",
+      "St. Paul (typological comparison from Salonga's speech)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "Cosmopolitan Church (Salonga's pastoral home)",
+      "Catholic Bishops' Conference of the Philippines (CBCP)",
+      "Second Plenary Council of the Philippines (PCP II, mid-Feb 1991)",
+      "Pontifical Council of the Laity (Vatican)",
+      "University of the Philippines (Salonga's LLB)",
+      "Harvard Law School (Salonga's LLM)",
+      "Yale Law School (Salonga's JSD)",
+      "Far Eastern University (CJ's LLB)",
+      "Inquirer (publisher)"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "Romans 12:17-19 (Catholic biblical citation â€” handling enmity)"
+    ],
+    "events": [
+      "Oct 27, 2019 â€” CJ's column 'Agreeing to disagree with Justice Carpio'",
+      "Jan 22, 2008 â€” launch of Salonga's book 'A Test of Courage' (Carpio as guest speaker)",
+      "Mid-Feb 1991 â€” PCP II final sessions, Legaspi presiding",
+      "1996-2001 â€” CJ as sole Filipino member of Pontifical Council of the Laity"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Best friends are best critics â€” meaning CJ has differed without being difficult with ALL of his best friends, not just with Carpio; good-faith divergence is the foundation of, not the obstacle to, deep friendship.",
+      "rhetorical_move": "principle-generalization (universalizing a friendship pattern from one case)",
+      "confidence": "asserted as personal credo",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "There is a sharp distinction between good-faith divergence (which CJ welcomes and is grateful for) and offensive criticism at imagined defects conceived in malice (which CJ refuses to engage); the latter he leaves to 'sink in their own mud,' trusting his track record and those who truly know him.",
+      "rhetorical_move": "good-faith-vs-malice differentiation (the criterion for engaging or ignoring criticism)",
+      "confidence": "asserted as praxis",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Scripture (Romans 12:17-19) â€” 'Do not repay anyone evil for evilâ€¦ live at peace with allâ€¦ leave room for the wrath; for it is written, Vengeance is Mine' â€” is CJ's canonical refuge for handling enmity.",
+      "rhetorical_move": "scriptural-grounding of self-care principle",
+      "confidence": "asserted as personal-faith anchor",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Salonga's 'foremost teaching is not about law but about life': money buys necessities; what it CANNOT buy â€” excellence, integrity, honor, dignity, and reverential regard for God â€” is what makes a life worth living; this is the deepest substantive agreement across the Catholic-Protestant disagreement.",
+      "rhetorical_move": "teacher-as-life-source elevation",
+      "confidence": "asserted with intense gratitude",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Salonga's St. Paul / road to Damascus framing of CJ â€” 'inward journey, saw the light and was transformed' â€” is the most carefully-quoted endorsement in CJ's writing, even though CJ insists Salonga has 'exaggerated my role.'",
+      "rhetorical_move": "honor-with-humility (quoting the praise while explicitly deflecting it)",
+      "confidence": "asserted as treasured testimony",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Legaspi's repeated ruling-out-of-order at PCP II on CJ's proposal that priests and nuns should be allowed to marry â€” paired with his subsequent recommendation (with Tita de Villa) of CJ to Pope John Paul II for the Pontifical Council of the Laity â€” exemplifies that substantive disagreement and institutional vouching are compatible.",
+      "rhetorical_move": "biographical-paradox-resolution (the bishop who ruled him out of order also sponsored his Vatican appointment)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Leni Panganiban â€” CJ's wife â€” is the canonical case: she critiques CJ's writing, speech, looks and even dress, yet remains his closest friend and beloved, because 'every critical word is uttered with unconditional love.' The sequence is universal: 'Friend first before critic, and love first before criticism.'",
+      "rhetorical_move": "closing-sequence formula (the canonical CJ rule for friendship and critique)",
+      "confidence": "asserted as central credo",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The Salonga biographical contrast â€” bar topper, UP LLB, Harvard LLM, Yale JSD, three-time senatorial topper, 'the best president our country never had' â€” set against CJ's self-deprecation as 'poor newsboy born in squalid Tondo, Manila,' FEU LLB, bar 6th place. The contrast is one of the most explicit class/biographical confessions in CJ's writing.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Salonga's Jan 22, 2008 'A Test of Courage' book launch (with Carpio as guest speaker) â€” Salonga publicly comparing CJ to St. Paul on the road to Damascus â€” 'inward journey, saw the light and was transformed' â€” and confessing 'In a deeper sense, Art is my mentor.' The mutual mentorship is the most affecting moment in CJ's public friendships.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Catholic-Protestant disagreement â€” CJ a 'fledgling Catholic,' Salonga a Cosmopolitan Church pastor who 'sometimes invited (but never proselytized) me' â€” a delicate disclosure of inter-faith respect across a foundational divide.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Archbishop Legaspi at PCP II 1991 repeatedly ruling CJ out of order on his proposal that priests and nuns be allowed to marry â€” 'Despite my stubbornness, he and the other bishops, along with another close friend, Ambassador Henrietta 'Tita' de Villa, recommended me, and later on, Pope John Paul II named me (though unworthy) as the only Filipino member of the Pontifical Council of the Laity in the Vatican in 1996-2001.' The 'though unworthy' is a recurring CJ humility marker.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Leni Panganiban â€” CJ's wife â€” critiquing his writing, speech, looks and dress, paired with the closing universal principle: 'Friend first before critic, and love first before criticism.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Romans 12:17-19 cited verbatim â€” including the rare in-column citation of biblical verse-numbers â€” as CJ's canonical scripture for handling enmity.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'let them sink in their own mud' phrase â€” CJ's most cutting dismissal of malicious critics, paired immediately with refusal to engage rather than retaliation.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses good-faith-vs-malice differentiation as the canonical criterion for engaging or ignoring criticism",
+    "treats Romans 12:17-19 as the scriptural-anchor for refusing retaliation against malicious critics",
+    "applies 'differed without being difficult' as the universal CJ formula for principled disagreement with friends",
+    "deploys honor-with-humility (quoting others' praise then deflecting) as a register move balancing recognition and modesty",
+    "uses 'though unworthy' as the recurring humility marker for honors and appointments received",
+    "treats substantive Catholic-Protestant disagreement as compatible with deepest friendship when both sides honor good faith",
+    "models institutional disagreement-and-vouching compatibility (Legaspi ruled CJ out of order, then recommended him to the Pope)",
+    "closes with 'Friend first before critic, and love first before criticism' as the canonical sequence formula"
+  ],
+  "target_audience": [
+    "Inquirer general readership",
+    "Readers who wrote in response to the Oct 27 Carpio column",
+    "Personal-essay following of CJ",
+    "Catholic and ecumenical readers (the Romans 12 and inter-faith disclosure)",
+    "Law-school cohorts familiar with the Salonga biographical legend",
+    "Readers interested in marriage-as-partnership wisdom (Leni's role)"
+  ],
+  "register_markers": [
+    "Reader-response opening (referencing column comments)",
+    "Direct verbatim citation of biblical verse (Romans 12:17-19, with quotation marks)",
+    "Self-deprecating biographical contrast ('I pale utterlyâ€¦ poor newsboy born in squalid Tondo, Manila')",
+    "Self-quotation of others' speeches (Salonga's Jan 22, 2008 launch speech excerpted in full)",
+    "Honor-with-humility ('he has exaggerated my role, as I stated elsewhere')",
+    "'though unworthy' as CJ's recurring humility marker for honors received",
+    "Capitalized emphasis ('repeat all'; 'CANNOT buy')",
+    "Faith-language interjections ('Source of all that is true, good and beautiful')",
+    "Closing universal principle in italicizable form: 'Friend first before critic, and love first before criticism'",
+    "Chiastic doublets ('differed without being difficult')",
+    "Three-sequence friendship vignettes (Salonga, Legaspi, Leni)"
+  ],
+  "one_paragraph_summary": "Responding to reader comments on his Oct 27 column 'Agreeing to disagree with Justice Carpio' â€” where he described enjoying '95-percent harmony and overlooking our 5-percent cacophony' with Carpio â€” Panganiban explains why his best friends are his best critics. He has 'differed without being difficult with all, repeat all, of my best friends,' and is grateful for their good-faith divergences expressed in gentle though sometimes emphatic language. He distinguishes this sharply from offensive criticisms at imagined defects conceived in malice; those he ignores, refusing to let 'schemers and kibitzers' disrupt his goals, and instead trusting his track record and the judgment of those who truly know him. His scriptural refuge is Romans 12:17-19 â€” do not repay evil for evil, live at peace with all, leave vengeance to the Lord. He then cites three close friends as exemplars. First, the late Jovito R. Salonga â€” his 'guru, dean and surrogate father,' bar topper, UP LLB plus Harvard LLM plus Yale JSD, three-time senatorial topper, 'the best president our country never had' â€” set against CJ's self-deprecation as 'poor newsboy born in squalid Tondo, Manila' with an FEU LLB and bar 6th place. Salonga's foremost teaching was about life, not law: the rare gems money CANNOT buy â€” excellence, integrity, honor, dignity, reverential regard for God. At the Jan 22, 2008 launch of Salonga and Miranda-Feliciano's 'A Test of Courage' (with Carpio as guest speaker), Salonga publicly compared CJ to St. Paul on the road to Damascus â€” inward journey, blinding light, transformation â€” and confessed 'In a deeper sense, Art is my mentor.' Yet they 'agreed to disagree on something very fundamental': Salonga was a revered Cosmopolitan Church pastor, CJ a fledgling Catholic. Second, Archbishop Leonardo Z. Legaspi â€” as CBCP president, the presiding officer at PCP II in mid-Feb 1991 â€” repeatedly ruled CJ out of order for proposing that priests and nuns be allowed to marry; yet despite CJ's stubbornness, Legaspi (with Ambassador Tita de Villa) recommended him to Pope John Paul II, who named CJ 'though unworthy' as the only Filipino member of the Pontifical Council of the Laity (1996-2001). Third, his wife Leni Panganiban critiques his writing, speech, looks and even dress â€” yet remains his closest friend and beloved, because every critical word is uttered with unconditional love. The closing universal principle: 'Friend first before critic, and love first before criticism.'"
+}

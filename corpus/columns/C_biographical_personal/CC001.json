@@ -1,0 +1,55 @@
+{
+  "id": "CC001",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 1,
+  "title": "Joy in writing for the Inquirer",
+  "date": "2017-02-12",
+  "year": 2017,
+  "source_url": "https://opinion.inquirer.net/101589/joy-writing-inquirer",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "with_due_respect_persona",
+      "mentors_and_legal_lineage",
+      "friendships_and_civic_circles"
+    ]
+  },
+  "keywords": [
+    "[Pre-existing demo file C01 - skipped this batch] 10th anniversary column",
+    "first column Feb 11 2007",
+    "Dr. Jovito Salonga discouraging advice",
+    "Inquirer chair Marixi R. Prieto invitation",
+    "iPhone 6-plus and digital pivot",
+    "'With Due Respect 2' book launch",
+    "CJ Sereno preface, Judge Pangalangan foreword"
+  ],
+  "primary_topics": [],
+  "sub_topics": [],
+  "signature_phrases": [],
+  "entities": {
+    "people": [],
+    "institutions": [],
+    "cases": [],
+    "laws_treaties": [],
+    "events": []
+  },
+  "stances": [],
+  "notable_anecdotes": [],
+  "decision_framework_signals": [],
+  "target_audience": [],
+  "register_markers": [],
+  "one_paragraph_summary": ""
+}

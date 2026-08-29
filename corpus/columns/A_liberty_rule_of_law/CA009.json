@@ -1,0 +1,286 @@
+{
+  "id": "CA009",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 9,
+  "title": "Enforcing the Arbitral Award",
+  "date": "2021-06-13",
+  "year": 2021,
+  "source_url": "https://opinion.inquirer.net/141119/enforcing-the-arbitral-award",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Justice Secretary Menardo Guevarra",
+      "Foreign Secretary Teodoro Locsin Jr.",
+      "DFA legal advisers and PH international-law practitioners",
+      "Senators and House members on foreign-affairs and judiciary committees",
+      "Members of the PH PCA National Group and ICJ-engaged jurists",
+      "Civic-minded readers tracking SCS strategy",
+      "International law academe at home and abroad"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes",
+      "icc_and_duterte"
+    ],
+    "secondary": [
+      "global_geopolitics",
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "Arbitral Award enforcement",
+    "rule of law foreign policy",
+    "ICJ vs arbitration",
+    "UN Charter Art. 2 par. 3 and Art. 33 par. 1",
+    "Iwasawa ICJ nomination",
+    "PH PCA National Group",
+    "Jardeleza 100 features proposal",
+    "ICJ consent jurisdiction",
+    "Guevarra-Locsin jurisconsults team",
+    "might of being right"
+  ],
+  "primary_topics": [
+    "Strategic question of how to enforce the July 12, 2016 Arbitral Award (AA) against China's intractable SCS claim",
+    "Author's foundational doctrine: 'stick to the rule of law' — 'the might of being right' — as the small-state's strategy against great-power adversity",
+    "UN Charter Art. 2 par. 3 and Art. 33 par. 1 catalogue of peaceful-settlement modes; Philippines has tried all except ICJ judicial settlement",
+    "Distinction between ICJ (permanent body, secure 9-year judge tenure, UNGA + UNSC elections) and arbitration (ad hoc tribunal, ad hoc members, dissolves after award)",
+    "ICJ's dispositive limitation: jurisdiction over China only with China's consent — and China's transparent posture of non-consent",
+    "Practical pathway: form a team of international jurisconsults headed by Justice Secretary Guevarra and Foreign Secretary Locsin to study these difficulties"
+  ],
+  "sub_topics": [
+    "Author's biographical credential: 'professor of public international law for many years in the 1960s'",
+    "UN Charter Art. 2 par. 3: members shall 'settle their international disputes by peaceful means'",
+    "UN Charter Art. 33 par. 1 catalogue: negotiation, enquiry, mediation, conciliation, arbitration, judicial settlement, regional agencies, other peaceful means",
+    "AA limitation: ruled only on sovereign rights over the maritime domain, not on ownership or sovereignty over 'rocks' or HTEs within the domain",
+    "China's jurisdictional defense: dispute allegedly covered territorial (not maritime) disputes",
+    "ICJ-arbitration distinction: ICJ is permanent under its Statute (which is separate from UN Charter but binds all UN members ipso facto); judges have 9-year secure tenure; arbitration tribunals are ad hoc",
+    "ICJ judges elected by UNGA and UNSC (voting separately) from a list nominated by national groups in the Permanent Court of Arbitration",
+    "PH National Group in the PCA: Judge Raul Pangalangan, retired CJ Reynato Puno, retired Justice Jose Vitug, and the author as chair",
+    "Iwasawa ICJ election (Nov 12, 2020) — Japan's nominee won an ICJ seat with PH support",
+    "Late CJ Cesar Bengzon — only Filipino who served (late 1960s) as an ICJ judge",
+    "Forcible modes — boycott, blockade, embargo, severance of diplomatic relations, armed encounters — judged 'extremely difficult' to win with",
+    "Guevarra's text question: 'Is there any chance at all that if the matter is brought to the ICJ, any part of the AA may be reopened?'",
+    "Author's answer: 'I don't think so if we were to craft a good petition. We already won the maritime rights granted by Unclos. We should not re-litigate them. China will probably have the opposite view because it does not recognize the AA… how to get China to the ICJ is quite tough.'",
+    "Jardeleza et al.'s proposal: identify 'by name and coordinates at least 100 features being claimed and occupied by the Philippines' to prove territorial title to 35 HTEs",
+    "China's public posture: only the ICJ has jurisdiction to settle EEZ claims (because they involve territorial disputes) but won't consent",
+    "ICJ-Statute consent requirement as the dispositive obstacle"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "the might of being right",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "stick to the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to my delight",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "yours truly as chair",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I expect China to ignore this proposal and to insist on its old 'nine-dash line' tune",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "poor and weak states like ours can vie with wealthy and powerful countries only by a reliance on the might of being right",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I will detail my humble suggestions in a future column",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to repeat",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "how to get China to the ICJ is quite tough",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author, retired CJ, former public-international-law professor, PH PCA National Group chair)",
+      "Justice Secretary Menardo I. Guevarra",
+      "Foreign Secretary Teodoro Locsin Jr.",
+      "Judge Raul C. Pangalangan (ICC; PH PCA National Group)",
+      "Retired CJ Reynato S. Puno (PH PCA National Group)",
+      "Retired Justice Jose C. Vitug (PH PCA National Group)",
+      "Judge Yuji Iwasawa (Japan, ICJ-elected Nov 12, 2020)",
+      "Late CJ Cesar Bengzon (only Filipino ICJ judge, late 1960s)",
+      "Retired Justice Francis H. Jardeleza"
+    ],
+    "institutions": [
+      "International Court of Justice (ICJ)",
+      "United Nations (UN)",
+      "UN General Assembly",
+      "UN Security Council",
+      "Permanent Court of Arbitration (PCA)",
+      "Philippine National Group in the PCA",
+      "Department of Foreign Affairs (DFA)",
+      "Department of Justice (DOJ)",
+      "International Criminal Court (ICC)",
+      "China (PRC) as adversary state"
+    ],
+    "cases": [
+      "South China Sea Arbitral Award (PCA, July 12, 2016)"
+    ],
+    "laws_treaties": [
+      "Charter of the United Nations (Art. 2 par. 3; Art. 33 par. 1)",
+      "Statute of the International Court of Justice",
+      "United Nations Convention on the Law of the Sea (UNCLOS)",
+      "Permanent Court of Arbitration framework"
+    ],
+    "events": []
+  },
+  "stances": [
+    {
+      "claim": "Poor and weak states like the Philippines can vie with wealthy and powerful countries only by reliance on 'the might of being right' — sticking to the rule of law is the foundational strategy.",
+      "rhetorical_move": "foundational-creed declaration from the author's own teaching career",
+      "evidence": "Author's 1960s professorship in public international law; FLP creed; the AA itself as proof of small-state success via law",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Philippines should simultaneously pursue all UN Charter peaceful-settlement modes and resort to the ICJ — without re-litigating the AA's maritime-rights victory.",
+      "rhetorical_move": "parallel-pursuit strategy: not arbitration OR ICJ but and",
+      "evidence": "Art. 33 par. 1 catalogue of modes; author's text exchange with Justice Secretary Guevarra",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "ICJ resort is constrained by the consent requirement under the ICJ Statute — China will not consent — and forcible modes (boycott, blockade, embargo, severance, armed encounter) are extremely difficult to win with.",
+      "rhetorical_move": "constraint-acknowledgment paired with rejection of forcible alternatives",
+      "evidence": "ICJ Statute jurisdictional rules; realistic assessment of military and economic asymmetry",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Jardeleza et al. proposal to identify by name and coordinates at least 100 features being claimed and occupied by the Philippines will help prove territorial title to 35 HTEs in our maritime domain — though China will ignore it and insist on the nine-dash line.",
+      "rhetorical_move": "endorsement-with-realism",
+      "evidence": "Specific 100/35 numerical claim; China's stable posture",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The way forward is institutional: form a team of international jurisconsults headed by Guevarra and Locsin to study how to overcome the ICJ-consent and AA-enforcement difficulties.",
+      "rhetorical_move": "institutional-proposal: assemble expertise as the operational lever",
+      "evidence": "Author's direct proposal to Sec. Guevarra; promise of detailed future-column suggestions",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Author's biographical anchor as a public-international-law professor 'for many years in the 1960s' — the foundational pedigree for 'the might of being right' as creed.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Composition of the PH National Group in the PCA — Judge Raul Pangalangan, retired CJ Reynato Puno, retired Justice Jose Vitug, and 'yours truly as chair' — and their nomination of Judge Yuji Iwasawa of Japan, who won an ICJ seat on Nov 12, 2020.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The late CJ Cesar Bengzon as 'the only Filipino who served (in the late 1960s) as an ICJ judge' — a historical pedigree the author quietly hopes to extend.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Justice Secretary Guevarra's text-message question to the author ('Is there any chance at all that if the matter is brought to the ICJ, any part of the AA may be reopened?') and the author's verbatim reply — a rare instance of texted policy dialogue surfacing in a column.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Jardeleza et al.'s proposal to identify '100 features being claimed and occupied by the Philippines' to prove territorial title to 35 HTEs — the most concrete current proposal under discussion.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies UN Charter Art. 33 par. 1 catalogue as the menu of legitimate options",
+    "treats ICJ-arbitration distinction as institutional-design analysis (permanent vs ad hoc; secure tenure vs case-specific membership)",
+    "uses ICJ Statute consent requirement as the dispositive constraint",
+    "deploys parallel-pursuit logic (continue other modes AND ICJ resort, simultaneously)",
+    "frames forcible alternatives as 'extremely difficult to win with' — implicit rejection",
+    "uses jurisconsults-team formation as institutional-capacity-building proposal",
+    "treats Jardeleza's 100-feature/35-HTE proposal as a concrete evidentiary lever for any ICJ filing"
+  ],
+  "target_audience": [
+    "Justice Secretary Menardo Guevarra",
+    "Foreign Secretary Teodoro Locsin Jr.",
+    "DFA legal advisers and PH international-law practitioners",
+    "Senators and House members on foreign-affairs and judiciary committees",
+    "Members of the PH PCA National Group and ICJ-engaged jurists",
+    "Civic-minded readers tracking SCS strategy",
+    "International law academe at home and abroad"
+  ],
+  "register_markers": [
+    "doctrinal-strategist register paired with personal-memoir credentialing",
+    "biographical-pedigree opening (1960s public-international-law professorship)",
+    "Charter-citation grammar (Art. 2 par. 3; Art. 33 par. 1)",
+    "ICJ-vs-arbitration doctrinal distinction (institutional-design comparison)",
+    "directly-quoted texted policy exchange with the Justice Secretary",
+    "named-roster of the PH PCA National Group",
+    "humble-author closer ('I will detail my humble suggestions in a future column')",
+    "rule-of-law refrain ('the might of being right')",
+    "nine-dash-line vocabulary as shorthand for the Chinese counter-position"
+  ],
+  "one_paragraph_summary": "Panganiban asks how the Philippines should enforce the July 12, 2016 Arbitral Award against China's intractable claim of ownership and sovereignty over almost the entire South China Sea including the Philippine exclusive economic zone. His foundational answer is to stick to the rule of law Ã¢â‚¬â€� drawing on his 1960s professorship in public international law, he teaches that poor and weak states like the Philippines can vie with wealthy and powerful countries only through 'the might of being right.' He walks through UN Charter Art. 2 par. 3 (peaceful settlement obligation) and Art. 33 par. 1 (the catalogue of modes Ã¢â‚¬â€� negotiation, enquiry, mediation, conciliation, arbitration, judicial settlement, regional agencies, other peaceful means), noting that the Philippines has tried all except ICJ judicial settlement. He distinguishes arbitration (ad hoc tribunal, ad hoc members, dissolves after award) from the ICJ (permanent body, judges with secure nine-year tenure, elected by UNGA and UNSC voting separately from a list nominated by national groups in the Permanent Court of Arbitration) Ã¢â‚¬â€� noting that all UN members are ipso facto ICJ members under the ICJ Statute, and disclosing that the Philippine National Group in the PCA (composed of Judge Raul Pangalangan, retired CJ Reynato Puno, retired Justice Jose Vitug, and the author as chair) nominated Judge Yuji Iwasawa of Japan, who won an ICJ seat on Nov 12, 2020 Ã¢â‚¬â€� with the late CJ Cesar Bengzon as the only Filipino who ever served as an ICJ judge in the late 1960s. He records his texted exchange with Justice Secretary Menardo I. Guevarra (who 'always comments on my columns') who asked whether ICJ resort might reopen the AA. Panganiban's reply: not if a good petition is crafted; the maritime rights already won under UNCLOS should not be re-litigated; China will likely take the opposite view because it does not recognize the AA; and 'how to get China to the ICJ is quite tough.' He notes that forcible modes (boycott, blockade, embargo, severance of diplomatic relations, armed encounters) are extremely difficult to win with, and endorses retired Justice Francis H. Jardeleza et al.'s proposal to identify by name and coordinates at least 100 features being claimed and occupied by the Philippines to help prove territorial title to 35 HTEs Ã¢â‚¬â€� though he expects China to ignore the proposal and insist on its old 'nine-dash line' tune. China has publicly declared that only the ICJ has jurisdiction over EEZ claims (because they involve territorial disputes) but will not consent Ã¢â‚¬â€� the ICJ Statute dispositive limitation. Given these difficulties, he proposes to Sec. Guevarra to form a team of international jurisconsults headed by Guevarra and Foreign Secretary Teodoro Locsin Jr. to study how to overcome these obstacles, promising to detail his humble suggestions in a future column."
+}

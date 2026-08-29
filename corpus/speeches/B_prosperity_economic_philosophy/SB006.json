@@ -1,0 +1,323 @@
+{
+  "id": "SB006",
+  "type": "speech",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 6,
+  "title": "Freedom for the Spirit, Food for the Body",
+  "date": "2024-09-02",
+  "year": 2024,
+  "source_url": "https://cjpanganiban.com/freedom-for-the-spirit-food-for-the-body/",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Special Guest First Lady Louise Araneta-Marcos and her official escort",
+      "FLP's institutional partners (Tan Yan Kee, Ayala, Metrobank, SM Investments)",
+      "The annual FLP Awards Ceremony audience — scholars, professorial chair holders, fellows",
+      "Members of the Supreme Court and other government officials present",
+      "Prospective donors for the Center for Liberty and Prosperity and the Prosperity Fund"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "ceremonial"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_donors_and_partners",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "constitutional_doctrine",
+      "flp_scholarship_programs",
+      "friendships_and_civic_circles"
+    ]
+  },
+  "keywords": [
+    "FLP Awards Ceremony",
+    "Foundation for Liberty and Prosperity",
+    "First Lady Louise Araneta-Marcos",
+    "Manny Pangilinan",
+    "professorial chairs",
+    "law scholarships",
+    "ESMEL fellowships",
+    "Panganiban Educational Assistance Program",
+    "Center for Liberty and Prosperity",
+    "Prosperity Fund",
+    "Paseo de Magallanes lot donation"
+  ],
+  "primary_topics": [
+    "Closing remarks at the FLP Awards Ceremony (Manila Polo Club, September 2, 2024)",
+    "Personal acknowledgments of the special guests, principal partners, and supporters of FLP",
+    "The libertarian foundation of all five Philippine Constitutions (1897 Biak na Bato, 1898 Malolos, 1935, 1973, 1987) and their Bills of Rights",
+    "Panganiban's signature thesis: libertarianism of the mind is necessary but insufficient — must be paired with liberation from extreme poverty",
+    "FLP's program portfolio: liberty programs (Professorial Chairs, Law Scholarships, Dissertation Writing Contests) and prosperity programs (ESMEL Fellowships)",
+    "FLP's two 'ultimate projects' for its second decade (2021-2031): the Center for Liberty and Prosperity, and the Prosperity Fund",
+    "The seed donation: the Panganiban family's 357-square-meter Paseo de Magallanes lot (worth ≥ ₱100 million in 2022)"
+  ],
+  "sub_topics": [
+    "First Lady Louise Araneta-Marcos sent a video declining to attend (sacred days around Aug 19) and asked to reschedule",
+    "Rescheduled ceremony coincided with her birthday — 'Happy Birthday' singing and birthday cake presentation",
+    "Mike Toledo as Official Escort of the First Lady",
+    "MVP (Manuel V. Pangilinan) as guest speaker representing prosperity",
+    "CJ Alexander G. Gesmundo as chair of Board of Judges for Law Scholarship Program (prior guest speaker, 2022-23)",
+    "Justice Ramon Paul L. Hernando as third most senior associate justice and Working Chairman of First Division",
+    "Lucio 'Hun Hun' Tan III (Stanford summa, PAL Holdings/LT Group president) representing Tan Yan Kee Foundation",
+    "Solomon Hermosura, Government Corporate Counsel, representing Ayala Corporation",
+    "Arthur Ty (Metrobank/Metrobank Foundation) and Alfred Ty (Toyota PH/Federal Land/Grand Hyatt) — Ty brothers represent Metrobank Foundation for FLP Professorial Chair Program (18 eminent chair holders)",
+    "Amando 'Say' Tetangco Jr. — only two-term BSP Governor, SM Investments chair, FLP Esmel chair-of-judges, FLP trustee",
+    "Justice Angelina Sandoval Gutierrez — FLP President, head of SC Integrity Board",
+    "All five Philippine Constitutions traced to people's struggle for political independence",
+    "Standard Bill-of-Rights enumeration: due process, equal protection, against unreasonable search, presumption of innocence, privacy, religion, expression, assembly",
+    "Meritocracy as FLP's principal selection standard; social need only as tie-breaker",
+    "Panganiban Educational Assistance Program — social-status-principal, passing-grades-only criterion (for the poor)",
+    "Task Force on the ultimate projects co-chaired by BSP Governor 'Say' Tetangco and retired SAJ Telly Perlas-Bernabe",
+    "Multiple verbal/written donor pledges including a 2,500 sq m commercial lot south of Manila"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "libertarianism of the mind, though extremely important, is not enough",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "freedom for the spirit and food for the body",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "freedom from fear and freedom from want",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "justice and jobs, ethics and economics, peace and development",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "liberty and prosperity under the rule of law, not under the rule of dictators or authoritarians",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "we believe in meritocracy, hard work, honesty and trustworthiness",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "though of modest means",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "two 'ultimate' projects",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "kick start the campaign",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "may his tribe increase",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Sana bigyan pa kayo ng mahaba at masaganang buhay ng Panginoon",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "halos pareho naman ang ating pangalan, Pangilinan at Panganiban",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "parehong guapo, at parehong binata",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (FLP Chairman)",
+      "First Lady Louise Araneta-Marcos (Special Guest)",
+      "Manuel V. 'MVP' Pangilinan (guest speaker)",
+      "CJ Alexander G. Gesmundo",
+      "Justice Ramon Paul L. Hernando",
+      "Lucio 'Hun Hun' Tan III (Stanford summa cum laude)",
+      "Mike Toledo (Chamber of Mines chair, Metro Pacific exec)",
+      "Solomon Hermosura (Government Corporate Counsel)",
+      "Arthur Ty (Metrobank chair)",
+      "Alfred Ty (Toyota PH/Federal Land/Grand Hyatt)",
+      "Cherry Ty (daughter-by-choice of Panganiban)",
+      "Amando 'Say' Tetangco Jr. (former 2-term BSP Governor; SM Investments chair)",
+      "Justice Angelina Sandoval Gutierrez (FLP President)",
+      "Justice Telly Perlas-Bernabe (FLP Task Force co-chair)",
+      "Jaime Augusto Zobel de Ayala (Ayala Corp chairman)"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Tan Yan Kee Foundation",
+      "Ayala Corporation",
+      "Metrobank Foundation",
+      "SM Investments Corporation",
+      "Bangko Sentral ng Pilipinas",
+      "Supreme Court Integrity Board",
+      "Manila Polo Club (venue)"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "1897 Biak na Bato Constitution",
+      "1898 Malolos Constitution",
+      "1935 Constitution",
+      "1973 Constitution",
+      "1987 Constitution — Bill of Rights"
+    ],
+    "events": [
+      "FLP Awards Ceremony, Manila Polo Club, September 2, 2024",
+      "Originally scheduled August 19; rescheduled to coincide with First Lady's birthday",
+      "Panganiban family's Paseo de Magallanes lot donation (registered to FLP in 2022)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "All five Philippine Constitutions (1897, 1898, 1935, 1973, 1987) emerged from the people's struggle for political independence, and their Bills of Rights are libertarian in spirit — addressing freedom of thought, speech, action, religion, privacy, and assembly. But political libertarianism is incomplete without economic liberation.",
+      "rhetorical_move": "constitutional-history premise establishing libertarian DNA",
+      "confidence": "asserted as constitutional fact",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Libertarianism of the mind is necessary but insufficient — Filipinos must also have liberation from extreme poverty. Freedom for the spirit AND food for the body, freedom from fear AND freedom from want, justice AND jobs, ethics AND economics. Liberty and prosperity must always go together, under the rule of law, not under dictators or authoritarians.",
+      "rhetorical_move": "dyadic-completeness argument — twin beacons as the speaker's signature thesis",
+      "confidence": "asserted as personal credo",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP's design philosophy is meritocratic — its scholarships, professorial chairs, dissertation contests, and ESMEL fellowships are awarded on merit first, with social or financial status as tie-breaker only. Hard work, honesty, and trustworthiness are the aspirational standards.",
+      "rhetorical_move": "merit-with-equity-floor design as institutional value",
+      "confidence": "asserted with separate program (Panganiban Educational Assistance Program) for purely-need-based aid",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP's two 'ultimate projects' for its 2021-2031 second decade — the Center for Liberty and Prosperity (liberty-aspect) and the Prosperity Fund (prosperity-aspect) — are seeded by the Panganiban family's own donation (357 sq m Paseo de Magallanes lot, ≥ ₱100M valuation, registered to FLP in 2022) and additional pledges including a 2,500 sq m southern-suburb commercial lot.",
+      "rhetorical_move": "lead-by-example donation as moral authority for fundraising call",
+      "confidence": "asserted with named seed gift",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "First Lady Louise Araneta-Marcos sent a video declining the August 19 schedule because 'the days around August 19 were sacred to her'; the rescheduled date coincided with her birthday — Panganiban led 'Happy Birthday' and a birthday cake was rolled in for her to blow the candle.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Panganiban's playful comparison with MVP: 'halos pareho naman ang ating pangalan, Pangilinan at Panganiban; pareho tayong Kapampangan; parehong guapo, at parehong binata!' (almost-same names, both Kapampangan, both handsome, both bachelors).",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "His prayer-toast for MVP: 'Sana bigyan pa kayo ng mahaba at masaganang buhay ng Panginoon. May you overtake my age of 88.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Cherry Ty (wife of Alfred Ty) is introduced as Panganiban's 'daughter by choice' — establishing his typology: 'relatives by blood, by affinity, by legal adoption, and by choice.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Panganiban family's seed donation: 357 sq m lot in Paseo de Magallanes, Makati, worth ≥ ₱100 million at donation (now FLP-titled), to be eventually sold for the two ultimate projects.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "One donor's written offer for a 2,500 sq m commercial lot in a southern Manila suburb (offerer unnamed in the speech).",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "treats the five Constitutions as a single libertarian tradition needing prosperity-side completion",
+    "frames philanthropic design with dyadic completeness (each program has a liberty twin and a prosperity twin)",
+    "uses merit-with-equity-floor as the dominant award criterion, with a separate need-based program for absolute equity",
+    "applies lead-by-example fundraising — the family's own seed donation precedes any call for outside money",
+    "rejects dictatorship/authoritarianism explicitly as the negative space defining 'under the rule of law'"
+  ],
+  "target_audience": [
+    "Special Guest First Lady Louise Araneta-Marcos and her official escort",
+    "FLP's institutional partners (Tan Yan Kee, Ayala, Metrobank, SM Investments)",
+    "The annual FLP Awards Ceremony audience — scholars, professorial chair holders, fellows",
+    "Members of the Supreme Court and other government officials present",
+    "Prospective donors for the Center for Liberty and Prosperity and the Prosperity Fund"
+  ],
+  "register_markers": [
+    "closing-remarks ceremonial register",
+    "two-part rhetorical structure announced upfront ('First...thank guests, second...explain projects')",
+    "counterclockwise-around-the-table acknowledgments as compositional spine",
+    "Tagalog code-switching for affection and humor ('halos pareho naman ang ating pangalan')",
+    "ad-hoc birthday-cake interpolation choreography (stage directions in parentheses)",
+    "video-playback cue inside the speech text ('PLAY FL VERY BRIEF VIDEO HERE')",
+    "constitutional-history premise as analytical scaffolding",
+    "named-program enumeration with operational typology (merit-first vs need-first)",
+    "lead-by-example donation as concrete proof of seriousness",
+    "'kababayan'-style humor (Kapampangan brotherhood with MVP)"
+  ],
+  "one_paragraph_summary": "Delivered as closing remarks at the FLP Awards Ceremony at Manila Polo Club on September 2, 2024, this speech has two parts. The first thanks the special guests seated around Panganiban's table, organized counterclockwise — Special Guest First Lady Louise Araneta-Marcos (whose birthday is being doubly celebrated since the ceremony was rescheduled from August 19 to a date sacred to her), guest speaker MVP (Manuel V. Pangilinan), CJ Alexander G. Gesmundo (chair of the Law Scholarship Board of Judges), Justice Ramon Paul L. Hernando, Lucio 'Hun Hun' Tan III (Tan Yan Kee Foundation), Solomon Hermosura (representing Ayala Corporation), Arthur and Alfred Ty (Metrobank Foundation), former BSP Governor 'Say' Tetangco (SM Investments), and FLP President Justice Angelina Sandoval Gutierrez. The second part lays out Panganiban's foundational thesis: all five Philippine Constitutions are libertarian in their Bills of Rights, but political libertarianism of the mind must be paired with liberation from extreme poverty — freedom for the spirit AND food for the body, freedom from fear AND freedom from want, under the rule of law, not dictators. He inventories FLP's merit-based liberty programs (Professorial Chairs, Law Scholarships, Dissertation Writing Contests) and prosperity programs (ESMEL Fellowships, scaling from 5 to 10) plus the Panganiban Educational Assistance Program (need-based). He announces FLP's two 'ultimate projects' for the 2021-2031 second decade — the Center for Liberty and Prosperity and the Prosperity Fund — seeded by his family's 357-square-meter Paseo de Magallanes lot (≥ ₱100M valuation, FLP-titled since 2022), with additional pledges including a 2,500 sq m southern-suburb commercial lot, and closes with a fervent call for cooperation."
+}

@@ -1,0 +1,546 @@
+{
+  "id": "CD008",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 8,
+  "title": "FLP's 2024 law scholars, fellows, and winners",
+  "date": "2024-09-02",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/176505/flps-2024-law-scholars-fellows-and-winners",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "FLP scholars, fellows, alumni, and applicants",
+      "FLP donors and partner foundations (TYKF, Metro Pacific, Ayala)",
+      "Law-school deans, faculty, and PALS network",
+      "MSME advocates and microfinance practitioners",
+      "Conglomerate executives and family-foundation principals",
+      "Members of the Supreme Court and bar",
+      "Inquirer general readership",
+      "Philippine corporate-philanthropy observers"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_donors_and_partners",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "msme_and_entrepreneurship",
+      "philippine_political_landscape",
+      "flp_scholarship_programs"
+    ]
+  },
+  "keywords": [
+    "First Lady Louise Araneta Marcos",
+    "FLP 2024 awards",
+    "Manuel V. Pangilinan",
+    "Tan Yan Kee Foundation",
+    "Metro Pacific",
+    "Ayala",
+    "Esmel fellows",
+    "Prosperity Fund",
+    "Center for Liberty and Prosperity"
+  ],
+  "primary_topics": [
+    "First Lady Louise Araneta-Marcos as charming special guest at the rescheduled Sept 2 FLP awards ceremony",
+    "Three groups of awardees: 20 law scholars (P200,000 each), 5 MBA Esmel fellows (P450,000 each), 20 dissertation winners",
+    "Detailed roster of awardees with schools and prize amounts",
+    "FLP's three boards of judges chaired respectively by CJ Gesmundo, Tetangco, and J Lazaro-Javier",
+    "FLP Professorial Chairs program â€” Dean Darlene Marie Berberabe (UP Law) inducted",
+    "FLP's second-decade (2021-2031) strategic goals: Center for Liberty and Prosperity / Museum; multi-billion-peso Prosperity Fund for MSMEs"
+  ],
+  "sub_topics": [
+    "Pre-presidency Louise Araneta-Marcos credentials: practicing lawyer and law professor; dissolved her entrenched law firm before husband's inauguration",
+    "Two early meetings: June 28, 2023 Sistine Chapel exhibit; Aug 22, 2023 Toyota Philippines 35th anniversary",
+    "Initial Aug 19, 2024 invitation through Mike Toledo (Chamber of Mines chair/president); First Lady's video reply citing 'sacred' days",
+    "Postponement to Sept 2, 2024",
+    "TYKF partnership represented by Lucio Tan III (Stanford summa; PAL Holdings & LT Group president)",
+    "10 third-year law scholars named with schools",
+    "10 fourth-year law scholars named with schools",
+    "Metro Pacific Investments Foundation partnership; 5 Esmel fellows named",
+    "Esmel fellowship breakdown: P350,000 tuition + P100,000 books/stipend",
+    "Ayala Corp. partnership; dissertation winners with cash prizes (P320,000 / P220,000 / 3 x P120,000) + 15 finalists at P20,000",
+    "Boards of judges composition for each program",
+    "FLP Professorial Chair inducted: Dean Darlene Marie Berberabe; installed by Metrobank's Arthur Ty and Toyota Philippines' Alfred Ty",
+    "FLP Board of Trustees roster: Sandoval-Gutierrez (president), Perlas-Bernabe, De Jesus, Tetangco, Yaptangco, MaÃ±alac, Gregorio, Cortez, CJ (chairperson)",
+    "Second-decade goals: AI-powered Center for Liberty and Prosperity hosting Museum with SC; multi-billion-peso Prosperity Fund to invest in/manage MSMEs alongside Esmel fellows",
+    "Unique positioning: FLP as 'the only entity aspiring to invest in and help manage MSMEs'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "I have already heard of her vaunted competence as a practicing lawyer and law professor",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "she dissolved her entrenched law firm before the newly elected president assumed office",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "during an exhibit of some reproductions of Michelangelo's 'Sistine Chapel' masterpieces",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the 35th anniversary of Toyota Philippines",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "as if we had known each other for years",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "holding on to my arm occasionally",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "INDEED, A REAL CHARMER, FIRST LADY LOUISE ARANETA-MARCOS IS",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "compaÃ±ero Mike Toledo, chair and president of the Chamber of Mines",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "she sent me her personalized video saying that she was keenly interested",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Aug. 19 is encompassed by her 'sacred' days",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "we happily postponed the awards ceremony",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The amiable First Lady will be the special guest",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "business leader Manuel V. Pangilinan (MVP), the guest speaker",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "20 law scholars at P200,000 each, five MBA fellows specializing in entrepreneurship, sustainability, management, economics, or business law (Esmel) at P450,000 each, and 20 dissertation writing contest winners",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "THE LAW SCHOLARS WERE CHOSEN by a board of judges (BOJ) chaired by CJ Alexander G. Gesmundo",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "past Bangko Sentral ng Pilipinas governor Amando M. Tetangco Jr., now chair of the largest conglomerate in our country, SM Investments Corp.",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Justice Amy C. Lazaro-Javier",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "In partnership with the Tan Yan Kee Foundation represented by Lucio Tan III, the Stanford summa",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Each Esmel fellowship is worth P450,000 divided into P350,000 maximum for tuition plus P100,000 stipend for books and living allowance",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The five winning dissertations can be accessed at www.libpros.com",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "To be installed by FLP's partners",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "into the FLP Professorial Chairs program is new UP law Dean Darlene Marie Berberabe",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "THE FLP's BOARD OF TRUSTEES is composed of",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "yours truly (chairperson)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "In its second decade (2021 to 2031)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an immersive, interactive, AI-powered, and tech-driven Center for Liberty and Prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a multi-billion-peso Prosperity Fund to help eliminate extreme poverty",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to assist micro, small, and medium-sized enterprises (MSMEs) by investing in their equity and by helping them help themselves with management expertise through the Esmel fellows",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "unleashing their entrepreneurial ingenuity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "FLP is the only entity aspiring to invest in and help manage MSMEs",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "they will become more credit-worthy and growth-worthy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Louise Araneta-Marcos (First Lady)",
+      "Manuel V. Pangilinan (MVP)",
+      "Mike Toledo (Chamber of Mines chair/president)",
+      "Lucio Tan III (TYKF representative; PAL Holdings & LT Group president; Stanford summa)",
+      "Alexander G. Gesmundo (Chief Justice; scholarships BOJ chair)",
+      "Amando M. Tetangco Jr. (former BSP governor; SM Investments chair; Esmel BOJ chair)",
+      "Amy C. Lazaro-Javier (Justice; dissertation BOJ chair)",
+      "Darlene Marie Berberabe (UP Law Dean; FLP Professorial Chair inductee)",
+      "Arthur Ty (Metrobank chair)",
+      "Alfred Ty (Toyota Philippines chair)",
+      "Angelina Sandoval-Gutierrez (FLP president; retired Justice)",
+      "Estela M. Perlas-Bernabe (FLP trustee; retired Justice)",
+      "Edilberto de Jesus (FLP trustee; former Education Secretary)",
+      "Maria Elena P. Yaptangco (FLP trustee)",
+      "Maria Theresa P. MaÃ±alac (FLP trustee; professor)",
+      "Joel Emerson Gregorio (FLP trustee/lawyer)",
+      "Arvin Paolo D. Cortez (FLP trustee/lawyer)",
+      "Rachel Gella (USLS; first-prize dissertation P320K)",
+      "Arvin Maceda (FEU; second-prize dissertation P220K)",
+      "Sabrina De Guia (ADMU; third-prize P120K)",
+      "Clarisse Loro (USC; third-prize P120K)",
+      "Lovelyn Quebrar (UP Diliman; third-prize P120K)",
+      "Mariana Alberto (UP, third-year scholar)",
+      "Kerstein Despi (USC, third-year scholar)",
+      "Cicily Mirasol (UP, third-year scholar)",
+      "Christa Mutuc (USC, third-year scholar)",
+      "Jayson Orajay (Xavier U, third-year scholar)",
+      "Enrico Paguia (ADMU, third-year scholar)",
+      "Janelle Sy (ADMU, third-year scholar)",
+      "Ricardo SobreviÃ±as (ADMU, third-year scholar)",
+      "Mary Te (USC, third-year scholar)",
+      "Chinzen Viernes (UP, third-year scholar)",
+      "Betlee-kyle Barraquias (ADMU, fourth-year scholar)",
+      "Gerifel Cerillo (ADMU, fourth-year scholar)",
+      "Joanna David (BulSU, fourth-year scholar)",
+      "Susanna Ruth Gruyal (UP, fourth-year scholar)",
+      "Mia Laza (SLU, fourth-year scholar)",
+      "Alma Patricio (UST, fourth-year scholar)",
+      "Aimiel Reyes (ADMU, fourth-year scholar)",
+      "Allan Reyes (UP, fourth-year scholar)",
+      "Azelea Salcedo (JRU, fourth-year scholar)",
+      "Robert Sanders Jr. (UP, fourth-year scholar)",
+      "Milagrosa Ballestar (AIM, Esmel fellow)",
+      "Gian Lucas (AIM, Esmel fellow)",
+      "Wallace Panlilio II (AIM, Esmel fellow)",
+      "Ciara Tuquero (ADMU, Esmel fellow)",
+      "Ralph Villanueva (UP, Esmel fellow)"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Tan Yan Kee Foundation (TYKF)",
+      "Metro Pacific Investments Foundation",
+      "Ayala Corporation",
+      "Supreme Court of the Philippines",
+      "SM Investments Corp.",
+      "PAL Holdings",
+      "LT Group",
+      "Toyota Philippines",
+      "Metrobank",
+      "Chamber of Mines of the Philippines",
+      "Asian Institute of Management (AIM)",
+      "UP, USC, Xavier U, ADMU, BulSU, SLU, UST, JRU, DLSL, FEU, USLS, UM (law schools represented)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "June 28, 2023 â€” Sistine Chapel reproductions exhibit",
+      "Aug 22, 2023 â€” Toyota Philippines 35th anniversary",
+      "Aug 19, 2024 â€” originally scheduled FLP awards ceremony",
+      "Sept 2, 2024 â€” rescheduled FLP awards ceremony"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Before her husband's presidency, CJ already knew of First Lady Louise Araneta-Marcos's competence as practicing lawyer and law professor â€” and was 'even more impressed' when she dissolved her entrenched law firm before the new president assumed office.",
+      "rhetorical_move": "credential-acknowledgment opening",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "On two formal occasions in 2023 (June 28 Sistine Chapel exhibit; Aug 22 Toyota Philippines 35th anniversary), she 'acted so spontaneously as if we had known each other for years' â€” a real charmer.",
+      "rhetorical_move": "personal-warmth-anecdote credentialing",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Invited through compaÃ±ero Mike Toledo for Aug 19, the First Lady sent a personalized video citing 'sacred' days and requested a reschedule â€” and the awards were happily postponed to Sept 2.",
+      "rhetorical_move": "process-detail recital",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Three groups of awardees will receive prizes from the First Lady, MVP, and CJ as FLP chair: 20 law scholars at P200,000 each (TYKF partnership represented by Lucio Tan III), five MBA Esmel fellows at P450,000 each (Metro Pacific partnership), and 20 dissertation winners (Ayala Corp partnership; First Prize P320,000 to Rachel Gella USLS, Second P220,000 to Arvin Maceda FEU, three Third P120,000 each, fifteen finalists P20,000 each).",
+      "rhetorical_move": "comprehensive-program disclosure",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Each Esmel fellowship is structured as P350,000 maximum tuition plus P100,000 books-and-living-allowance stipend, and the five winning dissertations can be accessed at www.libpros.com.",
+      "rhetorical_move": "program-specifics transparency",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "UP Law Dean Darlene Marie Berberabe is being inducted into the FLP Professorial Chairs program by FLP partners Metrobank chair Arthur Ty and Toyota Philippines chair Alfred Ty.",
+      "rhetorical_move": "new-chair-induction announcement",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "In its second decade (2021-2031), FLP aims to set up an immersive, interactive, AI-powered, tech-driven Center for Liberty and Prosperity (in SC partnership) hosting a Museum for Liberty and Prosperity, and a multi-billion-peso Prosperity Fund to help eliminate extreme poverty by investing in MSME equity and helping them help themselves through Esmel-fellow management expertise.",
+      "rhetorical_move": "strategic-plan announcement",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "While other firms engage in microfinancing, FLP is â€” to its knowledge â€” the only entity aspiring to invest in and help manage MSMEs, with the goal of making them 'more credit-worthy and growth-worthy.'",
+      "rhetorical_move": "uniqueness-positioning close",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The First-Lady-as-charmer credentialing â€” 'INDEED, A REAL CHARMER, FIRST LADY LOUISE ARANETA-MARCOS IS' â€” built on the two pre-presidency 2023 encounters with specific dates (June 28 Sistine Chapel reproductions; Aug 22 Toyota Philippines 35th anniversary) and the 'holding on to my arm occasionally' detail.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The personalized-video reply citing 'sacred' days â€” used as both a Catholic-piety signal and a polite-rescheduling explanation, leading to the column's Sept 2 rescheduled awards ceremony framing.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Lucio Tan III's billing â€” 'the Stanford summa, president of PAL Holdings and LT Group' â€” quietly elevating the next-generation TYKF representative.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Tetangco's bracketed elevation â€” 'past Bangko Sentral ng Pilipinas governor Amando M. Tetangco Jr., now chair of the largest conglomerate in our country, SM Investments Corp.' â€” a single line that maps the FLP boardroom to corporate Philippines's apex.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Comprehensive name-by-name enumeration of all 20 scholars, 5 fellows, 20 dissertation winners (5 prize + 15 finalist), faculty advisers, and BOJs â€” turning the column into a permanent FLP record.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Dean Darlene Marie Berberabe's FLP Professorial Chair induction by Metrobank's Arthur Ty and Toyota Philippines' Alfred Ty â€” connecting the Ty family conglomerate dual-anchor to UP Law.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The www.libpros.com pointer for accessing winning dissertations â€” concrete public-access detail that makes the FLP prize program reviewable beyond the awards-night audience.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Esmel fellowship breakdown (P350K tuition + P100K stipend = P450K total) â€” operational transparency on how the MBA-for-MSME-management pipeline is funded.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Sandoval-Gutierrez-led FLP Board of Trustees roster â€” nine names including two retired justices, a former Education Secretary, and a former BSP governor â€” establishing FLP's institutional weight.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The second-decade strategic announcement: AI-powered Center for Liberty and Prosperity (with SC partnership), Museum for Liberty and Prosperity, and multi-billion-peso Prosperity Fund for MSME equity investment â€” paired with the closing positioning that 'FLP is the only entity aspiring to invest in and help manage MSMEs.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies the comprehensive-disclosure principle (full name-by-name enumeration as the FLP-philanthropy standard)",
+    "uses program-specifics transparency (peso breakdown of every prize and fellowship)",
+    "applies the credential-acknowledgment opening pattern for high-profile guests",
+    "uses partnership-billing convention (TYKF / Metro Pacific / Ayala Corp pairing with specific awardee group)",
+    "applies the strategic-plan announcement device as institutional-aspiration recitation",
+    "uses uniqueness-positioning close to differentiate FLP from microfinancing peers",
+    "preserves the trustee-roster recitation as institutional-weight signal",
+    "applies the SC-partnership claim (Center for Liberty and Prosperity / Museum) as the operative judicial-philanthropy interface"
+  ],
+  "target_audience": [
+    "FLP scholars, fellows, alumni, and applicants",
+    "FLP donors and partner foundations (TYKF, Metro Pacific, Ayala)",
+    "Law-school deans, faculty, and PALS network",
+    "MSME advocates and microfinance practitioners",
+    "Conglomerate executives and family-foundation principals",
+    "Members of the Supreme Court and bar",
+    "Inquirer general readership",
+    "Philippine corporate-philanthropy observers"
+  ],
+  "register_markers": [
+    "credential-acknowledgment opening register",
+    "ALL-CAPS section openers and inverted-emphasis declarative ('INDEED, A REAL CHARMER, FIRST LADY LOUISE ARANETA-MARCOS IS,' 'THE LAW SCHOLARS WERE CHOSEN,' 'THE FLP's BOARD OF TRUSTEES is composed of')",
+    "Spanish-Filipino marker 'compaÃ±ero'",
+    "'sacred days' quoted with deferential framing",
+    "comprehensive-roster-as-record disclosure mode",
+    "school-affiliation-in-parentheses convention",
+    "peso-amount precision throughout",
+    "URL embedding (www.libpros.com)",
+    "trustee-roster recitation",
+    "strategic-plan announcement register",
+    "uniqueness-positioning close ('the only entity aspiring')",
+    "no Tagalog vernacular markers; institutional-philanthropy English"
+  ],
+  "one_paragraph_summary": "Panganiban prefaces today's FLP awards ceremony with a portrait of First Lady Louise Araneta-Marcos â€” whose competence as practicing lawyer and law professor he had heard of before her husband's presidency, and whom he met formally on June 28, 2023 (Sistine Chapel reproductions exhibit) and Aug 22, 2023 (Toyota Philippines 35th anniversary), where she acted so spontaneously, occasionally holding his arm, as if they had known each other for years: 'INDEED, A REAL CHARMER.' Invited through compaÃ±ero Mike Toledo (Chamber of Mines chair and president) for Aug 19, she sent a personalized video citing 'sacred' days and requested a reschedule to today, Sept 2. Three groups of awardees will receive prizes from her, guest speaker Manuel V. Pangilinan (MVP), and CJ as FLP chair: 20 law scholars at P200,000 each (Tan Yan Kee Foundation partnership represented by Lucio Tan III, 'the Stanford summa, president of PAL Holdings and LT Group'), with 10 third-year students (Alberto, Despi, Mirasol, Mutuc, Orajay, Paguia, Sy, SobreviÃ±as, Te, Viernes) and 10 fourth-year students (Barraquias, Cerillo, David, Gruyal, Laza, Patricio, Aimiel and Allan Reyes, Salcedo, Sanders Jr.) named with their schools; five MBA Esmel fellows at P450,000 each (Metro Pacific Investments Foundation partnership; P350,000 tuition + P100,000 stipend) â€” Ballestar, Lucas, Panlilio II, Tuquero, and Villanueva; and 20 dissertation contest winners (Ayala Corp partnership) â€” Rachel Gella (USLS) first prize P320,000, Arvin Maceda (FEU) second P220,000, three third placers at P120,000 (De Guia, Loro, Quebrar), and 15 finalists at P20,000 each, with the five winning dissertations accessible at www.libpros.com. The three boards of judges were chaired by CJ Alexander G. Gesmundo (scholars), past BSP governor Amando M. Tetangco Jr. â€” 'now chair of the largest conglomerate in our country, SM Investments Corp.' (Esmel fellows) â€” and Justice Amy C. Lazaro-Javier (dissertations). UP Law Dean Darlene Marie Berberabe will be inducted into the FLP Professorial Chairs program by Metrobank chair Arthur Ty and Toyota Philippines chair Alfred Ty. The FLP Board of Trustees comprises retired Justice Angelina Sandoval-Gutierrez (president), retired Justice Estela M. Perlas-Bernabe, former Education Secretary Edilberto de Jesus, Tetangco, Maria Elena P. Yaptangco, professor Maria Theresa P. MaÃ±alac, lawyers Joel Emerson Gregorio and Arvin Paolo D. Cortez, and CJ as chairperson. In its second decade (2021-2031), FLP aims to set up an immersive, interactive, AI-powered, tech-driven Center for Liberty and Prosperity (in partnership with the Supreme Court) hosting a Museum for Liberty and Prosperity, and a multi-billion-peso Prosperity Fund to help eliminate extreme poverty by investing in MSME equity and helping them through Esmel-fellow management expertise â€” unleashing their entrepreneurial ingenuity. 'To our knowledge, while there are firms engaged in microfinancing, FLP is the only entity aspiring to invest in and help manage MSMEs' â€” making them 'more credit-worthy and growth-worthy.'"
+}

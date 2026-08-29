@@ -1,0 +1,302 @@
+{
+  "id": "CC014",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 14,
+  "title": "Student activism",
+  "date": "2024-05-06",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/173470/student-activism",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Current and aspiring student activists (PH and US)",
+      "Readers tracking US campus protest movement and Israel-Hamas war",
+      "PH-history readers interested in NUSP and First Quarter Storm lineage",
+      "Catholic readers and Bukas Loob Sa Diyos community",
+      "Personal-history audience interested in CJ's pre-judicial life"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "faith_journey",
+      "family_and_marriage"
+    ],
+    "secondary": [
+      "bar_exam_and_legal_education",
+      "global_geopolitics",
+      "international_law_disputes"
+    ]
+  },
+  "keywords": [
+    "Columbia University pro-Palestinian rallies",
+    "Israel-Hamas Gaza war",
+    "FEUCSO presidency",
+    "NUSP",
+    "Karl Marx phase",
+    "Elenita Carpio conversion",
+    "First Quarter Storm",
+    "Wenceslao Q. Vinzons"
+  ],
+  "primary_topics": [
+    "Pro-Palestinian campus rallies in US universities (Columbia and 30+ others) and globally (France, UK, Norway, Australia)",
+    "Infiltration by 'outside actors' converting free speech into vandalism and violence; NYC police suppression",
+    "CJ's own origin story in PH student activism (late 1950s) as FEUCSO and NUSP president",
+    "How CJ's Marxist phase was reversed by Fr. Michael Nolan and Elenita 'Leni' Carpio"
+  ],
+  "sub_topics": [
+    "Spread from Columbia to 30+ US universities within days, then to France, UK, Norway, Australia",
+    "US students' influence on US pressure on Israel for ceasefire and hostage release",
+    "Outside-actor infiltration; NYC police 'in full force, shields, sticks, and arms' subduing protestors",
+    "CJ's youthful activism as FEUCSO and NUSP president â€” battle to rouse Catholic-institution students (Ateneo, La Salle, St. Theresa, St. Scholastica, Maryknoll/Miriam)",
+    "Parallel UP leadership: UP Student Council (Fernando Lagua), UP 'Collegian' editor Homobono Adaza, UPSCA (Emmanuel Soriano)",
+    "CJ's Karl Marx infatuation: 'From each according to his ability, and to each according to his needs'",
+    "Fr. Michael Nolan's catechesis + economic-reality challenge re: Red China and Soviet Russia",
+    "10-hour train ride to NUSP Naga City seminar â€” accidental seatmate Elenita A. Carpio, editor of 'Scholastican,' aspiring Benedictine nun",
+    "Leni's 3-year conversion of CJ from Marxist to Christian â€” to chagrin of St. Scho nuns who expected her to take vows",
+    "Pope John Paul II named CJ to Pontifical Council for the Laity (1996-2002), succeeding Amb. Henrietta 'Tita' de Villa",
+    "PH student-activism lineage: Wenceslao Q. Vinzons (1941 anti-Japanese resistance) â†’ late-1950s FEUCSO/NUSP â†’ 1970 First Quarter Storm (Edgar Jopson NUSP, Jerry Barican UPSC, Sison and Ocampo KM) aimed at Marcos Sr.",
+    "Speculation that current Filipino students 'not yet' involved in Israel-Hamas, Russia-Ukraine, or West Philippine Sea â€” but will resume activism eventually"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "infiltrated by 'outside actors'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "no longer in free speech, but in vandalism and violence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Pity the poor, victimized students",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "From each according to his ability, and to each according to his needs",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "while communism may be theoretically attractive, it was not implementable",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an aspiring Benedictine nun",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "'irresistibly,' I won her heart to the chagrin of the St. Scho nuns",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "she converted me into a willing soldier of Christ",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "My Leni tenderly opened the clenched fist of this activist",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "'cloistered' colleges",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "First Quarter Storm",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "maybe 'not yet' is the correct term",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author; former FEUCSO and NUSP president)",
+      "Elenita A. Carpio (later CJ's wife; editor of 'Scholastican')",
+      "Fr. Michael Nolan (FEU chaplain)",
+      "Fernando Lagua (UP Student Council)",
+      "Homobono Adaza (UP 'Collegian' editor)",
+      "Emmanuel Soriano (UPSCA)",
+      "Edgar Jopson (NUSP president during FQS; Ateneo)",
+      "Jerry Barican (UP Student Council president during FQS)",
+      "Jose Ma. Sison (Kabataang Makabayan)",
+      "Satur Ocampo (Kabataang Makabayan)",
+      "Wenceslao Q. Vinzons (1941 anti-Japanese resistance)",
+      "President Ferdinand Marcos Sr. (FQS target)",
+      "Pope John Paul II",
+      "Ambassador Henrietta 'Tita' de Villa",
+      "Karl Marx (ideological reference)"
+    ],
+    "institutions": [
+      "Columbia University (New York City)",
+      "FEU Central Student Organization (FEUCSO)",
+      "National Union of Students of the Philippines (NUSP)",
+      "Ateneo de Manila",
+      "De La Salle",
+      "St. Theresa's, St. Scholastica's, Maryknoll/Miriam ('cloistered' women's colleges)",
+      "UP Student Council",
+      "UP 'Collegian'",
+      "UP Student Catholic Action (UPSCA)",
+      "Kabataang Makabayan",
+      "NYC police",
+      "Pontifical Council for the Laity (Vatican)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "2024 Columbia and 30+ US-university pro-Palestinian rallies; spread to France, UK, Norway, Australia",
+      "10-hour Manila-Naga train ride (NUSP seminar) â€” CJ's meeting with Elenita Carpio",
+      "Jan 26-March 17, 1970 â€” First Quarter Storm",
+      "1941 â€” Vinzons-led student resistance to Japanese invasion",
+      "1996-2002 â€” CJ's term on Pontifical Council for the Laity"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The 2024 US campus pro-Palestinian rallies â€” ignited by Columbia and spreading within days to 30+ other US universities and then to France, UK, Norway, and Australia â€” influenced US insistence that Israel temper its Gaza attacks on civilian enclaves and that there be a ceasefire coupled with hostage release; but the movement's ranks were 'infiltrated by outside actors' that converted free speech into vandalism and violence, drawing NYC police 'in full force, shields, sticks, and arms.'",
+      "rhetorical_move": "spread-and-influence acknowledgment paired with infiltration-distortion lament",
+      "confidence": "asserted with pity-tone",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "PH peacetime student activism owes its origin to CJ's own late-1950s organizing as FEUCSO and NUSP president â€” rallying private nonsectarian schools and battling to rouse the Catholic and 'cloistered' women's colleges (Ateneo, La Salle, St. Theresa, St. Scholastica, Maryknoll/Miriam) in parallel with UP's Lagua, Adaza, and Soriano â€” and bloomed in the 1970 First Quarter Storm led by Edgar Jopson (NUSP), Jerry Barican (UP Student Council), and Kabataang Makabayan's Sison and Ocampo against Marcos Sr.",
+      "rhetorical_move": "institutional-paternity claim with historical-chronology",
+      "confidence": "asserted as personal recollection",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ's youthful infatuation with Karl Marx's 'From each according to his ability, and to each according to his needs' â€” seen as 'the solution to poverty and economic equality' â€” was dissuaded by two people: Fr. Michael Nolan, who proved through the economic realities of Red China and Soviet Russia that 'while communism may be theoretically attractive, it was not implementable,' and Elenita Carpio, the aspiring Benedictine nun who 'tenderly opened the clenched fist of this activist' across three years of conversion until they married.",
+      "rhetorical_move": "two-person-disenchantment narrative (priest + future wife)",
+      "confidence": "autobiographical-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Today's Filipino student leaders are 'not (maybe \"not yet\" is the correct term) heavily involved' in the Israel-Hamas confrontation, the Russia-Ukraine war, or the West Philippine Sea tensions â€” but CJ predicts they will resume student activism in the Philippines once they realize 'there is no dispute so remote and so misunderstood they would not take a stand on.'",
+      "rhetorical_move": "predictive-deferred-engagement framing with self-correcting parenthetical ('not yet')",
+      "confidence": "predictive",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The 10-hour train ride from Manila to Naga City for the NUSP student seminar â€” CJ as 'accidental seatmate' of Elenita A. Carpio, editor of the 'Scholastican' and aspiring Benedictine nun â€” leading to three years of conversation at her family's home, her conversion of CJ to Christ, and eventually marriage 'to the chagrin of the St. Scho nuns who expected her to join them in blessed singlehood.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Fr. Michael Nolan's two-pronged work: teaching CJ basic Catholic catechesis as an 'unschooled Catholic' AND empirically demonstrating the failure of Red China and Soviet Russia as economic realities â€” refuting Marx not by doctrine but by data.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The vivid central metaphor: 'My Leni tenderly opened the clenched fist of this activist' â€” using the classic raised-fist symbol of revolutionary politics as the gesture Leni gently unwound.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Pope John Paul II naming CJ to the Pontifical Council for the Laity (1996-2002 term) â€” succeeding Ambassador Henrietta 'Tita' de Villa when she joined the diplomatic service in 1996.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ's tracing of PH student activism's origin to Wenceslao Q. Vinzons leading students against the 1941 Japanese invasion â€” predating the peacetime activism of the late 1950s.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "First Quarter Storm chronology: Jan 26-March 17, 1970; led by NUSP's Edgar Jopson (Ateneo), UPSC's Jerry Barican, and Kabataang Makabayan's Jose Ma. Sison and Satur Ocampo; demonstrations supported by workers, peasants, urban poor.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses outside-actor-infiltration distinction to preserve sympathy for movement while condemning its violent outcomes",
+    "applies empirical-failure-of-communism test (Red China, Soviet Russia) rather than doctrinal-rebuttal",
+    "treats personal conversion (Marx to Christ) as legitimate biographical anchor for political-philosophical disclosure",
+    "uses lineage-of-activism framework to legitimate current movements by historical continuity",
+    "self-correcting predictive language ('not yet') to mark expected-but-unrealized engagement"
+  ],
+  "target_audience": [
+    "Current and aspiring student activists (PH and US)",
+    "Readers tracking US campus protest movement and Israel-Hamas war",
+    "PH-history readers interested in NUSP and First Quarter Storm lineage",
+    "Catholic readers and Bukas Loob Sa Diyos community",
+    "Personal-history audience interested in CJ's pre-judicial life"
+  ],
+  "register_markers": [
+    "current-events-anchored opening (Columbia 2024 rallies)",
+    "personal-recollection register ('my own student days')",
+    "deliberate-religious framing of conversion narrative",
+    "ideological-self-disclosure register (Marxist phase)",
+    "Spanish-loanword register ('CompaÃ±ero,' 'cloistered')",
+    "scare-quote softening ('not yet,' 'irresistibly,' 'cloistered')",
+    "lineage-of-student-activism chronology (Vinzons â†’ late-50s â†’ FQS)",
+    "biographical-tribute embedded in current-affairs frame",
+    "pity-tonal register for the 'poor, victimized students'",
+    "personal-network-name dropping (Lagua, Adaza, Soriano, Jopson, Barican, Sison, Ocampo)"
+  ],
+  "one_paragraph_summary": "Panganiban opens with the 2024 pro-Palestinian campus rallies ignited at Columbia University, spreading within days to 30+ other US universities and then to France, the UK, Norway, and Australia â€” influencing US insistence that Israel temper its Gaza attacks on civilian enclaves and back a ceasefire with hostage release. He laments that the students' ranks were 'infiltrated by outside actors' that converted free speech into vandalism and violence, drawing NYC police in full force; he pities 'the poor, victimized students of Columbia and other universities' who sacrificed time, meager resources, possible suspension or expulsion. They remind him of his own late-1950s activism as president of the FEU Central Student Organization (FEUCSO) and the National Union of Students of the Philippines (NUSP) â€” rallying private nonsectarian schools and battling to rouse the Catholic and 'cloistered' women's colleges (Ateneo, La Salle, St. Theresa, St. Scholastica, Maryknoll/Miriam) in parallel with UP's Fernando Lagua, Homobono Adaza, and Emmanuel Soriano. CJ was then infatuated with Karl Marx's 'From each according to his ability, and to each according to his needs' as the solution to poverty, but two people dissuaded him: FEU chaplain Fr. Michael Nolan, who taught him catechesis and challenged him to confront the economic realities of Red China and Soviet Russia ('while communism may be theoretically attractive, it was not implementable'), and Elenita A. Carpio, editor of the 'Scholastican' and aspiring Benedictine nun, his 'accidental' seatmate on a 10-hour Manila-Naga train ride to a NUSP seminar. Over three years of visits to her family home, she converted him to Christ and eventually married him 'to the chagrin of the St. Scho nuns who expected her to join them in blessed singlehood.' 'My Leni tenderly opened the clenched fist of this activist,' redirecting him to the judiciary, the private sector, family, and the Lord â€” later leading to his appointment by Pope John Paul II to the Pontifical Council for the Laity (1996-2002). He traces PH student activism's origin to Wenceslao Q. Vinzons (1941 resistance to the Japanese invasion), through the late-1950s peacetime organizing he led, to the 1970 First Quarter Storm (Jan 26-March 17) led by NUSP's Edgar Jopson, UPSC's Jerry Barican, and Kabataang Makabayan's Sison and Ocampo against Marcos Sr. He predicts that current student leaders are 'not yet' engaged with Israel-Hamas, Russia-Ukraine, or West Philippine Sea â€” but will eventually take a stand and resume student activism in the Philippines."
+}

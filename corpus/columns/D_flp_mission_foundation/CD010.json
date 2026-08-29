@@ -1,0 +1,370 @@
+{
+  "id": "CD010",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 10,
+  "title": "Supreme Court's SPJI: Reminiscing the past",
+  "date": "2022-11-14",
+  "year": 2022,
+  "source_url": "https://opinion.inquirer.net/158705/supreme-courts-spji-reminiscing-the-past",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Lawyers and law students tracking SC reform programs",
+      "Judicial-reform researchers and donor-agency observers",
+      "Court administration staff and PIO",
+      "Civic readers interested in CJ-by-CJ reform lineage",
+      "FLP scholars and dissertation writers seeking foundational doctrine",
+      "Historians of post-1987 Philippine judiciary",
+      "Robot/AI knowledge-curators needing CJ's full vision statement verbatim"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "judicial_reform",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "msme_and_entrepreneurship",
+      "impeachment_accountability",
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "SPJI 2022-2027",
+    "Strategic Plan for Judicial Innovations",
+    "Action Program for Judicial Reform",
+    "APJR",
+    "four Ins integrity independence industry intelligence",
+    "ACID problems",
+    "DHL dedication honesty loyalty",
+    "Judicial Renaissance book",
+    "Global Forum on Liberty and Prosperity 2006",
+    "great writs of freedom"
+  ],
+  "primary_topics": [
+    "CJ Gesmundo's unveiling of the Strategic Plan for Judicial Innovations (SPJI) 2022-2027 â€” framed by recalling CJ Davide's APJR",
+    "CJ Davide's Action Program for Judicial Reform (APJR, 2001) â€” first structured judicial reform plan; lineage to current SPJI",
+    "CJ Panganiban's own vision-values-goals statement on assuming CJ office (four Ins, four ACID problems, DHL, two loftier goals)",
+    "Roll-call of subsequent CJ reform contributions â€” Puno, Corona, De Castro, Bersamin, Peralta (with conspicuous omission of Sereno)"
+  ],
+  "sub_topics": [
+    "SPJI continuity from APJR: 'a truly impressive plan from which (were) drawn some of (the) present activities in the SPJI... the idea of adopting technology for court functions, as well as the need for a wider reach for public information and collaboration with civil society'",
+    "CJ's 536-page book 'Judicial Renaissance' (Supreme Court Press, Nov 2006) dedicated to CJ Davide",
+    "Davide's biographical arc traced in the book â€” from remote barangay of Colawin, Argao, Cebu, to lawyer, lawmaker, constitution framer, elections chairman, associate justice, and chief justice",
+    "APJR donor support: World Bank, Asian Development Bank, USAID, Canadian International Development Agency, Japan International Cooperation Agency",
+    "World Bank featuring APJR on its website as a model for developing countries to deserve Bank support",
+    "APJR vision quoted: 'judiciary that is independent, effective and efficient, and worthy of public trust and confidence; and a legal profession that provides quality, ethical, accessible and cost-effective legal service'",
+    "Pre-Davide-retirement (Dec 20, 2005) International Conference and Showcase on Judicial Reforms (Nov 28-30, 2005)",
+    "CJ Gesmundo crediting CJ Panganiban with 'egalitarian justice' by 'institutionalizing the perspective of law and economics as an essential element of his Liberty and Prosperity Programs'",
+    "CJ's four Ins on assuming office: integrity, independence, industry, intelligence â€” morally courageous to resist influence, interference, indifference, insolence",
+    "CJ's 'plague of ships' to avoid: kinship, relationship, friendship, fellowship",
+    "CJ's pledge to continue APJR with focus on four ACID problems: (1) limited access to justice by the poor, (2) corruption, (3) incompetence, (4) delay in delivery of quality justice",
+    "CJ's call for competent and ethical lawyers â€” responsible, dependable, morally upright; courageously uphold truth and justice",
+    "CJ's pledge to grant maximum financial and fringe benefits to 26,000 employees nationwide in exchange for DHL â€” Dedication to duty, Honesty in every way, Loyalty to the judiciary",
+    "Two loftier goals: safeguarding the liberty and nurturing the prosperity of our people under the rule of law",
+    "Capstone of CJ's incumbency: Global Forum on Liberty and Prosperity, Oct 18-20, 2006",
+    "Post-retirement Foundation for Liberty and Prosperity (FLP) â€” professional chairs, legal scholarships, dissertation writing contests, Esmel fellowships",
+    "FLP's two ultimate projects: Center for Liberty and Prosperity with interactive Museum (in SC partnership) + Entrepreneurship Fund",
+    "CJ Reynato S. Puno as 'father of the great writs of freedom' â€” Writ of Amparo, Writ of Habeas Data, Writ of Kalikasan",
+    "CJ Renato C. Corona's amendments â€” Quezon City Courts and precursor of Judicial Affidavit Rule",
+    "CJ Teresita Leonardo de Castro's amendments â€” Family Courts and Children in Conflict with the Law",
+    "CJ Lucas P. Bersamin's amendments â€” Revised Law Student Practice, Mandatory Clinical Legal Education, 2019 Amendments to Rules of Civil Procedure, Rules on Evidence",
+    "CJ Diosdado M. Peralta's amendments â€” Continuous Trial 'among others'",
+    "Conspicuous omission: 'Sorry, no mention of Maria Lourdes P. A. Sereno's Four Pillars'",
+    "Self-deprecating close â€” retired Dec 7, 2006; doesn't have details of post-term remedial reforms; refers readers to pio.sc@judiciary.gov.ph"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "IMHO",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Yes, the 'Action Program for Judicial Reform' (APJR) of CJ Davide",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I humbly traced his modest roots",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in all modesty",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I vow to lead a judiciary characterized by four Ins: integrity, independence, industry and intelligence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "morally courageous to resist influence, interference, indifference, and insolence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "impervious to the plague of 'ships': kinship, relationship, friendship, and fellowship",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the four ACID problems that corrode justice in our country",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "limited access to justice by the poor, corruption, incompetence, and delay",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "dedication to duty, honesty in every way, and full loyalty to the judiciary, or DHL",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the two loftier goals of safeguarding the liberty and nurturing the prosperity of our people under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "father of the great writs of freedom",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Sorry, no mention of Maria Lourdes P. A. Sereno's 'Four Pillars'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I do not have the details of these remedial reforms undertaken after my term, but the mains are imbedded in our Rules of Court",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author; former CJ)",
+      "CJ Alexander G. Gesmundo (incumbent; SPJI unveiler)",
+      "CJ Hilario G. Davide Jr. (APJR architect)",
+      "CJ Reynato S. Puno ('father of the great writs of freedom')",
+      "CJ Renato C. Corona (QC Courts; Judicial Affidavit precursor)",
+      "CJ Teresita Leonardo de Castro (Family Courts; Children in Conflict with the Law)",
+      "CJ Lucas P. Bersamin (Law Student Practice; 2019 Civil Procedure; Evidence)",
+      "CJ Diosdado M. Peralta (Continuous Trial)",
+      "CJ Maria Lourdes P. A. Sereno ('Four Pillars' â€” conspicuously omitted by Gesmundo)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "Supreme Court Press (publisher of 'Judicial Renaissance')",
+      "Supreme Court Library",
+      "Public Information Office (pio.sc@judiciary.gov.ph)",
+      "World Bank (APJR donor; website featured)",
+      "Asian Development Bank (APJR donor)",
+      "USAID (APJR donor)",
+      "Canadian International Development Agency (APJR donor)",
+      "Japan International Cooperation Agency (APJR donor)",
+      "Foundation for Liberty and Prosperity (FLP)"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "Strategic Plan for Judicial Innovations 2022-2027 (SPJI)",
+      "Action Program for Judicial Reform (APJR, 2001)",
+      "Writ of Amparo (Puno)",
+      "Writ of Habeas Data (Puno)",
+      "Writ of Kalikasan (Puno)",
+      "Judicial Affidavit Rule (Corona precursor)",
+      "Family Courts amendments (De Castro)",
+      "Children in Conflict with the Law (De Castro)",
+      "Revised Law Student Practice (Bersamin)",
+      "Mandatory Clinical Legal Education (Bersamin)",
+      "2019 Amendments to the Rules of Civil Procedure (Bersamin)",
+      "Rules on Evidence (Bersamin)",
+      "Continuous Trial (Peralta)"
+    ],
+    "events": [
+      "Nov 28-30, 2005 â€” International Conference and Showcase on Judicial Reforms",
+      "Dec 20, 2005 â€” CJ Davide's retirement",
+      "Nov 2006 â€” Publication of 'Judicial Renaissance' (Supreme Court Press)",
+      "Oct 18-20, 2006 â€” Global Forum on Liberty and Prosperity",
+      "Dec 7, 2006 â€” CJ Panganiban's retirement",
+      "Nov 2022 â€” CJ Gesmundo's unveiling of SPJI 2022-2027"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "CJ Gesmundo was right (IMHO) to begin his SPJI unveiling by recalling CJ Davide's APJR â€” 'the first structured plan for judicial reform created way back in 2001' â€” because key SPJI elements (technology adoption for court functions, wider public information reach, collaboration with civil society) were drawn from the APJR's design, establishing institutional continuity rather than rupture.",
+      "rhetorical_move": "continuity-acknowledgment endorsement framing reform as lineage",
+      "confidence": "endorsement",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ Davide's APJR earned exceptional external validation â€” backing from the World Bank, ADB, USAID, CIDA, and JICA, with the World Bank going so far as to feature the APJR on its website as a model for developing countries to emulate â€” establishing it as the foundational Philippine judicial-reform template, properly memorialized in CJ Panganiban's 536-page 'Judicial Renaissance' (Supreme Court Press, Nov 2006).",
+      "rhetorical_move": "external-validation enumeration of donor and World Bank endorsement",
+      "confidence": "asserted with attribution",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ Panganiban's own opening vision rested on a structured fourfold-pledge architecture: (a) four Ins (integrity, independence, industry, intelligence) as judicial character â€” to resist influence, interference, indifference, insolence; (b) four ACID problems to combat (limited access by poor, corruption, incompetence, delay); (c) DHL pledge from employees (dedication, honesty, loyalty) in exchange for maximum financial and fringe benefits; and (d) two loftier goals (safeguarding liberty + nurturing prosperity under rule of law) that organize everything else.",
+      "rhetorical_move": "fourfold-structural vision-architecture as self-restatement",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Judicial impartiality requires being 'impervious to the plague of ships' â€” kinship, relationship, friendship, fellowship â€” which CJ identifies as the social-network forces that, more than overt bribery, distort judicial independence in the Philippine context.",
+      "rhetorical_move": "plague-of-ships coinage as social-network corruption diagnosis",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The post-CJ reform lineage runs through Puno ('father of the great writs of freedom' â€” Amparo, Habeas Data, Kalikasan), Corona (QC Courts; Judicial Affidavit precursor), De Castro (Family Courts; Children in Conflict with the Law), Bersamin (Revised Law Student Practice; Mandatory Clinical Legal Education; 2019 Civil Procedure; Rules on Evidence), and Peralta (Continuous Trial 'among others') â€” with CJ Gesmundo's reform-historiography conspicuously omitting CJ Sereno's 'Four Pillars,' an omission CJ Panganiban flags with a brief 'Sorry, no mention.'",
+      "rhetorical_move": "reform-lineage enumeration paired with pointed-but-restrained omission-flag",
+      "confidence": "asserted with editorial-eyebrow-raise",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "CJ Davide's biographical arc â€” 'from the remote barangay of Colawin in Argao, Cebu, to his outstanding career as a lawyer, lawmaker, constitution framer, elections chairman, associate justice, and finally, chief justice' â€” the small-town-to-CJ trajectory CJ Panganiban memorialized in his 536-page 'Judicial Renaissance.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The World Bank's elevation of the APJR to model status â€” 'so impressed that it included the APJR in its website as a model for developing countries to emulate to deserve the Bank's support' â€” a rare external-validation reference of Philippine institutional design.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Nov 28-30, 2005 International Conference and Showcase on Judicial Reforms held before CJ Davide's Dec 20, 2005 retirement â€” a Court-orchestrated send-off-by-showcase that CJ Panganiban later mirrored with the Oct 18-20, 2006 Global Forum on Liberty and Prosperity capping his own term.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'plague of ships' coinage â€” kinship, relationship, friendship, fellowship â€” a memorable rhetorical device folding four social-network sources of judicial bias into a single phonetic family.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'four ACID problems' coinage â€” access, corruption, incompetence, delay â€” a teachable acronym for judicial-reform diagnosis that the robot can deploy verbatim.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'DHL' employee-pledge coinage â€” dedication to duty, honesty in every way, full loyalty to the judiciary â€” using the express-courier brand as memory device.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The conspicuous Sereno omission: 'Sorry, no mention of Maria Lourdes P. A. Sereno's Four Pillars' â€” a single-sentence acknowledgment of the institutional silence around the ousted CJ, written with characteristic restraint.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Closing modesty-and-redirection device: 'Having retired on Dec. 7, 2006, I do not have the details of these remedial reforms undertaken after my term... For more info, please write the pio.sc@judiciary.gov.ph' â€” knowing-his-limits hand-off.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses reform-lineage continuity (Davide â†’ Puno â†’ Corona â†’ De Castro â†’ Bersamin â†’ Peralta â†’ Gesmundo) as legitimating framework for current SPJI",
+    "applies fourfold-architecture as institutional-design template (four Ins, four ACID, four loftier goals divided as 2+2)",
+    "treats external donor validation (World Bank, ADB, USAID, CIDA, JICA) as legitimacy multiplier for domestic reform",
+    "uses memorable-acronym devices (ACID, DHL, four Ins, plague of ships) as pedagogical retention tools",
+    "deploys 'plague of ships' diagnosis as Philippine-context-specific corruption framework (social network, not bribery)",
+    "treats employee-pledge as quid-pro-quo (maximum benefits for DHL) rather than unilateral demand",
+    "uses single-sentence omission-flag ('Sorry, no mention') as restrained editorial commentary on contested institutional silences",
+    "applies modesty-and-redirection close to knowledge-limits acknowledgment with PIO referral"
+  ],
+  "target_audience": [
+    "Lawyers and law students tracking SC reform programs",
+    "Judicial-reform researchers and donor-agency observers",
+    "Court administration staff and PIO",
+    "Civic readers interested in CJ-by-CJ reform lineage",
+    "FLP scholars and dissertation writers seeking foundational doctrine",
+    "Historians of post-1987 Philippine judiciary",
+    "Robot/AI knowledge-curators needing CJ's full vision statement verbatim"
+  ],
+  "register_markers": [
+    "two-part-column-promise opening ('today, past initiatives; next Monday, present and future')",
+    "IMHO acronym register (CJ comfortable with internet shorthand)",
+    "self-citation register ('In my 536-page book, Judicial Renaissance')",
+    "biographical-modesty register ('humbly traced his modest roots')",
+    "donor-roll-call register (World Bank, ADB, USAID, CIDA, JICA)",
+    "verbatim-vision-statement reproduction (block-quoted from CJ's own assumption-of-office speech)",
+    "fourfold-architecture register (four Ins, four ACID, DHL = three, two loftier goals)",
+    "memorable-acronym device (ACID, DHL, four Ins, plague of ships)",
+    "honorific-rolldown register ('father of the great writs of freedom')",
+    "editorial-omission-flag register ('Sorry, no mention of...')",
+    "modesty-and-redirection close ('I do not have the details... please write the PIO')",
+    "italics-in-original citation marker"
+  ],
+  "one_paragraph_summary": "Panganiban responds to CJ Alexander G. Gesmundo's unveiling of the Supreme Court's Strategic Plan for Judicial Innovations 2022-2027 (SPJI) â€” Gesmundo correctly (IMHO) began by recalling CJ Hilario G. Davide Jr.'s 2001 Action Program for Judicial Reform (APJR), 'the first structured plan for judicial reform' from which many SPJI activities were drawn, including technology adoption for court functions, wider public-information reach, and civil-society collaboration. CJ Panganiban dedicated his 536-page 'Judicial Renaissance' (Supreme Court Press, Nov 2006) to CJ Davide, tracing his arc from the remote barangay of Colawin, Argao, Cebu, to lawyer, lawmaker, constitution framer, elections chairman, associate justice, and CJ â€” and documenting APJR's donor support (World Bank, ADB, USAID, CIDA, JICA) with the World Bank featuring the APJR on its website as a model for developing countries. Pre-Davide-retirement on Dec 20, 2005, the Court held the International Conference and Showcase on Judicial Reforms (Nov 28-30, 2005). He thanks Gesmundo for crediting him with 'egalitarian justice' through 'institutionalizing the perspective of law and economics' in the Liberty and Prosperity Programs, then reproduces verbatim his own vision-values-goals statement on assuming office: lead a judiciary of four Ins (integrity, independence, industry, intelligence) morally courageous to resist influence, interference, indifference, and insolence; impervious to the 'plague of ships' (kinship, relationship, friendship, fellowship); continue APJR with focus on four ACID problems (limited access to justice by the poor, corruption, incompetence, delay); seek competent and ethical lawyers; grant maximum benefits to 26,000 employees nationwide in exchange for DHL (dedication, honesty, loyalty); and pursue the two loftier goals of safeguarding liberty and nurturing prosperity under the rule of law. His Oct 18-20, 2006 Global Forum on Liberty and Prosperity capped his incumbency; the post-retirement Foundation for Liberty and Prosperity (FLP) continued the philosophy via professional chairs, legal scholarships, dissertation contests, and Esmel fellowships, with ultimate projects in the Center for Liberty and Prosperity (Museum in SC partnership) and the Entrepreneurship Fund. Gesmundo then hailed CJ Reynato S. Puno as 'father of the great writs of freedom' (Amparo, Habeas Data, Kalikasan), and cited reform contributions of CJ Renato C. Corona (QC Courts; Judicial Affidavit precursor), CJ Teresita Leonardo de Castro (Family Courts; Children in Conflict with the Law), CJ Lucas P. Bersamin (Revised Law Student Practice; Mandatory Clinical Legal Education; 2019 Amendments to the Rules of Civil Procedure; Rules on Evidence), and CJ Diosdado M. Peralta (Continuous Trial 'among others') â€” with the editorial eyebrow-raise 'Sorry, no mention of Maria Lourdes P. A. Sereno's Four Pillars.' Having retired on Dec 7, 2006, CJ closes by acknowledging he doesn't have the details of post-term remedial reforms, referring readers to pio.sc@judiciary.gov.ph."
+}

@@ -1,0 +1,515 @@
+{
+  "id": "CB001",
+  "type": "column",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 1,
+  "title": "AI fortifies liberty, prosperity, rule of law",
+  "date": "2024-09-09",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/176671/ai-fortifies-liberty-prosperity-rule-of-law",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Members of the Philippine bench and bar",
+      "Law students, FLP scholars, and dissertation-contest applicants",
+      "Technology and AI policymakers in Congress",
+      "Privacy-law and constitutional-law practitioners",
+      "Conglomerate executives and tech-industry leaders",
+      "FLP donors and partners (especially Metro Pacific)",
+      "Justice-sector officials (SC, DOJ, DILG)",
+      "Inquirer general readership"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "foundation_for_liberty_and_prosperity",
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "friendships_and_civic_circles",
+      "ai_and_technology",
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "Manuel V. Pangilinan",
+    "FLP awards night",
+    "generative AI",
+    "First Lady Louise Araneta Marcos",
+    "Rachel Gella dissertation",
+    "digital consent",
+    "Justice Malcolm",
+    "SC Strategic Plan for Judicial Innovation 2022-2027",
+    "HB 7396",
+    "HB 7913"
+  ],
+  "primary_topics": [
+    "MVP's FLP keynote: lawyers' main AI fear is reduced billable hours; you will not be replaced by AI but by a person using AI",
+    "MVP's framing of AI as algorithm-anchored but extendable by human creativity in pursuit of prosperity",
+    "Rachel Lois B. Gella's first-prize dissertation on digital consent and illusory consent under privacy law",
+    "Constitutional, Civil Code, ICCPR, and Data Privacy Act protections of digital consent",
+    "SC's Strategic Plan for Judicial Innovation 2022-2027 and DOJ-DILG data-sharing alliance",
+    "Pending House bills: HB 7396 (AI Authority); HB 7913 (AI system regulation/audit)",
+    "Thesis: properly contextualized AI fortifies liberty, prosperity, rule of law"
+  ],
+  "sub_topics": [
+    "FLP awards ceremony â€” 20 law scholars, 5 MBA fellows, 30 dissertation contest winners",
+    "MVP's nod to First Lady Louise Araneta Marcos as 'brilliant lawyer and FLP's special guest'",
+    "MVP's generative-AI definition: curating huge data and creating new content (video, audio, text)",
+    "Looping back of AI-generated content into the system â†’ over-time human-like learning",
+    "MVP's reassurance: replacement risk is not AI itself but humans using AI",
+    "Distinguishing humans from AI: liberty of thought, talent to think, creative and innovative powers",
+    "AI server interactions (Netflix, YouTube) augmented by human experience",
+    "Robots' inability to replace human touch, empathy, instincts, crisis-emotion navigation",
+    "Gella's first-prize P320,000 77-page dissertation at USLS Bacolod",
+    "CJ's prosperity motto via Gella: 'unleash the entrepreneurial genius of the people by granting them the freedom and the tools'",
+    "Gella's digital-consent critique: tapping screens loses data; commercial practices can render consent illusory",
+    "Justice George Malcolm paraphrased: 'no real liberty in the digital world when consent is rendered illusory'",
+    "1987 Constitution: 'privacy of communication and correspondence shall be inviolable'",
+    "International Covenant on Civil and Political Rights (ICCPR)",
+    "Civil Code right-to-privacy protection",
+    "Data Privacy Act of 2012",
+    "SC Strategic Plan for Judicial Innovation 2022-2027 and data-sharing with DOJ and DILG",
+    "House Bill No. 7396 â€” Artificial Intelligence Authority",
+    "House Bill No. 7913 â€” AI system audit and accountability"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Lawyers (and the public in general) should not fear the many disruptions caused, and to be caused, by artificial intelligence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "except that 'it will drastically reduce their billable hours'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "so truthfully, yet so funnily, by tycoon Manuel V. Pangilinan (MVP)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Generative AI has the capacity to curate huge data and create new contentâ€”video, audio, and text which resemble human intelligence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "(it can) learn and become over time more human-like",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "AI will get smarter over time, so we must be wary of what AI can do now, and more so, in the future",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "You will not be replaced by AI per se, but you can be replaced by a person using AI",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Tackling the FLP's advocacy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "though 'algorithms are the homecourt of AI, these can be rigid and fundamentalist'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "by exercising liberty of thought, our talent to think, and combining our creative and innovative powers with AI",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "essential today in our continuing pursuit of prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "interacts with its users",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the algorithms of that server enhanced by human experience produce the data created by AI",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "it is erroneous to say that by itself, AI can run this world",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "It must interact with human beings",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "humans can take advantage of the speed and efficiency of technology",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "they cannot replace human touch, empathy, instincts, ability to connect, and capacity to navigate emotions of crises",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "THE RISKS AND PITFALLS OF AI",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "well-researched, 77-page winning dissertation of Rachel Lois B. Gella",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the best way to share prosperity is 'to unleash the entrepreneurial genius of the people by granting them the freedom and the tools'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "as we move forward with the tools of technology at our disposal, we become more of a tool ourselves",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Consent permeates our lives in the digital landscape",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "We frequently consent to privacy notices and accept tracking cookies",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "liberty cannot be dwarfed into mere freedom from physical restraint",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "there will be no real liberty in the digital world when consent is rendered illusory",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "THOUGH OF OLDER VINTAGE THAN AI, the 1987 Constitution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the 'privacy of communication and correspondence shall be inviolable'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "International Covenant on Civil and Political Rights",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Data Privacy Act of 2012",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Strategic Plan for Judicial Innovation 2022-2027",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to cut down redundancies and delays to deliver justice that our people need when they need it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "House Bill No. 7396",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "HB 7913 to regulate the application and audit of AI systems",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "properly contextualized and used, AI can fortify the safeguarding of liberty and the nurturing of prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Manuel V. Pangilinan (MVP)",
+      "Louise Araneta Marcos (First Lady)",
+      "Rachel Lois B. Gella (USLS Bacolod; first-prize dissertation winner)",
+      "George A. Malcolm (Justice; paraphrased on liberty)"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Supreme Court of the Philippines",
+      "Department of Justice (DOJ)",
+      "Department of the Interior and Local Government (DILG)",
+      "Philippine Congress (House of Representatives)",
+      "Netflix (referenced)",
+      "YouTube (referenced)",
+      "University of St. La Salle (USLS) Bacolod"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "1987 Philippine Constitution (privacy of communication and correspondence)",
+      "International Covenant on Civil and Political Rights (ICCPR)",
+      "Civil Code of the Philippines (right to privacy)",
+      "Data Privacy Act of 2012 (Republic Act No. 10173)",
+      "House Bill No. 7396 (Artificial Intelligence Authority)",
+      "House Bill No. 7913 (AI system regulation/audit)"
+    ],
+    "events": [
+      "FLP awards ceremony (last week prior to Sept 9, 2024)",
+      "SC's Strategic Plan for Judicial Innovation 2022-2027",
+      "SC data-sharing alliance with DOJ and DILG"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Lawyers and the public should not fear AI's many disruptions â€” except, as MVP truthfully and funnily put it during the FLP awards keynote with First Lady Louise Araneta Marcos in attendance, that AI 'will drastically reduce their billable hours.'",
+      "rhetorical_move": "humor-as-thesis opener",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "MVP defined generative AI as the capacity to curate huge data and create new content (video, audio, text) that resembles human intelligence, with loopback learning making it more human-like over time â€” yet reassured that 'you will not be replaced by AI per se, but you can be replaced by a person using AI.'",
+      "rhetorical_move": "expert-attribution thesis",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Algorithms are AI's 'homecourt' but can be rigid and fundamentalist; humans must distinguish themselves not by competing with algorithms but by exercising liberty of thought, talent to think, and creative and innovative powers in pursuit of prosperity â€” robots cannot replace human touch, empathy, instincts, ability to connect, or crisis-emotion navigation.",
+      "rhetorical_move": "human-vs-algorithm distinction",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Rachel Lois B. Gella's first-prize 77-page dissertation at USLS Bacolod, citing CJ's prosperity motto, argued that 'consent permeates our lives in the digital landscape' and commercial practices can render that consent illusory â€” with a tap on the screen losing data to corporations; paraphrasing Justice George Malcolm, 'there will be no real liberty in the digital world when consent is rendered illusory.'",
+      "rhetorical_move": "student-research amplification",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Though of older vintage than AI, the 1987 Constitution's guarantee that 'the privacy of communication and correspondence shall be inviolable,' together with the ICCPR, the Civil Code right to privacy, and the Data Privacy Act of 2012, can protect digital consent.",
+      "rhetorical_move": "constitutional-and-treaty assembly",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The SC's Strategic Plan for Judicial Innovation 2022-2027, implemented through issuances and alliances including data-sharing with DOJ and DILG, anticipates the AI age and will be critical for more responsive justice-sector policymaking.",
+      "rhetorical_move": "institutional-readiness recognition",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Congress is to be hailed for HB 7396 (establishing an Artificial Intelligence Authority to develop a national AI strategy) and HB 7913 (regulating the application and audit of AI systems to ensure accountability).",
+      "rhetorical_move": "legislative-recognition note",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Properly contextualized and used, AI can fortify the safeguarding of liberty and the nurturing of prosperity under the rule of law â€” completing the FLP twin-beacons framework with AI as enabling technology.",
+      "rhetorical_move": "thesis-as-title close",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "MVP's opening one-liner â€” lawyers should not fear AI 'except that it will drastically reduce their billable hours' â€” flagged by CJ as 'so truthfully, yet so funnily,' setting the column's accessible-tone register.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The First Lady Louise Araneta Marcos nod-and-smile detail â€” 'After observing the nod and smile of First Lady Louise Araneta Marcos, herself a brilliant lawyer and FLP's special guest that evening' â€” a quiet political-presence acknowledgment.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "MVP's algorithm-as-'homecourt' metaphor â€” calling algorithms AI's home court but warning they can be 'rigid and fundamentalist' â€” a memorable single-image framing.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "MVP's pivotal reassurance â€” 'You will not be replaced by AI per se, but you can be replaced by a person using AI' â€” quotable formulation of the human-plus-AI thesis.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Rachel Lois B. Gella's 77-page first-prize dissertation cited at length â€” with two embedded direct quotations from her acceptance speech, including the haunting line 'as we move forward with the tools of technology at our disposal, we become more of a tool ourselves' â€” a column-within-column elevation of student work.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Justice George Malcolm paraphrased â€” 'liberty cannot be dwarfed into mere freedom from physical restraint' â€” used as the historical constitutional anchor for the digital-consent argument.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The SC data-sharing announcement with DOJ and DILG â€” recited verbatim from official text â€” anchoring the column's institutional-readiness claim.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing thesis-as-title â€” 'properly contextualized and used, AI can fortify the safeguarding of liberty and the nurturing of prosperity under the rule of law' â€” restating the column title as the operative conclusion.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies the humans-plus-AI thesis (not replaced by AI but by humans using AI)",
+    "uses the algorithm-as-homecourt-but-rigid metaphor to distinguish AI from human creativity",
+    "applies the FLP twin-beacons (liberty + prosperity) framework extended to include AI as enabling technology",
+    "uses the digital-consent-as-illusory diagnostic (Gella + paraphrased Malcolm)",
+    "applies the constitutional-and-treaty assembly approach to digital-privacy protection (1987 Constitution + ICCPR + Civil Code + Data Privacy Act)",
+    "uses institutional-readiness recognition (SC Strategic Plan 2022-2027; DOJ-DILG data-sharing)",
+    "applies legislative-recognition note (HB 7396 / HB 7913)",
+    "uses thesis-as-title closing convention to lock in the operative conclusion",
+    "preserves student-research amplification as part of the FLP-pedagogy register"
+  ],
+  "target_audience": [
+    "Members of the Philippine bench and bar",
+    "Law students, FLP scholars, and dissertation-contest applicants",
+    "Technology and AI policymakers in Congress",
+    "Privacy-law and constitutional-law practitioners",
+    "Conglomerate executives and tech-industry leaders",
+    "FLP donors and partners (especially Metro Pacific)",
+    "Justice-sector officials (SC, DOJ, DILG)",
+    "Inquirer general readership"
+  ],
+  "register_markers": [
+    "humor-as-thesis opener (MVP billable-hours joke)",
+    "expert-attribution thesis register (MVP quoted extensively)",
+    "ALL-CAPS section opener ('THE RISKS AND PITFALLS OF AI,' 'THOUGH OF OLDER VINTAGE THAN AI')",
+    "First-Lady acknowledgment marker ('nod and smile')",
+    "student-research amplification register (full Gella quotation)",
+    "Justice-Malcolm paraphrase as constitutional-historical anchor",
+    "constitutional-and-treaty assembly device",
+    "legislative-recognition note ('To be hailed is the effort of Congress')",
+    "thesis-as-title close",
+    "no Tagalog markers; technology-policy English",
+    "FLP twin-beacons framing extended to AI"
+  ],
+  "one_paragraph_summary": "At last week's FLP awards ceremony for 20 new law scholars, five MBA fellows, and 30 dissertation contest winners â€” with First Lady Louise Araneta Marcos, herself 'a brilliant lawyer,' as special guest â€” keynote speaker Manuel V. Pangilinan (MVP) reassured that lawyers and the public should not fear AI's disruptions 'except that it will drastically reduce their billable hours.' MVP defined generative AI as the capacity to curate huge data and create new content (video, audio, text) resembling human intelligence, with loopback learning making it more human-like over time â€” yet reassured that 'you will not be replaced by AI per se, but you can be replaced by a person using AI.' Algorithms are AI's 'homecourt' but 'can be rigid and fundamentalist'; humans must distinguish themselves not by competing with algorithms but by exercising 'liberty of thought, our talent to think, and combining our creative and innovative powers with AI' in the continuing pursuit of prosperity â€” robots cannot replace human touch, empathy, instincts, ability to connect, or capacity to navigate crisis emotions. Rachel Lois B. Gella's first-prize 77-page dissertation at USLS Bacolod cited CJ's prosperity motto and argued that 'consent permeates our lives in the digital landscape,' that commercial practices can render that consent illusory, and â€” paraphrasing Justice George Malcolm â€” that 'liberty cannot be dwarfed into mere freedom from physical restraint' and 'there will be no real liberty in the digital world when consent is rendered illusory.' Though of older vintage than AI, the 1987 Constitution's guarantee that 'the privacy of communication and correspondence shall be inviolable,' together with the ICCPR, the Civil Code, and the Data Privacy Act of 2012, can protect digital consent. The SC's Strategic Plan for Judicial Innovation 2022-2027 anticipates the AI age, with its data-sharing alliance with DOJ and DILG cutting down redundancies and delays. Congress is to be hailed for HB 7396 (Artificial Intelligence Authority) and HB 7913 (AI system audit and accountability). 'Properly contextualized and used, AI can fortify the safeguarding of liberty and the nurturing of prosperity under the rule of law.'"
+}

@@ -1,0 +1,303 @@
+{
+  "id": "SD033",
+  "type": "speech",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 33,
+  "title": "Bequeathing My Legacy",
+  "date": "2021-02-06",
+  "year": 2021,
+  "source_url": "https://cjpanganiban.com/bequeathing-my-legacy/",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "AY 2020-2021 fourth-year FLP Law Scholars receiving final-year grants",
+      "FLP Board of Trustees and Tan Yan Kee Foundation representatives",
+      "FLP Scholars Society (FLPSS) members",
+      "Deans and professors at partner law schools",
+      "Family members of scholars (and Leni Panganiban as wife/trustee)",
+      "Future law-school applicants weighing FLP scholarship applications"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "ceremonial"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "foundation_for_liberty_and_prosperity",
+      "family_and_marriage"
+    ],
+    "secondary": [
+      "flp_donors_and_partners",
+      "flp_scholarship_programs",
+      "bar_exam_and_legal_education"
+    ]
+  },
+  "keywords": [
+    "Fourth Year Law Scholars 2020-2021",
+    "FLP scholars as legacy",
+    "no lawyer children no lawyer grandchildren",
+    "sperm bank quip",
+    "FLP Scholars Society",
+    "FLP 10th anniversary",
+    "Coffee Table Book",
+    "bar topnotchers Sean Borja Katrina Gaw",
+    "FLPSS",
+    "digital bar exam"
+  ],
+  "primary_topics": [
+    "Edited extemporaneous address at the online Award Ceremony for AY 2020-2021 Fourth Year Law Scholars, February 6, 2021",
+    "FLP's program architecture (20 scholars/year: 10 third-year + 10 fourth-year) and the role of the JBC-modeled Board of Judges chaired by the Chief Justice or a Senior Associate Justice",
+    "Personal disclosure: none of his five children and none of his ten grandchildren went into law — the foundational anxiety that led to FLP's creation",
+    "Tan Yan Kee Foundation as the constant Scholarship Program partner through COVID",
+    "10th Anniversary projects: a Coffee Table Book (edited by Joel Gregorio with FLPSS) and a separate Professorial Lectures volume",
+    "Bar topnotcher tally: Batch 1 Sean Borja (No. 1) and Katrina Gaw (No. 5); Batch 2 Kenneth Manuel (No. 6) and Dexter Rojas (No. 9); Batches 3-4 taking the digital bar together"
+  ],
+  "sub_topics": [
+    "FLP Board of Trustees present: Dr. Edilberto de Jesus, Justice Angelina Sandoval-Gutierrez, Prof. Leni Panganiban (wife), Ms Marilen P. Yaptangco, Treasurer Becky Felix, Executive Director Susan Gavino ('mother hen')",
+    "Tan Yan Kee Foundation represented by Valerie Ann L. Tan (Corp Comm Officer; niece of Dr. Lucio Tan; daughter of Harry Tan)",
+    "Nine of ten third-year scholars qualified for fourth-year continuation — checks deposited Monday (next business day)",
+    "Board of Judges chaired by the incumbent CJ or a Senior Associate Justice — final interview held in 'the inner sanctum of the Court'",
+    "Preliminary Selection Committee headed by Trustee Atty. Joel Emerson Gregorio",
+    "Last year's physical Awards Ceremony at FEU; first ever at FLP Office, PCCI Center, Salcedo Village, Makati",
+    "FLP Scholars Society (FLPSS) — scholars and dissertation contest winners as members; runs semi-autonomous projects",
+    "Professorial Chairs Program — 16-17 chairs co-funded by Metrobank Foundation; several deans/professors as chair holders",
+    "Dissertation Writing Contest supported by Ayala Group",
+    "CJP's 84-year-old self-description as still operating laptop, iPad, desktop, smart cell phone",
+    "Mock Bar Exam recently held; postponement of last school year's bar exam due to COVID; upcoming digital November bar exam (laptop-based)",
+    "Maria Carissa Guinto's House of Representatives experience and Mock Bar Exam sharing",
+    "Laurence Obaob's sharing about COVID-afflicted parents",
+    "Atty. Arvin Paolo Cortez and FLPSS — operationalizing philosophy into projects",
+    "Coffee Table Book contents: pictures + excerpts from professorial lectures, dissertation winners, scholar essays, snippets from CJP's decisions/speeches/columns",
+    "₱3 million grant from Metrobank Foundation for the Coffee Table Book",
+    "October 10 — FLP 10th Anniversary date"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Bequeathing My Legacy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the cream of the crop of the best law schools in the Philippines",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "my frustration about not having any heirs to continue my legacy is now over",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I feel fulfilled with exhilaration and joy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in the Great Beyond",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Let us clap our hands digitally for that!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "my philosophy of liberty and prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I thought of adopting young people who might become lawyers or even of donating to – what do you call that? – sperm banks",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "as they grow in your society",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the inner sanctum of the Court",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (FLP Chairman, 84 years old)",
+      "Dr. Edilberto de Jesus (FLP Trustee)",
+      "Justice Angelina Sandoval-Gutierrez (FLP Trustee)",
+      "Prof. Leni Panganiban (FLP Trustee; wife)",
+      "Ms Marilen P. Yaptangco (FLP Trustee; daughter)",
+      "Gov. Amando Tetangco (FLP Trustee; sent regrets)",
+      "Mrs. Becky Felix (FLP Treasurer)",
+      "Susan Gavino (FLP Executive Director, 'mother hen')",
+      "Valerie Ann L. Tan (TYKF Corp Comm Officer; niece of Dr. Lucio Tan; daughter of Harry Tan)",
+      "Dr. Lucio C. Tan (TYKF Chairman-President)",
+      "Harry Tan (TYKF Vice Chairman)",
+      "Atty. Joel Emerson Gregorio (FLP Preliminary Selection Committee head)",
+      "Atty. Arvin Paolo Cortez (FLPSS)",
+      "Maria Carissa Guinto (scholar; House of Reps; Mock Bar speaker)",
+      "Laurence Obaob (scholar; COVID-affected parents)",
+      "Sean Borja (Bar No. 1, Batch 1)",
+      "Katrina Gaw (Bar No. 5, Batch 1)",
+      "Kenneth Manuel (Bar No. 6, Batch 2)",
+      "Dexter Rojas (Bar No. 9, Batch 2)"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Tan Yan Kee Foundation (TYKF)",
+      "Ayala Group",
+      "Metrobank Foundation",
+      "FLP Scholars Society (FLPSS)",
+      "Supreme Court of the Philippines",
+      "Far Eastern University (last face-to-face Awards venue)",
+      "PCCI Center, Salcedo Village, Makati (first FLP Office venue)",
+      "House of Representatives"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "FLP online Award Ceremony — February 6, 2021",
+      "Postponed November 2020 bar exam (COVID) — moved to November 2021 digital format",
+      "Recent Mock Bar Exam (January 2021)",
+      "FLP 10th Anniversary — October 10, 2021",
+      "Bar Exam Topnotcher placements (Batches 1 and 2)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "FLP exists in significant part because none of CJP's five children and none of his ten grandchildren went into law — leaving him 'a little frustrated' that his legacy as lawyer and jurist 'would come to an end.' Organizing FLP was a deliberate alternative to 'adopting young people who might become lawyers or even... donating to sperm banks.' The 40 scholars across four batches now constitute his legal-philosophical heirs.",
+      "rhetorical_move": "personal-biographical-vulnerability disclosure as legitimation of institutional choice",
+      "confidence": "asserted with self-deprecating humor",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP scholars are not 'ordinary scholars' but 'the cream of the crop of the best law schools in the Philippines' — a claim validated by Batch 1 producing Bar No. 1 (Sean Borja) and No. 5 (Katrina Gaw), and Batch 2 producing No. 6 (Kenneth Manuel) and No. 9 (Dexter Rojas). The selection process — with final interviews in 'the inner sanctum of the Court' chaired by the incumbent CJ or Senior Associate Justice — is itself part of the formative experience.",
+      "rhetorical_move": "topnotcher-statistics as institutional validation",
+      "confidence": "asserted with named-placement evidence",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The 10th Anniversary publication (Coffee Table Book + Professorial Lectures volume) is the appropriate institutional milestone — combining pictures, excerpts from professorial lectures, dissertation-winner snippets, scholar essays, and CJP's own decisions/speeches/columns, funded by a ₱3M Metrobank Foundation grant — to be ready before October 10.",
+      "rhetorical_move": "institutional self-documentation as legacy-building",
+      "confidence": "asserted with funding specificity",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Tan Yan Kee Foundation's six-year continuous funding of the Scholarship Program — including through 'the harsh business environment of the last three years caused by the COVID pandemic' — represents the gold standard of philanthropic constancy that other FLP partners are implicitly being measured against.",
+      "rhetorical_move": "thank-you-as-implicit-benchmark for other donors",
+      "confidence": "asserted with explicit gratitude",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The sperm-bank quip: CJP discloses publicly that he was 'a little frustrated' that none of his five children and none of his ten grandchildren went into law. 'And so for a while, I was worried that perhaps my legacy as a lawyer and as a jurist would come to an end... I thought of adopting young people who might become lawyers or even of donating to – what do you call that? – sperm banks. But, I think, that organizing the Foundation for Liberty and Prosperity is better...'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Bar topnotcher tally as proof of FLP's quality: Batch 1 — Sean Borja No. 1, Katrina Gaw No. 5. Batch 2 — Kenneth Manuel No. 6, Dexter Rojas No. 9. 'Let us clap our hands digitally for that!'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "84-year-old self-description: 'I hope all of you are already experts in operating your laptops. Well, I'm trying my best to do that even as an oldster. I'm 84 years old already but still trying to operate my laptop, my iPad, my desktop, of course, my smart cell phone.' (Modeling lifelong digital adaptation.)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "First-ever FLP Awards Ceremony was at the FLP Office, PCCI Center, Salcedo Village, Makati — recalled by Carissa Guinto.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Coffee Table Book contents include 'snippets from my decisions, speeches and columns' — funded by ₱3M Metrobank Foundation grant — published before October 10, 2021 (FLP 10th Anniversary).",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Tan Yan Kee Foundation continued the usual donation 'despite the many business problems his conglomerate has faced and continues to face because of the ongoing pandemic.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "treats institutional creation (FLP) as a substitute for biological-line legacy continuity",
+    "applies bar-topnotcher placement as the primary validation metric for the Scholarship Program",
+    "treats sitting-Court Board of Judges chairmanship (CJ or Senior Associate Justice) as legitimacy infrastructure",
+    "models lifelong digital adaptation as appropriate posture for 84-year-old institutional leader",
+    "uses anniversary-publication as the institutional self-documentation milestone (Coffee Table Book funded at ₱3M)",
+    "uses donor-constancy through hardship (TYKF through COVID) as the implicit measure of philanthropic seriousness"
+  ],
+  "target_audience": [
+    "AY 2020-2021 fourth-year FLP Law Scholars receiving final-year grants",
+    "FLP Board of Trustees and Tan Yan Kee Foundation representatives",
+    "FLP Scholars Society (FLPSS) members",
+    "Deans and professors at partner law schools",
+    "Family members of scholars (and Leni Panganiban as wife/trustee)",
+    "Future law-school applicants weighing FLP scholarship applications"
+  ],
+  "register_markers": [
+    "edited-extemporaneous register (less polished than ceremonial; conversational pacing)",
+    "personal-vulnerability-disclosure register (the sperm-bank-quip moment)",
+    "numbered-list compositional structure ('First...', 'Second...', 'Third...', 'Fourth...')",
+    "online-ceremony adaptations ('Let us clap our hands digitally')",
+    "self-aware-aging interpolation ('84 years old already but still trying to operate my laptop')",
+    "topnotcher-roll-call as applause-line",
+    "scholar-as-heir metaphor sustaining the title",
+    "anniversary-project preview as closer (Coffee Table Book, lecture volume)",
+    "informal mid-thought interruption ('what do you call that? – sperm banks')"
+  ],
+  "one_paragraph_summary": "Delivered February 6, 2021 as edited extemporaneous closing remarks at the online Awards Ceremony for the Fourth Year FLP Law Scholars (AY 2020-2021), this speech is structurally the most personally disclosing of CJP's FLP addresses. He thanks the FLP Board of Trustees present (Edilberto de Jesus, Justice Angelina Sandoval-Gutierrez, his wife Prof. Leni Panganiban, daughter Marilen Yaptangco, Treasurer Becky Felix, Executive Director Susan Gavino as 'mother hen'), the Tan Yan Kee Foundation (represented by Valerie Ann L. Tan, niece of Dr. Lucio Tan) for six years of unbroken Scholarship funding through COVID, and congratulates the nine fourth-year graduating scholars whose checks will be deposited the following Monday. He explains the 20-scholars-per-year program structure (10 third-year + 10 fourth-year), the Preliminary Selection Committee under Atty. Joel Gregorio, and the final-interview Board of Judges chaired by the incumbent Chief Justice or a Senior Associate Justice — 'in the inner sanctum of the Court.' The speech's emotional center is a vulnerable personal disclosure: none of his five children and none of his ten grandchildren entered law, leaving him frustrated that his legacy 'would come to an end' — he self-deprecatingly mentions briefly considering 'adopting young people who might become lawyers or even... donating to – what do you call that? – sperm banks' before settling on FLP as the better legacy vehicle. Forty scholars across four batches now constitute that legacy. He validates the program by reciting bar topnotchers — Batch 1's Sean Borja (No. 1) and Katrina Gaw (No. 5), Batch 2's Kenneth Manuel (No. 6) and Dexter Rojas (No. 9) — and previews the FLP 10th Anniversary projects (Coffee Table Book edited by Joel Gregorio with FLPSS support, funded by a ₱3M Metrobank Foundation grant, plus a separate Professorial Lectures volume) launching before October 10, 2021. He describes himself, at 84, as 'still trying to operate my laptop, my iPad, my desktop, of course, my smart cell phone.'"
+}

@@ -1,0 +1,531 @@
+{
+  "id": "CC012",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 12,
+  "title": "The bar exam and the legends of the bar",
+  "date": "2024-09-16",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/176846/the-bar-exam-and-the-legends-of-the-bar",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Law students, bar reviewees, and 2024 bar takers",
+      "Law-school deans, faculty, and PALS network",
+      "Members of the Philippine bench and bar",
+      "Bar-exam committee members and SC justices",
+      "Diokno, Salonga, and Teehankee family circles",
+      "FEU, UP, and Ateneo alumni networks",
+      "Inquirer general readership",
+      "Historians of Philippine legal education"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "mentors_and_legal_lineage",
+      "bar_exam_and_legal_education"
+    ],
+    "secondary": [
+      "early_life_sampaloc",
+      "with_due_respect_persona",
+      "judicial_activism_and_political_question"
+    ]
+  },
+  "keywords": [
+    "2024 bar exam",
+    "passing-grade integrity",
+    "1999 lowest pass rate",
+    "2021 highest pass rate",
+    "top-10 disclosure",
+    "chief-justice bar placers",
+    "Diokno Salonga Teehankee",
+    "CJ's dissolved law firm"
+  ],
+  "primary_topics": [
+    "Bar-exam statistics across decades (1960 CJ's batch; 1965-1981 small numbers; 1999 lowest 16.59%; 2021 digitized record 8,241 passers; 72.28% pass rate)",
+    "CJ's objection to lowering the 1999 passing grade from 75 to 74 percent and the SC's reprimand of the bar exam chair",
+    "CJ's principled disagreement with wholesale entries (the legal profession 'must swing on reluctant hinges') and with nondisclosure of top 10 passers",
+    "Eleven of 27 Philippine CJs (excluding ousted Sereno) are bar placers â€” including CJ himself (sixth)",
+    "CJ's three idealized bar legends: Diokno, Salonga, Teehankee",
+    "CJ's dissolution of his own law firm (Panganiban, Parlade, Benitez, and Africa) on SC appointment in 1995, emulating Salonga's 1986 PCGG dissolution"
+  ],
+  "sub_topics": [
+    "2024 bar â€” Sept 8, 11, 15; 12,246 applied; 10,483 showed up first day",
+    "1960 â€” CJ's batch of 4,178; 1,667 passers; held over four consecutive Sundays at UE",
+    "1965-1981 â€” yearly examinees less than 2,000",
+    "1999 â€” 16.59% pass; 660 passers; attempt to lower passing grade from 75 to 74 percent thwarted by CJ's strong objections",
+    "Bar-exam chair (then-AJ) reprimanded; honorarium slashed by half for nondisclosure of nephew-taker",
+    "2021 â€” 11,402 took digitized regionalized exam; 8,241 passed (record); 72.28% pass; for the first time top 10 unnamed",
+    "Legal profession 'invested in the public interest'; lawyers as public officers disciplined by the SC",
+    "Top-10 placers becoming leading practitioners, professors, corporate counsels, government officials",
+    "27 CJs total (excluding ousted Sereno deemed never a de jure CJ); 11 bar placers: Yulo (3rd), Paras (2nd), Bengzon (2nd), Concepcion (1st), Makalintal (7th), R. Aquino (9th), Teehankee (1st), Yap (1st), Narvasa (2nd), Panganiban (6th), Bersamin (9th)",
+    "Diokno-Salonga 1944 tie at 95.3% (Diokno did not finish law school; also topped CPA boards)",
+    "Salonga's UP-Harvard-Yale academic record; CJ's mentor at FEU, law-office boss, lifetime guru",
+    "Salonga's 'Pepe Diokno or Dingdong Teehankee' opponent-deference instruction",
+    "Teehankee's Ateneo summa BA and LLB; #1 in 1940 bar; remained independent despite Marcos appointment",
+    "CJ's three law-firm partners â€” Agustin Benitez (1959 #1), Custodio Parlade (1959 #4), Leopoldo Africa (1960 #11) â€” orphaned by the 1995 dissolution"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "The three-day 2024 Bar exam was finished yesterday",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "When I took the Bar exam in 1960, we were only 4,178, and 1,667 passed",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "It was held on four consecutive Sundays (instead of three days in just one week) and in only one location, the University of the East",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "THE LOWEST PASSING RATE was recorded in 1999 at 16.59 percent",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "An attempt to increase the percentage via the lowering of the passing grade from 75 to 74 percent was scuttled because of my strong objections",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rules should be obeyed and should not be changed midway",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the bar exam chair (who was an associate justice) was reprimanded and his honorarium as chair slashed by half",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "for failing to disclose that a nephew of his took the Bar exam",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The most numerous examinees were in 2021 when 11,402 took the digitized and regionalized tests for the first time",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "8,241 passed, the most in history",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "With due respect, I disagree with this wholesale entry to the doors of the legal profession",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "must swing on reluctant hinges",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "AFTER ALL, OUR PROFESSION IS THE FIRST KEY TO THE JUSTICE SYSTEM",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Lawyering is invested in the public interest",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "lawyers are regarded and disciplined by the Supreme Court as public officers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Just because a few lawyers lie, people generalize the label to all",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I also disagree with the nondisclosure of the top 10 passers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Notably, of the 27 chief justices of the Philippines",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "excluding Maria Lourdes Sereno who was ousted via quo warranto and deemed never to have been a de jure chief justice",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "at least 11 are bar placers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "SINCE MY STUDENT DAYS, I have idealized three bar topnotchers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Jose W. Diokno, Jovito R. Salonga, and Claudio Teehankee",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Diokno and Salonga tied for first place in the 1944 Bar exam with identical grades of 95.3 percent",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Amazingly, Diokno did not finish law school. (He also topped the CPA board exam.)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Salonga was my mentor at Far Eastern University, my boss at his law firm, and my lifetime guru",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "He was in awe of only two lawyers, Diokno and Teehankee",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Please prepare our trial brief extra well because Pepe Diokno (or Dingdong Teehankee) is our opponent",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Teehankee had impeccable academic credentials: summa cum laude in both his Bachelor of Arts and Bachelor of Laws from Ateneo de Manila, and numero uno in the 1940 Bar exam",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "he remained independent and wrote (or concurred with) decisions unfavorable to him",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "In my humble view, he is the greatest Ateneo law alumnus of all time",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I tried, though unworthy, to emulate these three great masters",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I dissolved my own law firm (Panganiban, Parlade, Benitez, and Africa) upon my appointment to the Supreme Court in 1995",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The dissolution orphaned my law partners",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Please excuse my feeble attempts to imitate these legends of the bar as I humbly try, though undeserving, to live in the penumbra of their great shadows",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Jose W. 'Pepe' Diokno",
+      "Jovito R. Salonga",
+      "Claudio 'Dingdong' Teehankee Sr.",
+      "Maria Lourdes P. A. Sereno (ousted CJ, referenced)",
+      "Ferdinand E. Marcos Sr. (referenced for Teehankee's appointment)",
+      "Jose Yulo (CJ, bar placer)",
+      "Ricardo Paras (CJ, bar placer)",
+      "Cesar Bengzon (CJ, bar placer)",
+      "Roberto Concepcion (CJ, bar placer)",
+      "Querube Makalintal (CJ, bar placer)",
+      "Ramon Aquino (CJ, bar placer)",
+      "Pedro Yap (CJ, bar placer)",
+      "Andres Narvasa (CJ, bar placer)",
+      "Lucas Bersamin (CJ, bar placer)",
+      "Agustin Benitez (Dean; 1959 bar topnotcher; CJ's law-firm partner)",
+      "Custodio Parlade (Dean; 1959 bar 4th; CJ's law-firm partner)",
+      "Leopoldo Africa (1960 bar 11th; CJ's classmate and partner)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "Philippine Bar (legal profession)",
+      "University of the East (UE) â€” 1960 bar venue",
+      "University of the Philippines",
+      "Harvard University",
+      "Yale University",
+      "Ateneo de Manila University",
+      "Far Eastern University (FEU)",
+      "Presidential Commission on Good Government (PCGG) â€” Salonga 1986",
+      "Panganiban, Parlade, Benitez, and Africa Law Office"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "Rules of Court (bar admission)",
+      "Quo warranto jurisprudence (Sereno ouster, referenced)"
+    ],
+    "events": [
+      "1944 Bar exam â€” Diokno and Salonga tie at 95.3%",
+      "1940 Bar exam â€” Teehankee #1",
+      "1959 Bar exam â€” Benitez #1, Parlade #4",
+      "1960 Bar exam â€” CJ #6; Africa #11",
+      "1986 â€” Salonga's dissolution of his law firm on PCGG appointment",
+      "1995 â€” CJ's dissolution of his law firm on SC appointment",
+      "1999 â€” lowest pass rate; SC reprimand of bar-exam chair",
+      "2021 â€” first digitized regionalized bar; record passers",
+      "2024 Sept 8, 11, 15 â€” three-day bar exam"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The 2024 three-day bar exam closed Sept 15 with 12,246 applicants and 10,483 first-day appearances â€” over five times the 1960 batch (4,178; 1,667 passed; four consecutive Sundays at UE) and the small 1965-1981 cohorts of under 2,000.",
+      "rhetorical_move": "historical-statistics framing",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The 1999 record-low 16.59% pass rate (660 passers) prompted an attempt to lower the passing grade from 75 to 74 percent, which CJ â€” then an incumbent associate justice â€” strongly objected to ('rules should be obeyed and should not be changed midway'); the bar-exam chair was also reprimanded and his honorarium halved for failing to disclose that a nephew of his was taking the bar.",
+      "rhetorical_move": "personal-historical disclosure as institutional-integrity stance",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The 2021 digitized regionalized exam produced 8,241 passers â€” the most in history â€” with a 72.28% pass rate, also a historical high; for the first time, the top 10 passers were not named.",
+      "rhetorical_move": "record-setting data note",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "With due respect, CJ disagrees with this 'wholesale entry to the doors of the legal profession' â€” 'must swing on reluctant hinges' â€” even under the COVID-19 emergency; the SC should remain wary and admit only the most qualified, because the legal profession is the first key to the justice system and lawyers are 'invested in the public interest' and disciplined by the SC as public officers.",
+      "rhetorical_move": "principled-disagreement with elitist defense",
+      "confidence": "asserted with humility marker",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ also disagrees with the nondisclosure of the top 10 passers (a practice now abandoned in the last two years); topping the bar is no guarantee of legal excellence, but top 10 placers nonetheless become great practitioners, professors, corporate counsels, and government officials sought after by top firms.",
+      "rhetorical_move": "principled-disagreement with empirical defense",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Of the 27 Philippine CJs (excluding ousted-via-quo-warranto Sereno deemed never a de jure CJ), at least 11 are bar placers: Yulo (3rd), Paras (2nd), Bengzon (2nd), Concepcion (1st), Makalintal (7th), R. Aquino (9th), Teehankee (1st), Yap (1st), Narvasa (2nd), Panganiban (6th), and Bersamin (9th).",
+      "rhetorical_move": "self-inclusion in historical roster",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ has idealized three bar legends since student days â€” Diokno and Salonga tying for #1 in 1944 at 95.3% (Diokno did not finish law school; also topped CPA boards); Teehankee (Ateneo summa BA and LLB; 1940 #1; remained independent despite his Marcos appointment).",
+      "rhetorical_move": "personal-pantheon establishment",
+      "confidence": "asserted with hero-worship register",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Salonga was CJ's FEU mentor, law-firm boss, and lifetime guru, and was in awe of only two lawyers â€” Diokno and Teehankee â€” instructing CJ when either was on the opposite side to prepare the trial brief extra well; in emulation of Salonga's 1986 PCGG-appointment law-firm dissolution, CJ dissolved his own firm (Panganiban, Parlade, Benitez, and Africa) on his 1995 SC appointment, orphaning his bar-placer partners.",
+      "rhetorical_move": "imitation-of-models close with personal-cost detail",
+      "confidence": "asserted with explicit unworthiness",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The exact contrast â€” '1960, we were only 4,178, and 1,667 passedâ€¦ four consecutive Sundaysâ€¦ in only one location, the University of the Eastâ€¦ 1965-1981, less than 2,000 took the exam. Now, more than five times did.' â€” six decades collapsed into a single statistical paragraph.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 1999 nepotism-and-passing-grade story â€” CJ's strong objection scuttling the 75-to-74 lowering, plus the SC's reprimand of the bar-exam chair (an AJ) whose nephew was a taker â€” a rare personal-institutional anecdote of the kind CJ reserves for principled-disagreement contexts.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'must swing on reluctant hinges' phrase for the legal profession â€” one of CJ's most memorable single-image formulations of bar-admission gatekeeping.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The exact roster of 11 chief-justice bar placers with placement numbers â€” CJ explicitly self-inscribing as 'Panganiban (sixth)' â€” turning a historical observation into a quiet biographical claim.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Diokno-Salonga 1944 tie at 95.3% (Diokno did not finish law school; also topped CPA boards) â€” a single line that contains one of the most striking facts in Philippine legal history.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Salonga in-awe-of-only-two-lawyers detail â€” 'Please prepare our trial brief extra well because Pepe Diokno (or Dingdong Teehankee) is our opponent' â€” preserving the affectionate first-name diminutives ('Pepe,' 'Dingdong') used between bar legends.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Teehankee 'greatest Ateneo law alumnus of all time' claim â€” paired with his independence despite owing his appointment to Marcos â€” used as CJ's exemplar of integrity-after-appointment.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 1995 law-firm dissolution detail â€” orphaning Dean Agustin Benitez (1959 #1), Dean Custodio Parlade (1959 #4), and classmate Leopoldo Africa (1960 #11) â€” each partner identified with his bar placement number, making the dissolution itself a memorial roster.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing 'feeble attemptsâ€¦ in the penumbra of their great shadows' â€” CJ's signature humility-disclaimer applied to his own bar-legends emulation.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies the 'rules must be obeyed and not changed midway' principle to the 1999 passing-grade controversy",
+    "uses the 'reluctant hinges' gatekeeping principle for bar admission",
+    "applies the 'lawyering is invested in the public interest' framing as the warrant for stringent admission standards",
+    "uses the disclosure-of-top-10 transparency principle (against record-suppression)",
+    "applies the integrity-after-appointment principle (Teehankee remaining independent despite owing his appointment to Marcos)",
+    "uses the law-firm-dissolution-on-appointment convention (Salonga 1986 PCGG; CJ 1995 SC) as the model of independence-protection",
+    "applies the imitation-of-models close as the operative personal-emulation framework",
+    "uses the 'penumbra of their great shadows' humility-aware self-positioning"
+  ],
+  "target_audience": [
+    "Law students, bar reviewees, and 2024 bar takers",
+    "Law-school deans, faculty, and PALS network",
+    "Members of the Philippine bench and bar",
+    "Bar-exam committee members and SC justices",
+    "Diokno, Salonga, and Teehankee family circles",
+    "FEU, UP, and Ateneo alumni networks",
+    "Inquirer general readership",
+    "Historians of Philippine legal education"
+  ],
+  "register_markers": [
+    "biographical-memoir register with extensive bar-exam statistics",
+    "ALL-CAPS section openers ('THE LOWEST PASSING RATE,' 'AFTER ALL, OUR PROFESSION IS THE FIRST KEY TO THE JUSTICE SYSTEM,' 'SINCE MY STUDENT DAYS')",
+    "'With due respect' lawyerly humility marker",
+    "'must swing on reluctant hinges' aphorism",
+    "self-inclusion in historical roster (Panganiban, 6th)",
+    "first-name-diminutive preservation ('Pepe,' 'Dingdong')",
+    "Latin honors usage (summa cum laude; numero uno)",
+    "personal-pantheon establishment ('three bar topnotchers')",
+    "'though unworthy' / 'though undeserving' recurring humility marker",
+    "'penumbra of their great shadows' literary-metaphor close",
+    "no Tagalog markers; bar-and-bench English memoir",
+    "humility-disclaimer + self-credentialing dialectic"
+  ],
+  "one_paragraph_summary": "On the closure of the three-day 2024 Bar exam (Sept 8, 11, 15), Panganiban reflects on a profession that must 'swing on reluctant hinges.' His own 1960 batch was 4,178 with 1,667 passers, held over four consecutive Sundays at the University of the East; yearly 1965-1981 cohorts numbered under 2,000; the lowest pass rate was 16.59% in 1999, when an attempt to lower the passing grade from 75 to 74 percent was scuttled by CJ's strong objections â€” and the bar-exam chair was reprimanded and his honorarium halved for failing to disclose that a nephew of his was a taker. The most numerous batch was 2021's 11,402 in the first digitized regionalized exam, with a record 8,241 passers at 72.28% and (for the first time) the top 10 unnamed. With due respect, CJ disagrees with this wholesale entry â€” the legal profession is the first key to the justice system and lawyers are public officers â€” and with the nondisclosure of top 10 placers (since abandoned), because while bar topping is no guarantee of excellence, top 10 placers nonetheless become leading practitioners, professors, corporate counsels, and government officials. Of the 27 Philippine CJs (excluding ousted-via-quo-warranto Sereno, deemed never a de jure CJ), at least 11 are bar placers: Yulo (3rd), Paras (2nd), Bengzon (2nd), Concepcion (1st), Makalintal (7th), R. Aquino (9th), Teehankee (1st), Yap (1st), Narvasa (2nd), Panganiban (6th), and Bersamin (9th). Since student days, CJ has idealized three bar legends: Jose W. Diokno and Jovito R. Salonga, tied at 95.3% in 1944 â€” and amazingly Diokno did not finish law school (and also topped the CPA boards); Salonga was CJ's FEU mentor, law-office boss, and lifetime guru, in awe of only Diokno and Teehankee ('Please prepare our trial brief extra well because Pepe Diokno or Dingdong Teehankee is our opponent'); and Claudio Teehankee, Ateneo summa BA and LLB and 1940 bar #1, who remained independent despite his Marcos appointment â€” 'in my humble view, the greatest Ateneo law alumnus of all time.' In emulation of Salonga's 1986 PCGG-appointment law-firm dissolution, CJ dissolved his own firm Panganiban, Parlade, Benitez, and Africa on his 1995 SC appointment, orphaning Dean Agustin Benitez (1959 #1), Dean Custodio Parlade (1959 #4), and classmate Leopoldo Africa (1960 #11). 'Please excuse my feeble attempts to imitate these legends of the bar as I humbly try, though undeserving, to live in the penumbra of their great shadows.'"
+}

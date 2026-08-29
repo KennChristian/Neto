@@ -1,0 +1,304 @@
+{
+  "id": "SA136",
+  "type": "speech",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 136,
+  "title": "Maraming Salamat Po",
+  "date": "2006-12-06",
+  "year": 2006,
+  "source_url": "https://cjpanganiban.com/maraming-salamat-po/",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Sitting and retired members of the Supreme Court and the broader Philippine judiciary",
+      "Members of the Bar attending the retirement ceremony at the SC Session Hall",
+      "Future generations of jurists inheriting the institutional vocabulary",
+      "Family members, spiritual mentors, and personal benefactors being publicly thanked",
+      "The general civic audience tuning in to a high-state judicial transition"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "valedictory",
+      "ceremonial",
+      "thanksgiving"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "family_and_marriage",
+      "judicial_reform"
+    ],
+    "secondary": [
+      "mentors_and_legal_lineage",
+      "supreme_court_history",
+      "faith_journey"
+    ]
+  },
+  "keywords": [
+    "valedictory address",
+    "Chief Justice retirement",
+    "Panganiban Court",
+    "Four Ins",
+    "ACID problems",
+    "Action Program for Judicial Reform",
+    "liberty and prosperity",
+    "Global Forum on Liberty and Prosperity",
+    "Jovito R. Salonga",
+    "FEU",
+    "thanksgiving"
+  ],
+  "primary_topics": [
+    "Valedictory thanksgiving as outgoing 21st Chief Justice of the Philippines",
+    "The 'Four Ins' aspirational standard for the judiciary (independence, integrity, industry, intelligence)",
+    "The 'ACID problems' that corrode justice (limited Access, Corruption, Incompetence, Delay)",
+    "Liberty and prosperity under the rule of law as the twin end-goals of judicial reform",
+    "Personal acknowledgments to the two appointing Presidents (Ramos, Arroyo), colleagues, teachers, shepherds, and family"
+  ],
+  "sub_topics": [
+    "Appointment by President Fidel V. Ramos on Double Ten — October 10, 1995",
+    "Designation as 21st Chief Justice (and first of the 21st century) by President Gloria Macapagal-Arroyo, oath on December 21, 2005",
+    "Action Program for Judicial Reform (APJR) — Court's institutional reform vehicle",
+    "Four Ins: independence, integrity, industry, intelligence",
+    "Four 'I'-vices to resist: influence, interference, indifference, insolence",
+    "'Plague of ships' to be impervious to: kinship, relationship, friendship, fellowship",
+    "ACID problems: limited Access to justice by the poor, Corruption, Incompetence, Delay",
+    "Global Forum on Liberty and Prosperity (October 18-20, 2006) as institutional capstone",
+    "FEU as alma mater — academic excellence, leadership, Catholic faith",
+    "Honorary doctoral degrees as 'doctorate without enrollment or sweat'",
+    "Fr. Michael Nolan (FEU chaplain) and Fr. James Sheehy as spiritual mentors",
+    "Dr. Jovito R. Salonga as 50-year lifetime guru and FEU dean/professor",
+    "Wife Leni (45+ years married), five children (Len, Archie, Celine, Tet, Mabel), nine grandchildren",
+    "Eleven books dedicated to family",
+    "Closing personal prayer: 'The Lord is my Shepherd. There is nothing I shall want.'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Maraming salamat po",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "primus inter pares of the Panganiban Court",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "independence, integrity, industry and intelligence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "influence, interference, indifference and insolence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the plague of ships: kinship, relationship, friendship, and fellowship",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the ACID problems that corrode justice in our country",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "limited access to justice by the poor, corruption, incompetence and delay",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "safeguarding the liberty and nurturing the prosperity of our people under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "twin beacons of liberty and prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the things that money cannot buy, like honor, dignity, ethics, character and excellence",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "she is my anchor in the stormy seas of adversity and the wind beneath my wings",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The Lord is my Shepherd. There is nothing I shall want.",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Welcome home to my everlasting Kingdom",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "To God be the glory",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (21st Chief Justice)",
+      "President Gloria Macapagal-Arroyo (appointing President)",
+      "President Fidel Valdez Ramos (Supreme Court appointing President)",
+      "Chief Justice Hilario G. Davide Jr. (predecessor)",
+      "Fr. Michael Nolan (FEU chaplain)",
+      "Fr. James Sheehy (baptized his five children)",
+      "Dr. Jovito R. Salonga (lifetime guru, FEU dean)",
+      "Leni Carpio-Panganiban (wife)",
+      "Children: Len, Archie, Celine, Tet, Mabel"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "Candaba Elementary School",
+      "Juan Luna Elementary School",
+      "Mapa High School",
+      "Far Eastern University (FEU)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "Oath as Associate Justice — October 10, 1995",
+      "Oath as 21st Chief Justice — December 21, 2005",
+      "Global Forum on Liberty and Prosperity — October 18-20, 2006",
+      "Retirement ceremony — December 6, 2006, SC Session Hall, 4:30 PM"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The judiciary should aspire to four institutional virtues — independence, integrity, industry, and intelligence — and should be 'morally courageous' enough to resist four institutional vices: influence, interference, indifference, and insolence.",
+      "rhetorical_move": "alliterative-virtue/vice taxonomy ('Four Ins') for memorable institutional self-discipline",
+      "confidence": "asserted as personal vow and institutional standard",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The judiciary must be impervious to what Panganiban calls the 'plague of ships' — kinship, relationship, friendship, and fellowship — because these social bonds compromise judicial impartiality more reliably than overt corruption does.",
+      "rhetorical_move": "wordplay-as-warning ('-ships' suffix) to surface relational corruption as a distinct category",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The judiciary's reform agenda should attack four 'ACID problems' that corrode justice: limited Access to justice by the poor, Corruption, Incompetence, and Delay in delivery of quality judgments.",
+      "rhetorical_move": "acronym-as-diagnosis (ACID) compressing four discrete reform fronts into one memorable framework",
+      "confidence": "asserted as institutional program",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The proper end-goal of the judiciary's struggle for the Four Ins and against the ACID problems is the twin attainment of liberty AND prosperity for the Filipino people under the rule of law — neither beacon is sufficient without the other.",
+      "rhetorical_move": "fusion-of-twin-beacons rejecting the false dichotomy between rights-oriented and economy-oriented jurisprudence",
+      "confidence": "asserted as the speaker's signature legal philosophy",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "President Arroyo named him 21st Chief Justice without asking for anything in return — 'Let it be on record that President Arroyo had not asked me to do anything in return for that momentous event.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "President Ramos appointed him to the SC on October 10, 1995 (Double Ten) but in eleven years 'never spoke to me about any case or matter pending in the Court since then' — held up as the gentleman standard for executive non-interference.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Dr. Jovito R. Salonga's foundational teaching, repeated like a mantra across the speeches: 'while it is desirable to have some of the necessities that money can buy, we should never ever forget that it is far more important to aspire for the things that money cannot buy, like honor, dignity, ethics, character and excellence.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Honorary doctorates conferred without enrollment 'or sweat during examinations' — pre-honorary-degree, he was the only one in his immediate family without a graduate degree; afterwards, jokingly, 'we are now equal' with wife and children who hold real graduate degrees.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Canada Chief Justice Beverley McLachlin and her husband stayed three extra days after the 2006 Global Forum because she so enjoyed the visit (referenced indirectly via 'testimonials we received').",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses paired-acronyms (Four Ins vs ACID problems) as the mnemonic architecture of judicial reform",
+    "treats liberty and prosperity as inseparable end-goals — never one without the other",
+    "frames institutional integrity in relational terms (the four '-ships' of kinship, relationship, friendship, fellowship) rather than purely transactional ones",
+    "anchors institutional reform claims in Court-wide collective action (APJR) rather than individual leadership",
+    "closes major institutional moments with a personal Christian prayer, signaling the speaker's view that judicial vocation is a religious vocation"
+  ],
+  "target_audience": [
+    "Sitting and retired members of the Supreme Court and the broader Philippine judiciary",
+    "Members of the Bar attending the retirement ceremony at the SC Session Hall",
+    "Future generations of jurists inheriting the institutional vocabulary",
+    "Family members, spiritual mentors, and personal benefactors being publicly thanked",
+    "The general civic audience tuning in to a high-state judicial transition"
+  ],
+  "register_markers": [
+    "valedictory register — formal high-court ceremonial speech",
+    "structured thanksgiving (Two Presidents, Colleagues, Teachers, Shepherds, Family, God) as compositional spine",
+    "alliterative coinages as institutional shorthand ('Four Ins', 'ACID problems', 'plague of ships')",
+    "Tagalog refrain 'Maraming salamat po' threaded as anaphora",
+    "Catholic doxology closing ('To God be the glory!')",
+    "personal-prayer interpolation (Psalm 23 echo) inside formal address",
+    "modest self-deprecation about education ('a chance to serve as our country's highest magistrate', 'I am merely their servant')",
+    "explicit institutional self-naming ('the Panganiban Court')"
+  ],
+  "one_paragraph_summary": "Delivered on December 6, 2006 at the Supreme Court Session Hall as his retirement valedictory, CJ Panganiban structures his thanksgiving in concentric circles — first the two Presidents who appointed him (Ramos to the Court on October 10, 1995, and Arroyo as 21st Chief Justice on December 21, 2005), then his Supreme Court colleagues, his teachers from Candaba Elementary to FEU, his spiritual shepherds led by Fr. Michael Nolan and Dr. Jovito R. Salonga, and finally his wife Leni and their five children and nine grandchildren. He uses the occasion to crystallize the institutional vocabulary of what he calls 'the Panganiban Court': the 'Four Ins' the judiciary must embody (independence, integrity, industry, intelligence), the four institutional vices it must resist (influence, interference, indifference, insolence), the 'plague of ships' that corrodes impartiality (kinship, relationship, friendship, fellowship), and the 'ACID problems' that the Action Program for Judicial Reform attacks (limited Access by the poor, Corruption, Incompetence, Delay). All of these, he argues, are means toward the twin end-goals of safeguarding liberty AND nurturing prosperity under the rule of law, exemplified by the Global Forum on Liberty and Prosperity he convened October 18-20, 2006. He closes with a personal Psalm-23 echoing prayer dedicating his life to God."
+}

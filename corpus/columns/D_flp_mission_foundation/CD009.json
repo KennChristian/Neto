@@ -1,0 +1,204 @@
+{
+  "id": "CD009",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 9,
+  "title": "Hail to the FLP bar topnotchers and passers",
+  "date": "2026-01-12",
+  "year": 2026,
+  "source_url": "https://opinion.inquirer.net/188943/hail-to-the-flp-bar-topnotchers-and-passers",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_scholarship_programs",
+      "bar_exam_and_legal_education"
+    ],
+    "secondary": [
+      "flp_donors_and_partners",
+      "twin_beacons_doctrine",
+      "foundation_for_liberty_and_prosperity"
+    ]
+  },
+  "keywords": [
+    "FLP",
+    "bar exam",
+    "law scholarship",
+    "legal education",
+    "liberty and prosperity"
+  ],
+  "primary_topics": [
+    "FLP scholars' performance in the 2025 bar examinations",
+    "FLP's merit-based Legal Scholarship Program with Tan Yan Kee Foundation",
+    "ethical practice and disbarment as the title's revocability"
+  ],
+  "sub_topics": [
+    "14 FLP scholars topped or passed the 2025 bar exams",
+    "FLP's 100% passing rate sustained",
+    "Three FLP scholars in the top 20: Enrico Gabriel Paguia (ADMU, 6th), Ignacio Lorenzo Villareal (UP, 15th), Chinzen Viernes (UP, 19th)",
+    "11 other passers: Mariana Alberto (UP), Joanna Rizza David (Bulacan State), Kerstein Kylle Despi (USC), Susanna Ruth Gruyal (UP), Cicily Isabelle Mirasol (UP), Christa Marie Mutuc (USC), Jayson Orajay (Xavier), Allan Cairo Reyes (UP), Janelle Sy (ADMU), Ricardo Anton SobreviÃ±as (ADMU), Mary Lynn Te (USC)",
+    "FLP-Tan Yan Kee Foundation Legal Scholarship Program since 2018",
+    "FLP's historical track record: 2018 (Borja 1st ADMU, Gaw 5th ADMU, Dy 17th UP)",
+    "2019 (Manuel 6th UST, Rojas 9th PUP)",
+    "2022 (Opina 19th UST)",
+    "2024 (Tutor 1st UP, Quebrar 6th UP, Barraquias 18th ADMU)",
+    "2020-2021 pandemic-era non-ranking",
+    "FLP excellents Domingo, Mata, Omamalin",
+    "2025 bar examiners praised: retired SAJ Estela M. Perlas-Bernabe (civil law), Judge Cherry Chiara L. Hernando (commercial and taxation), SBN Justice Sarah Jane T. Fernandez (criminal law), retired CA Justice Magdangal M. De Leon (labor)",
+    "Justice Amy C. Lazaro-Javier, overall chair of the 2025 bar exams",
+    "Pimentel v. House (Dec. 3, 2025) â€” PhilHealth contributions cannot be transferred to National Treasury or fund flood-control fraud",
+    "lawyering as public-interest profession",
+    "ethics distinct from competence in measurability"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "ASIDE FROM THE THREE TOPNOTCHERS",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "LAWYERING IS INVESTED WITH PUBLIC INTEREST",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "IT IS MY DEEPEST PRAYER",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the loudest clap belongs to",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Excellence demonstrated through exams is obvious and easily measured, but ethics is not always so apparent",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "great privilege carries great responsibility",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "safeguarding of liberty and the nurturing of prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "merely the beginning",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "wantonly fraudulent public works projects",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "history will long remember her headship",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [],
+    "institutions": [],
+    "cases": [],
+    "laws_treaties": [],
+    "events": []
+  },
+  "stances": [],
+  "notable_anecdotes": [
+    {
+      "summary": "FLP's first 2018 batch of 10 examinees led by Sean James Borja (ADMU, 1st place), Katrina Monica Gaw (5th), and Ervin Fredrick Dy (17th)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Subsequent years' toppers â€” 2019: Kenneth Glenn Manuel (UST, 6th) and Dexter Rojas (PUP, 9th)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "2022: Louis-Mari Opina (UST, 19th)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "2024: Kyle Christian Tutor (UP, 1st), Maria Lovelyn Joyce Quebrar (UP, 6th), Betlee-kyle Barraquias (ADMU, 18th)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "During the 2020-2021 pandemic SC did not rank top 20, opting for 'exemplary' (85-90%) and 'excellent' (>90%) categories â€” FLP's Stephanie Mae Domingo, Geremae Mata, and Jani Omamalin all received excellent",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ praises retired SAJ Estela M. Perlas-Bernabe (FLP trustee) as 2025 civil law examiner alongside personal friends Judge Hernando (commercial/taxation), SBN Justice Fernandez (criminal), and retired CA Justice De Leon (labor)",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ singles out 'the loudest clap' for Justice Amy C. Lazaro-Javier, overall 2025 bar exam chair, especially for authoring Pimentel v. House (Dec. 3, 2025), which held that PhilHealth contributions belong to its contributors and cannot fund 'wantonly fraudulent public works projects'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [],
+  "target_audience": [],
+  "register_markers": [],
+  "one_paragraph_summary": ""
+}

@@ -1,0 +1,13 @@
+{
+  "n_questions_attempted": 30,
+  "n_questions_completed": 30,
+  "n_questions_errored": 0,
+  "primary_routing_pass_rate": 0.967,
+  "meta_route_rate": 1.0,
+  "fidelity_clean_rate_in_corpus": 0.92,
+  "substantive_response_rate": 1.0,
+  "mean_response_word_count": 241.7,
+  "p95_latency_seconds": 51.14,
+  "mean_cost_per_turn_usd": 0.05922,
+  "total_cost_usd": 1.7767
+}

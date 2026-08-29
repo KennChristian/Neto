@@ -1,0 +1,264 @@
+{
+  "id": "CA004",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 4,
+  "title": "Due process in impeachment",
+  "date": "2012-01-14",
+  "year": 2012,
+  "source_url": "https://opinion.inquirer.net/21127/due-process-in-impeachment",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Members of the House of Representatives and the Senate",
+      "Legal academics and constitutional law students",
+      "Inquirer Opinion readers following the Corona impeachment",
+      "The legal-political community broadly concerned with due process",
+      "Future commentators on impeachment proceedings"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "pedagogical"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "impeachment_accountability",
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "due_process"
+    ]
+  },
+  "keywords": [
+    "impeachment",
+    "Renato C. Corona",
+    "due process",
+    "one-third rule",
+    "public office is a public trust",
+    "Themistocles",
+    "Daniel Webster",
+    "Bill of Rights",
+    "sui generis",
+    "House of Representatives"
+  ],
+  "primary_topics": [
+    "Constitutional analysis of due process in impeachment proceedings, written days after the December 2011 filing of the verified impeachment complaint against CJ Renato C. Corona by 188 House members",
+    "The two constitutional methods of initiating impeachment — and which one requires notice and hearing",
+    "Why a public office is NOT 'life, liberty, or property' for Bill of Rights due-process purposes",
+    "The distinction between the House's prosecutorial role (filing/charging) and the Senate's adjudicatory role (trying/deciding)",
+    "Why impeachment is sui generis — a class of its own, not a judicial proceeding"
+  ],
+  "sub_topics": [
+    "First method of impeachment: verified complaint by a single congressman or by a citizen with congressional endorsement ? House Committee on Justice ? notice and hearing ? majority vote ? House floor ? 1/3 vote",
+    "Second method: verified complaint filed directly by 1/3 of all House members ? 'shall constitute the Articles of Impeachment' ? Senate trial 'forthwith'",
+    "Bill of Rights Section 1: 'No person shall be deprived of life, liberty or property without due process of law'",
+    "Public office is not 'life,' not 'liberty,' and — as jurisprudence holds — not 'property' (no vested right, no Torrens title to a public office)",
+    "'Public office is a public trust' (constitutional provision)",
+    "Themistocles: 'Strike, but hear me first'",
+    "Daniel Webster: a law 'which hears before it condemns, proceeds upon inquiry and renders judgment only after trial'",
+    "Senate's 'sole power to try and decide all cases of impeachment'",
+    "Senate Rules provide notice and hearing for the impeached officials in the trial phase",
+    "Penalty in impeachment limited to removal from office and possible future-office disqualification — not criminal in nature",
+    "'Over due process' as wasteful when 1/3 of the House is already convinced"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "due process is sourced not just from the Constitution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "deeply ingrained in democracy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the people's inherent sense of justice and fair play",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Strike, but hear me first",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a law which hears before it condemns, proceeds upon inquiry and renders judgment only after trial",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "no one has a vested right or a Torrens title to a public office",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "public office is a public trust",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Ergo, the due process clause in the Bill of Rights does not cover the return to the state of a misused public office",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to impeach merely means to charge or bring suit, not to convict and impose sanctions",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "over due process",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "moro-moro of false impartiality",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "impeachment is sui generis, a class of its own",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (columnist)",
+      "CJ Renato C. Corona (impeached respondent)",
+      "Themistocles (cited)",
+      "Daniel Webster (cited)",
+      "188 members of the House of Representatives (collectively)"
+    ],
+    "institutions": [
+      "Supreme Court of the Philippines",
+      "House of Representatives",
+      "House Committee on Justice",
+      "Senate of the Philippines"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "1987 Philippine Constitution — Bill of Rights Section 1 (due process)",
+      "1987 Philippine Constitution — Article XI (impeachment provisions)",
+      "Constitutional provision: 'public office is a public trust'"
+    ],
+    "events": [
+      "Verified impeachment complaint filed by 188 House members against CJ Corona — December 2011",
+      "Forthcoming Senate trial of CJ Corona — 2012"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The Constitution provides two methods of initiating impeachment. The first (single-complainant) method requires notice and hearing at the House Committee on Justice. The second method (verified complaint filed by at least 1/3 of all House members) requires NO hearing — the complaint 'shall constitute the Articles of Impeachment' and 'trial by the Senate shall forthwith proceed.'",
+      "rhetorical_move": "side-by-side constitutional-text exegesis",
+      "confidence": "asserted with verbatim quotation",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Bill of Rights due-process clause protects 'life, liberty or property' — and jurisprudence is emphatic that a public office is NONE of these. No one has 'a vested right or a Torrens title to a public office'; it is a privilege temporarily entrusted by the state. Therefore, the Bill of Rights due-process clause does not cover the return to the state of a misused public office.",
+      "rhetorical_move": "Bill-of-Rights-categorical-exclusion argument with jurisprudential anchor",
+      "confidence": "asserted with 'emphatic No' framing",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Due process is sourced not just from the Constitution but from the 'people's inherent sense of justice and fair play,' as immortalized by Themistocles and Daniel Webster. The Senate, which has 'sole power to try and decide all cases of impeachment,' adopts this immortalized idea via its Senate Rules ensuring notice and hearing. The House does not render judgments; it merely files and prosecutes — hence the constitutional framers' allowance of ex-parte filing under the second method.",
+      "rhetorical_move": "natural-law-tradition citation + Senate-vs-House role distinction",
+      "confidence": "asserted with 'of this, there is no dispute' framing",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "When 1/3 of the House is already convinced of an official's culpability, requiring notice and hearing would constitute 'over due process' — an unnecessary waste of time, both for the respondent and for the House (which has other vital lawmaking duties). The constitutional framers wisely allowed the ex-parte filing to avoid both delay and the pretense — 'moro-moro' — of false impartiality.",
+      "rhetorical_move": "'over due process' coinage + Tagalog-cultural metaphor (moro-moro) for institutional theater",
+      "confidence": "asserted as the framers' likely intent",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Impeachment is sui generis — a class of its own. It is not the equivalent of a judicial proceeding in which the 'life, liberty or property' of the suspect or defendant is at risk. The penalty is limited to removal from office and possible future-office disqualification, not deprivation of liberty (imprisonment) or property (fine). Criminal prosecution may follow, but is separate.",
+      "rhetorical_move": "Latin-doctrinal-anchor (sui generis) for categorical distinction",
+      "confidence": "asserted as institutional category",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Personal disclosure: 'I was startled when, without any prior notice and hearing, 188 members of the House of Representatives filed a verified complaint for the impeachment of Chief Justice Renato C. Corona' — leading him to reread the constitutional provisions.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Tagalog 'moro-moro' — folk-theater stylization of false battles — deployed as metaphor for institutional pretense of impartiality.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "distinguishes between House (prosecutorial) and Senate (adjudicatory) roles to allocate due-process burdens",
+    "applies the Bill of Rights life-liberty-property triad as the categorical filter for due-process coverage",
+    "treats 'public office is a public trust' as the operative limit on official property claims",
+    "invokes natural-law tradition (Themistocles, Webster) alongside positive law (Constitution, Senate Rules)",
+    "uses sui generis classification to prevent over-judicialization of political accountability mechanisms",
+    "balances anti-delay efficiency ('to avoid delay in the delivery of justice') against pretense-of-impartiality risks"
+  ],
+  "target_audience": [
+    "Members of the House of Representatives and the Senate",
+    "Legal academics and constitutional law students",
+    "Inquirer Opinion readers following the Corona impeachment",
+    "The legal-political community broadly concerned with due process",
+    "Future commentators on impeachment proceedings"
+  ],
+  "register_markers": [
+    "constitutional-pedagogical register — explaining text and structure to lay readers",
+    "FIRST-PERSON-startled opener ('I was startled when...')",
+    "verbatim-quotation of constitutional text",
+    "side-by-side method comparison as compositional spine",
+    "Latin doctrinal anchor ('sui generis')",
+    "natural-law tradition citations (Themistocles, Daniel Webster)",
+    "coinage interpolation ('over due process')",
+    "Tagalog cultural metaphor (moro-moro) for institutional pretense",
+    "ergo-style logical conclusion markers",
+    "matter-of-fact closing without doxology — typical column register"
+  ],
+  "one_paragraph_summary": "Published January 14, 2012 — days after 188 House members filed the verified impeachment complaint against CJ Renato C. Corona — this column performs CJP's constitutional-pedagogical reading of due process in impeachment. The Constitution provides two methods: the first, single-complainant method requires notice and hearing at the House Committee on Justice; the second, supermajority method (1/3 of all House members filing the verified complaint directly) constitutes the Articles of Impeachment outright and triggers Senate trial 'forthwith' — no House hearing required. The Bill of Rights due-process clause ('No person shall be deprived of life, liberty or property without due process of law') does NOT cover the return of a misused public office to the state because, per jurisprudence, no one has 'a vested right or a Torrens title to a public office'; 'public office is a public trust.' Due process, however, is sourced beyond the Constitution — from the natural-law tradition of Themistocles ('Strike, but hear me first') and Daniel Webster — and the Senate, which has 'sole power to try and decide all cases of impeachment,' provides the due-process satisfaction via its Senate Rules. Requiring notice and hearing where 1/3 of the House is already convinced would constitute 'over due process' and a 'moro-moro of false impartiality.' Impeachment is sui generis — a class of its own — not a judicial proceeding; the penalty is removal and possible disqualification, not life or property deprivation, so the constitutional framers correctly allowed ex-parte filing under the second method."
+}

@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "EnterPlanMode",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "PLANNING-ONLY SESSION. Before planning, read: (1) the plan index at docs/plans/00-index.md for existing plans and dependencies, (2) the ADR manifest at docs/decisions/000-adr-manifest.md for prior architectural decisions, (3) docs/lessons/CLAUDE.md for known pitfalls. Partition work by separation of concerns into multiple plans, ADRs, test specs, and lessons as warranted. Each plan must lead with a 3-line summary (objective, scope, key constraint) for progressive disclosure. Include verifiability mechanisms, failure modes, edge cases, and observability — specified, not executed. After ExitPlanMode: summarize planned documents, then STOP. Do NOT proceed to implementation."
+          }
+        ]
+      }
+    ]
+  }
+}

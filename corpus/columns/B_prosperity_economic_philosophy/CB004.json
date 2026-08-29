@@ -1,0 +1,440 @@
+{
+  "id": "CB004",
+  "type": "column",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 4,
+  "title": "Negative versus positive",
+  "date": "2021-10-31",
+  "year": 2021,
+  "source_url": "https://opinion.inquirer.net/145837/negative-versus-positive",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "FLP scholars, donors, partners, and friends",
+      "Civic-minded readers and philanthropy advocates",
+      "Constitutional and political-theory scholars",
+      "Corporate-CSR practitioners",
+      "Catholic readers (New Testament positive commands)",
+      "MBA students in economics, sustainability, business law, entrepreneurship",
+      "Inquirer general readership"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "celebratory",
+      "reflective"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "foundation_for_liberty_and_prosperity",
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "rule_of_law",
+      "twin_beacons_doctrine",
+      "due_process"
+    ]
+  },
+  "keywords": [
+    "FLP 10th anniversary",
+    "liberty and prosperity",
+    "negative versus positive",
+    "Bill of Rights",
+    "Ten Commandments",
+    "Marxist slogan",
+    "CSR",
+    "second decade"
+  ],
+  "primary_topics": [
+    "FLP 10th anniversary themes: theory vs practice, dreams vs realities, negative vs positive, slogans vs philosophies",
+    "Bill of Rights and Ten Commandments as predominantly negative formulations",
+    "Constitutional positives (national-economy goals) and the New Testament's two positive commands as counterweights",
+    "FLP first decade (2011-2021) and the four projects",
+    "FLP second decade (2021-2031) extending to extreme-poverty elimination"
+  ],
+  "sub_topics": [
+    "FLP founded October 13, 2011",
+    "Marxist slogan 'From each according to his ability and to each according to his need' as pre-law philosophical challenge",
+    "Communism 'appealing in theory but appalling in practice'",
+    "Bill of Rights negative formulation: 'No person shall be deprived of life, liberty or property without due process of law'",
+    "Ten Commandments negative: 'Thou shall not kill,' 'Thou shall not steal'",
+    "Constitutional positive: 'The goals of the national economy are a more equitable distribution of opportunities, income, and wealth'",
+    "New Testament positive: 'Love God with all your heartÃ¢â‚¬Â¦ and love your neighbor as I love you'",
+    "Electoral mantras as mostly negative: Marcos's 'Alis diyan!' vs Macapagal; Cory's 'Tama na! Sobra na! Palitan na!' vs Marcos",
+    "Slogans rarely transformed into fulfillment without sustainable philosophies, implementable programs, realistic timelines",
+    "CJ's tenure on the Court Ã¢â‚¬â€� happy but with 'a yearning throbbed deep in my heart that I have not done enough'",
+    "Most of his decisions negative in language (commanding stop, dismissing petitions, enforcing negatively-phrased rights)",
+    "Post-retirement invitation by tycoons as independent director or adviser",
+    "FLP organized with 'dear friends' on October 13, 2011",
+    "First decade projects: professorial chairs, legal scholarships, dissertation-writing contests, educational assistance for the poor",
+    "P164 million donated over the first 10 years (family and partners)",
+    "Office condo HQ in Makati",
+    "Interactive Museum of Liberty and Prosperity (planned with Supreme Court)",
+    "Second-decade focus: extreme-poverty elimination via scholarships and dissertation contests for MBA students in economics, sustainability, business law, entrepreneurship"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "theory versus practice, dreams versus realities, negative versus positive, slogans versus philosophies",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "From each according to his ability and to each according to his need",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Communism was appealing in theory but appalling in practice",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I forged my legal philosophy of safeguarding liberty and nurturing prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I was bothered that the Bill of Rights was written mainly in negative language",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "No person shall be deprived of life, liberty or property without due process of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Thou shall not kill",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Thou shall not steal",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I felt, and still feel, that negativesÃ¢â‚¬â€� what we are against Ã¢â‚¬â€� are not enough",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "positives Ã¢â‚¬â€� what we are for and how we achieve them Ã¢â‚¬â€� are indispensable",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The goals of the national economy are a more equitable distribution of opportunities, income, and wealth",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Love God with all your heartÃ¢â‚¬Â¦ and love your neighbor as I love you",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the mantras were/are also mostly negative",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Alis diyan!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Tama na! Sobra na! Palitan na!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "slogans and tweets rarely transformed into fulfillment because they are not backed up by sustainable philosophies, implementable programs, and realistic timelines",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Modesty aside, I was happy at my tenure in the Court",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "yet a yearning throbbed deep in my heart that I have not done enough",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Mostly, my decisions and orders were negative in language",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I had only a few decisions on the positive provisions",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "their own yearnings to set aside a part of their corporations' earnings to philanthropy and corporate social responsibility",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I organized, together with my dear friends, the FLP on Oct. 13, 2011",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "donated over P164 million to the FLP during the last 10 years",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the safeguarding of liberty has been transformed from a mere dream to a sustainable reality",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the professors, scholars, dissertation winners, and education-assisted poor will continue and expand the reach of our philosophy in the future, beyond my lifetime",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Interactive Museum of Liberty and Prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the FLP will enlarge its focus to help eliminate extreme poverty",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Diosdado Macapagal (target of Marcos's 'Alis diyan!')",
+      "Ferdinand Marcos (target of Cory's 'Tama na! Sobra na! Palitan na!')",
+      "Cory Aquino",
+      "Jesus Christ (New Testament positive commands)",
+      "CJ's unnamed pre-law political science professor",
+      "Unnamed tycoons who invited CJ as independent director or adviser",
+      "CJ's family (donors)",
+      "FLP partners and friends (donors over P164 million)"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Supreme Court of the Philippines",
+      "FLP HQ Ã¢â‚¬â€� Makati office condo",
+      "Philippine corporations led by tycoons (CSR sources)",
+      "Planned Interactive Museum of Liberty and Prosperity"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "1987 Philippine Constitution Ã¢â‚¬â€� Bill of Rights; Declaration of Principles (national-economy goals)",
+      "Ten Commandments",
+      "New Testament (Jesus's two positive commands)",
+      "Marxist slogan 'From each according to his abilityÃ¢â‚¬Â¦'"
+    ],
+    "events": [
+      "October 2021 Ã¢â‚¬â€� FLP 10th anniversary celebrations throughout the month",
+      "October 13, 2011 Ã¢â‚¬â€� FLP founding date",
+      "First decade 2011-2021 Ã¢â‚¬â€� sustainability, HQ purchase, four projects",
+      "Second decade 2021-2031 Ã¢â‚¬â€� extreme-poverty focus extension"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Negatives Ã¢â‚¬â€� what we are against Ã¢â‚¬â€� are not enough; positives Ã¢â‚¬â€� what we are for and how we achieve them Ã¢â‚¬â€� are indispensable. The Bill of Rights, the Ten Commandments, and electoral mantras (Marcos's 'Alis diyan!' against Macapagal; Cory's 'Tama na! Sobra na! Palitan na!' against Marcos) are mostly negative, and they fail to deliver fulfillment without sustainable philosophies, implementable programs, and realistic timelines.",
+      "rhetorical_move": "comparative-formulation analysis across Bill of Rights, Decalogue, and electoral mantras (negative-formulation taxonomy)",
+      "confidence": "asserted as personal philosophical conviction",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Marxist slogan 'From each according to his ability and to each according to his need' was appealing in theory but appalling in practice for the masses under communist regimes Ã¢â‚¬â€� a formative pre-law lesson that taught CJ that theory must be tested against practice and that slogans need backing philosophies and programs.",
+      "rhetorical_move": "autobiographical-formation pivot (using a pre-law professor's challenge as origin story)",
+      "confidence": "testimonial",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Despite a happy SC tenure, CJ felt a yearning that he had not done enough because most of his decisions and orders were negative in language Ã¢â‚¬â€� commanding parties to stop irregular behavior, dismissing petitions, or enforcing negatively-phrased constitutional rights Ã¢â‚¬â€� with only a few on the Constitution's positive provisions.",
+      "rhetorical_move": "self-critique of judicial-output formulation (acknowledging a negative-language tilt in his own decisions)",
+      "confidence": "confessional",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The FLP, organized on October 13, 2011 with 'dear friends' after tycoons invited CJ to join their companies and shared their yearnings to set aside corporate earnings for philanthropy and CSR, has during its first decade (2011-2021) achieved sustainability, purchased an office condo HQ in Makati, and sponsored four projects (professorial chairs, legal scholarships, dissertation-writing contests, educational assistance for the poor) Ã¢â‚¬â€� funded by over P164 million in donations from family, partners, and friends.",
+      "rhetorical_move": "institutional-history-as-positive-fulfillment (concrete projects + donor numbers as proof that positives can be implemented)",
+      "confidence": "asserted with specific figure",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Through its projects, 'the safeguarding of liberty has been transformed from a mere dream to a sustainable reality' because the professors, scholars, dissertation winners, and education-assisted poor will continue and expand the philosophy 'beyond my lifetime' Ã¢â‚¬â€� with the planned Interactive Museum of Liberty and Prosperity (in partnership with the Supreme Court) as the ultimate first-decade liberty-side project.",
+      "rhetorical_move": "legacy-continuity framing (positing the project beneficiaries as the philosophy's living continuation)",
+      "confidence": "asserted as aspiration realized",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "During its second decade (2021-2031), the FLP will enlarge its focus to help eliminate extreme poverty Ã¢â‚¬â€� initially by sponsoring scholarships and dissertation-writing contests among MBA students majoring in economics, sustainability, business law, and entrepreneurship Ã¢â‚¬â€� moving from the liberty side to the prosperity side of the overarching philosophy.",
+      "rhetorical_move": "decade-pivot agenda-setting (extreme-poverty elimination as second-decade thesis)",
+      "confidence": "asserted as institutional plan",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "CJ's pre-law political science professor's recurring challenge to refute the Marxist slogan 'From each according to his ability and to each according to his need' Ã¢â‚¬â€� 'difficult to refute' for a 'dirt-poor student like me' because it 'seemed to fulfill my longings and needs' Ã¢â‚¬â€� the most concentrated single-paragraph autobiographical origin story for CJ's eventual liberty-and-prosperity-under-the-rule-of-law philosophy.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The negative-formulation tour across Bill of Rights ('No person shall be deprivedÃ¢â‚¬Â¦'), Ten Commandments ('Thou shall not kill,' 'Thou shall not steal'), and electoral mantras (Marcos's 'Alis diyan!,' Cory's 'Tama na! Sobra na! Palitan na!') Ã¢â‚¬â€� one of CJ's most ambitious cross-domain rhetorical-formulation analyses.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "CJ's confessional self-critique that his SC decisions were 'mostlyÃ¢â‚¬Â¦ negative in language' with 'only a few decisions on the positive provisions' Ã¢â‚¬â€� a rare acknowledgment that the institutional form of judging itself tilts negative.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The P164 million figure for first-decade FLP donations Ã¢â‚¬â€� preserved as the column's institutional-scale anchor, with the parenthetical regret that 'due to lack of space, I cannot list our many partners and friends.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The planned Interactive Museum of Liberty and Prosperity 'to be built in partnership with the Supreme Court' as the ultimate first-decade liberty-side project Ã¢â‚¬â€� an institutional vision CJ would return to in later columns.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The decade-pivot to 'help eliminate extreme poverty' via MBA-economics/sustainability/business-law/entrepreneurship scholarships Ã¢â‚¬â€� making the column the FLP's official second-decade thesis statement.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing emphasis on legacy 'beyond my lifetime' Ã¢â‚¬â€� among CJ's most explicit single-line legacy framings, anchored not in personal achievement but in the propagation of the philosophy through the project beneficiaries.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "treats negative vs positive formulation as a cross-domain analytical question (constitutional, religious, electoral)",
+    "applies theory-vs-practice test to political slogans (Marxism appealing in theory, appalling in practice)",
+    "uses 'sustainable philosophies, implementable programs, realistic timelines' as the three-part backing-test for slogans",
+    "deploys autobiographical-formation as the origin of philosophy (pre-law professor challenge)",
+    "treats own judicial output as predominantly negative-language Ã¢â‚¬â€� a self-critique that motivates post-retirement positive-philanthropy work",
+    "frames philanthropy/CSR as institutional implementation of constitutional positives",
+    "uses decade-pivot (first decade liberty side Ã¢â€ â€™ second decade prosperity side) as institutional thesis structure",
+    "anchors legacy in beneficiary-propagation 'beyond my lifetime' rather than in personal achievement"
+  ],
+  "target_audience": [
+    "FLP scholars, donors, partners, and friends",
+    "Civic-minded readers and philanthropy advocates",
+    "Constitutional and political-theory scholars",
+    "Corporate-CSR practitioners",
+    "Catholic readers (New Testament positive commands)",
+    "MBA students in economics, sustainability, business law, entrepreneurship",
+    "Inquirer general readership"
+  ],
+  "register_markers": [
+    "FLP-anniversary celebratory register",
+    "four-pair theme statement ('theory vs practice, dreams vs realities, negative vs positive, slogans vs philosophies')",
+    "autobiographical-formation pivot (pre-law professor challenge)",
+    "cross-domain formulation tour (Bill of Rights + Decalogue + electoral mantras)",
+    "Tagalog electoral mantras preserved verbatim ('Alis diyan!,' 'Tama na! Sobra na! Palitan na!')",
+    "biblical positive commands quoted alongside constitutional positive goals",
+    "confessional self-critique of own judicial output",
+    "specific donation figure (P164 million) as institutional-scale anchor",
+    "decade-pivot agenda-setting (first decade Ã¢â€ â€™ second decade)",
+    "'beyond my lifetime' as explicit-legacy framing",
+    "personal-institutional reflective register",
+    "philosophy-as-institutional-program register (liberty/prosperity as both ideas and project portfolio)"
+  ],
+  "one_paragraph_summary": "Panganiban marks the Foundation for Liberty and Prosperity's 10th anniversary by reflecting on the FLP's four October themes Ã¢â‚¬â€� theory versus practice, dreams versus realities, negative versus positive, slogans versus philosophies. He recalls his pre-law political science professor challenging him to refute the Marxist slogan 'From each according to his ability and to each according to his need,' a slogan 'difficult to refute' for a 'dirt-poor student' like him; yet he knew that communism, however appealing in theory, was appalling in practice, leading him later to forge his legal philosophy of 'safeguarding liberty and nurturing prosperity under the rule of law.' He observes that the Bill of Rights is written mainly in negative language ('No person shall be deprived of life, liberty or property without due process of lawÃ¢â‚¬Â¦'), as are most of the Ten Commandments ('Thou shall not kill,' 'Thou shall not steal') and electoral mantras (Marcos's 'Alis diyan!' against Macapagal; Cory's 'Tama na! Sobra na! Palitan na!' against Marcos). Constitutional positives Ã¢â‚¬â€� like 'The goals of the national economy are a more equitable distribution of opportunities, income, and wealth' Ã¢â‚¬â€� and Jesus's two positive commands ('Love God with all your heartÃ¢â‚¬Â¦ and love your neighbor as I love you') exist but are outnumbered, and slogans rarely transform into fulfillment without 'sustainable philosophies, implementable programs, and realistic timelines.' He confesses that even his SC decisions were mostly negative in language Ã¢â‚¬â€� commanding stops, dismissing petitions, enforcing negatively-phrased rights Ã¢â‚¬â€� with only a few on positive provisions, leaving a yearning that he had not done enough. After retirement, invitations from tycoons to serve as independent director or adviser revealed their own yearnings for philanthropy and CSR, and together with dear friends he organized the FLP on October 13, 2011. Its first decade (2011-2021) achieved sustainability, purchased an office condo HQ in Makati, and sponsored four projects (professorial chairs, legal scholarships, dissertation-writing contests, educational assistance for the poor), funded by over P164 million from family, partners, and friends Ã¢â‚¬â€� transforming 'the safeguarding of libertyÃ¢â‚¬Â¦ from a mere dream to a sustainable reality' that will continue 'beyond my lifetime,' with the planned Interactive Museum of Liberty and Prosperity (in partnership with the Supreme Court) as the ultimate first-decade project. During its second decade (2021-2031), the FLP will enlarge its focus to help eliminate extreme poverty, initially by sponsoring scholarships and dissertation contests among MBA students in economics, sustainability, business law, and entrepreneurship Ã¢â‚¬â€� pivoting from the liberty side to the prosperity side of the overarching philosophy."
+}

@@ -1,0 +1,316 @@
+{
+  "id": "CC005",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 5,
+  "title": "Right man for the right job",
+  "date": "2014-02-01",
+  "year": 2014,
+  "source_url": "https://opinion.inquirer.net/70776/right-man-for-the-right-job",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Inquirer general readership",
+      "Congressmen and their staff (the targeted audience for the disagree-not-disobey lecture)",
+      "Lawyers and law students (rule-of-law primer)",
+      "Civic-minded Filipinos following the Reyes v. Comelec controversy",
+      "Editorial-page readers tracking PDAF aftermath"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine",
+      "impeachment_accountability"
+    ],
+    "secondary": [
+      "rule_of_law",
+      "with_due_respect_persona",
+      "supreme_court_history"
+    ]
+  },
+  "keywords": [
+    "rule of law",
+    "Supreme Court",
+    "judiciary",
+    "constitution",
+    "judicial activism"
+  ],
+  "primary_topics": [
+    "Rep. Reynaldo Umali privilege-speech labeling justices 'judicial despots' for Belgica + Reyes v. Comelec decisions",
+    "LAMP v. DBM (April 24 2012) upholding PDAF reversed by Belgica v. Ochoa (Nov 19 2013) — 'flip-flop' Umali critique reframed as SC-corrects-itself thesis",
+    "Reyes v. Comelec (June 25 2013, J. Jose Portugal Perez ponente, 7-4 vote) — Regina Ongsiako Reyes HRET-jurisdiction question",
+    "Reyes four-stage chronology — Comelec First Division March 27 COC cancellation, en banc May 14 6-1 affirmation, May 18 BOC proclamation despite cancellation, June 25 SC 7-4 affirmation",
+    "HRET-three-element 'Member' threshold — proclamation + oath + June 30 assumption-of-office",
+    "Right-to-disagree-not-disobey thesis with CJP personal disclosure of his own internal dissents as AJ and CJ",
+    "Congressional remedies enumeration — purse + legislation + oversight + jurisdiction + change-jurisprudence + impeachment",
+    "Impeachment grounds Charter citation — 'culpable violation of the Constitution, treason, bribery, graft and corruption, other high crimes, or betrayal of public trust' — not for decisions/opinions/votes"
+  ],
+  "sub_topics": [
+    "Umali quoted accusation of justices as 'judicial despots' undermining coequal branches",
+    "Judiciary Development Fund Umali whataboutism mention",
+    "Reyes lost natural-born Filipino citizenship by marriage to American + failed to take oath of allegiance + failed to renounce US citizenship per Philippine law",
+    "Reyes proclaimed winner over Lord Allan Velasco (second place) on May 18 despite COC cancellation",
+    "June 5: oath of office and SC suit filed simultaneously — Reyes arguing post-proclamation Comelec lost jurisdiction",
+    "Court two MR denials after the 7-4 affirmation",
+    "Charter: HRET as 'sole judge of all contests relating to the election, returns and qualifications of [House] Members'",
+    "Comelec May 19 final-and-executory effect vis-à-vis BOC's May 18 proclamation",
+    "CJP personal practice — disagreed with majority many times as AJ + persuaded colleagues as CJ + did not begrudge those who differed",
+    "Lawmakers can be disciplined only for 'disorderly behavior' — not for bills and votes, even if unwise"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Several congressmen are restive",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "judicial despots for undermining their coequal counterpart branches",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "flip-flopping decisions",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in total disregard of the doctrine of stare decisis",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "forgetting that the judiciary has its own pork barrel system called Judiciary Development Fund",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "sole judge of all contests relating to the election, returns and qualifications of Members",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Court's resolution was not whimsical or baseless; it had legal and logical moorings",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "with due respect, I cannot understand why it ignited a congressional conflagration",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Criticize, yes; disobey, no",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "we all have the right to disagree, but not to disobey",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I have many times disagreed with the majority when I was an associate justice",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "When I was chief justice, I persuaded my colleagues to vote with me during our internal deliberations, but I did not begrudge those who differed from us",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Now, as a retired jurist, I have critiqued decisions and flip-flops. But I have always honored and followed them",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "they are not helpless. They hold the purse, they legislate laws, they have oversight powers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "they can impeach the justices, but only for culpable violation of the Constitution",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Not for their decisions, opinions or votes, even if these may later turn out to be erroneous",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "lawmakers can be disciplined only for their disorderly behavior",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Rep. Reynaldo Umali (privilege-speech attacker)",
+      "Regina Ongsiako Reyes (unseated Marinduque representative)",
+      "Lord Allan Velasco (second-placer)",
+      "J. Jose Portugal Perez (Reyes v. Comelec ponente)",
+      "J. Estela M. Perlas-Bernabe (Belgica ponente, implied)"
+    ],
+    "institutions": [
+      "Supreme Court",
+      "House of Representatives Electoral Tribunal (HRET)",
+      "Commission on Elections (Comelec) — First Division and en banc",
+      "Board of Canvassers (BOC)",
+      "Congress (lawmaker class)",
+      "Judiciary Development Fund (Umali whataboutism)"
+    ],
+    "cases": [
+      "Belgica v. Ochoa (Nov 19 2013) — PDAF strikedown",
+      "Reyes v. Comelec (June 25 2013) — Marinduque HRET-jurisdiction 7-4 affirmation",
+      "LAMP v. DBM (April 24 2012) — unanimous pro-PDAF (the alleged 'flip-flop')"
+    ],
+    "laws_treaties": [
+      "1987 Constitution — HRET sole-judge provision, impeachment grounds clause, lawmaker discipline 'disorderly behavior' clause",
+      "Citizenship law on oath of allegiance and renunciation of US citizenship"
+    ],
+    "events": [
+      "Umali privilege speech attacking justices",
+      "March 27 2013 Comelec First Division COC cancellation",
+      "May 14 Comelec en banc 6-1 affirmation",
+      "May 18 BOC proclamation despite cancellation",
+      "May 19 finality of Comelec ruling",
+      "June 5 simultaneous oath of office and SC suit by Reyes",
+      "June 25 SC 7-4 affirmation"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Lawmakers have every right to criticize, attack, and bemoan SC decisions — but under the rule of law they are duty-bound to follow the Court's rulings whether they agree with them or not. 'Criticize, yes; disobey, no.'",
+      "rhetorical_move": "disagree-not-disobey foundational maxim",
+      "confidence": "asserted as titular thesis",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The Reyes v. Comelec resolution was not whimsical or baseless — it had legal and logical moorings, citing many precedents; with due respect, Panganiban cannot understand why it ignited a congressional conflagration and fomented threats of disobedience.",
+      "rhetorical_move": "defend-decision-on-craftsmanship grounds",
+      "confidence": "asserted with respectful disagreement formula",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Congress is not helpless when it disagrees with the Court — it holds the purse, legislates laws, has oversight powers, determines court jurisdictions, can change jurisprudence, and most importantly can impeach justices — but only for culpable violation of the Constitution, treason, bribery, graft and corruption, other high crimes, or betrayal of public trust, NOT for their decisions, opinions, or votes even if these later prove erroneous.",
+      "rhetorical_move": "congressional-remedies-enumerated + impeachment-grounds-doctrinal-limit",
+      "confidence": "asserted with Charter citation",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "By the same token, lawmakers can be disciplined only for their 'disorderly behavior' — not for their bills and votes in Congress, even if these may later turn out to be unwise — a symmetric protection of legislative independence that mirrors judicial independence.",
+      "rhetorical_move": "symmetric-immunity reciprocity framing",
+      "confidence": "asserted as constitutional parallel",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Panganiban's personal three-stage disclosure of his own dissent practice — 'I have many times disagreed with the majority when I was an associate justice. When I was chief justice, I persuaded my colleagues to vote with me during our internal deliberations, but I did not begrudge those who differed from us. Now, as a retired jurist, I have critiqued decisions and flip-flops. But I have always honored and followed them.' — among the most autobiographically-precise statements of CJP's institutional ethic.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Reyes four-stage chronology compressed into a single paragraph (March 27 COC cancellation → May 14 en banc affirmation → May 18 BOC proclamation despite cancellation → May 19 finality → June 5 oath-and-SC-suit-same-day → June 25 7-4 SC affirmation) — a procedural-sequence masterclass in a few sentences.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Umali's Judiciary-Development-Fund whataboutism reframed as forgetting-that critique rather than dignified rebuttal — CJP's only acknowledgment of the JDF parallel in this column.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'flip-flop' framing of LAMP→Belgica reframed as SC self-correction, mirroring A411's later treatment of the same pair as evidence of judicial maturity rather than incoherence.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses disagree-not-disobey rule-of-law maxim as titular doctrinal anchor",
+    "applies Charter-craftsmanship defense (legal and logical moorings + many precedents) to Reyes v. Comelec",
+    "deploys HRET-three-element Member threshold (proclamation + oath + assumption-of-office) as jurisdictional rule",
+    "enumerates congressional-remedies (purse + legislation + oversight + jurisdiction + change-jurisprudence + impeachment) as proper channels for disagreement",
+    "uses impeachment-grounds Charter-text limit (culpable violation/treason/bribery/graft/high crimes/betrayal of public trust — not decisions/opinions/votes) as judicial-independence protection",
+    "mirrors with lawmaker-discipline-only-for-disorderly-behavior parallel as symmetric protection",
+    "treats LAMP→Belgica reversal as SC self-correction not stare-decisis breach"
+  ],
+  "target_audience": [
+    "Inquirer general readership",
+    "Congressmen and their staff (the targeted audience for the disagree-not-disobey lecture)",
+    "Lawyers and law students (rule-of-law primer)",
+    "Civic-minded Filipinos following the Reyes v. Comelec controversy",
+    "Editorial-page readers tracking PDAF aftermath"
+  ],
+  "register_markers": [
+    "Several congressmen are restive news-current opening",
+    "labeled the justices as judicial despots verbatim-quote pivot",
+    "let us rewind the facts very briefly procedural-summary register",
+    "Clearly, the Court's resolution was not whimsical or baseless rebuttal pivot",
+    "with due respect, I cannot understand respectful-disagreement formula",
+    "Criticize, yes; disobey, no maxim-clinch",
+    "I have many times disagreed personal-disclosure register",
+    "After all, they are not helpless congressional-remedies enumeration register",
+    "Most important, they can impeach the justices, but only for limiting-clause register",
+    "By the same token symmetric-parallel register"
+  ],
+  "one_paragraph_summary": "Panganiban addresses restive congressmen dismayed by alleged Supreme Court 'flip-flopping' Ã¢â‚¬â€� especially Belgica v. Ochoa (Nov 19 2013) outlawing PDAF and Reyes v. Comelec (June 25 2013) upholding the Comelec's unseating of Regina Ongsiako Reyes Ã¢â‚¬â€� who are threatening to disobey and impeach justices. He defends both decisions. On PDAF, LAMP v. DBM (April 24 2012) was reversed by Belgica a year later, but this is self-correction, not stare-decisis breach. On Reyes, he rewinds the four-stage chronology: March 27 Comelec First Division cancelled Reyes's COC (she lost Filipino citizenship by marriage to an American and failed to take oath of allegiance and renounce US citizenship); May 14 the en banc affirmed 6-1; May 18 the BOC proclaimed her winner despite the cancellation; May 19 the Comelec ruling became final and executory; June 5 she took her oath and simultaneously sued the SC; June 25 the SC (J. Jose Portugal Perez, 7-4) affirmed the Comelec, citing the HRET-three-element Member threshold (proclamation + oath + June 30 assumption-of-office), and held that the Comelec still had jurisdiction when it decided on May 14 (which became final on May 19, before Reyes met all three HRET-Member elements). The resolution had legal and logical moorings and cited many precedents Ã¢â‚¬â€� with due respect, he cannot understand why it ignited a congressional conflagration. He delivers the rule-of-law maxim: legislators have the right to disagree but not to disobey. He discloses his own three-stage practice: he disagreed many times as AJ, persuaded colleagues internally as CJ but did not begrudge those who differed, and as retired jurist has critiqued flip-flops but always honored and followed decisions. Congress is not helpless Ã¢â‚¬â€� it holds the purse, legislates laws, has oversight powers, determines court jurisdictions, can change jurisprudence, and most importantly can impeach justices Ã¢â‚¬â€� but only for culpable violation of the Constitution, treason, bribery, graft and corruption, other high crimes, or betrayal of public trust, NOT for their decisions, opinions, or votes, even if these may later turn out to be erroneous. By the same token, lawmakers can be disciplined only for disorderly behavior, not for bills and votes, even if these may later prove unwise."
+}

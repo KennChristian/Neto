@@ -1,0 +1,255 @@
+{
+  "id": "CD006",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 6,
+  "title": "'Liberty, prosperity, rule of law'",
+  "date": "2021-07-25",
+  "year": 2021,
+  "source_url": "https://opinion.inquirer.net/142416/liberty-prosperity-rule-of-law",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Law students applying for FLP scholarships or dissertation prizes",
+      "FLP Scholars Society members (current and prospective)",
+      "Law school deans and faculty advisers",
+      "Civic readers tracking the liberty-prosperity-rule-of-law philosophy",
+      "Aspiring 'patriotic, talented, and trustworthy' new leaders"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "twin_beacons_doctrine",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "flp_donors_and_partners",
+      "rule_of_law",
+      "flp_scholarship_programs"
+    ]
+  },
+  "keywords": [
+    "FLP scholarship awardees 2021",
+    "patriotic talented trustworthy",
+    "FLP Scholars Society",
+    "Tan Yan Kee Foundation partnership",
+    "intertwining liberty and prosperity",
+    "rule of law in democracy",
+    "monocracy by force"
+  ],
+  "primary_topics": [
+    "FLP scholarship awardees for school year 2021-2022 â€” 21 law students at P200,000 each",
+    "FLP-AC dissertation writing contest winners chaired by Senior Justice Perlas-Bernabe",
+    "Articulation of FLP's core philosophy: 'liberty, prosperity, rule of law'",
+    "FLP Scholars Society â€” the hoped-for crucible of new leaders"
+  ],
+  "sub_topics": [
+    "Board of judges for legal scholarship chaired by CJ Gesmundo, with Justice Secretary Menardo I. Guevarra, former education secretary Edilberto C. de Jesus, TYKF VC Harry C. Tan, law dean Anna Maria D. Abad, lawyer Joel Emerson J. Gregorio",
+    "10 juniors + 2 fourth year + 9 renewing seniors = 21 scholars at P200,000 each (P100k tuition + P80k stipends + P20k books)",
+    "Junior awardees: Crisostomo (FEU), Laza (St. Louis U), Leron (UP), Maurin (U Cebu), Opina (UST), Pacumio (UST), Ramos (U Cordilleras), Salazar (FEU), Sibayan (U Cordilleras), Taongan (DLSU)",
+    "Senior awardees: Dela Cruz (Father Saturnino Urios U), Dumelod (UST), Fomaneg (UP), Macalino (ADMU), Mappang (U Cordilleras), Mata (USC), Negado (USC), Obaob (USC), Omamalin (USC), Soriano (UP), Sy (ADMU)",
+    "Dissertation winners: Cuntapay ADMU (1st, P320,000); Baliong USC (2nd, P220,000); three third placers each P120,000 (De Vera DLSU, Dulanas USC, Lim ADMU)",
+    "Seven other dissertation finalists at P20,000 each (Cabazares RMC, Cimatu UST, Dela Cruz Father Saturnino Urios U, Go FEU, Limosnero DLSU, Nini UP, Uyguangco ADMU)",
+    "Faculty advisers of winners receive cash prizes (P100k for 1st placer Evecar Cruz Ferrer; P75k for 2nd placer Rashid Pandi; P50k for third placers Dr. Rebecca Khan, Pandi, Ferdinand Negre)",
+    "Dissertation board: De Jesus, Gregorio, Ayala Corp managing director and general counsel Solomon M. Hermosura, law dean Anna Maria D. Abad",
+    "FLP philosophy doctrines: 'justice and jobs; freedom and food; ethics and economics; liberty and prosperity. One is useless without the other'",
+    "Doctrinal binary: rule of law in a democracy vs rule of force in a monocracy",
+    "Dissertation contest aims to improve writing/research/analysis skills + apply philosophy to lives and livelihoods",
+    "Contest open to junior/senior law students, Master of Laws candidates here or abroad, Ph.D. candidates"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "keywords and ideas that patriotic, talented, and trustworthy law school juniors and seniors have to believe in and promote",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "The FLP scholarships are unique",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the intertwining relationship of justice and jobs; freedom and food; ethics and economics; liberty and prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "One is useless without the other",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the indispensability and inseparability of the freedom from tyranny and the freedom from poverty",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the freedom from fear and the freedom from hunger",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "to be attained and preserved under the rule of law in a democracy, not under the rule of force in a monocracy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "patriotic, talented, and trustworthy promoters of liberty and prosperity under the rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "FLP fervently hopes that from this society will arise the new leaders of our country",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (FLP chair, author)",
+      "CJ Alexander G. Gesmundo (Legal Scholarship judges chair)",
+      "Senior Justice Estela M. Perlas-Bernabe (Dissertation judges chair)",
+      "Justice Secretary Menardo I. Guevarra (judges member)",
+      "Former education secretary Edilberto C. de Jesus (judges member)",
+      "TYKF vice chairman Harry C. Tan (judges member)",
+      "Law dean Anna Maria D. Abad (judges member)",
+      "Lawyer Joel Emerson J. Gregorio (judges member)",
+      "Solomon M. Hermosura (Ayala Corp MD/GC)",
+      "Evecar Cruz Ferrer (1st-place faculty adviser)",
+      "Rashid Pandi (2nd-place faculty adviser; also 3rd)",
+      "Dr. Rebecca Khan (3rd-place faculty adviser)",
+      "Ferdinand Negre (3rd-place faculty adviser)",
+      "21 named scholars + 5 dissertation winners + 7 finalists"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Tan Yan Kee Foundation (TYKF)",
+      "Ayala Corporation (AC)",
+      "Office of the Bar Confidant",
+      "FLP Scholars Society",
+      "Department of Justice (via Sec. Guevarra)",
+      "Top-rated law schools: FEU, St. Louis U, UP, U Cebu, UST, U Cordilleras, DLSU, ADMU, USC, Father Saturnino Urios U, RMC"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "School year 2021-2022 FLP awards"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "FLP scholarships are unique â€” recipients are judged not only on academic performance in eligible law schools but also 'for their commitment to promote the FLP's underlying philosophy of safeguarding the liberty of our people and nurturing their prosperity under the rule of law.'",
+      "rhetorical_move": "uniqueness-claim grounded in dual-criterion (academic + philosophical-commitment) selection",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP's philosophy rests on the intertwining inseparability of justice and jobs, freedom and food, ethics and economics, liberty and prosperity â€” 'one is useless without the other' â€” combining freedom from tyranny + freedom from poverty + freedom from fear + freedom from hunger, all 'to be attained and preserved under the rule of law in a democracy, not under the rule of force in a monocracy.'",
+      "rhetorical_move": "intertwining-pairs doctrine and democracy-vs-monocracy contrast",
+      "confidence": "doctrine-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The dissertation contest aims not merely at writing improvement but at developing the ability to research, analyze, and apply FLP's philosophy 'to improve the lives and livelihoods of our people' â€” broadening the talent pool to LL.M. candidates here or abroad and to Ph.D. candidates regardless of bachelor or master degrees.",
+      "rhetorical_move": "purpose-broadening of contest beyond skills to application",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Recipients automatically become members of the FLP Scholars Society â€” 'FLP fervently hopes that from this society will arise the new leaders of our country â€” patriotic, talented, and trustworthy promoters of liberty and prosperity under the rule of law.'",
+      "rhetorical_move": "society-as-leader-pipeline aspiration framing",
+      "confidence": "aspirational",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The intertwining-pairs doctrine â€” 'justice and jobs; freedom and food; ethics and economics; liberty and prosperity' â€” CJ's signature catechism for the FLP philosophy, easily memorized and easily quoted.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The four-freedoms restatement echoing FDR's Four Freedoms but recast for the FLP's Filipino context: 'freedom from tyranny and the freedom from poverty; and... the freedom from fear and the freedom from hunger.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The democracy-vs-monocracy binary â€” 'rule of law in a democracy, not... rule of force in a monocracy' â€” a sharp coinage during the Duterte years (July 2021) that flags FLP's institutional posture.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Faculty advisers receiving recognition prizes alongside their students â€” a quiet but consistent FLP design choice that honors mentorship as essential to dissertation excellence.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses dual-criterion selection (academic + philosophical-commitment) as distinguishing design",
+    "applies intertwining-pairs doctrine as foundational FLP catechism",
+    "structures freedoms in pairs (from tyranny + from poverty; from fear + from hunger) rather than singly",
+    "deploys democracy-vs-monocracy binary as institutional-posture marker",
+    "treats Scholars Society as leader-pipeline rather than alumni network",
+    "honors faculty advisers as integral to dissertation excellence, not just students"
+  ],
+  "target_audience": [
+    "Law students applying for FLP scholarships or dissertation prizes",
+    "FLP Scholars Society members (current and prospective)",
+    "Law school deans and faculty advisers",
+    "Civic readers tracking the liberty-prosperity-rule-of-law philosophy",
+    "Aspiring 'patriotic, talented, and trustworthy' new leaders"
+  ],
+  "register_markers": [
+    "institutional-announcement register",
+    "intertwining-pairs catechism device",
+    "four-freedoms-echo register (FDR Four Freedoms recast for PH)",
+    "democracy-vs-monocracy binary as sharp doctrinal marker",
+    "roster-recital register (21 names with school affiliations)",
+    "honor-the-faculty-adviser register (prizes for advisers parallel to students)",
+    "FLP-philosophy restatement as recurring closing device",
+    "society-as-leader-pipeline aspiration vocabulary",
+    "trinity-adjective device ('patriotic, talented, and trustworthy')"
+  ],
+  "one_paragraph_summary": "Panganiban announces the FLP scholarship awardees for school year 2021-2022 â€” 21 law students at P200,000 each (P100k tuition + P80k stipend + P20k books) â€” selected by a board chaired by CJ Alexander G. Gesmundo with Justice Secretary Menardo I. Guevarra, former education secretary Edilberto C. de Jesus, TYKF vice chairman Harry C. Tan, law dean Anna Maria D. Abad, and lawyer Joel Emerson J. Gregorio as members. He names all 10 juniors (Crisostomo FEU, Laza St. Louis U, Leron UP, Maurin U Cebu, Opina UST, Pacumio UST, Ramos U Cordilleras, Salazar FEU, Sibayan U Cordilleras, Taongan DLSU) and all 11 seniors (Dela Cruz Father Saturnino Urios U, Dumelod UST, Fomaneg UP, Macalino ADMU, Mappang U Cordilleras, Mata USC, Negado USC, Obaob USC, Omamalin USC, Soriano UP, Sy ADMU), plus the dissertation contest winners chaired by Senior Justice Estela M. Perlas-Bernabe (Cuntapay ADMU P320k first; Baliong USC P220k second; three third-placers De Vera DLSU, Dulanas USC, Lim ADMU at P120k each), seven additional finalists at P20k each, and the faculty advisers' cash prizes. He articulates the unique FLP selection criterion â€” academic excellence PLUS commitment to the philosophy of liberty and prosperity under rule of law â€” and his signature catechism: 'the intertwining relationship of justice and jobs; freedom and food; ethics and economics; liberty and prosperity. One is useless without the other.' Echoing FDR's four freedoms recast for the Philippines, he stresses 'the indispensability and inseparability of the freedom from tyranny and the freedom from poverty; and of the freedom from fear and the freedom from hunger â€” to be attained and preserved under the rule of law in a democracy, not under the rule of force in a monocracy.' Awardees automatically join the FLP Scholars Society, from which 'will arise the new leaders of our country â€” patriotic, talented, and trustworthy promoters of liberty and prosperity under the rule of law.'"
+}

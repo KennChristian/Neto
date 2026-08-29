@@ -1,0 +1,416 @@
+{
+  "id": "CC011",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 11,
+  "title": "Supercalifragilisticexpialidocious",
+  "date": "2023-10-30",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/167631/supercalifragilisticexpialidocious",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Manila Overseas Press Club members and journalism community",
+      "Inquirer readers tracking CJ's column milestones",
+      "GMA Network staff and media-industry observers",
+      "Friends and admirers of Marixi R. Prieto and Henry Gozon",
+      "Aspiring writers and lawyers reflecting on prose clarity",
+      "Readers familiar with the prior Salonga/Marixi anecdote seeking expanded narrative"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "family_and_marriage",
+      "mentors_and_legal_lineage"
+    ],
+    "secondary": [
+      "honors_received",
+      "eulogies_and_passing",
+      "faith_journey"
+    ]
+  },
+  "keywords": [
+    "MOPC Journalist of the Year Law",
+    "Manila Overseas Press Club award",
+    "accidental writer",
+    "accidental owner",
+    "Mega Media Movers",
+    "Italian bell trophy",
+    "Inquirer Newsboy Foundation",
+    "GMA Network Nielsen dominance"
+  ],
+  "primary_topics": [
+    "MOPC naming CJ 'Journalist of the Year â€” Law' at Oct 25, 2023 Fairmont Hotel ceremony â€” first such MOPC awards in 78 years",
+    "Tribute to three 'Mega Media Movers' â€” MOPC chair Antonio 'Tony' Lopez, retired Inquirer chair Marixi R. Prieto, GMA chair/CEO Felipe 'Henry' L. Gozon",
+    "Origin story of CJ's 17-year Inquirer column career â€” Marixi's recruitment over Dr. Salonga's objection",
+    "Tribute to Henry Gozon as foremost aviation-law expert turned GMA Network chairman"
+  ],
+  "sub_topics": [
+    "MOPC citation: 'prolific work and prodigious excellence in writing about law and justice with depth, clarity, and command of language, thereby strengthening the people's faith in the third and often misunderstood branch of government, the judiciary'",
+    "Citation error noted by CJ â€” '12 [should be 14] books on law, faith, and the Supreme Court'",
+    "CJ's self-description as 'accidental writer; in short, tsamba lang 'yon'",
+    "'Supercalifragilisticexpialidocious' as CJ's witty reaction word â€” 'typical of how lawyers, like me, tend to be highfalutin, muddled, and long-worded' vs. journalists' clear, simple writing he tries to imitate",
+    "Italian bell trophies: 15 inches tall, three kilos, ordered in Italy ('home to the world's oldest and best bell-manufacturing technology, dating back a thousand years') â€” symbolize freedom, excellence, achievement, glory, perfection of craft",
+    "Inquirer 'Business Writer of the Year' co-honoree Dax Lucas at the same ceremony",
+    "Marixi origin story â€” late 1980s newsprint sales to Inquirer; Inquirer a 'giant in circulation but a dwarf in money'; her P10 million loan convertible to common stock at her option; two-bloc deadlock resolved by assigning holdings to her â€” Inquirer 'magically fell on her lap as the ACCIDENTAL OWNER'",
+    "Marixi vs Dr. Jovito R. Salonga exchange on the columnist invitation â€” Salonga: 'I do not know of any CJ who became a columnist. Chief justices do not write history; they make it'; Marixi: 'I do not know of any chief justice who had been offered to write a regular column'",
+    "17 years of weekly Inquirer columns (compromise from Marixi's thrice-weekly request) â€” without fail, without vacation, despite COVID Dec 2022, despite Leni's death April 9 (eulogy became most-visited Inquirer.net column as of August 2023), despite travel (Kuala Lumpur speech)",
+    "Longer at the Inquirer (17 years) than at the SC (11 years)",
+    "WDR1 Amazon bestseller (3rd, courts category) â€” bested only by Jeffrey Toobin (CNN) and Antonin Scalia (US SC)",
+    "Royalties donated to Inquirer Newsboy Foundation",
+    "Henry Gozon as foremost aviation-law expert â€” counsel of Philippine Airlines vs CJ as counsel of KLM and Continental ('clashed passionately but socialized privately')",
+    "CJ repeatedly asked Henry to join the SC as an incumbent justice; Henry declined",
+    "Dec 6, 2006 â€” CJ's SC retirement; Henry and GMA president Jimmy Duavit visited home, invited him to GMA board of directors",
+    "GMA Nielsen dominance â€” rating higher than the 10 other major networks combined; P7.5B+ 2021 net profit (highest in any network's history)",
+    "GMA motto 'Sa totoo lang tayo'",
+    "ABS-CBN closure context (GMA's competitive ascent)",
+    "Closing self-deprecation: 'honorary Ph.D. from the MOPC University of Journalism'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "though unworthy and without my prior knowledge",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Mega Media Movers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "at the sunset of my humble life",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I am not worthy of the appellation 'Journalist'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "battle-tested stars of the journalism profession",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "ACCIDENTAL WRITER",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "tsamba lang 'yon",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Supercalifragilisticexpialidocious!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "highfalutin, muddled, and long-worded",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Specially designed trophies, gleaming golden bells",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a giant in circulation but a dwarf in money",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the Inquirer magically fell on her lap as the ACCIDENTAL OWNER",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I do not know of any CJ who became a columnist. Chief justices do not write history; they make it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I do not know of any chief justice who had been offered to write a regular column",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Marixi won the battle of wits",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "without fail, without any vacation",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "believe it or not",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Come to think of it",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "clashed passionately but socialized privately",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "unknown to many",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Sa totoo lang tayo",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I feel like receiving an honorary Ph.D. from the 'MOPC University of Journalism'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author, awardee)",
+      "Antonio 'Tony' Lopez (MOPC chair)",
+      "Marixi R. Prieto (retired Inquirer chair)",
+      "Felipe 'Henry' L. Gozon (GMA Network chair/CEO)",
+      "Dr. Jovito R. Salonga (late lifetime guru)",
+      "Elenita 'Leni' Carpio-Panganiban (CJ's late wife; passed April 9, 2023)",
+      "Dax Lucas (Inquirer Business Writer of the Year)",
+      "Jeffrey Toobin (CNN, Amazon courts-category #1)",
+      "Justice Antonin Scalia (US SC, Amazon courts-category #2)",
+      "Jimmy Duavit (GMA president)"
+    ],
+    "institutions": [
+      "Manila Overseas Press Club (MOPC)",
+      "Philippine Daily Inquirer",
+      "Inquirer.net",
+      "Inquirer Newsboy Foundation",
+      "GMA Network",
+      "ABS-CBN (closure referenced)",
+      "Philippine Airlines (Gozon's former client)",
+      "KLM (CJ's former client)",
+      "Continental Airlines (CJ's former client)",
+      "Supreme Court of the Philippines",
+      "Fairmont Hotel Makati (ceremony venue)",
+      "Nielsen (ratings source)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "Oct 25, 2023 â€” MOPC awards ceremony at Fairmont Hotel Makati",
+      "Late 1980s â€” Marixi's first contact with Inquirer via newsprint sales",
+      "Inquirer ownership consolidation â€” Marixi as 'accidental owner'",
+      "Feb 2007 â€” CJ's column writing began (per prior columns); 17-year span as of Oct 2023",
+      "Dec 6, 2006 â€” CJ's SC retirement / 'graduation from the Court'",
+      "Dec 2022 â€” CJ's COVID episode",
+      "April 9, 2023 â€” Leni Panganiban's death",
+      "August 2023 â€” Leni eulogy column most-visited on Inquirer.net",
+      "78 years since the last similar MOPC awards"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "CJ owes the MOPC 'Journalist of the Year â€” Law' recognition to three 'Mega Media Movers' â€” MOPC chair Antonio 'Tony' Lopez, retired Inquirer chair Marixi R. Prieto, and GMA Network chair/CEO Felipe 'Henry' L. Gozon â€” none of whose contributions are interchangeable.",
+      "rhetorical_move": "three-mover tribute framing as gratitude-attribution",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "CJ is properly described not as a 'Journalist' (a title reserved for 'battle-tested stars of the journalism profession') but as an 'accidental writer' â€” 'tsamba lang 'yon' â€” and 'Supercalifragilisticexpialidocious' is the right reaction word because it exemplifies how 'lawyers, like me, tend to be highfalutin, muddled, and long-worded,' in contrast to the clear, simple writing of journalists that he tries to imitate.",
+      "rhetorical_move": "self-deprecating-acceptance with lawyer-vs-journalist contrast as title-deflection",
+      "confidence": "humble-asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Marixi R. Prieto became the Inquirer's 'accidental owner' â€” in the late 1980s, while selling newsprint to an Inquirer that was 'a giant in circulation but a dwarf in money,' she lent it P10 million convertible to common stock at her option; the two equal blocs that owned the paper compromised their control deadlock by assigning their holdings to her, and the Inquirer 'magically fell on her lap.'",
+      "rhetorical_move": "accidental-ownership origin narrative paralleling CJ's 'accidental writer' self-description",
+      "confidence": "asserted as recollected history",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Marixi won the columnist-recruitment 'battle of wits' against Dr. Salonga's objection â€” Salonga: 'I do not know of any CJ who became a columnist. Chief justices do not write history; they make it'; Marixi: 'I do not know of any chief justice who had been offered to write a regular column' â€” resulting in CJ's compromise to write weekly (not thrice weekly), without fail, without vacation, despite illnesses (COVID Dec 2022), family death (Leni April 9, 2023), and travel (Kuala Lumpur speech) â€” making him an Inquirer columnist for 17 years, longer than his 11 years on the SC.",
+      "rhetorical_move": "winning-the-battle-of-wits narrative with persistence-evidence",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Henry Gozon is 'our foremost expert on aviation law' â€” having opposed CJ in clashes between Philippine Airlines (Gozon's client) and KLM/Continental (CJ's clients) 50 years ago, 'clashed passionately but socialized privately' â€” and CJ repeatedly invited him to the SC, which Henry declined; CJ later 'became a witness to why he declined membership in the Court' as Henry built GMA into 'the largest, most trusted, and best TV-radio network' with Nielsen ratings higher than the 10 other major networks combined and a record P7.5B+ 2021 net profit, all under the motto 'Sa totoo lang tayo.'",
+      "rhetorical_move": "professional-rival-turned-mentor tribute with vindication-by-results",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Tony Lopez's text + CJ's reply exchange: Tony stressed it was the first MOPC awards in 78 years; CJ replied 'I am not worthy of the appellation Journalist... At best, I am just an ACCIDENTAL WRITER; in short, tsamba lang 'yon.' When Tony asked what he thought of the citation, CJ replied 'Supercalifragilisticexpialidocious!' â€” the column's title and a self-aware critique of lawyerly prose.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Italian bell trophies â€” 15 inches tall, three kilos, sourced from Italy 'home to the world's oldest and best bell-manufacturing technology, dating back a thousand years' â€” symbolizing 'freedom, excellence, achievement, glory, and perfection of craft.' A craftsmanship-detail flourish CJ rarely indulges in.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Marixi's accidental ownership of the Inquirer: lending P10M convertible to common stock to a 'giant in circulation but a dwarf in money,' then receiving both blocs' holdings as a deadlock compromise â€” 'the Inquirer magically fell on her lap as the ACCIDENTAL OWNER.' A clean parallel to CJ's own 'accidental writer' self-description that structures the column's twin themes.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The Salonga-vs-Marixi 'battle of wits' â€” verbatim quotes â€” repeated from earlier columns (CC09) but here landing at higher rhetorical compression and with Marixi's victory explicitly declared.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Leni's eulogy column becoming 'the most visited column in the Inquirer.net as of August 2023' â€” a quiet posthumous tribute embedded in a different column's anecdote about CJ's commitment to never missing a Sunday.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 50-year aviation-law rivalry: Gozon (PAL) vs Panganiban (KLM, Continental) â€” 'clashed passionately but socialized privately' â€” a six-word capsule of professional decorum.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Dec 6, 2006 SC 'graduation' immediately followed by the Gozon-Duavit home visit recruiting CJ to the GMA board â€” a 24-hour transition between branches of public life.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "GMA's competitive vindication: P7.5B+ 2021 net profit 'the highest in the history of any network,' with Nielsen ratings 'higher than those of the 10 other major networks combined,' under the motto 'Sa totoo lang tayo' â€” ABS-CBN closure tacitly mentioned as context.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Closing 'honorary Ph.D. from the MOPC University of Journalism' â€” CJ's signature self-deprecating-but-pleased acceptance device.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses twin-accidental motif ('accidental writer' + 'accidental owner') to structure the tribute and reframe achievement as serendipity",
+    "treats self-deprecating-acceptance as proper register for honors received without prior knowledge",
+    "deploys lawyer-vs-journalist prose contrast as self-critique and standard-of-aspiration",
+    "uses persistence-evidence (17 years without fail despite illness, death, travel) to qualify the 'accidental writer' label as still-meritorious",
+    "treats professional rivalry resolved by socializing privately as a model of decorum",
+    "uses Nielsen + net-profit metrics as vindication-by-results for Gozon's choice to decline the SC",
+    "applies parenthetical-correction within citation as graceful factual-accuracy device"
+  ],
+  "target_audience": [
+    "Manila Overseas Press Club members and journalism community",
+    "Inquirer readers tracking CJ's column milestones",
+    "GMA Network staff and media-industry observers",
+    "Friends and admirers of Marixi R. Prieto and Henry Gozon",
+    "Aspiring writers and lawyers reflecting on prose clarity",
+    "Readers familiar with the prior Salonga/Marixi anecdote seeking expanded narrative"
+  ],
+  "register_markers": [
+    "acceptance-speech reproduction register",
+    "self-deprecating-but-pleased acceptance device (recurring CJ signature)",
+    "humility-cluster opening ('though unworthy and without my prior knowledge,' 'at the sunset of my humble life')",
+    "title-as-witty-word device (Mary-Poppins-allusion as column title)",
+    "Tagalog code-switch register ('tsamba lang 'yon,' 'Sa totoo lang tayo')",
+    "lawyer-vs-journalist prose contrast as self-critique device",
+    "ALL-CAPS-for-emphasis register ('ACCIDENTAL WRITER,' 'ACCIDENTAL OWNER')",
+    "twin-accidental motif structuring the tribute (writer + owner)",
+    "verbatim-quotation register for Marixi-Salonga exchange",
+    "professional-rivalry-into-friendship register (Gozon)",
+    "metric-citation register (P7.5B, Nielsen, 17 years vs 11 years)",
+    "in-line parenthetical-correction register ('12 [should be 14] books')",
+    "closing 'honorary Ph.D. from X University' acceptance flourish"
+  ],
+  "one_paragraph_summary": "Panganiban accepts the Manila Overseas Press Club's 'Journalist of the Year â€” Law' award at the Oct 25, 2023 Fairmont Hotel Makati ceremony â€” the first such MOPC awards in 78 years â€” with the citation honoring his 'prolific work and prodigious excellence in writing about law and justice with depth, clarity, and command of language, thereby strengthening the people's faith in the third and often misunderstood branch of government, the judiciary' (and noting in passing that the cited '12 books' should be 14). He attributes the recognition to three 'Mega Media Movers': MOPC chair Antonio 'Tony' Lopez, retired Inquirer chair Marixi R. Prieto, and GMA Network chair/CEO Felipe 'Henry' L. Gozon. He declines the title 'Journalist' (reserved for 'battle-tested stars of the journalism profession') and self-describes as 'ACCIDENTAL WRITER â€” tsamba lang 'yon'; when Tony asked what he thought of the citation, CJ replied 'Supercalifragilisticexpialidocious!' â€” the column's title and a self-aware critique that lawyers 'tend to be highfalutin, muddled, and long-worded' while journalists write clearly and simply, which he tries to imitate. He admires the Italian bell trophies (15 inches, three kilos, from a thousand-year-old bell-making tradition) and the co-honor of Inquirer's Dax Lucas as Business Writer of the Year. He recounts Marixi's late-1980s entry into the Inquirer as newsprint seller to 'a giant in circulation but a dwarf in money,' her P10 million convertible loan, and the two-bloc deadlock compromise that made her the 'ACCIDENTAL OWNER' â€” paralleling his own 'accidental writer' description. After his 2006 retirement Marixi invited him to write thrice weekly; Dr. Jovito R. Salonga objected with 'I do not know of any CJ who became a columnist. Chief justices do not write history; they make it'; Marixi parried 'I do not know of any chief justice who had been offered to write a regular column' and 'won the battle of wits,' leading to CJ's 17-year weekly run (longer than his 11 years on the SC) â€” without fail, without vacation, despite COVID in December 2022, despite Leni's unexpected death on April 9, 2023 (whose eulogy column became Inquirer.net's most-visited as of August 2023), and despite international travel. The first WDR volume in 2011 placed third in Amazon's courts-category bestseller list (bested only by Jeffrey Toobin of CNN and Justice Antonin Scalia of the US Supreme Court); CJ donated royalties to the Inquirer Newsboy Foundation. He then turns to Henry Gozon as 'our foremost expert on aviation law,' recalling their 50-year-ago clashes between Gozon as Philippine Airlines counsel and CJ as KLM and Continental counsel â€” 'clashed passionately but socialized privately.' CJ repeatedly invited Gozon to the SC during his incumbency; Gozon declined. On Dec 6, 2006 â€” CJ's day of SC 'graduation' â€” Gozon and GMA president Jimmy Duavit visited him at home to invite him to the GMA board, and CJ 'became a witness to why he declined' as Gozon built GMA into 'the largest, most trusted, and best TV-radio network long before ABS-CBN was closed' â€” today unrivaled per Nielsen with ratings higher than the 10 other major networks combined and a record P7.5B+ 2021 net profit, under the motto 'Sa totoo lang tayo.' He closes: 'I feel like receiving an honorary Ph.D. from the MOPC University of Journalism.'"
+}

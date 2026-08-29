@@ -1,0 +1,29 @@
+id: core
+name: Orchestration Core
+version: 1.0.0
+description: >
+  Always-active orchestration backbone. Provides the master execution guide,
+  bootstrap setup, documentation templates, MANIFEST enforcement scripts,
+  and hook examples. This module has no relevance scoring — it is always active.
+
+always_active: true
+
+prompt: orchestration-prompt.md
+
+templates:
+  - root-claude-md.md
+  - subdirectory-claude-md.md
+  - manifest-md.md
+  - plan-index.md
+  - plan-document.md
+  - adr-template.md
+  - project-orchestration-overlay.md
+
+scripts:
+  - check-manifest.sh
+  - validate-manifests.sh
+  - check-registry.sh
+  - validate-registry.sh
+
+hooks:
+  - settings.json.example

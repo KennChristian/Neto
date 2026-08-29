@@ -1,0 +1,265 @@
+{
+  "id": "CA013",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 13,
+  "title": "Winning the war to exploit our EEZ",
+  "date": "2019-08-25",
+  "year": 2019,
+  "source_url": "https://opinion.inquirer.net/123532/winning-the-war-to-exploit-our-eez",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Filipino policymakers and Cabinet members preparing the Beijing trip",
+      "Diplomatic-watchers and journalists",
+      "FLP donors interested in legacy WPS coverage",
+      "Inquirer general readership"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "diplomatic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes",
+      "global_geopolitics"
+    ],
+    "secondary": [
+      "with_due_respect_persona",
+      "icc_and_duterte"
+    ]
+  },
+  "keywords": [
+    "WPS",
+    "EEZ",
+    "nine-dash line",
+    "arbitral award",
+    "UNCLOS",
+    "ICJ jurisdiction",
+    "Duterte Beijing visit"
+  ],
+  "primary_topics": [
+    "Diplomatic preparation for Duterte's August 2019 Beijing visit",
+    "Background on China's May 7, 2009 nine-dash-line submission to the UN",
+    "China's jurisdictional objections to the arbitration and ICJ alternative argument",
+    "The arbitral tribunal's unenforceable status and the EEZ-entitlements alternative"
+  ],
+  "sub_topics": [
+    "Lord Palmerston / Henry John Temple's 'no permanent friends or enemies, only permanent interests' (referenced implicitly through realpolitik framing)",
+    "Aquino III's recourse to UNCLOS Annex VII arbitration",
+    "China's seizure, reclamation, and structures on Spratly features",
+    "Tribunal ruling: nullification of nine-dash line, freedom of navigation, recognition of PH sovereign entitlements",
+    "China's argument that ICJ is the proper forum for territorial disputes and requires both parties' consent",
+    "The 'face' concept in Chinese culture as a diplomatic constraint",
+    "Sibuto Strait / territorial-sea passage of Chinese warships (the second issue Duterte must raise)"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "To win in any negotiation, transaction or war, it is essential to know the arguments, stance, strengths and weaknesses of the other side",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "for the first time, formally showed the rough boundaries of its 'nine dash line'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "indisputable sovereignty over the islands in the South China Sea",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "speedily and aggressively asserted its claims",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Sadly, however, the tribunal is powerless to enforce its award",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "though it won the arbitration, our country could not exploit the fish and natural resources in our EEZ",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "in my humble opinion, may have a better chance at success",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "China's implied admission of our maritime entitlements",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "China would not have to budge on its abhorrence of the arbitral award and to lose face to its people, something sacred in their culture",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Let the world powers tangle with China over the enforcement of the arbitral award",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Let us, in the meanwhile, concentrate on promoting our national interest",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "let us unite as one people in supporting and praying for our President as he tiptoes to his talks",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban",
+      "Rodrigo Duterte",
+      "Xi Jinping",
+      "Benigno S. Aquino III",
+      "UN Secretary-General (2009)"
+    ],
+    "institutions": [
+      "Arbitral Tribunal Constituted Under Annex VII of UNCLOS",
+      "International Court of Justice (ICJ)",
+      "United Nations",
+      "Chinese military and Coast Guard"
+    ],
+    "cases": [
+      "Republic of the Philippines v. People's Republic of China â€” UNCLOS Annex VII arbitration (award July 12, 2016)"
+    ],
+    "laws_treaties": [
+      "UN Charter (ICJ consent provisions)",
+      "United Nations Convention on the Law of the Sea (UNCLOS)",
+      "Republic Act No. 9522 (PH archipelagic baselines law, 2009)"
+    ],
+    "events": [
+      "China's May 7, 2009 nine-dash-line submission to the UN Secretary-General",
+      "PH initiation of arbitration under Aquino III",
+      "Issuance of arbitral award July 12, 2016",
+      "Duterte's August 28-29, 2019 visit to China",
+      "Unannounced Chinese warship passage in PH territorial waters"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Knowing the adversary's arguments, stance, strengths, and weaknesses is the precondition for any successful negotiation â€” a truism Duterte will need when he raises the arbitral award and the Chinese warship passage with Xi.",
+      "rhetorical_move": "negotiation-as-war metaphor (Sun Tzu-flavored opener)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Although the arbitral tribunal overruled China's jurisdictional objections and issued an award nullifying the nine-dash line, recognizing freedom of navigation, and recognizing PH sovereign entitlements in the EEZ, the tribunal is powerless to enforce its award â€” which is why China can simply bar PH exploitation of the WPS through its overwhelming military and coast guard presence.",
+      "rhetorical_move": "doctrinal-victory-plus-enforcement-gap (winning in law, losing in fact)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Without waiving the arbitral award directly or indirectly, Duterte may have a better chance at success by alternatively invoking China's implied admission of PH maritime entitlements via the April 13, 2009 Note (which took 'exceptions' only to RA 9522's reference to Spratlys and Scarborough, not to the EEZ).",
+      "rhetorical_move": "alternative-channel diplomatic pattern (face-saving for China)",
+      "confidence": "asserted with 'in my humble opinion' humility marker",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Let the great powers fight over enforcement of the nine-dash-line nullification and freedom-of-navigation portions of the award; the PH should concentrate on the more achievable goal of exploiting our God-given EEZ wealth.",
+      "rhetorical_move": "division-of-labor among allies (let powers handle what powers benefit from)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Asking China to seek PH permission before its warships sail through PH territorial waters would not be as difficult as asking it to honor the arbitral award.",
+      "rhetorical_move": "ordering-of-asks (easier ask first)",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The opening truism â€” 'To win in any negotiation, transaction or war, it is essential to know the arguments, stance, strengths and weaknesses of the other side' â€” applied not as commentary but as advice directly addressed to Duterte heading into Beijing.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The 'face' observation â€” that asking China to accept the award would force it to 'lose face to its people, something sacred in their culture' â€” a rare moment where CJ explicitly invokes Chinese cultural norms as a tactical constraint on PH diplomatic options.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The closing prayer-for-the-President line â€” 'let us unite as one people in supporting and praying for our President as he tiptoes to his talks with Chinese President Xi Jinping' â€” striking a notably ecumenical, supportive tone toward Duterte despite CJ's broader pattern of policy criticism.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies 'know the other side' as the negotiation precondition",
+    "distinguishes a legal victory (the award) from an enforceable victory (military and coast-guard reality)",
+    "uses the 'unwaived rights + alternative channel' diplomatic pattern (invoke the Note's implied admission rather than the award China abhors)",
+    "applies division-of-labor among allies (let great powers carry what they benefit from; PH carries what only PH benefits from)",
+    "orders asks by feasibility â€” the easier ask (warship-passage notification) before the harder one (award enforcement)",
+    "treats face-saving as a negotiation engineering constraint, not as soft sentiment"
+  ],
+  "target_audience": [
+    "Filipino policymakers and Cabinet members preparing the Beijing trip",
+    "Diplomatic-watchers and journalists",
+    "FLP donors interested in legacy WPS coverage",
+    "Inquirer general readership"
+  ],
+  "register_markers": [
+    "doctrinal-formal register with historical-procedural recap",
+    "Sun Tzu-style war-and-negotiation aphorism as opener",
+    "'in my humble opinion' humility marker on the alternative-channel proposal",
+    "explicit acknowledgment of cultural variable (Chinese 'face')",
+    "'Let the world powers tangleâ€¦' and 'Let us, in the meanwhileâ€¦' parallel construction",
+    "ecumenical closing exhortation to national unity",
+    "no Tagalog markers; international-English register for diplomatic argument"
+  ],
+  "one_paragraph_summary": "Days before Duterte's August 2019 Beijing visit, Panganiban argues that knowing China's arguments and constraints is the precondition for any successful negotiation. He recaps China's May 7, 2009 submission of the nine-dash line â€” which appropriated roughly 80% of the PH EEZ â€” and its aggressive seizure-and-build strategy in the Spratlys, then walks through China's jurisdictional objection to the Aquino-initiated UNCLOS Annex VII arbitration (China insisted the proper forum was the ICJ, which would have required Chinese consent). Although the tribunal overruled those objections and issued an award nullifying the nine-dash line, allowing freedom of navigation, and recognizing PH sovereign entitlements in the EEZ, the tribunal is powerless to enforce it â€” and China's overwhelming military and coast guard simply bar PH exploitation of those rights. Panganiban's counsel: without waiving the award, Duterte should invoke an easier ask â€” China's implied admission of PH EEZ entitlements via the April 13, 2009 Note that contested only Spratly/Scarborough sovereignty â€” letting China save face. Let the great powers tangle over freedom of navigation and the nine-dash line; the PH should focus on its God-given wealth in the EEZ. He closes by asking Filipinos to unite as one people and pray for the President as he 'tiptoes to his talks' with Xi."
+}

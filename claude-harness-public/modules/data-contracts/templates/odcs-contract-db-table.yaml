@@ -1,0 +1,132 @@
+# {NAME} — {ONE_LINE_DESCRIPTION}
+# See: docs/datacontracts/CLAUDE.md for conventions
+kind: DataContract
+apiVersion: v3.1.0
+id: dc-{KEBAB_NAME}-001
+version: 1.0.0
+status: draft
+name: "{NAME}"
+domain: {DOMAIN}
+dataProduct: {DATA_PRODUCT}
+
+description:
+  purpose: |
+    {PURPOSE}
+  limitations: |
+    {LIMITATIONS}
+  usage: |
+    {USAGE}
+
+# Optional: Link to specs, code, tests (STANDARD/COMPREHENSIVE mode)
+# authoritativeDefinitions:
+#   - type: specification
+#     url: {SPEC_PATH}
+#     description: {SPEC_DESCRIPTION}
+#   - type: codeRepository
+#     url: {CODE_PATH}
+#     description: {CODE_DESCRIPTION}
+#   - type: testSuite
+#     url: {TEST_PATH}
+#     description: {TEST_DESCRIPTION}
+
+servers:
+  - server: {SERVER_ID}
+    type: {DB_TYPE}  # postgres | mysql | bigquery | snowflake | redshift | sqlite
+    description: "{SERVER_DESCRIPTION}"
+    environment: production
+    host: "${DB_HOST}"
+    port: {DB_PORT}
+    database: {DATABASE}
+    schema: {DB_SCHEMA}
+  # Optional: Add staging/dev server
+  # - server: {SERVER_ID}-staging
+  #   type: {DB_TYPE}
+  #   description: Staging database
+  #   environment: staging
+  #   host: "${STAGING_DB_HOST}"
+  #   port: {DB_PORT}
+  #   database: {DATABASE}
+  #   schema: {DB_SCHEMA}
+
+schema:
+  - id: {SCHEMA_ID}
+    name: {SCHEMA_NAME}
+    physicalName: {TABLE_OR_VIEW_NAME}
+    logicalType: object
+    businessName: "{NAME}"
+    description: |
+      {SCHEMA_DESCRIPTION}
+    dataGranularityDescription: "{GRANULARITY}"
+    tags: [{TAGS}]
+    quality:
+      - id: qr-row-count
+        name: Minimum row count
+        type: library
+        dimension: completeness
+        severity: error
+        description: Table must have at least {MIN_ROWS} rows
+        customProperties:
+          - property: metric
+            value: rowCount
+          - property: operator
+            value: ">="
+          - property: value
+            value: {MIN_ROWS}
+      - id: qr-pk-unique
+        name: Primary key uniqueness
+        type: sql
+        dimension: uniqueness
+        severity: error
+        description: "Primary key ({PK_COLUMNS}) must be unique"
+        customProperties:
+          - property: query
+            value: "SELECT COUNT(*) - COUNT(DISTINCT ({PK_COLUMNS})) FROM {TABLE_OR_VIEW_NAME}"
+          - property: operator
+            value: "=="
+          - property: value
+            value: 0
+      # Add more table-level quality rules from the catalog
+    properties:
+      # Repeat this block for each column:
+      - id: {COLUMN_NAME}
+        name: {COLUMN_NAME}
+        logicalType: {LOGICAL_TYPE}  # string | integer | number | boolean | date | timestamp
+        physicalType: {PHYSICAL_TYPE}  # varchar(255) | int4 | numeric(10,2) | bool | date | timestamptz
+        required: {true_or_false}
+        description: |
+          {COLUMN_DESCRIPTION}
+        # examples: [{EXAMPLES}]
+        # classification: public | internal | confidential | restricted
+        # quality:
+        #   - id: qr-{COLUMN_NAME}-not-null
+        #     name: "{COLUMN_NAME} not null"
+        #     type: library
+        #     dimension: completeness
+        #     severity: error
+        #     customProperties:
+        #       - property: metric
+        #         value: nullValues
+        #       - property: operator
+        #         value: "=="
+        #       - property: value
+        #         value: 0
+
+# Optional: SLA properties (STANDARD/COMPREHENSIVE mode)
+# slaProperties:
+#   - property: freshness
+#     description: "{FRESHNESS_DESCRIPTION}"
+#     customProperties:
+#       - property: gate
+#         value: "{FRESHNESS_GATE_COMMAND}"
+#   - property: retention
+#     description: "{RETENTION_DESCRIPTION}"
+#     value: {RETENTION_VALUE}
+#     unit: {RETENTION_UNIT}
+
+# Optional: Custom properties (COMPREHENSIVE mode)
+# customProperties:
+#   - property: {PROPERTY_NAME}
+#     value: "{PROPERTY_VALUE}"
+#     description: "{PROPERTY_DESCRIPTION}"
+
+contractCreatedTs: "{CREATED_TIMESTAMP}"

@@ -1,0 +1,234 @@
+{
+  "id": "CA018",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 18,
+  "title": "ICC prosecutor targets DOJ, OSG",
+  "date": "2023-02-27",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/161338/icc-prosecutor-targets-doj-osg",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Lawyers and law students following ICC-PH jurisdictional debate",
+      "DOJ and OSG officials charged with the substantive response",
+      "Civic-minded readers tracking the drug-war accountability question",
+      "Senators and lawmakers debating the Philippines' relationship to the ICC",
+      "Foreign-policy observers and international-law commentators"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "icc_and_duterte"
+    ],
+    "secondary": [
+      "judicial_activism_and_political_question",
+      "global_geopolitics",
+      "philippine_political_landscape"
+    ]
+  },
+  "keywords": [
+    "International Criminal Court",
+    "Karim Khan",
+    "Rome Statute",
+    "complementarity principle",
+    "crimes against humanity",
+    "drug war killings",
+    "Duterte ICC investigation"
+  ],
+  "primary_topics": [
+    "ICC jurisdiction over alleged crimes against humanity during Duterte's incumbency (Davao mayor 2011-2016; president 2016-2019)",
+    "Sovereignty partly surrendered through treaty ratification (Rome Statute, Senate concurrence Aug 30, 2011)",
+    "Complementarity principle: ICC defers only if State is willing and able to genuinely investigate and prosecute",
+    "DOJ and OSG as immediate targets â€” must demonstrate willingness and ability to investigate the killings"
+  ],
+  "sub_topics": [
+    "Rome Statute Article 5 â€” four crimes within ICC jurisdiction (genocide, crimes against humanity, war crimes, aggression)",
+    "Rome Statute Article 7 â€” 'widespread and systematic attack directed against any civilian population' definition",
+    "Rome Statute Article 17 â€” complementarity threshold for ICC deference",
+    "OSG (Menardo Guevarra) argument: killings were 'legitimate operations against illicit drugs,' not state policy",
+    "ICC prosecutor barred from preliminary investigation without Pre-Trial Chamber authority (unlike PH/US systems)",
+    "Government drug-war death toll: 6,117 (official) vs 30,000 (critics)",
+    "Risk of being numbered among 'failed African states' as ICC prowling grounds",
+    "SC's constitutional power to strike down grave abuse of discretion as unique global feature"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "absolute control is partly surrendered whenever our country enters into treaties",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "our country's reputation would be severely tarnished",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "mercilessly debased and numbered among failed African states which have been ICC's prowling grounds",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I hope and pray that the immediate targets of Khan, the DOJ, and the OSG, will be able to show their (1) willingness and (2) ability to investigate and prosecute the subject crimes (3) genuinely",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "as a retired jurist, let me comment within my limited space",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "leave the political overtones to our politicians",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the most powerful in the world because it is the only tribunal constitutionally mandated to strike down grave abuse of discretion",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author)",
+      "Karim Khan (ICC chief prosecutor)",
+      "Rodrigo R. Duterte (former president; Davao City mayor)",
+      "President Ferdinand 'Bongbong' Marcos Jr.",
+      "Former president Gloria Macapagal Arroyo",
+      "Solicitor General Menardo Guevarra",
+      "Canadian CJ Beverley McLachlin",
+      "Chinese CJ Xiao Yang",
+      "Russian CJ V. Lebedev",
+      "Israeli CJ Dorit Beinisch",
+      "French CJ Guy Canivet",
+      "US Justice Sandra O'Connor",
+      "US Justice Anthony Kennedy"
+    ],
+    "institutions": [
+      "International Criminal Court (ICC)",
+      "ICC Pre-Trial Chamber",
+      "Department of Justice (DOJ)",
+      "Office of the Solicitor General (OSG)",
+      "Philippine police force",
+      "Philippine Supreme Court",
+      "Philippine Senate"
+    ],
+    "cases": [],
+    "laws_treaties": [
+      "Rome Statute (ratified by PH Senate Aug 30, 2011)",
+      "Rome Statute Article 5 (crimes within ICC jurisdiction)",
+      "Rome Statute Article 7 (crimes against humanity)",
+      "Rome Statute Article 17 (complementarity)"
+    ],
+    "events": [
+      "Nov 1, 2011-June 30, 2016 â€” Duterte as Davao City mayor (covered period)",
+      "July 1, 2016-March 16, 2019 â€” Duterte as president (covered period)",
+      "Aug 30, 2011 â€” PH Senate ratification of Rome Statute",
+      "Khan petition to ICC Pre-Trial Chamber to resume preliminary investigation"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Sovereignty is partly surrendered by treaty ratification â€” the Philippines ceded a portion of its sovereignty when the Senate ratified the Rome Statute on Aug 30, 2011, and is bound to the Statute's provision that the ICC continues to have jurisdiction over crimes committed while the Philippines was still a member.",
+      "rhetorical_move": "treaty-binding-trumps-sovereignty argument against 'absolute control' rhetoric of political defenders",
+      "confidence": "asserted with constitutional-treaty doctrine",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Whether the killings constituted 'crimes against humanity' under Article 7 (acts committed as part of a widespread and systematic attack directed against any civilian population) versus the OSG's characterization of them as 'ordinary crimes' arising from legitimate anti-drug operations is a factual matter that requires the very preliminary investigation Khan seeks to resume.",
+      "rhetorical_move": "factual-issue-needs-proof argument refusing premature merits commentary",
+      "confidence": "judicially restrained",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The complementarity principle is the pivotal issue â€” the ICC will decline if the Philippines is 'being investigated or prosecuted by a State which has jurisdiction over it, unless the State is unwilling or unable genuinely to carry out the investigation or prosecution' â€” so the DOJ and OSG must demonstrate (1) willingness, (2) ability, and (3) genuine prosecution of the lawless killers of drug suspects (6,117 official, 30,000 critics).",
+      "rhetorical_move": "three-prong test framework (willingness + ability + genuineness) as the operative legal lens",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "If the Pre-Trial Chamber authorizes Khan and issues arrest warrants against Duterte and his officials, the Philippines' reputation would be severely tarnished and the country would be 'mercilessly debased and numbered among failed African states' â€” and the Supreme Court, though not directly involved, would be unfairly smeared by association as part of the same legal system.",
+      "rhetorical_move": "reputational-collateral-damage argument tying ICC outcome to national and judicial standing",
+      "confidence": "warning",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "CJ's personal reminiscence of mutual visits with world chief justices during his incumbency â€” Canadian CJ Beverley McLachlin, Chinese CJ Xiao Yang, Russian CJ V. Lebedev, Israeli CJ Dorit Beinisch, French CJ Guy Canivet â€” alongside US Justices Sandra O'Connor and Anthony Kennedy 'who became my personal friends,' deployed as evidence that foreign jurists 'publicly praised our Supreme Court' as the most powerful in the world for its grave-abuse-of-discretion mandate.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The stark disparity between government's drug-war casualty count (6,117) and critics' estimate (30,000) â€” used as the latent factual question hovering behind the complementarity test.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The contrast that 'unlike in the Philippine and US legal systems, the ICC prosecutor is barred from conducting any preliminary investigation without prior authority from the ICC's Pre-Trial Chamber' â€” surfacing an institutional comparative-law detail that frames why Khan must petition before proceeding.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "applies treaty-sovereignty surrender doctrine to defeat 'absolute control' rhetoric",
+    "uses Article 17 complementarity as the operative legal lens, not Article 5/7 substance",
+    "treats willingness + ability + genuineness as a tripartite test for ICC deference",
+    "distinguishes factual-merits questions from jurisdictional-procedural questions and reserves the former",
+    "deploys reputational-collateral consequences as additional pressure on DOJ/OSG to perform",
+    "uses comparative-law contrast (ICC vs PH/US prosecutor authority) to clarify procedural posture"
+  ],
+  "target_audience": [
+    "Lawyers and law students following ICC-PH jurisdictional debate",
+    "DOJ and OSG officials charged with the substantive response",
+    "Civic-minded readers tracking the drug-war accountability question",
+    "Senators and lawmakers debating the Philippines' relationship to the ICC",
+    "Foreign-policy observers and international-law commentators"
+  ],
+  "register_markers": [
+    "retired-jurist register ('as a retired jurist, let me comment within my limited space')",
+    "deliberate political-restraint marker ('leave the political overtones to our politicians')",
+    "doctrinal-three-issue structure (sovereignty, kind of crimes, complementarity)",
+    "treaty-citation density (Articles 5, 7, 17)",
+    "bold-type emphasis device for keywords ('willingness,' 'ability,' 'genuinely')",
+    "first-person-plural civic voice ('our country,' 'our Supreme Court')",
+    "reputational-warning rhetoric ('mercilessly debased,' 'failed African states')",
+    "personal-friendship attribution as credibility marker (US Justices)"
+  ],
+  "one_paragraph_summary": "Panganiban analyzes ICC chief prosecutor Karim Khan's request to resume preliminary investigation into alleged crimes against humanity committed during Rodrigo Duterte's incumbency as Davao City mayor (Nov 1, 2011-June 30, 2016) and as president (July 1, 2016-March 16, 2019), declining to engage the political overtones and instead surfacing three crucial legal issues. On sovereignty, he argues that the Philippines partly surrendered its absolute control when the Senate ratified the Rome Statute on Aug 30, 2011, and is bound to the Statute's continuing-jurisdiction provision for crimes committed during membership. On the kind of crimes, he sets out Article 5 (genocide, crimes against humanity, war crimes, aggression) and Article 7's definition of crimes against humanity as acts 'committed as part of a widespread and systematic attack directed against any civilian population' â€” refusing to rule on the factual question raised by OSG (Menardo Guevarra) that the killings were 'legitimate operations against illicit drugs,' not state policy. On complementarity (Article 17), the pivotal issue, he argues that DOJ and OSG must demonstrate willingness, ability, and genuineness in prosecuting the lawless killers of drug suspects (6,117 official, 30,000 critics) to defeat ICC jurisdiction. He warns that if arrest warrants issue against Duterte and his officials, the Philippines' reputation will be severely tarnished and 'numbered among failed African states,' with the Supreme Court â€” admired by foreign chief justices he hosted during his tenure â€” unfairly smeared by association."
+}

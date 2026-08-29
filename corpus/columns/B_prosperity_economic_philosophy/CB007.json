@@ -1,0 +1,59 @@
+{
+  "id": "CB007",
+  "type": "column",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 7,
+  "title": "SC decisions on the economy",
+  "date": "2013-04-27",
+  "year": 2013,
+  "source_url": "https://opinion.inquirer.net/51551/sc-decisions-on-the-economy",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "supreme_court_history"
+    ],
+    "secondary": [
+      "twin_beacons_doctrine",
+      "foundation_for_liberty_and_prosperity",
+      "flp_scholarship_programs"
+    ]
+  },
+  "keywords": [
+    "Foundational SC-economic-jurisprudence survey column April 28 2013 â€” OVERWRITES demo entry (7th demo-collision-overwrite after B06/C08/C07/A22/C06/C05)",
+    "retired Justice Adolfo S. Azcuna (1986 ConCom member + Philja chancellor) Ateneo Law School lecture vehicle as FLP Professorial Chair holder",
+    "FOUR-CONSTITUTIONAL-ECONOMIC-CASES dissection â€” (1) Manila Prince Hotel v. GSIS (Feb 3 1997, J. Josue N. Bellosillo ponente) Filipino-First-doctrine GSIS-Manila-Hotel-award-to-losing-Filipino-bidder after Malaysian-equal-match + 'In the grant of rights, privileges and concessions covering the national economy and patrimony, the State shall give preference to qualified Filipinos' Charter citation + CJP-OWN-DISSENT disclosure (Manila Hotel not part of national-economy-and-patrimony + bidding-essence-subverted + 'the scores are tied. But not when the ballgame is over and the foreigners clearly posted the highest score') joined by CJ Andres R. Narvasa + Justices Jose A.R. Melo and Reynato S. Puno",
+    "(2) La Bugal-B'laan v. Ramos Jan 27 2004 (J. Conchita Carpio Morales ponente) 8-5 striking-down Mining Law of 1995 + FTAA-with-Australian-company + 'under the full control and supervision of the State' Charter dictum + DEC 1 2004 10-4 reversal CJP-OWN-PONENCIA disclosure upholding FTAAs + impliedly-allowing-foreign-management-covenants subject-to-ultimate-Presidential-control + J. Antonio T. Carpio led-dissenters",
+    "(3) Gamboa v. Teves June 28 2011 (J. Carpio ponente) 40-percent-foreign-ownership-of-public-utilities-applies-only-to-voting-shares-not-total-outstanding-capital-stock",
+    "(4) Initiatives for Dialogue v. PSALM Oct 9 2012 (J. Martin S. Villarama Jr. ponente) river-water-natural-resource-for-Filipinos-only + once-appropriated-by-qualified-local-company-and-collected-in-dam-becomes-private-usable-by-Korean-firm",
+    "mining-industry-policy-volatility critique",
+    "CONSTITUTIONAL-INTERPRETATION two-ways framework â€” originalist vs liberal-living-Charter",
+    "J. Antonin Scalia US-SC originalist-confession verbatim 'Mr. Chief Justice, you do not really want me there. I would be useless in the Forum. When I joined the US Supreme Court, I swore to defend and implement the US Constitution and nothing else. And I interpret it according to the original intent of our framers, which did not include international law. Please see my friend next door, Justice Anthony Kennedy' anecdote with CJP Global Forum on Liberty and Prosperity Oct 18-20 2006 invitation backstory",
+    "J. Anthony Kennedy international-philosophy alternative spoke-via-video-teleconferencing acceptance"
+  ],
+  "primary_topics": [],
+  "sub_topics": [],
+  "signature_phrases": [],
+  "entities": {
+    "people": [],
+    "institutions": [],
+    "cases": [],
+    "laws_treaties": [],
+    "events": []
+  },
+  "stances": [],
+  "notable_anecdotes": [],
+  "decision_framework_signals": [],
+  "target_audience": [],
+  "register_markers": [],
+  "one_paragraph_summary": ""
+}

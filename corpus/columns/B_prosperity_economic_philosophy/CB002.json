@@ -1,0 +1,279 @@
+{
+  "id": "CB002",
+  "type": "column",
+  "theme": "B",
+  "theme_label": "Prosperity and Economic Philosophy",
+  "number": 2,
+  "title": "Protecting and projecting national interest",
+  "date": "2024-11-25",
+  "year": 2024,
+  "source_url": "https://opinion.inquirer.net/178623/protecting-and-projecting-national-interest",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "President Marcos Jr. and his foreign-policy advisers",
+      "ASEAN-watchers and SCS-policy commentators",
+      "Civic readers tracking PH-US-China triangulation",
+      "Historians of US foreign policy and Cold War legacies",
+      "Voters reflecting on the meaning of the 2022 mandate"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "ironic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes",
+      "constitutional_doctrine"
+    ],
+    "secondary": [
+      "icc_and_duterte",
+      "global_geopolitics",
+      "philippine_political_landscape"
+    ]
+  },
+  "keywords": [
+    "national interest",
+    "South China Sea militarization",
+    "2016 Arbitral Award",
+    "UNCLOS",
+    "Pax Americana",
+    "see-sawing PH foreign policy",
+    "Marcos absolute majority mandate"
+  ],
+  "primary_topics": [
+    "National interest as the unsaid short and simple answer to why China defies UNCLOS/AA and why the US enforces freedom of navigation in the SCS",
+    "Shifting nature of national interest â€” political, economic, security, social aspirations and turmoil drive change",
+    "China's century-of-humiliation backdrop (Hong Kong, Macau leases) fueling its current SCS militarization and Pax Sinica aspiration",
+    "PH foreign policy see-saw: US to China (Duterte 2016) and back to US (Marcos Jr. 2022)"
+  ],
+  "sub_topics": [
+    "China is a UNCLOS signatory and a party-litigant in the 2016 Arbitral Award (legally in default but indirectly participating via spokesperson statements)",
+    "Why China militarizes the SCS: SCS taught for decades in schools/media as Chinese; any leader who neglects this stance would be deemed a traitor or nincompoop",
+    "China's robust antedating civilization vs Western enslavement and territorial leases (Hong Kong, Macau)",
+    "China meteorically rising from poverty/slavery to second biggest economy aspiring to equal/surpass the West",
+    "Crossing maritime entitlements of Vietnam, Thailand, Malaysia, Singapore, Indonesia, and the Philippines (which have separate disputes among themselves)",
+    "US national interest shift from neutrality (covertly aiding European powers vs Hitler from Sept 1, 1939) to full participation after Pearl Harbor (Dec 7, 1941) to post-WWII Pax Americana",
+    "Post-war US borrowing trillions (much from China) and planting boots in Korea, Vietnam, Afghanistan, Iraq",
+    "Nov 5, 2024 election â€” Trump 'Make America Great Again' as new national interest; allies share peacekeeping cost; mass deportation of illegal migrants; 'he loves being a disruptor'",
+    "PH 2016 â€” Filipinos tired of democratic compromise and dynasties/'imperial Manila,' welcomed Duterte's autocratic rule veering to China and abandoning US protection",
+    "PH 2022 â€” Marcos Jr. reverted to US alliance; absolute majority (over 50%) of ballots cast, a first under the 1987 Constitution"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "The unsaid short and simple answer is 'national interest'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "National interest is not constant. It shifts according to the present and future political, economic, security, and social aspirations of, and sometimes turmoil in, a country",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "would be deemed a traitor or a nincompoop to be ousted summarily",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "robust civilization antedating many Western powers",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "dormant but simmering desire to become a respected world power again",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "meteorically risen from utter poverty and slavery",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Verily, he loves being a disruptor",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "see-sawing shifts in our national interest",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "imperial Manila",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "feisty, even autocratic, rule of Rodrigo Duterte",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "lo and behold",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "an absolute majority (well over 50 percent) of the ballots cast",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author)",
+      "Donald Trump",
+      "Adolf Hitler",
+      "Rodrigo Duterte",
+      "President Ferdinand Marcos Jr."
+    ],
+    "institutions": [
+      "United Nations Convention on the Law of the Sea (UNCLOS)",
+      "Permanent Court of Arbitration (2016 Arbitral Award)",
+      "ASEAN",
+      "Japanese Imperial Navy (Pearl Harbor)",
+      "United States (post-WWII allied leader)",
+      "Australia, France, Germany, Great Britain (freedom-of-navigation allies)"
+    ],
+    "cases": [
+      "2016 Arbitral Award invalidating China's nine-dash line and upholding SCS freedom of navigation"
+    ],
+    "laws_treaties": [
+      "UNCLOS",
+      "1987 Philippine Constitution (absolute majority threshold)"
+    ],
+    "events": [
+      "Sept 1, 1939 â€” German blitzkrieg on Poland",
+      "Dec 7, 1941 â€” Pearl Harbor attack",
+      "Sept 2, 1945 â€” Japan's unconditional surrender",
+      "Cold War interventions: Korea, Vietnam, Afghanistan, Iraq",
+      "Long-term Western leases: Hong Kong, Macau",
+      "2016 Arbitral Award",
+      "2016 PH presidential election (Duterte landslide)",
+      "2022 PH presidential election (Marcos Jr. absolute majority)",
+      "Nov 5, 2024 US election (Trump)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "The unsaid short and simple answer to why China defies the 2016 Arbitral Award and UNCLOS while the US (a non-signatory and non-party-litigant) enforces freedom of navigation is 'national interest' â€” all states act to protect and project what is beneficial to them, and national interest shifts according to present and future political, economic, security, and social aspirations and turmoil.",
+      "rhetorical_move": "national-interest-as-master-explanation reductive framing",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "China's SCS militarization is locked in by decades of school and media teaching that the SCS belongs to China â€” making any Chinese leader who would reverse course a 'traitor or nincompoop' subject to summary ouster â€” and is reinforced by its civilizational pride, its memory of Western enslavement and territorial leases (Hong Kong, Macau), and its meteoric rise from poverty to the second-largest economy aspiring to equal or surpass the West.",
+      "rhetorical_move": "ideational-path-dependence + civilizational-grievance argument",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "US national interest has itself shifted historically â€” from interwar neutrality (covertly aiding European powers against Hitler) to full WWII engagement after Pearl Harbor, then post-1945 Pax Americana with American-style democracy, libertarianism, capitalism, and free trade as exports paid for by trillions borrowed (ironically much from China) and bootprints in Korea, Vietnam, Afghanistan, Iraq â€” and again with Trump's Nov 5, 2024 mandate to 'Make America Great Again,' demand allied burden-sharing, and disrupt the postwar order.",
+      "rhetorical_move": "historical-chronology of shifting US-interest as evidence for mutability claim",
+      "confidence": "asserted with quasi-amused tone ('Verily, he loves being a disruptor')",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Philippine national interest has see-sawed from America to China (Duterte's 2016 pivot) and back to America (Marcos Jr.'s 2022 restoration) â€” and Marcos Jr.'s overwhelming mandate (the first absolute majority over 50% under the 1987 Constitution) gives him the political capital to lead in protecting and projecting national interest vis-Ã -vis ASEAN, China, the US, and the world.",
+      "rhetorical_move": "mandate-as-license argument tying electoral majority to foreign-policy authority",
+      "confidence": "concluding endorsement",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The historical irony that the US has spent trillions in postwar peacekeeping 'much of it borrowed domestically and, ironically, from China' â€” collapsing the geopolitical contest with the financial interdependence.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Trump's appetite for disruption captured in CJ's signature flourish: 'Verily, he loves being a disruptor' â€” a rare tonal lift of bemused recognition.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Marcos Jr.'s absolute majority being the first since 1987 â€” a statistical milestone CJ uses to invest the foreign-policy realignment with democratic legitimacy.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "China's century-of-humiliation memory operationalized as 'long-term leases like Hong Kong and Macau,' with the leases serving as the visceral civilizational grievance driving SCS assertion.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "reduces complex state behavior to single-variable 'national interest' explanation",
+    "applies path-dependence and ideational-lock-in logic to civilizational/educational narratives",
+    "tracks shifts in national interest across electoral cycles as the legitimate carrier of change",
+    "uses electoral-mandate magnitude as proxy for foreign-policy authority",
+    "treats Western postwar liberal-order export as itself a particular national interest, not a neutral default",
+    "frames disruption (Trump) and pivot (Duterte/Marcos) as legitimate exercises of evolving national interest"
+  ],
+  "target_audience": [
+    "President Marcos Jr. and his foreign-policy advisers",
+    "ASEAN-watchers and SCS-policy commentators",
+    "Civic readers tracking PH-US-China triangulation",
+    "Historians of US foreign policy and Cold War legacies",
+    "Voters reflecting on the meaning of the 2022 mandate"
+  ],
+  "register_markers": [
+    "geopolitical-explanation register reducing complex behavior to 'national interest'",
+    "historical-sweep register (1939 â†’ 1941 â†’ 1945 â†’ Korea/Vietnam/Afghanistan/Iraq â†’ 2024)",
+    "rhetorical-question opening callback ('So, I asked rhetorically in last Monday's column')",
+    "vivid-condemnation language ('traitor or nincompoop to be ousted summarily')",
+    "civilization-narrative register ('robust civilization antedating many Western powers')",
+    "ironic-aside register ('ironically, from China')",
+    "tonal-flourish marker ('Verily, he loves being a disruptor'; 'lo and behold')",
+    "statistical-mandate emphasis ('first time under our 1987 Constitution, an absolute majority')",
+    "see-sawing-imagery for foreign-policy oscillation"
+  ],
+  "one_paragraph_summary": "Panganiban answers his own rhetorical question from the prior Monday's column â€” why China militarizes the South China Sea despite being a UNCLOS signatory and 2016 Arbitral Award party-litigant, and why the US (a non-signatory and non-party-litigant) enforces SCS freedom of navigation with Australia, France, Germany, and Great Britain â€” with the unsaid short and simple answer: 'national interest.' He argues that national interest is not constant but shifts with political, economic, security, and social aspirations and turmoil. China's SCS posture is locked in by decades of school and media teaching that the SCS belongs to China, reinforced by civilizational pride and grievance over Western enslavement and the long-term leases of Hong Kong and Macau, and propelled by China's meteoric rise from poverty to the second-largest economy seeking parity with or supremacy over the West. The US has itself shifted â€” from interwar neutrality (covertly aiding European powers from Sept 1, 1939) to full engagement after the Dec 7, 1941 Pearl Harbor attack, then to post-1945 Pax Americana exporting American-style democracy, libertarianism, capitalism, and free trade at the cost of trillions ('ironically' much borrowed from China) and American boots in Korea, Vietnam, Afghanistan, and Iraq â€” and again on Nov 5, 2024, with Trump's 'Make America Great Again' mandate to demand allied burden-sharing, deport illegal migrants, and disrupt the postwar order ('Verily, he loves being a disruptor'). Philippine national interest has see-sawed similarly: tired of democratic compromise and dynasties/'imperial Manila,' Filipinos welcomed Duterte's autocratic 2016 pivot to China and away from US protection; in 2022 Marcos Jr. reverted to the US, gaining the first absolute majority (over 50%) under the 1987 Constitution â€” a mandate CJ argues licenses him to lead in protecting and projecting national interest vis-Ã -vis ASEAN, China, the US, and the world."
+}

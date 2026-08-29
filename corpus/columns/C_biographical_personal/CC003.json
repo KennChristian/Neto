@@ -1,0 +1,289 @@
+{
+  "id": "CC003",
+  "type": "column",
+  "theme": "C",
+  "theme_label": "Biographical and Personal",
+  "number": 3,
+  "title": "My Leni as mom, grand mom, and professor",
+  "date": "2023-04-24",
+  "year": 2023,
+  "source_url": "https://opinion.inquirer.net/162603/my-leni-as-mom-grand-mom-and-professor",
+  "routing": {
+    "primary_intent": [
+      "biography"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Family and friends of the Panganiban household",
+      "AIM alumni and faculty (especially the pioneering MBM 1971 batch)",
+      "Bukas Loob Sa Diyos Catholic Charismatic Community members",
+      "Readers of CJ's columns who knew Leni personally or by reputation",
+      "Women juggling family and professional careers â€” Mari Sison Garcia's audience-of-witnesses"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "intimate"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "faith_journey",
+      "family_and_marriage"
+    ],
+    "secondary": [
+      "flp_donors_and_partners",
+      "eulogies_and_passing"
+    ]
+  },
+  "keywords": [
+    "Elenita Carpio-Panganiban",
+    "AIM Pioneering Batch 1971",
+    "eulogy excerpts",
+    "BLD Catholic Charismatic Community",
+    "Harvard case method",
+    "first fruits of AIM"
+  ],
+  "primary_topics": [
+    "Tribute to the late Elenita 'Leni' Carpio-Panganiban â€” quoted excerpts from three of ten eulogies",
+    "Leni as mother of five â€” quiet authority, monthly allowance lesson on banking and saving",
+    "Leni as grandmother â€” listening ear, openness to barkada, love of phones and tech",
+    "Leni as AIM professor for 37 years â€” 'First Fruits of AIM,' Council of Servant Leaders at Bukas Loob Sa Diyos (BLD)"
+  ],
+  "sub_topics": [
+    "Celine Panganiban-Hannett's eulogy: 'beautiful, poised, and strong yet demure'; raised five children with 'quiet authority'; eight as 'the age of reason'",
+    "Monthly-allowance pedagogy: bonanza on the first; some run out (lesson on banking, borrow-and-pay-back); some save (lesson on saving); but Mom still buys Archie pajamas when needed",
+    "Rafa Panganiban Yaptangco's eulogy: 'Lola Leni was always my Number One supporter'; 'How are you? How's school? Do you want chicheria?'; 'Do you have a girlfriend na?'",
+    "Leni's signature tech-fondness â€” newest phones, Bounce game, foundation of grandson's tech career",
+    "Mari Sison Garcia's eulogy: AIM graduate-school classmates in pioneering 1971 batch (4 women, male-dominated)",
+    "Difficult balance of Harvard case-study method with five children and being 'a good wife to CJ Art'",
+    "'First Fruits of AIM' â€” Leni and Mari earning MBM degrees by God's grace",
+    "Later reunion as AIM professors, lunch confidences, undecided whether they preferred being student or professor",
+    "Bukas Loob Sa Diyos (BLD) Catholic Charismatic Community â€” Leni and CJ Art as Council of Servant Leaders, leading worship; 'CJ Art changed the dynamics of worship and Leni remained his anchor'"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "my Leni",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "she raised the five of us with quiet authority",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "she just reasoned with us",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Tita Leni or Mommy Not",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the age of reason",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Lola Leni was always my Number One supporter",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Just get, just get, we have plenty!",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Do you have a girlfriend na?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "First Fruits of AIM",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "she served as my guidepost",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "behind-the-scene guidance",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Leni remained his anchor",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "if Leni can do it, I certainly (could)",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (author, widower)",
+      "Elenita 'Leni' Carpio-Panganiban (deceased; subject)",
+      "Celine Panganiban-Hannett (daughter)",
+      "Ate Len (daughter)",
+      "Archie (son)",
+      "Rafa Panganiban Yaptangco (grandson)",
+      "Mari Sison Garcia (AIM classmate, eulogist)",
+      "Raul (Mari's husband)"
+    ],
+    "institutions": [
+      "Asian Institute of Management (AIM) â€” Leni's 37-year employer",
+      "Bukas Loob Sa Diyos (BLD) Catholic Charismatic Community â€” Council of Servant Leaders",
+      "AIM pioneering MBM batch of 1971 (4 women)",
+      "St. Scholastica's College (Leni's alma mater)",
+      "Harvard (case study method)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "Leni's wake and the ten eulogies",
+      "1971 AIM MBM pioneering batch",
+      "Multi-decade AIM teaching career"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Leni raised her five children 'with quiet authority' â€” not overbearing, not strict, not in-your-face â€” using reasoning rather than yelling because she believed 'eight was the age of reason,' and she modeled life lessons indirectly through arrangements like the monthly-allowance bonanza-then-scarcity that taught banking, borrowing, and saving without sermonizing.",
+      "rhetorical_move": "indirect-pedagogy-by-arrangement framing (mother as institutional designer)",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Leni's hospitality and listening attention generalized far beyond the family â€” adopted moms, students, fellow professors, her children's friends, her grandson's barkada â€” all received her quiet warmth, captured in Rafa's recollection of the standard greeting triad: 'How are you? How's school? Do you want chicheria? Just get, just get, we have plenty!'",
+      "rhetorical_move": "expansive-hospitality testimony illustrated by recurring micro-rituals",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Leni's professional life â€” completing AIM's MBM in the 1971 pioneering batch of four women under Harvard's case-study method while raising five children and serving CJ Art â€” was itself an inspirational template for other women, with Mari Sison Garcia explicitly noting 'if Leni can do it, I certainly (could).'",
+      "rhetorical_move": "role-model-by-example testimony via classmate-witness",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "In the BLD Catholic Charismatic Community Council of Servant Leaders, Leni and CJ Art together introduced a joyful and animated worship format that 'brought new life to the BLD,' with the formula that 'CJ Art changed the dynamics of worship and Leni remained his anchor' â€” the public-facing dynamism powered by Leni's grounded stillness.",
+      "rhetorical_move": "complementary-spouse roles testimony of public energy + private anchoring",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "The monthly-allowance pedagogy â€” relative bonanza on the first of the month for the 12-year-old; some siblings (Celine, Ate Len) ran out before month-end and learned banking and installment-borrowing; others saved like Archie â€” but Mom still bought him pajamas anyway when she realized he hadn't, 'somehow, Ate Len and I didn't learn that trick.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The recurring grandson-greeting triad: 'How are you?' 'How's school?' 'Do you want chicheria? Just get, just get, we have plenty!' â€” plus the close runner-up: 'Do you have a girlfriend na?'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Lola Leni's love for the newest phones being the foundation of Rafa's tech career â€” 'I would help her set it up and we'd play games on it for hours â€” my favorite was Bounce... it's probably one of the big reasons why I love phones and tech and why I work in tech today.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The accidental train-ride origin (referenced obliquely here, fuller in CC14) connecting Leni's AIM pioneering experience with the male-dominated 1971 cohort â€” 4 women among the founders.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Mari Sison Garcia's recollection: 'There she was, looking frail and delicate' â€” yet managing 'a difficult balance between the demands of the Harvard's case study method and being mother to her five children, and a good wife to CJ Art.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "BLD worship dynamic: 'CJ Art changed the dynamics of worship and Leni remained his anchor.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "structures tribute as three-witness format (parent, grandparent, professional peer)",
+    "uses domestic-arrangement vignettes (allowance, greetings) as evidence of pedagogical philosophy",
+    "treats indirect modeling as more durable than explicit instruction",
+    "frames spousal partnership as complementary-roles (dynamic CJ + anchoring Leni)",
+    "anchors institutional credential (MBM 1971 pioneering batch, 37-year AIM professor) within family-and-faith framing"
+  ],
+  "target_audience": [
+    "Family and friends of the Panganiban household",
+    "AIM alumni and faculty (especially the pioneering MBM 1971 batch)",
+    "Bukas Loob Sa Diyos Catholic Charismatic Community members",
+    "Readers of CJ's columns who knew Leni personally or by reputation",
+    "Women juggling family and professional careers â€” Mari Sison Garcia's audience-of-witnesses"
+  ],
+  "register_markers": [
+    "intimate-memorial register (eulogy-excerpt format)",
+    "three-witness structure (daughter, grandson, classmate)",
+    "Tagalog endearments and code-switching ('Tita Leni,' 'Mommy Not,' 'chicheria,' 'barkada,' 'na')",
+    "domestic-vignette register (monthly allowance, pajamas)",
+    "first-person possessive title ('My Leni')",
+    "AIM/Harvard-credentialing detail",
+    "spiritual-community register (Council of Servant Leaders, BLD)",
+    "indirect self-presence (CJ as 'CJ Art' through others' eulogies)",
+    "ellipsis usage to gesture at omitted eulogy text",
+    "humility-by-comparison ('Not anywhere near her perfection')"
+  ],
+  "one_paragraph_summary": "Panganiban quotes from three of the ten eulogies delivered at the wake of his late wife Elenita 'Leni' Carpio-Panganiban, presenting her as mother, grandmother, and professor. Daughter Celine Panganiban-Hannett remembers Leni as 'my image of perfection â€” perfection that was beyond my grasp,' raising the five children 'with quiet authority,' reasoning rather than yelling because 'eight was the age of reason,' and modeling lessons indirectly â€” most famously through the monthly-allowance arrangement that taught Celine and Ate Len about banking and borrowing while teaching Archie about saving (though Mom still bought him pajamas anyway). Grandson Rafa Panganiban Yaptangco remembers Lola Leni as 'my Number One supporter,' greeting him with 'How are you? How's school? Do you want chicheria? Just get, just get, we have plenty!' â€” her love for the newest phones (and Bounce) becoming the foundation of his tech career today. AIM classmate Mari Sison Garcia remembers their pioneering 1971 batch of four women among the men, Leni's 'difficult balance between the demands of the Harvard's case study method and being mother to her five children and a good wife to CJ Art,' their being 'First Fruits of AIM,' and later reunion as professors with lunches and behind-the-scene guidance â€” and finally as Council of Servant Leaders in the Bukas Loob Sa Diyos Catholic Charismatic Community, where 'CJ Art changed the dynamics of worship and Leni remained his anchor.'"
+}

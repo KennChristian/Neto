@@ -1,0 +1,254 @@
+{
+  "id": "CD007",
+  "type": "column",
+  "theme": "D",
+  "theme_label": "FLP Mission and Foundation",
+  "number": 7,
+  "title": "FLP's 21 scholars, 10 winners, and 5 fellows",
+  "date": "2022-08-08",
+  "year": 2022,
+  "source_url": "https://opinion.inquirer.net/155854/flps-21-scholars-10-winners-and-5-fellows",
+  "routing": {
+    "primary_intent": [
+      "biography",
+      "institutional"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Aug 11, 2022 FLP ceremony audience",
+      "FLP scholars, fellows, dissertation winners (current and prospective)",
+      "Faculty advisers and law school deans",
+      "Bar examinees aspiring to 'Exemplary' rating",
+      "Donors and partner foundations (TYKF, Ayala, MPIF)",
+      "Readers interested in FVR's legacy and CJ's appointment story"
+    ],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "flp_donors_and_partners",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "museum_for_liberty_and_prosperity",
+      "msme_and_entrepreneurship",
+      "flp_scholarship_programs"
+    ]
+  },
+  "keywords": [
+    "FLP awards Aug 11 2022",
+    "FVR offered DOJ post then SC",
+    "FLP Esmel inaugural winners",
+    "Exemplary bar topnotchers",
+    "Entrepreneurship Fund",
+    "FLP first decade vs second decade"
+  ],
+  "primary_topics": [
+    "Preview of FLP's Aug 11, 2022 ceremony â€” 21 law scholars + 10 dissertation winners + 5 inaugural Esmel fellows",
+    "Anecdote opening: FVR offered CJ the DOJ secretaryship on June 17, 1992; CJ declined; FVR named him to SC instead",
+    "FLP's first decade (2011-2021) on liberty; second decade (2021-2031) adding prosperity via Esmel",
+    "FLP's two ultimate projects (Center/Museum for Liberty and Prosperity + P1B+ Entrepreneurship Fund)"
+  ],
+  "sub_topics": [
+    "FVR (Fidel V. Ramos) anecdote â€” CJ did not campaign or vote for him; FVR still offered SOJ on June 17, 1992; CJ declined; FVR offered SC seat instead; never spoke/influenced CJ in discharge of duties; respected independence even when CJ voted against FVR's known wishes; 'gentleman-patriot' â€” promised fuller column",
+    "Aug 11, 2022 ceremony with CJ Gesmundo as guest of honor and speaker",
+    "Legal Scholarship Program awardees (TYKF partnership): 10 fourth-year law students (Crisostomo FEU, Laza St. Louis U, Leron UP, Maurin UCebu, Opina UST, Pacumio UST, Ramos UCordilleras, Salazar FEU, Sibayan UCordilleras, Taongan DLSU) + 11 third-year law students (Alicando UCebu, Bringuelo DLSU, Chavez UST, Cosido UCebu, de Guzman DLSU, Garcia DLS-Lipa, Guevarra DLSU, Ngeteg UCordilleras, Quebrar UP, Tadea FEU, Tutor UP)",
+    "Scholar board of judges: CJ Gesmundo (chair), De Jesus, TYKF VC Harry Tan, Dean Gemy Festin (PALS president), Gregorio",
+    "Three 'Exemplary'-rated bar topnotchers awarded P100,000 each: Stephanie Domingo (UCordilleras), Geremae Mata (USC), Jani Omamalin (USC)",
+    "Latin honor graduates also awarded P25,000 to P100,000 each",
+    "Dissertation Writing Contest (Ayala partnership): Patricia Anne Alarios AdMU (1st P320,000); Breden Arcayos USC (2nd P220,000); three third placers at P120,000 each (Pineda AdMU, Mabutin UP, Carreon USC)",
+    "Faculty adviser cash gifts: Habaradas P100k (1st), Pandi P75k (2nd), Temprosa/Pangalangan/Felongco P50k each (3rd)",
+    "Five dissertation finalists at P20,000 each: Carlos Angeles U, Emilio USC, Ringia AdMU, Romano-Weigel USC, Soriano UP",
+    "Dissertation board: Justice Ramon Paul L. Hernando (chair), Solomon Hermosura (Ayala GC), Dean Maria Anna Abad (PALS EVP), De Jesus, Gregorio",
+    "Inaugural Esmel fellows (MPIF partnership) at P450,000 each: John Paul Abrina MD (AIM), Jacob Barbosa (AIM), Aibar Rabi Rashad Bibi (DLSU), Jella Marice Salarda (UP), George Martin Samaco III (AIM)",
+    "Esmel board: former BSP governor Amando M. Tetangco Jr. (chair); June Cheryl Cabal-Revilla (MPIC CFO); Cezar Consing (former BPI president, ex-Bankers Association president); Marilen P.S. Yaptangco (Baron Travel Corp president); Gregorio",
+    "First-decade (2011-2021) focus on liberty programs; second decade (2021-2031) expansion to prosperity starting with Esmel",
+    "Liberty ultimate project: Center for Liberty and Prosperity hosting the immersive Museum (in SC partnership)",
+    "Prosperity ultimate project: 'Entrepreneurship Fund' of at least P1 billion to invest in and help manage MSMEs with active assistance from Esmel fellows"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "Though I advised him that I did not campaign or vote for him",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "a gentleman-patriot",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "he fully respected my independence and probity even when I voted against his known political wishes",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "More on him in another column",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Exemplary",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "During the first decade of its existence (2011-2021), the FLP concentrated on its liberty programs. But during the next decade (2021-2031), it will include the prosperity side of its philosophy",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (FLP chair, author)",
+      "Late president Fidel V. Ramos (FVR) (1992 anecdote subject)",
+      "CJ Alexander G. Gesmundo (ceremony guest of honor; scholar judges chair)",
+      "Justice Ramon Paul L. Hernando (dissertation judges chair)",
+      "Former BSP governor Amando M. Tetangco Jr. (Esmel judges chair)",
+      "Former education secretary Dr. Edilberto De Jesus",
+      "TYKF vice chairman Harry Tan",
+      "Dean Gemy Festin (PALS president)",
+      "Lawyer Joel Emerson Gregorio",
+      "Solomon Hermosura (Ayala general counsel)",
+      "Dean Maria Anna Abad (PALS executive vice president)",
+      "June Cheryl Cabal-Revilla (MPIC CFO)",
+      "Cezar Consing (former BPI president)",
+      "Marilen P.S. Yaptangco (Baron Travel Corp president)",
+      "21 named scholars + 5 dissertation winners + 5 dissertation finalists + 5 Esmel fellows + 3 Exemplary bar topnotchers",
+      "Faculty advisers: Prof. Ma. Araceli Habaradas, Prof. Rashid Pandi, Prof. Francis Temprosa, Judge Raul Pangalangan, Prof. Noel Felongco"
+    ],
+    "institutions": [
+      "Foundation for Liberty and Prosperity (FLP)",
+      "Tan Yan Kee Foundation (TYKF)",
+      "Ayala Corporation",
+      "Metro Pacific Investments Foundation (MPIF)",
+      "Metro Pacific Investments Corporation (MPIC)",
+      "Philippine Association of Law Schools (PALS)",
+      "Bank of the Philippine Islands (BPI; via Consing)",
+      "Bankers Association of the Philippines (via Consing)",
+      "Baron Travel Corp (via Yaptangco)",
+      "Asian Institute of Management (AIM)",
+      "Supreme Court (Museum partnership)",
+      "Sandiganbayan (referenced indirectly via SC structure)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "June 17, 1992 â€” FVR offered CJ the DOJ post",
+      "June 30, 1992 â€” FVR's assumption of office",
+      "Aug 11, 2022 â€” FLP awards ceremony",
+      "FLP first decade 2011-2021 (liberty)",
+      "FLP second decade 2021-2031 (adding prosperity)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "Late president Fidel V. Ramos was a 'gentleman-patriot' who, after CJ told him he did not campaign or vote for him, still offered the DOJ secretaryship on June 17, 1992 (before FVR assumed office June 30, 1992) and, after CJ declined, offered him a Supreme Court seat â€” then never spoke or influenced him on duties even when CJ voted against FVR's known political wishes, fully respecting independence and probity.",
+      "rhetorical_move": "presidential-tribute via independence-respect narrative",
+      "confidence": "celebrated",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "FLP's first decade (2011-2021) concentrated on liberty programs; its second decade (2021-2031) will include the prosperity side of the philosophy, starting with the Esmel fellowships and culminating in the Entrepreneurship Fund.",
+      "rhetorical_move": "decade-by-decade institutional-strategy timeline",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Excellence is rewarded across multiple tracks â€” 21 law scholars (TYKF), 10 dissertation winners (Ayala) plus their faculty advisers, 5 inaugural Esmel fellows (MPIF), the three 'Exemplary'-rated bar topnotchers at P100,000 each, plus Latin-honor graduates at P25,000-P100,000 each â€” institutionalizing recognition at multiple performance tiers.",
+      "rhetorical_move": "multiple-track-recognition framework as comprehensive honor structure",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The prosperity-side ultimate project â€” at least P1 billion 'Entrepreneurship Fund' â€” will invest in and help manage MSMEs 'with the active assistance of its Esmel fellows,' making the Esmel fellowships not just an educational grant but a talent-pipeline for the Fund itself.",
+      "rhetorical_move": "pipeline-integration argument linking scholarship investment to fund operations",
+      "confidence": "asserted",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "FVR's offer-to-decline-to-SC sequence on June 17, 1992 â€” 'Though I advised him that I did not campaign or vote for him, the late president Fidel V. Ramos still offered me to be his secretary of justice... After I respectfully declined, he changed his offer to a seat in the Supreme Court' â€” and FVR's subsequent non-interference even on adverse votes, captured as the definition of 'a gentleman-patriot.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The teaser 'More on him in another column' â€” a CJ signature device promising future treatment, often signaling forthcoming biographical or doctrinal expansion.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Three 'Exemplary'-rated bar topnotchers (Domingo UCordilleras, Mata USC, Omamalin USC) â€” Mata and Omamalin already FLP scholars in prior rosters, demonstrating the scholarship-to-topnotcher pipeline in operation.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Judge Raul Pangalangan named as a third-prize faculty adviser â€” the prominent former ICC judge appearing in a humble FLP supporting role.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "John Paul Abrina, MD â€” the inaugural Esmel fellow holding both an MD and now an MBA-track AIM placement, illustrating the cross-disciplinary entrepreneurial profile FLP seeks.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "uses presidential-restraint criterion (no interference even on adverse votes) as test of statesmanlike character",
+    "applies decade-by-decade institutional-strategy framing to FLP development",
+    "structures recognition as multiple-track tier system (scholarship + dissertation + bar topnotcher + Latin honors)",
+    "treats Esmel fellows as future Entrepreneurship-Fund talent pipeline, not just grantees",
+    "uses opening-anecdote-as-hook before substantive announcement to capture reader interest"
+  ],
+  "target_audience": [
+    "Aug 11, 2022 FLP ceremony audience",
+    "FLP scholars, fellows, dissertation winners (current and prospective)",
+    "Faculty advisers and law school deans",
+    "Bar examinees aspiring to 'Exemplary' rating",
+    "Donors and partner foundations (TYKF, Ayala, MPIF)",
+    "Readers interested in FVR's legacy and CJ's appointment story"
+  ],
+  "register_markers": [
+    "opening-anecdote-as-hook register (FVR DOJ-to-SC sequence)",
+    "more-on-him-in-another-column teaser device",
+    "roster-recital register at high density (21 + 10 + 5 + 3 + advisers + finalists)",
+    "decade-by-decade institutional-history framing",
+    "tribute-via-restraint marker ('gentleman-patriot,' 'fully respected my independence')",
+    "judge-credentialing density (Festin PALS, Abad PALS, Hermosura Ayala GC, Tetangco BSP)",
+    "ultimate-projects pairing as closing structural device"
+  ],
+  "one_paragraph_summary": "Panganiban opens with a FVR (Fidel V. Ramos) anecdote: though CJ advised him he did not campaign or vote for FVR, the late president on June 17, 1992 â€” before assuming office on June 30, 1992 â€” offered him the DOJ secretaryship; CJ declined, so FVR changed the offer to a Supreme Court seat and 'never spoke or influenced me, in any manner, in the discharge of my duties,' fully respecting CJ's independence and probity 'even when I voted against his known political wishes' â€” a 'gentleman-patriot' who deserves fuller treatment in another column. He then previews the August 11, 2022 FLP awards ceremony with CJ Gesmundo as guest of honor and speaker: 21 law scholars (TYKF partnership; 10 fourth-years and 11 third-years, all named with school affiliations) selected by Gesmundo's board (with De Jesus, TYKF VC Harry Tan, PALS president Dean Gemy Festin, and Gregorio); three 'Exemplary'-rated bar topnotchers (Domingo UCordilleras, Mata USC, Omamalin USC) at P100,000 each plus Latin honor graduates at P25k-P100k each; 10 dissertation winners (Ayala partnership) â€” Patricia Anne Alarios AdMU (1st P320k), Breden Arcayos USC (2nd P220k), three third-placers at P120k each (Pineda AdMU, Mabutin UP, Carreon USC), with faculty adviser prizes (Habaradas P100k, Pandi P75k, Temprosa/Pangalangan/Felongco P50k each) and five finalists at P20k each â€” selected by Justice Ramon Paul L. Hernando's board (with Solomon Hermosura of Ayala, PALS EVP Dean Maria Anna Abad, De Jesus, Gregorio); and the inaugural Esmel fellowships (MPIF partnership) at P450,000 each to John Paul Abrina MD (AIM), Jacob Barbosa (AIM), Aibar Rabi Rashad Bibi (DLSU), Jella Marice Salarda (UP), and George Martin Samaco III (AIM), selected by former BSP governor Amando M. Tetangco Jr.'s board (with MPIC CFO Cabal-Revilla, former BPI president Cezar Consing, Baron Travel's Marilen P.S. Yaptangco, and Gregorio). He notes that FLP's first decade (2011-2021) concentrated on liberty programs; its second decade (2021-2031) will include prosperity, starting with Esmel and culminating in (a) the Center for Liberty and Prosperity hosting the immersive Museum (SC partnership, liberty side) and (b) the at-least-P1-billion Entrepreneurship Fund investing in and helping manage MSMEs 'with the active assistance of its Esmel fellows' (prosperity side)."
+}

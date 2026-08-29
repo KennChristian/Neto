@@ -1,0 +1,52 @@
+{
+  "id": "CA024",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 24,
+  "title": "Martial law, authoritarian rule and Cha-cha",
+  "date": "2017-10-01",
+  "year": 2017,
+  "source_url": "https://opinion.inquirer.net/107543/martial-law-authoritarian-rule-cha-cha",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [],
+    "complexity": "medium",
+    "emotional_register": []
+  },
+  "topic_paths": {
+    "primary": [
+      "constitutional_doctrine"
+    ],
+    "secondary": []
+  },
+  "keywords": [
+    "constitutional martial law limits",
+    "rebellion/invasion only trigger",
+    "1987 Charter safeguards",
+    "Sec. Lorenzana",
+    "authoritarian rule warning",
+    "coup d'Ã©tat risk",
+    "Cha-cha radical alteration possibilities"
+  ],
+  "primary_topics": [],
+  "sub_topics": [],
+  "signature_phrases": [],
+  "entities": {
+    "people": [],
+    "institutions": [],
+    "cases": [],
+    "laws_treaties": [],
+    "events": []
+  },
+  "stances": [],
+  "notable_anecdotes": [],
+  "decision_framework_signals": [],
+  "target_audience": [],
+  "register_markers": [],
+  "one_paragraph_summary": ""
+}

@@ -1,0 +1,274 @@
+{
+  "id": "SA015",
+  "type": "speech",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 15,
+  "title": "Consensus, Rule of Law, Liberty, and Prosperity in ASEAN",
+  "date": "2023-10-17",
+  "year": 2023,
+  "source_url": "https://cjpanganiban.com/consensus-rule-of-law-liberty-and-prosperity-in-asean/",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Delegates of the ASEAN Law Association from all ten member-countries",
+      "Chief Justices and judges of ASEAN nations",
+      "The Philippine delegation (50 members) including the sitting CJ and 7 SC justices",
+      "Regional and international legal community concerned with dispute resolution",
+      "FLP donors and prospective partners (for the 'ultimate projects' announcement)"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "ceremonial",
+      "valedictory",
+      "diplomatic"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "asean_law_association",
+      "foundation_for_liberty_and_prosperity"
+    ],
+    "secondary": [
+      "family_and_marriage",
+      "ai_and_technology",
+      "rule_of_law"
+    ]
+  },
+  "keywords": [
+    "ASEAN Law Association",
+    "ALA General Assembly",
+    "Kuala Lumpur",
+    "consensus",
+    "rule of law",
+    "Foundation for Liberty and Prosperity",
+    "Center for Liberty and Prosperity",
+    "Prosperity Fund",
+    "ESMEL fellowships",
+    "valedictory"
+  ],
+  "primary_topics": [
+    "Valedictory address as head of the Philippine delegation to the ALA General Assembly (Kuala Lumpur, October 17-22, 2023)",
+    "ASEAN's 40-year tradition of consensus as the operating principle for regional unity-in-diversity",
+    "Rule of law as ASEAN's preferred method of dispute settlement — and the rejection of 'gray tactics,' military force, propaganda, and nuclear coercion",
+    "FLP's progress report on liberty and prosperity programs (scholarships, professorial chairs, dissertation contests, ESMEL fellowships)",
+    "FLP's two 'ultimate projects': the Center for Liberty and Prosperity (with AI-powered museum) and the Prosperity Fund",
+    "Personal tribute to his late wife Leni Carpio-Panganiban (passed away April 9, 2023)"
+  ],
+  "sub_topics": [
+    "Introduction of the 50-strong Philippine delegation including CJ Alexander G. Gesmundo and seven other Supreme Court justices",
+    "Negotiated transition of ALA Philippines chairmanship from Panganiban (since 2015) to CJ Gesmundo (effective January 1, 2024)",
+    "Acknowledgment of CJ Gesmundo's 'Strategic Plan for Judicial Innovation' for the 'Age of Artificial Intelligence'",
+    "The 'Magnificent Seven' justices plus CJ Gesmundo constituting a majority of the 15-member Supreme Court at the Assembly",
+    "Recognition of former Executive Secretary Salvador 'Bingbong' Mediadea ('Little President' 2016-2022)",
+    "Praise for Malaysian hospitality — CJ Tun Tengku Maimun binti Tuan Mat, 'Malaysia, Truly Asia!' slogan, Shangri-la Hotel",
+    "Self-quotation of his 2015 ALA address on truth as eternal and limitless",
+    "FLP statistics: 83 full law scholarships, 16 professorial chairs, 27 dissertation-contest winners, 10 ESMEL fellowships",
+    "ESMEL = Entrepreneurship, Sustainability, Management, Economics, Business Law",
+    "International institutions ASEAN believes in: UN, ICJ, WTO Appellate Body, Permanent Court of Arbitration in The Hague"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "consensus has always dominated our discussions and decisions",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "this rule of unanimity forged our unity despite our diversity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "consensus as our North star",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "NOT in the rule of the mob, NOT in the rule of propaganda and falsehood and NOT in the rule of nuclear weapons",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the so-called 'gray tactics'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "humans need both justice and jobs; freedom and food; ethics and economics; peace and development; nay, liberty and prosperity",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "twin and inseparable beacons",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the oldest teenager and the youngest old timer",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "the gentle wind beneath my wings",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Mabuhay ALA. Mabuhay 'Malaysia Truly Asia!'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Before I leave this earth and enter the Great Beyond, I hope to complete these projects",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (outgoing ALA Philippines chair)",
+      "Sundaresh Menon (Chief Justice of Singapore, ALA President)",
+      "Alexander G. Gesmundo (incoming Chairman ALA Philippines, incumbent CJ Philippines)",
+      "Tun Tengku Maimun binti Tuan Mat (Chair, ALA Malaysia; Chief Justice of Malaysia)",
+      "Salvador 'Bingbong' Mediadea (former Executive Secretary)",
+      "Justices Henri Jean Paul B. Inting, Mario V. Lopez, Jhosep Y. Lopez, Antonio T. Kho Jr., Maria Filomena D. Singh",
+      "Justices Rodil V. Zalameda and Samuel H. Gaerlan (at golf tournament)",
+      "Leni Carpio-Panganiban (late wife, d. April 9, 2023)",
+      "Telly Perlas-Bernabe (recently retired Senior Associate Justice, FLP Task Force co-chair)",
+      "Say Tetangco (FLP Task Force co-chair)"
+    ],
+    "institutions": [
+      "ASEAN Law Association (ALA) — founded ~1983",
+      "ALA Philippines",
+      "Supreme Court of the Philippines",
+      "Foundation for Liberty and Prosperity (FLP)",
+      "United Nations",
+      "International Court of Justice",
+      "World Trade Organization Appellate Body",
+      "Permanent Court of Arbitration (The Hague)"
+    ],
+    "cases": [],
+    "laws_treaties": [],
+    "events": [
+      "ALA General Assembly and Governing Board Meetings (Kuala Lumpur, October 17-22, 2023)",
+      "ALA's 40-year history (founded ~1983)",
+      "12th ALA General Assembly (February 26, 2015) — Panganiban's prior valedictory-style address",
+      "Death of Leni Carpio-Panganiban (April 9, 2023)"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "ASEAN's 40-year history demonstrates that consensus and the rule of law — not military force, propaganda, mob rule, or nuclear coercion — are the only durable methods for managing disputes among nations with diverse histories, religions, economies, and forms of government.",
+      "rhetorical_move": "negative-list rhetoric (NOT in the rule of the mob, NOT in propaganda, NOT in nuclear weapons) followed by positive affirmation",
+      "confidence": "asserted as ASEAN doctrine",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "ASEAN's rejection of 'gray tactics' as a mode of settling territorial and maritime disputes is morally continuous with its faith in international tribunals (ICJ, WTO Appellate Body, Permanent Court of Arbitration) — both stand against the rule of force.",
+      "rhetorical_move": "named-condemnation of 'gray tactics' as a coded but unmistakable reference to coercion in the South China Sea",
+      "confidence": "asserted with diplomatic restraint (no country named)",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Truth is not bound by sovereignty, territory, ideology, or legality — what is true in America is also true in the Philippines, in ASEAN, and in the world; therefore humans everywhere need BOTH justice AND jobs, freedom AND food, ethics AND economics, peace AND development.",
+      "rhetorical_move": "self-citation of 2015 valedictory plus universalist-truth premise as foundation for twin-beacons philosophy",
+      "confidence": "asserted as personal credo, attributed by self-quotation",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Even in retirement, the proper second-life work of a former Chief Justice is to institutionalize the twin beacons through philanthropic infrastructure — scholarships, professorial chairs, dissertation contests, fellowships — and now through the Center for Liberty and Prosperity (with AI-powered museum) and the multi-billion-peso Prosperity Fund.",
+      "rhetorical_move": "first-person inventory of FLP outputs to legitimize the call for ultimate projects",
+      "confidence": "asserted with progress statistics",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "ALA President CJ Sundaresh Menon called for one minute of silent prayers in honor of the late Leni Panganiban at the Opening Ceremony — Panganiban responded that he knows she is 'above us in spirit, watching us, listening to us, rejoicing with us, thanking us for remembering her.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "The negotiated handover of ALA Philippines chairmanship: Panganiban begged CJ Gesmundo to take it immediately because he was 'an ancient relic who has overstayed' since 2015; Gesmundo asked Panganiban to carry on because the SC was busy with its 'Strategic Plan for Judicial Innovation.' Compromise: Panganiban serves till year-end, Gesmundo takes over January 1, 2024.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Eight of fifteen Philippine Supreme Court justices were in the Kuala Lumpur delegation — Panganiban quips they 'can, if they wish to, hold their sessions in Kuala Lumpur.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Panganiban self-describes as 'the oldest teenager and the youngest old timer of our jolly delegation.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "elevates consensus-and-rule-of-law dyad as the operative ASEAN test for any dispute resolution",
+    "rejects four named alternatives explicitly (mob rule, propaganda, falsehood, nuclear coercion) as the negative space defining legitimate methods",
+    "treats philanthropic infrastructure (FLP) as the proper retirement vocation of a former chief magistrate",
+    "uses self-citation as evidence of doctrinal consistency over decades",
+    "structures FLP reporting in dyadic form (liberty programs + prosperity programs) to enact the twin-beacons philosophy"
+  ],
+  "target_audience": [
+    "Delegates of the ASEAN Law Association from all ten member-countries",
+    "Chief Justices and judges of ASEAN nations",
+    "The Philippine delegation (50 members) including the sitting CJ and 7 SC justices",
+    "Regional and international legal community concerned with dispute resolution",
+    "FLP donors and prospective partners (for the 'ultimate projects' announcement)"
+  ],
+  "register_markers": [
+    "ASEAN-regional ceremonial register",
+    "valedictory-as-handover speech (announcing successor)",
+    "diplomatic-protocol bowing-and-acknowledgment of delegation by name",
+    "self-quotation register (lifting his own 2015 address verbatim)",
+    "personal-grief interpolation inside formal regional address (tribute to Leni)",
+    "'mabuhay' as both Filipino flag and regional greeting",
+    "FLP-program-progress-report embedded in cross-border valedictory",
+    "polite circumlocution on contested geopolitics ('gray tactics' without naming China)"
+  ],
+  "one_paragraph_summary": "Delivered as Panganiban's valedictory at the ALA General Assembly in Kuala Lumpur on October 17, 2023, this address combines four moves: (1) introducing the 50-member Philippine delegation, including CJ Alexander G. Gesmundo and seven other Supreme Court justices (a majority of the 15-member Court), and announcing his handover of ALA Philippines chairmanship to CJ Gesmundo effective January 1, 2024; (2) thanking Malaysian host CJ Tun Tengku Maimun binti Tuan Mat and acknowledging ALA President CJ Sundaresh Menon for honoring his late wife Leni (d. April 9, 2023) with a minute of silence at the Opening Ceremony; (3) declaring ASEAN's 40-year history of consensus and rule of law as the only sustainable method of regional governance — explicitly rejecting 'gray tactics,' military force, mob rule, propaganda, and nuclear weapons, and affirming faith in the UN, ICJ, WTO Appellate Body, and the Permanent Court of Arbitration; and (4) reporting FLP's scoreboard (83 law scholarships, 16 professorial chairs, 27 dissertation winners, 10 ESMEL fellowships) and announcing FLP's two ultimate projects — the Center for Liberty and Prosperity with an AI-powered museum, and a multi-billion-peso Prosperity Fund — which he hopes to complete 'before I leave this earth.'"
+}

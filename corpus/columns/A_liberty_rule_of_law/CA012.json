@@ -1,0 +1,308 @@
+{
+  "id": "CA012",
+  "type": "column",
+  "theme": "A",
+  "theme_label": "Liberty and Rule of Law",
+  "number": 12,
+  "title": "'Might is right' vs 'Right is might'",
+  "date": "2021-04-25",
+  "year": 2021,
+  "source_url": "https://opinion.inquirer.net/139623/might-is-right-vs-right-is-might",
+  "routing": {
+    "primary_intent": [
+      "legal_education",
+      "opinions"
+    ],
+    "secondary_intent": [],
+    "audience_match": [
+      "Philippine government foreign-policy and defense officials",
+      "Inquirer Opinion readers concerned with the WPS",
+      "Justice Antonio T. Carpio and the WPS advocacy community",
+      "Western embassy and foreign-affairs personnel",
+      "International-law academics and practitioners"
+    ],
+    "complexity": "medium",
+    "emotional_register": [
+      "pedagogical"
+    ]
+  },
+  "topic_paths": {
+    "primary": [
+      "international_law_disputes",
+      "rule_of_law"
+    ],
+    "secondary": [
+      "global_geopolitics",
+      "with_due_respect_persona",
+      "supreme_court_history"
+    ]
+  },
+  "keywords": [
+    "West Philippine Sea",
+    "200 Chinese militia ships",
+    "Opium Wars",
+    "Treaty of Nanking",
+    "Unequal Treaties",
+    "Arbitral Award 2016",
+    "UNCLOS",
+    "nine-dash line",
+    "freedom of navigation",
+    "ICJ jurisdiction",
+    "1734 Murillo-Velarde map",
+    "1898 Treaty of Paris",
+    "1900 Treaty of Washington",
+    "Justice Antonio T. Carpio",
+    "Professor Jay Batongbacal"
+  ],
+  "primary_topics": [
+    "China's 'Might is right' (rule of force) tactic of swarming the West Philippine Sea with 200+ militia and coast guard ships and prohibiting Filipino fishermen from the EEZ",
+    "Historical parallel — Great Britain's mid-1800s Opium Wars and 'Unequal Treaties' (Treaty of Nanking) on China — and CJP's hope that the new China would have learned the lesson and embraced 'Right is might' (rule of law)",
+    "The July 12, 2016 Arbitral Award based on UNCLOS — recognizing Philippine exclusive rights to fish, exploit, and develop WPS natural resources",
+    "Distinction between SOVEREIGN RIGHTS (covered by AA — EEZ 200 NM/370 km outward) and SOVEREIGNTY (over land features, NOT granted by the AA)",
+    "Justice Carpio and Prof. Batongbacal's argument that Philippine sovereignty over Spratlys/Scarborough is provable via the 1734 Murillo-Velarde map and the 1898/1900 treaties",
+    "Open question: should the Philippine government accept China's challenge to litigate at the ICJ (which only states, not private parties, can invoke)?"
+  ],
+  "sub_topics": [
+    "200+ Chinese militia and coast guard ships at the WPS",
+    "Prohibition on Filipino fishing in the EEZ",
+    "Mid-1800s Opium Wars + Treaty of Nanking + 'Unequal Treaties' on China",
+    "AA: 501-page July 12, 2016 ruling under UNCLOS",
+    "EEZ measured 200 nautical miles (370 km) from shores",
+    "China as UNCLOS signatory bound to obey",
+    "Western navies (US, Australia, France, UK) conducting freedom of navigation in the WPS — invoking parts of AA favorable to their interests",
+    "US not a signatory to UNCLOS despite invoking its parts",
+    "China's stance — only the ICJ has jurisdiction since alleged conflict involves land ownership/sovereignty; refused to participate in arbitral proceedings",
+    "China's claim: ownership/sovereignty proven by discovery/occupancy since 'time immemorial' — REJECTED by the AA",
+    "Au contraire: 1734 Murillo-Velarde map shows Spratlys and Scarborough as Philippine territory; 1898 Treaty of Paris ceded by Spain to US; 1900 Treaty of Washington — US then ceded to Philippines",
+    "Justice Antonio T. Carpio's April 15, 2021 opinion piece referenced",
+    "Under ICJ Charter — only states, not private individuals or organizations, may file suits"
+  ],
+  "signature_phrases": [
+    {
+      "phrase": "'Might is right'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "'Right is might'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rule of force",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "rule of law",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "shameful Opium Wars",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "cruel Treaty of Nanking",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Unequal Treaties",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "China has, in fact, replaced Great Britain as the new bully in Asia",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "swarm and shoo away",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "I wish they would enforce the entire AA to show their consistent adherence to 'Right is might'",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "Au contraire",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    },
+    {
+      "phrase": "'Might is right' vs 'Right is might'. Which will prevail?",
+      "type": "tbd",
+      "voice_marker": true,
+      "reusable": true,
+      "context": ""
+    }
+  ],
+  "entities": {
+    "people": [
+      "Artemio V. Panganiban (columnist)",
+      "Justice Antonio T. Carpio (cited; April 15, 2021 column)",
+      "Professor Jay Batongbacal (cited Philippine maritime expert)"
+    ],
+    "institutions": [
+      "Permanent Court of Arbitration",
+      "International Court of Justice (ICJ)",
+      "United Nations",
+      "Philippine government",
+      "Chinese government / Coast Guard / militia",
+      "US Navy and Air Force",
+      "Royal Australian forces",
+      "French Navy",
+      "Royal Navy (UK)"
+    ],
+    "cases": [
+      "South China Sea Arbitral Award (July 12, 2016) — 501 pages; UNCLOS-based"
+    ],
+    "laws_treaties": [
+      "United Nations Convention on the Law of the Sea (UNCLOS)",
+      "Treaty of Nanking (1842)",
+      "Unequal Treaties (mid-1800s)",
+      "1734 Murillo-Velarde map",
+      "1898 Treaty of Paris",
+      "1900 Treaty of Washington",
+      "ICJ Charter"
+    ],
+    "events": [
+      "Mid-1800s Opium Wars",
+      "Arbitral Award promulgation — July 12, 2016",
+      "Recent Chinese swarming of WPS with 200+ ships",
+      "Justice Carpio's column — April 15, 2021"
+    ]
+  },
+  "stances": [
+    {
+      "claim": "By swarming the West Philippine Sea with 200+ militia and coast guard ships and prohibiting Filipino fishing in the EEZ, China is imposing the old 'Might is right' rule-of-force adage — the very same adage that Great Britain forced on China during the shameful Opium Wars and the cruel Treaty of Nanking. China has 'replaced Great Britain as the new bully in Asia.'",
+      "rhetorical_move": "historical-irony framing — China repeating the wrong done to it",
+      "confidence": "asserted as moral indictment",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "The July 12, 2016 Arbitral Award expressly recognized Philippine exclusive rights to fish, exploit, and develop the natural resources of the WPS under UNCLOS — and China, as a UNCLOS signatory, is legally bound to obey if the new and better 'Right is might' rule-of-law adage were to reign.",
+      "rhetorical_move": "AA-binding-on-signatory argument",
+      "confidence": "asserted with treaty citation",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "There is a sharp distinction between SOVEREIGN RIGHTS (covered by the AA — exclusive rights to develop and exploit marine resources within the 200 NM/370 km EEZ) and SOVEREIGNTY (over land features, NOT granted by the AA). The Philippines did not ask for, and the AA did not grant, any rights over land areas in the SCS — including the features China reclaimed and militarized.",
+      "rhetorical_move": "rights-vs-sovereignty distinction as analytical scaffolding",
+      "confidence": "asserted with clarification 'To be clear'",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Philippine ownership and sovereignty over Spratlys and Scarborough is provable via the 1734 Murillo-Velarde map and the chain of cessions: 1898 Treaty of Paris (Spain ? US) and 1900 Treaty of Washington (US ? Philippines), per Justice Antonio T. Carpio and Prof. Jay Batongbacal. China's claim of 'discovery and occupancy since time immemorial' was rejected by the AA.",
+      "rhetorical_move": "rival-historical-evidence framing with named expert citations",
+      "confidence": "asserted with expert authority",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "If the Philippines has a strong case for ownership and sovereignty over WPS land features, the government can accept China's challenge to litigate at the ICJ (where only states, not private parties, may file). The closing rhetorical question — 'Might is right vs Right is might. Which will prevail?' — leaves the answer to history.",
+      "rhetorical_move": "strategic-option-opening with rhetorical-question closer",
+      "confidence": "tentatively asserted as policy option",
+      "domain": "",
+      "would_repeat_today": null
+    },
+    {
+      "claim": "Western powers (US, Australia, France, UK) — which were NOT parties to the arbitral proceedings and are 'strictly speaking, not bound by the AA' — invoke parts of the AA favorable to their interests (freedom of navigation). CJP wishes they would enforce the ENTIRE AA 'to show their consistent adherence to Right is might.'",
+      "rhetorical_move": "Western-selective-invocation critique",
+      "confidence": "asserted as wish, not demand",
+      "domain": "",
+      "would_repeat_today": null
+    }
+  ],
+  "notable_anecdotes": [
+    {
+      "summary": "Historical irony: Great Britain forced 'Might is right' on China via the Opium Wars and Treaty of Nanking — and CJP had hoped the 'new, hi-tech, militarily revitalized and economically dominant China' would have learned the lesson. Instead, China 'has, in fact, replaced Great Britain as the new bully in Asia.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Asymmetry: China can swarm Philippine fishermen but 'could not similarly swarm and shoo away the navies and air forces of the United States, Australia, France, and Great Britain' — simply because those powers 'assert the same mantra of Might is right.'",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Western inconsistency: US 'is not even a signatory to UNCLOS' yet invokes the parts of the AA that suit US interests.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    },
+    {
+      "summary": "Justice Antonio T. Carpio (April 15, 2021 column) and Prof. Jay Batongbacal: Philippine sovereignty over Spratlys/Scarborough provable via the 1734 Murillo-Velarde map and the 1898/1900 cession treaties from Spain to US to Philippines.",
+      "characters": [],
+      "deployable_when": [],
+      "tone": "tbd",
+      "length": "tbd",
+      "deployable_in_solemn_register": false
+    }
+  ],
+  "decision_framework_signals": [
+    "treats the 'Might is right' vs 'Right is might' dichotomy as the master organizing frame",
+    "distinguishes consistently between sovereign-rights (AA covers) and sovereignty (AA does not cover) to allocate legal strategy",
+    "uses historical-irony as moral leverage (China repeating what was done to it)",
+    "applies treaty-signatory-binding-effect as the legal anchor for rule-of-law claim against China",
+    "uses Western-selective-invocation critique to call out inconsistency in rule-of-law application",
+    "opens ICJ-jurisdiction route as strategic option while noting only-states-may-file requirement"
+  ],
+  "target_audience": [
+    "Philippine government foreign-policy and defense officials",
+    "Inquirer Opinion readers concerned with the WPS",
+    "Justice Antonio T. Carpio and the WPS advocacy community",
+    "Western embassy and foreign-affairs personnel",
+    "International-law academics and practitioners"
+  ],
+  "register_markers": [
+    "binary-aphorism organizing frame ('Might is right' vs 'Right is might')",
+    "historical-irony rhetorical structure (China as both Opium-War victim and current bully)",
+    "rights-vs-sovereignty pedagogical distinction",
+    "named-expert citation (Carpio, Batongbacal)",
+    "Western-inconsistency critique ('wish they would enforce the entire AA')",
+    "Latin/French interjection ('Au contraire')",
+    "treaty-citation chain (Paris 1898 ? Washington 1900)",
+    "rhetorical-question closer ('Which will prevail?')",
+    "moral-indictment register ('shameful', 'cruel', 'bully')",
+    "policy-option-suggestion (accept ICJ challenge)"
+  ],
+  "one_paragraph_summary": "Published April 25, 2021 amid Chinese swarming of the West Philippine Sea with 200+ militia and coast guard ships and the prohibition of Filipino fishing in the EEZ, this column organizes itself around the binary 'Might is right' (rule of force) versus 'Right is might' (rule of law). CJP traces the historical irony: Great Britain forced 'Might is right' on China via the shameful Opium Wars and the cruel Treaty of Nanking and other 'Unequal Treaties' in the mid-1800s — and CJP had hoped the new China, with its hi-tech military and economic dominance, would have learned the lesson and embraced 'Right is might' instead. Instead, China 'has, in fact, replaced Great Britain as the new bully in Asia.' The July 12, 2016 501-page Arbitral Award expressly recognized Philippine exclusive rights to fish, exploit, and develop the natural resources of the WPS within the 200 NM/370 km EEZ under UNCLOS — and China, a UNCLOS signatory, is legally bound to obey. Crucially, the AA covers SOVEREIGN RIGHTS over the maritime domain ONLY, NOT SOVEREIGNTY over land features (which the Philippines did not ask for and the AA did not grant). Asymmetrically, China can swarm Philippine fishermen but cannot 'swarm and shoo away the navies and air forces of the United States, Australia, France, and Great Britain' — which conduct freedom of navigation in the WPS while invoking parts of the AA, though none of them were parties to the arbitral proceedings and the US 'is not even a signatory to UNCLOS.' CJP wishes the Western powers 'would enforce the entire AA to show their consistent adherence to Right is might.' China's response has been to refuse to recognize the AA and to insist that only the ICJ has jurisdiction (since the conflict allegedly involves land sovereignty); Justice Antonio T. Carpio (April 15, 2021) and Prof. Jay Batongbacal argue, Au contraire, that Philippine sovereignty over Spratlys and Scarborough is provable via the 1734 Murillo-Velarde map and the chain of cessions (1898 Treaty of Paris, Spain to US; 1900 Treaty of Washington, US to Philippines). If the Philippines has a strong case, the government can accept China's ICJ challenge — under the ICJ Charter, only states, not private parties, may file. Closing rhetorical question: 'Might is right vs Right is might. Which will prevail?'"
+}
