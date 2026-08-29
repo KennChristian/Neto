@@ -15,29 +15,29 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "app"))
 os.environ.setdefault("CJ_CANNED_ENABLED", "1")
 
-try:  # credentials live in app/.env on the robot (loaded by cj_chat in-service)
+try:  # credentials live in app/.env on the robot (loaded by answer_pipeline in-service)
     from dotenv import load_dotenv
     load_dotenv(ROOT / "app" / ".env")
 except Exception:
     pass
 
-import canned_answers  # noqa: E402
-import voice_io  # noqa: E402
+import answer_canned  # noqa: E402
+import speech_engines  # noqa: E402
 
 try:
-    from postprocess import process_tts_sentence
+    from text_entities import process_tts_sentence
 except Exception:
     process_tts_sentence = lambda t: t  # noqa: E731
 
 total, failed = 0, []
-for e in canned_answers._load():
+for e in answer_canned._load():
     for i, answer in enumerate(e["answers"], 1):
         text = process_tts_sentence(answer)
         label = f"{e['id']}[{i}]"
         for attempt in (1, 2):
             t0 = time.time()
             try:
-                wav = voice_io.tts_elevenlabs_wav(text)
+                wav = speech_engines.tts_elevenlabs_wav(text)
             except Exception as err:
                 # ElevenLabs intermittently 401s rapid-fire batch renders even
                 # on a valid key — pause and retry once, then move on (a

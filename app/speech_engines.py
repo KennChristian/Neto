@@ -30,7 +30,7 @@ and 200-300 char response):
   - Total voice overhead  : ~$0.004 - $0.006
 
 This module deliberately has NO Streamlit imports — it's plain
-Python and is reusable from cj_chat.py CLI smoke tests.
+Python and is reusable from answer_pipeline.py CLI smoke tests.
 """
 
 from __future__ import annotations
@@ -120,7 +120,7 @@ def _ensure_key() -> None:
     if not os.environ.get("OPENAI_API_KEY"):
         raise RuntimeError(
             "OPENAI_API_KEY is not set. Add it to one of the .env files "
-            "searched by cj_chat (cwd / repo-root / app), or set "
+            "searched by answer_pipeline (cwd / repo-root / app), or set "
             "DOTENV_PATH to point at the file."
         )
 
@@ -263,7 +263,7 @@ def tts_create_kwargs(model: str, voice: str, speed: float, text: str) -> dict:
 
 
 # Dynamic speaking speed (2026-08-20): per-sentence delta on the cloned
-# voice's base speed, driven by stream_speak.classify_emotion. Solemn lines
+# voice's base speed, driven by speech_streaming.classify_emotion. Solemn lines
 # slow down, playful lines pick up. Values are deltas on VOICE_SETTINGS
 # speed (0.9 base), clamped to ElevenLabs' 0.7–1.2. Disable with
 # CJ_DYNAMIC_SPEED=0 (every sentence then uses the base speed).
@@ -595,7 +595,7 @@ def _local_whisper():
 def transcribe(audio_path: str | Path, backend: Optional[str] = None,
                language: Optional[str] = None) -> str:
     """Adapter for develop-branch callers (wake_word.SttKeywordDetector expects
-    voice_io.transcribe(path, backend=..., language=...)). backend "local" runs
+    speech_engines.transcribe(path, backend=..., language=...)). backend "local" runs
     faster-whisper ON the robot — the idle wake loop then needs no network and
     costs $0 — with OpenAI whisper-1 as the exception fallback; any other
     backend value goes straight to whisper-1.

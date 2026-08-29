@@ -17,9 +17,9 @@ from collections import deque
 import numpy as np
 import sounddevice as sd
 from scipy.io import wavfile
-from cj_chat import CorpusArtifacts, cache_savings_summary, make_client, run_turn
-import voice_io
-from voice_io import transcribe_openai, tts_concatenate_parallel
+from answer_pipeline import CorpusArtifacts, cache_savings_summary, make_client, run_turn
+import speech_engines
+from speech_engines import transcribe_openai, tts_concatenate_parallel
 
 FILLER_DIR = os.path.expanduser("~/fillers")
 # Spoken when CJ_FILLER_MAX fillers play with no composed answer (see FillerLoop).
@@ -65,7 +65,7 @@ STOP_EVENTS = "/dev/shm/cj_stop_events.jsonl"
 # state machine without the phrase. Ignored when older than 10 s (stale).
 WAKE_TRIGGER = "/dev/shm/cj_wake_trigger"
 # Touched by the dashboard's "Enroll voice" button — next wake-loop iteration
-# records ~10 s and enrolls it as the reference speaker (speaker_id.py).
+# records ~10 s and enrolls it as the reference speaker (voice_identity.py).
 ENROLL_TRIGGER = "/dev/shm/cj_enroll_trigger"
 # Written by the /event page's question buttons (JSON {"q","a","id"}): the
 # next wake-loop iteration speaks the scripted answer as if the question had
@@ -81,7 +81,7 @@ _gestures_inst = None
 _net_probe = {}   # wake-time reachability probe, filled by a daemon thread
 _pending_ask = {"ask": None}   # handoff from _wake_stream to wake_loop
 
-# Voice lock (see speaker_id.VoiceLock): one instance for the process.
+# Voice lock (see voice_identity.VoiceLock): one instance for the process.
 _voice_lock = {"lock": None}
 FAREWELL_TEXT = "Thank you for the conversation. Goodbye, and God bless."
 APOLOGY_TEXT = ("I am sorry. I cannot reach my notes at the moment. "
@@ -125,16 +125,16 @@ def _is_farewell(text):
 
 def _lock_enabled():
     try:
-        import speaker_id
-        return speaker_id.lock_enabled()
+        import voice_identity
+        return voice_identity.lock_enabled()
     except Exception:
         return False
 
 
 def _voice_lock_obj():
     if _voice_lock["lock"] is None:
-        import speaker_id
-        _voice_lock["lock"] = speaker_id.VoiceLock()
+        import voice_identity
+        _voice_lock["lock"] = voice_identity.VoiceLock()
     return _voice_lock["lock"]
 
 
@@ -143,8 +143,8 @@ def _warm_voice_lock():
     (first load ~1 s) so the lock costs nothing on the turn itself."""
     try:
         if _lock_enabled():
-            import speaker_id
-            speaker_id._load()
+            import voice_identity
+            voice_identity._load()
     except Exception as e:
         print(f"[lock] model warm-up failed ({type(e).__name__}: {e})")
 ENROLL_PROMPT_WAV = os.path.expanduser("~/fillers_bail/enroll_prompt.wav")
@@ -153,9 +153,9 @@ TRANSCRIPT = "/dev/shm/cj_transcript.jsonl"
 
 
 def _stage(step=None, state=None, detail=None, reset=False, extra=None):
-    """Audience-page pipeline tracker (stream_speak.publish_stage; fails open)."""
+    """Audience-page pipeline tracker (speech_streaming.publish_stage; fails open)."""
     try:
-        from stream_speak import publish_stage
+        from speech_streaming import publish_stage
         publish_stage(step, state, detail, reset=reset, extra=extra)
     except Exception:
         pass
@@ -235,8 +235,8 @@ def prewarm_connections(client):
         return
 
     def _openai():
-        try:  # STT path uses voice_io._sync_client(); any request warms its pool
-            voice_io._sync_client().models.retrieve("whisper-1")
+        try:  # STT path uses speech_engines._sync_client(); any request warms its pool
+            speech_engines._sync_client().models.retrieve("whisper-1")
         except Exception as e:
             print(f"[prewarm] openai skipped: {type(e).__name__}")
 
@@ -248,7 +248,7 @@ def prewarm_connections(client):
 
     def _eleven():
         try:
-            if getattr(voice_io, "TTS_BACKEND", "openai") != "elevenlabs":
+            if getattr(speech_engines, "TTS_BACKEND", "openai") != "elevenlabs":
                 return
             root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             if root not in sys.path:              # voice/ pkg lives at repo root
@@ -273,8 +273,8 @@ def prewarm_connections(client):
 
     def _postproc():
         try:  # entity dictionary: 0.9 s cold on the CM4 (11k entries); load it
-            import postprocess   # while the person is still asking
-            postprocess.load()
+            import text_entities   # while the person is still asking
+            text_entities.load()
         except Exception as e:
             print(f"[prewarm] postproc skipped: {type(e).__name__}")
 
@@ -285,7 +285,7 @@ def prewarm_connections(client):
 def prewarm_boot():
     """Boot-time warm-up (2026-08-29): the heavy local imports and the entity
     dictionary used to load lazily inside the FIRST answer after boot —
-    `import voice.speak` alone is ~4 s on the CM4, postprocess.load() ~0.9 s.
+    `import voice.speak` alone is ~4 s on the CM4, text_entities.load() ~0.9 s.
     Runs in one daemon thread right after "Ready." so the first turn pays
     nothing. Network prewarms stay in prewarm_connections (at wake fire)."""
     def _run():
@@ -294,11 +294,11 @@ def prewarm_boot():
             root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             if root not in sys.path:
                 sys.path.insert(0, root)
-            import stream_speak          # noqa: F401
-            if getattr(voice_io, "TTS_BACKEND", "openai") == "elevenlabs":
+            import speech_streaming          # noqa: F401
+            if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
                 import voice.speak       # noqa: F401
-            import postprocess
-            postprocess.load()
+            import text_entities
+            text_entities.load()
             print(f"[prewarm] boot warm-up done in {time.monotonic() - t0:.1f}s "
                   "(tts modules + entity dictionary)", flush=True)
         except Exception as e:
@@ -307,10 +307,10 @@ def prewarm_boot():
 
 
 def _api_cost_snapshot():
-    """Cumulative Anthropic $ this service run (cj_chat.api_cost_usd);
+    """Cumulative Anthropic $ this service run (answer_pipeline.api_cost_usd);
     None if unavailable — cost display is best-effort, never turn-breaking."""
     try:
-        from cj_chat import api_cost_usd
+        from answer_pipeline import api_cost_usd
         return api_cost_usd()
     except Exception:
         return None
@@ -339,7 +339,7 @@ def _cost_meta(cost0):
 
 
 def _fidelity_meta(fid):
-    """Maintenance-feed fields from the async fidelity audit (stream_speak);
+    """Maintenance-feed fields from the async fidelity audit (speech_streaming);
     empty when the audit didn't run or hadn't landed by turn end."""
     if not fid:
         return {}
@@ -1407,7 +1407,7 @@ def _avatar_head_start(prefed_age=None):
 
 def _mark_play_start():
     try:
-        from stream_speak import mark_play_start
+        from speech_streaming import mark_play_start
         mark_play_start()
     except Exception:
         pass
@@ -1426,7 +1426,7 @@ def _play_aside(clip, stop=None):
     mode = _avatar_mode()
     if mode and _asides_enabled():
         try:
-            from stream_speak import publish_aside, wav_duration
+            from speech_streaming import publish_aside, wav_duration
             publish_aside(clip)
         except Exception:
             mode = None
@@ -1606,7 +1606,7 @@ def _play_wav_listener(wav_path, listener, prefed_age=None):
     _mark_play_start()
     if mode == "solo":
         # avatar is the only voice: silent hold for the sentence's duration
-        from stream_speak import wav_duration
+        from speech_streaming import wav_duration
         end = time.monotonic() + (wav_duration(wav_path) or 2.0)
         while time.monotonic() < end:
             if listener.fired:
@@ -1640,18 +1640,18 @@ def speak(text, filler=None, stop=None, voice_settings=None):
     """TTS + play. With a StopWord, playback is interruptible by the wake
     phrase; returns True if it was cut short that way.
     voice_settings: ElevenLabs voice_settings override for expressive
-    deliveries (voice_io.farewell_settings()); None = default voice."""
+    deliveries (speech_engines.farewell_settings()); None = default voice."""
     interrupted = False
     try:  # P0 entity pass on the spoken text (citation exactness); fails open
-        from postprocess import process_tts_sentence
+        from text_entities import process_tts_sentence
         text = process_tts_sentence(text)
     except Exception as e:
         print(f"[postproc] tts pass skipped: {e}")
     _t_synth = time.monotonic()
     mp3_path = wav_from_eleven = None
-    if getattr(voice_io, "TTS_BACKEND", "openai") == "elevenlabs":
+    if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
         try:  # cloned voice: wav straight from the clip cache (no ffmpeg, 2026-08-29)
-            wav_from_eleven = voice_io.tts_elevenlabs_wav(
+            wav_from_eleven = speech_engines.tts_elevenlabs_wav(
                 text, voice_settings=voice_settings)
         except Exception as e:
             print(f"[tts] elevenlabs failed ({type(e).__name__}) — openai fallback")
@@ -1673,7 +1673,7 @@ def speak(text, filler=None, stop=None, voice_settings=None):
             pass
         _speak_timing["synth_s"] = round(time.monotonic() - _t_synth, 2)
         try:  # speaking-rate fields for the maintenance page
-            from stream_speak import wav_duration as _wd
+            from speech_streaming import wav_duration as _wd
             _speak_timing["audio_s"] = _wd(wav_path)
             _speak_timing["words"] = len(text.split())
         except Exception:
@@ -1682,7 +1682,7 @@ def speak(text, filler=None, stop=None, voice_settings=None):
         if filler is not None:
             filler.stop()  # let the current clip finish, then start the answer
         try:  # live caption feed (audience page); whole answer on this path
-            from stream_speak import (publish_speaking, publish_sentence_wav,
+            from speech_streaming import (publish_speaking, publish_sentence_wav,
                                       wav_duration)
         except Exception:
             publish_speaking = None
@@ -1695,7 +1695,7 @@ def speak(text, filler=None, stop=None, voice_settings=None):
             time.sleep(_avatar_lag())   # let the avatar catch up, then BOTH speak
         _mark_play_start()
         if _amode == "solo":
-            from stream_speak import wav_duration
+            from speech_streaming import wav_duration
             end = time.monotonic() + (wav_duration(wav_path) or 2.0) \
                 + _avatar_lag()
             while time.monotonic() < end:  # avatar page is the only voice
@@ -1718,21 +1718,21 @@ def speak(text, filler=None, stop=None, voice_settings=None):
 
 # ════════════════════════════════════════════════════════════════════════════
 # 7. TURN — STREAMING ANSWER
-# gate+router (Haiku) → composer stream → stream_speak.SentenceSpeaker (per-sentence TTS + play)
+# gate+router (Haiku) → composer stream → speech_streaming.SentenceSpeaker (per-sentence TTS + play)
 # (sequence + line refs: docs/SYSTEM_TRACE.md)
 # ════════════════════════════════════════════════════════════════════════════
 
 def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                            question, raw_asr, stt_s):
     """Streaming variant of the compose+speak half of handle_turn: speech
-    starts at the FIRST composed sentence (stream_speak.py). Same filler,
+    starts at the FIRST composed sentence (speech_streaming.py). Same filler,
     bail-out, offline, history, and stop-word semantics as the classic path."""
     t0 = time.monotonic()
     cost0 = _api_cost_snapshot()
     filler = play_filler()
     try:  # P3: question-relevant filler generated in parallel (fails open)
-        import dynamic_filler
-        dynamic_filler.start(client, question, filler, note=_publish_transcript)
+        import answer_filler
+        answer_filler.start(client, question, filler, note=_publish_transcript)
     except Exception as e:
         print(f"[dynfiller] unavailable ({e})")
     abort, first_audio = threading.Event(), threading.Event()
@@ -1763,8 +1763,8 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
 
     def _worker():
         try:
-            import stream_speak
-            result["out"] = stream_speak.stream_turn(
+            import speech_streaming
+            result["out"] = speech_streaming.stream_turn(
                 client, artifacts, question, history, play_fn=_play,
                 on_first_audio=_on_first, abort=abort, style_fn=_style)
         except Exception as e:
@@ -1773,7 +1773,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
             done.set()
 
     try:    # canned/aborted turns never call build_context — don't show the
-        import cj_chat as _cjc     # previous turn's grounding docs for them
+        import answer_pipeline as _cjc     # previous turn's grounding docs for them
         _cjc.LAST_CONTEXT_DOCS[:] = []
     except Exception:
         pass
@@ -1822,7 +1822,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                 "note", f"(fidelity audit flagged: {', '.join(fid_flags)} — "
                 f"{(out.get('fidelity') or {}).get('reasoning', '')[:120]})")
         try:  # P2.5 maintenance feed
-            from cj_chat import (TOKEN_BUDGET_BY_DIM, TOKEN_BUDGET_DIM_DEFAULT,
+            from answer_pipeline import (TOKEN_BUDGET_BY_DIM, TOKEN_BUDGET_DIM_DEFAULT,
                                  DYNAMIC_TOKENS_ENABLED, COMPOSER_MAX_TOKENS,
                                  LAST_CONTEXT_DOCS, _scale_budget)
             topic = (routing or {}).get("primary_topic")
@@ -1975,8 +1975,8 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         # embedding runs in parallel with the STT call (joined below), so a
         # follow-up costs no extra latency; a stranger gets no answer.
         try:
-            import speaker_id
-            _sr, _data = speaker_id.read_wav(path)
+            import voice_identity
+            _sr, _data = voice_identity.read_wav(path)
 
             def _chk():
                 try:
@@ -1997,12 +1997,12 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         except Exception as e:
             print(f"[lock] could not lock ({type(e).__name__}: {e}) — no conversation mode")
     try:
-        import speaker_id
-        if speaker_id.gate_active():
-            ok, sim = speaker_id.verify(path)
+        import voice_identity
+        if voice_identity.gate_active():
+            ok, sim = voice_identity.verify(path)
             if not ok:
                 print(f"[speaker] ignored — similarity {sim:.2f} < "
-                      f"{speaker_id.threshold():.2f}")
+                      f"{voice_identity.threshold():.2f}")
                 _publish_transcript(
                     "note", f"(ignored — voice does not match enrolled speaker, "
                             f"similarity {sim:.2f})")
@@ -2054,9 +2054,9 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         print(f"[stt] discarded non-Latin hallucination: {question!r}")
         _publish_transcript("note", f"(discarded non-Latin hallucination: {question})")
         return False
-    try:  # Filipino/English only (2026-08-25, user) — lang_gate fails open
-        import lang_gate
-        _ok, _why = lang_gate.check(question)
+    try:  # Filipino/English only (2026-08-25, user) — text_language_gate fails open
+        import text_language_gate
+        _ok, _why = text_language_gate.check(question)
     except Exception as _e:
         _ok, _why = True, f"gate unavailable ({type(_e).__name__})"
     if not _ok:
@@ -2081,7 +2081,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
     _stage("transcribe", "done", f"heard in {stt_s:.1f}s")
     raw_asr = question
     try:  # P0 entity correction on the transcript (fails open; DARK unless enabled)
-        from postprocess import process_transcript
+        from text_entities import process_transcript
         corrected = process_transcript(question)
         if corrected != question:
             print(f"[postproc] corrected: \"{corrected}\"")
@@ -2102,18 +2102,18 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         # the emotion in the farewells"); the flat one-liner is the fallback.
         farewell = None
         try:
-            import canned_answers
-            farewell = canned_answers.get("thanks_goodbye")
+            import answer_canned
+            farewell = answer_canned.get("thanks_goodbye")
         except Exception as e:
             print(f"[canned] farewell pool unavailable ({e})")
         farewell = farewell or FAREWELL_TEXT
         speak(farewell, None, stop=stop,
-              voice_settings=voice_io.farewell_settings())
+              voice_settings=speech_engines.farewell_settings())
         _publish_transcript("cj", farewell)
         return "bye"
     try:  # canned fast path: curated answers for common questions (fails open)
-        import canned_answers
-        hit = canned_answers.match(question)
+        import answer_canned
+        hit = answer_canned.match(question)
     except Exception as e:
         print(f"[canned] unavailable ({e})")
         hit = None
@@ -2139,8 +2139,8 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         response = hit["answer"]
         t0 = time.monotonic()
         gestures.start("talk")
-        # goodbyes get the expressive delivery (see voice_io.farewell_settings)
-        vs = voice_io.farewell_settings() if hit["id"] == "thanks_goodbye" else None
+        # goodbyes get the expressive delivery (see speech_engines.farewell_settings)
+        vs = speech_engines.farewell_settings() if hit["id"] == "thanks_goodbye" else None
         interrupted = speak(response, None, stop=stop, voice_settings=vs)
         _publish_transcript("cj", response)
         _publish_turn_meta({
@@ -2166,152 +2166,16 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             _publish_transcript("note", "(answer interrupted by wake phrase — listening)")
             return "interrupted"
         return True
-    if os.environ.get("CJ_STREAM_SPEECH", "").strip().lower() in {"1", "true", "yes", "on"}:
-        return _handle_turn_streaming(client, artifacts, gestures, history, stop,
-                                      question, raw_asr, stt_s)
-    t0 = time.monotonic()
-    cost0 = _api_cost_snapshot()
-    filler = play_filler()
-    try:  # P3: question-relevant filler generated in parallel (fails open)
-        import dynamic_filler
-        dynamic_filler.start(client, question, filler, note=_publish_transcript)
-    except Exception as e:
-        print(f"[dynfiller] unavailable ({e})")
-    result, done = {}, threading.Event()
-
-    def _compose():
-        try:
-            result["turn"] = run_turn(client, artifacts, None, question_text=question,
-                                      conversation_history=history, skip_audio=True)
-        except Exception as e:
-            result["err"] = e
-        finally:
-            done.set()
-
-    threading.Thread(target=_compose, daemon=True).start()
-    try:
-        while not done.wait(0.25):
-            if filler.exhausted.is_set():
-                # 4 fillers played and still no answer — give up on this turn.
-                # The abandoned compose thread finishes in the background; its
-                # result is discarded and never enters history.
-                print(f"[filler] {filler.max_clips} fillers played, no answer yet — bailing out")
-                _publish_transcript("note", "(no answer in time — asked for a more specific question)")
-                gestures.start("talk")
-                if os.path.exists(BAIL_WAV):
-                    subprocess.run(["aplay", "-q", BAIL_WAV], stderr=subprocess.DEVNULL)
-                else:
-                    print(f'[filler] (missing {BAIL_WAV} — cannot voice "Please be more specific")')
-                return True
-        if "err" in result:
-            if not internet_up():
-                print(f"[net] offline during compose ({type(result['err']).__name__}) "
-                      "— voicing the offline notice")
-                _publish_transcript("note", "(offline during compose — spoke the no-internet notice)")
-                filler.stop()
-                gestures.start("talk")
-                say_offline()
-                return True
-            raise result["err"]
-        q, response, routing = result["turn"]
-        # P0 answer gate (classic path): the FULL answer exists before any TTS
-        # here, so a tripped answer is fully blocked — the safe in-persona
-        # fallback is spoken instead. Zero LLM calls, ~0.15 ms; fails open.
-        try:
-            import config as _cfg
-            if response and getattr(_cfg, "ANSWER_GATE_ENABLED", False):
-                import answer_gate
-                _topics = [t for t in [(routing or {}).get("primary_topic")]
-                           + list((routing or {}).get("secondary_topics") or []) if t]
-                _g = answer_gate.check_answer(question, response, topic_ids=_topics)
-                if not _g["ok"]:
-                    print(f"[answer-gate] answer BLOCKED pre-TTS: "
-                          f"{[t['rule'] for t in _g['tripped']]}")
-                    _publish_transcript(
-                        "note", f"(answer gate blocked the draft: "
-                        f"{', '.join(t['rule'] for t in _g['tripped'])} — spoke fallback)")
-                    from cj_chat import SAFE_OOC_FALLBACK
-                    response = SAFE_OOC_FALLBACK
-        except Exception as _e:
-            print(f"[answer-gate] fail-open: {type(_e).__name__}")
-        if q and response:
-            gestures.start("talk")
-            compose_s = round(time.monotonic() - t0, 2)
-            print(f"[tts] speaking...  (compose {compose_s:.1f}s)")
-            _publish_transcript("cj", response)
-            try:  # P2.5 maintenance feed: routing + budget + stage latency
-                from cj_chat import (TOKEN_BUDGET_BY_DIM, TOKEN_BUDGET_DIM_DEFAULT,
-                                     DYNAMIC_TOKENS_ENABLED, COMPOSER_MAX_TOKENS,
-                                     LAST_CONTEXT_DOCS, _scale_budget)
-                topic = (routing or {}).get("primary_topic")
-                theme = artifacts.topics.get(topic, {}).get("theme_anchor", "")
-                budget = _scale_budget(
-                    int(TOKEN_BUDGET_BY_DIM.get(topic, TOKEN_BUDGET_DIM_DEFAULT))
-                    if DYNAMIC_TOKENS_ENABLED else int(COMPOSER_MAX_TOKENS))
-                _publish_turn_meta({
-                    "phase": "composed", "raw_asr": raw_asr, "question": question,
-                    "answer": response, "topic": topic, "theme": theme,
-                    "confidence": (routing or {}).get("confidence"),
-                    "token_budget": budget, "dynamic_tokens": DYNAMIC_TOKENS_ENABLED,
-                    "stt_s": stt_s, "compose_s": compose_s,
-                    "docs": list(LAST_CONTEXT_DOCS),
-                    **_cost_meta(cost0),
-                })
-            except Exception as e:
-                print(f"[meta] publish skipped: {e}")
-            interrupted = speak(response, filler, stop=stop)  # filler talks through TTS synth too
-            try:
-                _publish_turn_meta({
-                    "phase": "spoken", "question": question,
-                    "synth_s": _speak_timing.get("synth_s"),
-                    "play_s": _speak_timing.get("play_s"),
-                    "interrupted": bool(interrupted),
-                    **_wpm_meta(_speak_timing.get("words"), _speak_timing.get("audio_s")),
-                })
-            except Exception as e:
-                print(f"[meta] publish skipped: {e}")
-            _trace_turn(path="whole-answer", stt_s=stt_s, compose_s=compose_s,
-                        synth_s=_speak_timing.get("synth_s"),
-                        play_s=_speak_timing.get("play_s"),
-                        words=_speak_timing.get("words"),
-                        topic=(routing or {}).get("primary_topic"),
-                        interrupted=bool(interrupted))
-            history += [{"role": "user", "content": q},
-                        {"role": "assistant", "content": response}]
-            del history[:-20]
-            if interrupted:
-                _publish_transcript("note", "(answer interrupted by wake phrase — listening)")
-                return "interrupted"
-    finally:
-        filler.stop()
-    return True
-
+    # Streaming is the only answer path (2026-08-29: the classic whole-answer
+    # composer path was removed; CJ_STREAM_SPEECH no longer needs to be set).
+    return _handle_turn_streaming(client, artifacts, gestures, history, stop,
+                                  question, raw_asr, stt_s)
 
 # ════════════════════════════════════════════════════════════════════════════
 # 9. IDLE — WAKE WORD
 # _wake_stream(): openWakeWord per 80 ms frame; polls the dashboard triggers (ask / gesture / listen / enroll)
 # (sequence + line refs: docs/SYSTEM_TRACE.md)
 # ════════════════════════════════════════════════════════════════════════════
-
-def _wake_windows():
-    """MicAudioSource windows, RMS-gated: a window only reaches STT when its
-    level clears an adaptive floor (2.5x the 25th percentile of recent windows,
-    min 350) — silence costs $0 and no network round-trip. The floor is taken
-    from PREVIOUS windows only, so the first shout after arming still passes."""
-    from collections import deque
-    import wake_word
-    hist = deque(maxlen=20)
-    for path in wake_word.MicAudioSource().windows():
-        try:
-            _, data = wavfile.read(path)
-        except Exception:
-            continue
-        rms = int(np.sqrt(np.mean(data.astype(np.float64) ** 2)) or 0)
-        floor = max(350, 2.5 * float(np.percentile(hist, 25))) if hist else 350
-        hist.append(rms)
-        if rms >= floor:
-            yield path
-
 
 def _wake_stream(det):
     """Continuous streaming wake detection for the openWakeWord backend: feed
@@ -2394,7 +2258,7 @@ def _wake_stream(det):
 
 def _run_enrollment(gestures):
     """Record ~10 s from the robot mic and save it as the reference speaker."""
-    import speaker_id
+    import voice_identity
     gestures.perk()
     if os.path.exists(ENROLL_PROMPT_WAV):
         subprocess.run(["aplay", "-q", ENROLL_PROMPT_WAV], stderr=subprocess.DEVNULL)
@@ -2407,7 +2271,7 @@ def _run_enrollment(gestures):
         gestures.neutral()
         return
     try:
-        speaker_id.enroll(path)
+        voice_identity.enroll(path)
         print("[speaker] enrolled — speaker gate is ON")
         _publish_transcript("note", "(voice enrolled — speaker gate is now ON)")
         if os.path.exists(ENROLL_DONE_WAV):
@@ -2485,54 +2349,34 @@ def wake_loop(client, artifacts, gestures):
     loops straight back into listening, no fresh wake required."""
     import wake_word    # inserts the repo root on sys.path, where config lives
     import config
-    import voice_io
+    import speech_engines
     detector = wake_word.make_detector()        # config.WAKE_BACKEND picks the backend
     # Post-answer pause before re-arming. The answer has fully played by then,
     # so this only needs to cover speaker/room tail — near-zero re-arms instantly.
     grace = max(0.0, float(getattr(config, "WAKE_COOLDOWN_S", 1.0)))
     phrase = getattr(config, "WAKE_PHRASE", "Cee-Jap")
     history = []
-    if isinstance(detector, wake_word.OpenWakeWordDetector):
-        backend_desc = f"openwakeword ({os.path.basename(detector.model_path)}, " \
-                       f"threshold {detector.threshold})"
-        detector._load()    # pre-warm so "armed" means the model is resident
-        print("[wake] openWakeWord model resident — idle listening is on-device, no network")
-
-        def _on_listen(r):  # near-misses only; the model scores every gated window
-            if r.score >= 0.15:
-                print(f"[wake] below threshold (score {r.score})")
-    else:
-        backend_desc = f"stt: {detector.backend}"
-        if detector.backend == "local":
-            try:            # pre-warm so "armed" means the model is resident
-                voice_io._local_whisper()
-                print("[wake] local STT resident — idle listening is on-device, no network")
-            except Exception as e:
-                print(f"[wake] local model preload failed ({e}) — will fall back to whisper-1")
-
-        def _on_listen(r):
-            if r.heard.strip() and r.heard != "<stt-error>":
-                print(f"[wake] not the phrase: {r.heard!r}")
+    if not isinstance(detector, wake_word.OpenWakeWordDetector):
+        raise SystemExit("[wake] only the openWakeWord backend is supported "
+                         "(CJ_WAKE_BACKEND=openwakeword); the STT-keyword backend was removed 2026-08-29")
+    backend_desc = (f"openwakeword ({os.path.basename(detector.model_path)}, "
+                    f"threshold {detector.threshold})")
+    detector._load()    # pre-warm so "armed" means the model is resident
+    print("[wake] openWakeWord model resident — idle listening is on-device, no network")
     gestures.scan()         # visible look-around: the robot is awake and listening
     print(f"[wake] armed — say \"{phrase}\"  (backend: {backend_desc})")
-    streaming = isinstance(detector, wake_word.OpenWakeWordDetector)
     stop = None
-    if streaming and bool(getattr(config, "STOP_WORD_ENABLED", True)):
+    if bool(getattr(config, "STOP_WORD_ENABLED", True)):
         stop = StopWord(detector, getattr(config, "STOP_OWW_THRESHOLD", 0.4))
         print(f"[stop] stop word armed — \"{phrase}\" mid-answer cuts playback "
               f"(threshold {stop.threshold})")
     while True:
         gestures.start("sleep")
-        if streaming:
-            score = _wake_stream(detector)
-            if score < 0:
-                _run_enrollment(gestures)
-                continue
-            print(f"[wake] FIRED (streaming, score {score:.3f})")
-        else:
-            res = wake_word.wait_for_wake(
-                detector, windows=_wake_windows(), on_listen=_on_listen)
-            print(f"[wake] FIRED on {res.variant!r} (score {res.score}, heard: {res.heard!r})")
+        score = _wake_stream(detector)
+        if score < 0:
+            _run_enrollment(gestures)
+            continue
+        print(f"[wake] FIRED (streaming, score {score:.3f})")
         ask, _pending_ask["ask"] = _pending_ask["ask"], None
         if ask:   # /event question button: cached clip, works even offline
             gestures.perk()
@@ -2569,8 +2413,8 @@ def wake_loop(client, artifacts, gestures):
             # the lock (the wake detector is not even running in here). Ends
             # on "bye", the stop word, or CJ_VOICE_LOCK_IDLE_S of silence
             # from the locked voice after an answer.
-            import speaker_id
-            idle_s = speaker_id.lock_idle_s()
+            import voice_identity
+            idle_s = voice_identity.lock_idle_s()
             print(f"[lock] in conversation — no wake word needed "
                   f"(ends on 'bye' or {idle_s:.0f}s of silence)")
             _publish_transcript("note", "(in conversation — no wake word needed; "
@@ -2600,28 +2444,6 @@ def wake_loop(client, artifacts, gestures):
             _publish_transcript("note", "(conversation closed — say the wake word to start again)")
         elif lock is not None:
             lock.release()
-        while lock is None:   # legacy follow-up / stop-relisten loop (lock off)
-            # Stop word fired mid-answer: just stop and go back to SLEEP — the
-            # next question needs a fresh wake (user decision 2026-08-20;
-            # CJ_STOP_RELISTEN=1 restores the old Alexa-style instant re-listen).
-            if r == "interrupted" and os.environ.get("CJ_STOP_RELISTEN", "0") == "1":
-                gestures.perk()
-                print("[stop] listening for the next question (no wake needed)")
-                r = handle_turn(client, artifacts, gestures, history, stop=stop)
-                continue
-            # Conversational follow-up (2026-08-21): after a COMPLETED answer
-            # the mic re-opens for CJ_FOLLOWUP_WINDOW_S so the visitor can just
-            # keep talking. Silence closes the window -> back to sleep.
-            if r in (True, "rewake") and _followup_window() > 0:
-                time.sleep(grace)       # speaker/room tail before the mic re-arms
-                gestures.perk()
-                print(f"[followup] listening {_followup_window():.0f}s for a "
-                      f"follow-up (no wake needed)")
-                _publish_transcript("note", "(listening for a follow-up — no wake needed)")
-                r = handle_turn(client, artifacts, gestures, history, stop=stop,
-                                followup=True)
-                continue
-            break
         if r == "interrupted":
             print(f"[stop] answer stopped — back to sleep, say \"{phrase}\" to ask again")
         gestures.neutral()
@@ -2631,10 +2453,9 @@ def wake_loop(client, artifacts, gestures):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--auto", action="store_true", help="hands-free, no wake word")
     ap.add_argument("--wake", action="store_true",
-                    help='hands-free behind the "Cee-Jap" wake phrase')
-    args = ap.parse_args()
+                    help='hands-free behind the wake phrase (the only mode; flag kept for the systemd unit)')
+    ap.parse_args()
 
     print("Loading artifacts...")
     artifacts = CorpusArtifacts()
@@ -2645,16 +2466,8 @@ def main():
     print("Ready.\n")
     prewarm_boot()   # heavy imports + entity dictionary off the first turn
 
-    history = []
     try:
-        if args.wake:
-            wake_loop(client, artifacts, gestures)
-        else:
-            while True:
-                if not args.auto:
-                    input("Press Enter to speak...")
-                handle_turn(client, artifacts, gestures, history)
-                gestures.neutral()
+        wake_loop(client, artifacts, gestures)
     except KeyboardInterrupt:
         gestures.neutral()
         print("\n" + cache_savings_summary())

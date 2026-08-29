@@ -28,13 +28,13 @@ except Exception:
     pass
 
 import requests  # noqa: E402
-import canned_answers  # noqa: E402
-import voice_io  # noqa: E402
+import answer_canned  # noqa: E402
+import speech_engines  # noqa: E402
 from voice import cache as v_cache  # noqa: E402
 from voice.speak import effective_settings  # noqa: E402
 
 try:
-    from postprocess import process_tts_sentence
+    from text_entities import process_tts_sentence
 except Exception:
     process_tts_sentence = lambda t: t  # noqa: E731
 
@@ -58,13 +58,13 @@ def align(wav_path, transcript):
 
 
 done = skipped = missing = failed = 0
-for e in canned_answers._load():
+for e in answer_canned._load():
     for i, answer in enumerate(e["answers"], 1):
         label = f"{e['id']}[{i}]"
         text = process_tts_sentence(answer)
         synth_text = text
         if os.environ.get("CJ_ELEVEN_RESPELL", "0") == "1":
-            synth_text = voice_io.apply_forced_respellings(text)
+            synth_text = speech_engines.apply_forced_respellings(text)
         norm = v_cache.normalize_text(synth_text)
         key = v_cache.cache_key(norm, effective_settings(None))
         wav = v_cache.cache_dir() / f"{key}.wav"

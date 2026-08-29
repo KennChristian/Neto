@@ -35,7 +35,7 @@ Two Claude API calls per turn. Everything else runs locally.
 ### Run the smoke test (text-only — no audio)
 
 ```bash
-.venv/Scripts/python.exe cj_chat.py --text "What is the rule of law?"
+.venv/Scripts/python.exe answer_pipeline.py --text "What is the rule of law?"
 ```
 
 This skips STT/TTS and exercises the full router → inference pipeline. You
@@ -45,7 +45,7 @@ response written in CJ's voice (twin beacons, *Au contraire*, "Cheers!" etc.).
 ### Run the full voice loop
 
 ```bash
-.venv/Scripts/python.exe cj_chat.py
+.venv/Scripts/python.exe answer_pipeline.py
 ```
 
 Press Enter to start each turn. Speak your question. The recorder stops
@@ -79,14 +79,14 @@ permission — accept it.
 - Sidebar toggle "Generate Piper voice" — turn off to skip TTS (~5-10s
   faster per turn) if you only want text replies during testing
 
-The CLI (`cj_chat.py`) is still available for headless / terminal use and
+The CLI (`answer_pipeline.py`) is still available for headless / terminal use and
 covers the same pipeline.
 
 ## Repo layout
 
 ```
 app/
-├── cj_chat.py              # CLI entrypoint (text + voice modes, drives audio I/O)
+├── answer_pipeline.py              # CLI entrypoint (text + voice modes, drives audio I/O)
 ├── dashboard.py            # Streamlit chat app (mic + text fallback, the demo UI)
 ├── state/                  # Runtime artifacts e.g. generated TTS wavs (GITIGNORED)
 │   └── tts/

@@ -10,7 +10,7 @@ Files:
     /dev/shm/cj_speaker_last.json                    last check, for the dashboard
 
 Enrollment happens through the robot mic (dashboard "Enroll voice" button
-touches /dev/shm/cj_enroll_trigger; cj_voice_cloud records ~10 s and calls
+touches /dev/shm/cj_enroll_trigger; main_voice_robot records ~10 s and calls
 enroll()). Threshold via CJ_SPEAKER_THRESHOLD, default 0.40 — measured
 2026-08-05: same voice scores ~0.88, different sources ~0.12.
 """

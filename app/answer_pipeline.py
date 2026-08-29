@@ -32,8 +32,8 @@ ARTIFACTS — loaded from the locations above:
         (e.g., corpus/speeches/A_liberty_rule_of_law/SA136.json)
 
 USAGE:
-    python cj_chat.py                  # interactive mode (push-to-talk)
-    python cj_chat.py --text "..."     # text-only test (skip STT/TTS)
+    python answer_pipeline.py                  # interactive mode (push-to-talk)
+    python answer_pipeline.py --text "..."     # text-only test (skip STT/TTS)
 """
 
 import os
@@ -302,7 +302,7 @@ class Config:
 # may build their own Config and pass it into CorpusArtifacts directly.
 DEFAULT_CONFIG = Config.from_env()
 
-# Backwards-compatibility alias kept so `from cj_chat import ARTIFACTS_DIR`
+# Backwards-compatibility alias kept so `from answer_pipeline import ARTIFACTS_DIR`
 # in app/dashboard.py keeps working. New code should accept a Config.
 ARTIFACTS_DIR = DEFAULT_CONFIG.voice_dir
 
@@ -856,7 +856,7 @@ def _trim_doc(raw: dict) -> dict:
 
 # What the composer last saw: the source docs that survived the budget trim
 # (and the ones dropped by it), refreshed by every build_context call. Read
-# by cj_voice_cloud's turn-meta publish so the maintenance dashboard can show
+# by main_voice_robot's turn-meta publish so the maintenance dashboard can show
 # the grounding documents per turn.
 LAST_CONTEXT_DOCS: list[dict] = []
 
@@ -1570,8 +1570,8 @@ def run_turn(
         else:
             if gate["scope"] == "out_of_corpus":
                 try:  # canned out-of-topic deflection (fails open to composer)
-                    import canned_answers
-                    ooc = canned_answers.get("out_of_topic")
+                    import answer_canned
+                    ooc = answer_canned.get("out_of_topic")
                 except Exception as e:
                     print(f"[canned] ooc unavailable ({e})")
                     ooc = None
@@ -1620,13 +1620,13 @@ def run_turn(
 
 
 def main():
-    # Guard: if someone runs `streamlit run cj_chat.py` by mistake, point
+    # Guard: if someone runs `streamlit run answer_pipeline.py` by mistake, point
     # them at the dashboard instead. Otherwise Streamlit would execute
     # main() → load Whisper (~1.5 GB) → call input() which hangs the
     # Streamlit process indefinitely. See GUIDE-firstrun.md.
     if "STREAMLIT_SERVER_PORT" in os.environ or "STREAMLIT_SERVER_HEADLESS" in os.environ:
         msg = (
-            "cj_chat.py is the CLI entrypoint, not a Streamlit app.\n"
+            "answer_pipeline.py is the CLI entrypoint, not a Streamlit app.\n"
             "Run the dashboard instead:\n"
             "    streamlit run app/dashboard.py            (from repo root)\n"
             "    streamlit run dashboard.py                (from app/)\n"

@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "app"))
 os.environ["CJ_CANNED_ENABLED"] = "1"
 
-import canned_answers  # noqa: E402
+import answer_canned  # noqa: E402
 
 PASS = FAIL = 0
 
@@ -24,17 +24,17 @@ def check(name, cond):
 
 
 def hits(q):
-    m = canned_answers.match(q)
+    m = answer_canned.match(q)
     return m["id"] if m else None
 
 
 # --- normalization ---
-check("normalize punctuation", canned_answers.normalize("What's the Rule of Law?")
+check("normalize punctuation", answer_canned.normalize("What's the Rule of Law?")
       == "whats the rule of law")
 
 # event mode ON for the hit cases below — scripted event_* entries only
 # voice-match while the flag file exists (toggled from the /event page)
-EVENT_FLAG = os.path.join(os.path.dirname(canned_answers._DEFAULT_PATH),
+EVENT_FLAG = os.path.join(os.path.dirname(answer_canned._DEFAULT_PATH),
                           "event_mode.on")
 _had_event_flag = os.path.exists(EVENT_FLAG)
 open(EVENT_FLAG, "w").close()
@@ -134,7 +134,7 @@ check("event off: donor question falls through",
 check("event off: generic how_are_you unaffected",
       hits("How are you today?") == "how_are_you")
 check("event off: get-by-id still works (button path)",
-      isinstance(canned_answers.get("event_ready"), str))
+      isinstance(answer_canned.get("event_ready"), str))
 open(EVENT_FLAG, "w").close()
 check("event on: scripted question matches again",
       hits("Good afternoon. How are you feeling today?") == "event_feeling")
@@ -142,31 +142,31 @@ if not _had_event_flag:
     os.unlink(EVENT_FLAG)
 
 # --- out_of_topic: selected by id (gate scope), never by transcript ---
-ooc = canned_answers.get("out_of_topic")
+ooc = answer_canned.get("out_of_topic")
 check("get out_of_topic", isinstance(ooc, str) and len(ooc) > 40)
-variants = {canned_answers.get("out_of_topic") for _ in range(30)}
+variants = {answer_canned.get("out_of_topic") for _ in range(30)}
 check("out_of_topic rotates variants", len(variants) >= 2)
 check("out_of_topic never pattern-matches",
       all(hits(q) != "out_of_topic" for q in
           ("out of topic", "what is your favorite basketball team",
            "tell me about quantum physics")))
-check("get unknown id -> None", canned_answers.get("nope") is None)
+check("get unknown id -> None", answer_canned.get("nope") is None)
 
 # --- disabled flag ---
 os.environ["CJ_CANNED_ENABLED"] = "0"
 check("disabled -> None", hits("Who are you?") is None)
-check("disabled -> get None", canned_answers.get("out_of_topic") is None)
+check("disabled -> get None", answer_canned.get("out_of_topic") is None)
 os.environ["CJ_CANNED_ENABLED"] = "1"
 
 # --- every entry's answers are non-empty strings ---
-entries = canned_answers._load()
+entries = answer_canned._load()
 check("entries loaded", len(entries) >= 25)
 check("all answers non-empty",
       all(isinstance(a, str) and a.strip() for e in entries for a in e["answers"]))
 check("every entry has >=5 variants",   # event_* = verbatim scripts, 1 answer
       all(len(e["answers"]) >= 5 for e in entries
           if not e["id"].startswith("event_")))
-variants2 = {canned_answers.match("Who are you?")["answer"] for _ in range(40)}
+variants2 = {answer_canned.match("Who are you?")["answer"] for _ in range(40)}
 check("pattern entries rotate variants", len(variants2) >= 3)
 
 print(f"\n{PASS}/{PASS + FAIL} passed")

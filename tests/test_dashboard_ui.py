@@ -16,7 +16,7 @@ from pathlib import Path
 from urllib.request import urlopen, Request
 
 sys.path.insert(0, os.path.join(os.path.expanduser("~"), "pi_dashboard"))
-import supervaise_ui as ui  # noqa: E402
+import ui_routes as ui  # noqa: E402
 
 TMP = Path(tempfile.mkdtemp(prefix="cj_ui_test_"))
 

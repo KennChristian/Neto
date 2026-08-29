@@ -47,7 +47,7 @@ def start(client, question, filler, note=None):
 def _work(client, question, filler, note):
     t0 = time.monotonic()
     try:
-        from cj_chat import ROUTER_MODEL
+        from answer_pipeline import ROUTER_MODEL
         msg = client.messages.create(
             model=ROUTER_MODEL, max_tokens=60, system=_SYSTEM,
             messages=[{"role": "user", "content": question[:500]}])
@@ -55,16 +55,16 @@ def _work(client, question, filler, note):
         if not text or "\n" in text or len(text.split()) > 20:
             print(f"[dynfiller] rejected generation: {text!r}")
             return
-        import voice_io
+        import speech_engines
         wav = None
-        if getattr(voice_io, "TTS_BACKEND", "openai") == "elevenlabs":
+        if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
             try:  # cloned voice, matches the answer + canned filler pool
-                wav = voice_io.tts_elevenlabs_wav(text)
+                wav = speech_engines.tts_elevenlabs_wav(text)
             except Exception as e:
                 print(f"[dynfiller] elevenlabs failed ({type(e).__name__}) "
                       f"— openai fallback")
         if wav is None:
-            from voice_io import (_sync_client, tts_create_kwargs,
+            from speech_engines import (_sync_client, tts_create_kwargs,
                                   TTS_MODEL_DEFAULT, TTS_VOICE_DEFAULT,
                                   TTS_SPEED_DEFAULT)
             kw = tts_create_kwargs(TTS_MODEL_DEFAULT, TTS_VOICE_DEFAULT,

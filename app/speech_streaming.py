@@ -5,7 +5,7 @@ Sonnet's answer, cuts it into sentences as tokens arrive, synthesizes each
 sentence (one ahead), and starts PLAYING as soon as the first sentence's
 audio is ready — first audio lands during composition of the rest.
 
-Used by cj_voice_cloud.handle_turn when CJ_STREAM_SPEECH is on; the classic
+Used by main_voice_robot.handle_turn when CJ_STREAM_SPEECH is on; the classic
 whole-answer path remains the fallback. Fail behavior: any error raises to
 the caller, which owns the offline/bail handling.
 
@@ -260,7 +260,7 @@ def split_ready(buf: str):
 class SentenceSpeaker:
     """Synthesizes queued sentences (one ahead) and plays them in order.
 
-    play_fn(wav_path) -> bool(interrupted) is injected by cj_voice_cloud so
+    play_fn(wav_path) -> bool(interrupted) is injected by main_voice_robot so
     the stop-word/mute machinery is reused verbatim. on_first_audio() fires
     just before the first playback starts (filler stop + talk gesture)."""
 
@@ -275,7 +275,7 @@ class SentenceSpeaker:
         self._emos = {}              # idx -> emotion tag (classified once, in add)
         self._rids = []              # ElevenLabs request ids (stitching context)
         try:
-            from tempo_smooth import TempoSmoother
+            from speech_tempo import TempoSmoother
             self._tempo = TempoSmoother()   # per-answer tempo normaliser
         except Exception as e:
             print(f"[tempo] disabled ({type(e).__name__}: {e})")
@@ -308,15 +308,15 @@ class SentenceSpeaker:
 
     @classmethod
     def _client(cls):
-        # voice_io's parallel TTS caches an ASYNC client bound to one event
+        # speech_engines's parallel TTS caches an ASYNC client bound to one event
         # loop — calling it from several worker threads stalls for seconds.
-        # Reuse voice_io's cached SYNC client instead: it is thread-safe AND
+        # Reuse speech_engines's cached SYNC client instead: it is thread-safe AND
         # its connection pool is already warm from the STT call at turn start
         # (a cold TLS setup costs ~5-7s on the CM4; warm is ~1.5-2s).
         with cls._oai_lock:
             if cls._oai is None:
                 try:
-                    from voice_io import _sync_client
+                    from speech_engines import _sync_client
                     cls._oai = _sync_client()
                 except Exception:
                     from openai import OpenAI
@@ -324,13 +324,13 @@ class SentenceSpeaker:
         return cls._oai
 
     def _synth(self, text, previous_text=None, speed=None):
-        import voice_io
+        import speech_engines
         try:
-            from postprocess import process_tts_sentence
+            from text_entities import process_tts_sentence
             text = process_tts_sentence(text)
         except Exception:
             pass
-        if getattr(voice_io, "TTS_BACKEND", "openai") == "elevenlabs":
+        if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
             try:
                 # Cloned voice → 24 kHz wav straight from the clip cache. (The
                 # per-sentence wav→mp3 ffmpeg that used to live here is gone;
@@ -345,7 +345,7 @@ class SentenceSpeaker:
                 with self._lock:
                     rids = list(self._rids[-3:])
                 meta = {}
-                wav = voice_io.tts_elevenlabs_wav(text, speed=speed,
+                wav = speech_engines.tts_elevenlabs_wav(text, speed=speed,
                                                   previous_text=previous_text,
                                                   previous_request_ids=rids or None,
                                                   meta_out=meta)
@@ -365,10 +365,10 @@ class SentenceSpeaker:
                 print(f"[stream-speak] elevenlabs synth failed "
                       f"({type(e).__name__}) — openai fallback for this sentence")
         mp3 = self._client().audio.speech.create(
-            **voice_io.tts_create_kwargs(
-                getattr(voice_io, "TTS_MODEL_DEFAULT", "tts-1"),
-                getattr(voice_io, "TTS_VOICE_DEFAULT", "echo"),
-                getattr(voice_io, "TTS_SPEED_DEFAULT", 0.98),
+            **speech_engines.tts_create_kwargs(
+                getattr(speech_engines, "TTS_MODEL_DEFAULT", "tts-1"),
+                getattr(speech_engines, "TTS_VOICE_DEFAULT", "echo"),
+                getattr(speech_engines, "TTS_SPEED_DEFAULT", 0.98),
                 text)).content
         f = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False, dir="/dev/shm")
         f.write(mp3)
@@ -399,10 +399,10 @@ class SentenceSpeaker:
                 emo = None
             self._emos[idx] = emo      # reused by _play_loop (gesture + captions)
             try:
-                import voice_io
-                if getattr(voice_io, "TTS_BACKEND", "openai") == "elevenlabs":
-                    spd = voice_io.smooth_speed(
-                        voice_io.emotion_speed(emo or "neutral"),
+                import speech_engines
+                if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
+                    spd = speech_engines.smooth_speed(
+                        speech_engines.emotion_speed(emo or "neutral"),
                         self._speed_cur)
                     self._speed_cur = spd if spd is not None else self._speed_cur
             except Exception:
@@ -479,7 +479,7 @@ class SentenceSpeaker:
                 except Exception:
                     pass
             words = None
-            try:  # alignment sidecar written by voice_io.tts_elevenlabs_wav
+            try:  # alignment sidecar written by speech_engines.tts_elevenlabs_wav
                 with open(wav + ".align.json") as af:
                     words = json.load(af)
             except (OSError, ValueError):
@@ -619,7 +619,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
     Returns {response, routing, interrupted, first_audio_s, compose_s} or
     None if aborted before completion. Raises on API errors (caller owns
     offline handling)."""
-    from cj_chat import (input_gate, force_meta_routing, route_question,
+    from answer_pipeline import (input_gate, force_meta_routing, route_question,
                          generate_response_stream, _strip_stage_directions)
     abort = abort or threading.Event()
     t0 = time.monotonic()
@@ -647,8 +647,8 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
     else:
         if gate.get("scope") == "out_of_corpus":
             try:  # canned out-of-topic deflection (fails open to the composer)
-                import canned_answers
-                ooc_text = canned_answers.get("out_of_topic")
+                import answer_canned
+                ooc_text = answer_canned.get("out_of_topic")
             except Exception as e:
                 print(f"[canned] ooc unavailable ({e})")
         if ooc_text is not None:
@@ -744,7 +744,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
 
         def _audit():
             try:
-                from cj_chat import fidelity_check, build_context
+                from answer_pipeline import fidelity_check, build_context
                 ctx = build_context(routing, artifacts)
                 fid_box.update(fidelity_check(client, ctx, audit_text))
                 fl = [k for k in ("hallucination", "voice_drift",
