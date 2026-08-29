@@ -117,6 +117,28 @@ _THANKS_RE = re.compile(
     re.I)
 
 
+def _quiet_goodbye(gestures, stop):
+    """Conversation ended by silence (2026-08-29, user: "if there is nothing
+    to ask, make it say goodbye so there is an indicator"): a short curated
+    line from the `quiet_goodbye` canned pool, farewell delivery. Off with
+    CJ_LOCK_QUIET_GOODBYE=0."""
+    if os.environ.get("CJ_LOCK_QUIET_GOODBYE", "1").strip().lower() in {"0", "off", "false"}:
+        return
+    text = None
+    try:
+        import answer_canned
+        text = answer_canned.get("quiet_goodbye")
+    except Exception as e:
+        print(f"[canned] quiet_goodbye pool unavailable ({e})")
+    text = text or "It seems we have come to a pause. Thank you — say my name again whenever you wish to continue."
+    try:
+        gestures.start("talk")
+        speak(text, None, stop=stop, voice_settings=speech_engines.farewell_settings())
+        _publish_transcript("cj", text)
+    except Exception as e:
+        print(f"[lock] quiet goodbye failed ({type(e).__name__}: {e})")
+
+
 def _is_farewell(text):
     """True when the (locked) speaker is closing the conversation."""
     t = (text or "").strip()
@@ -2441,6 +2463,7 @@ def wake_loop(client, artifacts, gestures):
                 remaining = deadline - time.monotonic()
                 if remaining <= 0.3:
                     print("[lock] quiet — conversation closed")
+                    _quiet_goodbye(gestures, stop)   # audible sign that CJ stopped listening
                     break
                 if _muted():
                     print("[lock] mic muted from the dashboard — conversation closed")

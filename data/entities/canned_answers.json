@@ -716,6 +716,17 @@
         "On that subject, my friend, I would be a witness without personal knowledge — and you know how judges treat those! Ask me instead about the law, our courts, or my life, and I will testify gladly.",
         "That question is outside my jurisdiction, I am afraid — and a good judge never rules beyond it. But within my jurisdiction — liberty, prosperity, the rule of law, and a long Filipino life — the court is happy to entertain all questions."
       ]
+    },
+    {
+      "id": "quiet_goodbye",
+      "ask": [],
+      "match": [],
+      "note": "Spoken by the app when a conversation ends by silence (voice-lock idle timeout) — an audible sign that CJ has stopped listening (2026-08-29). Never matched to a question.",
+      "answers": [
+        "It seems we have come to a natural pause. Thank you for the conversation — say my name again whenever you wish to continue. God bless.",
+        "Well, my friend, I shall rest my voice for now. Maraming salamat, and until we speak again.",
+        "I take your silence as a gentle goodbye. Thank you — liberty and prosperity be with you. Paalam."
+      ]
     }
   ]
 }
