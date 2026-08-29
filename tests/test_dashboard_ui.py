@@ -49,6 +49,7 @@ def _point_at_fixtures(missing=False):
     ui.ENTITY_OVERLAY = str(base / "overlay.json")
     ui.WAKE_TRIGGER = str(base / "wake_trigger")
     ui.MUTE_TRIGGER = str(base / "mute_trigger")
+    ui.MUTED_FLAG = str(base / "muted")          # never read the live mic-mute flag
     ui._health_cache.update(ts=9e18, data={"stub": True})  # skip live probes
 
 

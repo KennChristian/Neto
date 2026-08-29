@@ -1,6 +1,6 @@
 # SYSTEM_TRACE — Reachy Mini "CJ" voice robot (live checkout)
 
-*Written 2026-08-29 from the deployed code in `~/Supervaise-Reachy-Mini-Project-main`
+*Written 2026-08-29 (module names updated to the renamed layout the same day — see `RENAME_MAP_2026-08-29.md`) from the deployed code in `~/Supervaise-Reachy-Mini-Project-main`
 (`app/`, `voice/`) and the dashboard in `~/pi_dashboard/`. Line numbers are
 approximate — search for the function name; `app/cj_voice_cloud.py` carries
 numbered `# ═══ N. …` section banners that match the sections below.*
@@ -151,13 +151,11 @@ Dashboard `/api/action` is fire-and-forget (`{"queued":true,"id":N}` → poll `/
 
 ---
 
-## 6. Known dead / duplicated code (left in place, documented)
+## 6. Removed / remaining duplication
 
-- Classic non-streaming turn in `handle_turn` (after the `CJ_STREAM_SPEECH` return), `_wake_windows`, `wake_word.wait_for_wake` / `MicAudioSource` / `SttKeywordDetector`, `run_hands_free_loop`, the legacy follow-up loop, `--auto` mode — unreachable under the deployed env.
-- ~60 % of `voice/speak.py` (`speak()`, host/robot playback, espeak fallback) — the app imports only `synthesize` / `effective_settings`.
-- `app/app.py`, `app/dashboard.py`, `app/wake_test.py` — not imported by the service.
-- Duplicated helpers: `_publish_wake`/`_publish_stop`; four wav-duration readers; canned speak+publish block in `handle_turn` vs `_ask_turn`; turn-meta block in both turn paths; avatar mode/lag helpers in app and dashboard.
-- Backups of every edited file live in `_backups/` (app, voice) and `~/pi_dashboard/_backups/`.
+Removed 2026-08-29 (see `RENAME_MAP_2026-08-29.md`): the classic non-streaming turn, `_wake_windows`, the STT-keyword wake backend, the legacy follow-up loop, `--auto` mode, `voice/speak.py` playback/fallback half, the Streamlit kiosk files (→ `app/legacy/`).
+
+Still duplicated (small, left in place): `_publish_wake`/`_publish_stop`; four wav-duration readers; canned speak+publish block in `handle_turn` vs `_ask_turn`; turn-meta block in both turn paths; avatar mode/lag helpers in app and dashboard.
 
 ## 7. Changes made on 2026-08-29 for speed / traceability
 

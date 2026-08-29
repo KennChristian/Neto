@@ -1,5 +1,7 @@
 # Supervaise FLP Project — CJ Panganiban Conversation App
 
+> **2026-08-29:** modules were renamed by function and the tree cleaned — see [docs/RENAME_MAP_2026-08-29.md](docs/RENAME_MAP_2026-08-29.md) and [docs/SYSTEM_TRACE.md](docs/SYSTEM_TRACE.md). File names in the older handovers below are historical.
+
 A voice conversation app that speaks as retired Philippine Chief Justice
 Artemio V. Panganiban, grounded in his published corpus.
 
