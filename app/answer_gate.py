@@ -27,6 +27,8 @@ safety surface. This module never raises into the caller.
 
 from __future__ import annotations
 
+import os
+
 import json
 import re
 import sys
@@ -168,6 +170,59 @@ def check_answer(question: str, answer: str,
     if audit and result["tripped"]:
         _audit(question, answer, result, topic_ids)
     return result
+
+
+# ---- fact gate (2026-08-29, user: "reduce all hallucinations in any form") ----
+_YEAR_RX = re.compile(r"\b(1[89]\d\d|20\d\d)\b")
+_TITLE_RX = re.compile(r"[*_\u201c\"]([A-Z][^*_\u201d\"]{6,80}?)[*_\u201d\"]")
+_CORE = {"years": None, "text": ""}
+
+
+def _core():
+    """Persona-core text: voice card, topic map, router prompt, canned answers,
+    gate rules. Years/titles found here are always allowed."""
+    if _CORE["years"] is None:
+        root = Path(__file__).resolve().parent.parent
+        buf = []
+        for pat in ("corpus/voice/*.md", "corpus/voice/*.json",
+                    "data/entities/canned_answers.json", "data/entities/answer_gate_rules.json"):
+            for f in root.glob(pat):
+                try:
+                    buf.append(f.read_text(errors="ignore"))
+                except OSError:
+                    pass
+        _CORE["text"] = "\n".join(buf).casefold()
+        _CORE["years"] = set(_YEAR_RX.findall(_CORE["text"]))
+    return _CORE
+
+
+def fact_check(sentence: str, context_text: str = "", question: str = "") -> dict:
+    """Deterministic pre-TTS fact gate. A sentence that states a YEAR that
+    appears neither in the composer's grounding context, the question, nor
+    the persona-core corpus is blocked — the composer had no source for it
+    (the fidelity audit used to catch these only after they were spoken).
+    Quoted / italic TITLES not found in context or core are logged, not
+    blocked (CJ_FACT_GATE_TITLES=block to block). CJ_FACT_GATE=0 disables.
+    Returns {ok, bad_years, unverified_titles}."""
+    out = {"ok": True, "bad_years": [], "unverified_titles": []}
+    if os.environ.get("CJ_FACT_GATE", "1").strip().lower() in {"0", "off", "false"}:
+        return out
+    try:
+        core = _core()
+        ctx = (context_text or "").casefold()
+        years = set(_YEAR_RX.findall(sentence))
+        if years:
+            allowed = set(_YEAR_RX.findall(ctx)) | core["years"] | set(_YEAR_RX.findall(question or ""))
+            out["bad_years"] = sorted(years - allowed)
+        for t in _TITLE_RX.findall(sentence):
+            tf = t.casefold().strip()
+            if len(tf.split()) >= 2 and tf not in ctx and tf not in core["text"]:
+                out["unverified_titles"].append(t)
+        block_titles = os.environ.get("CJ_FACT_GATE_TITLES", "log").strip().lower() == "block"
+        out["ok"] = not out["bad_years"] and not (block_titles and out["unverified_titles"])
+    except Exception:
+        out["ok"] = True   # never break a turn
+    return out
 
 
 def correction_hint(result: dict) -> str:

@@ -859,6 +859,7 @@ def _trim_doc(raw: dict) -> dict:
 # by main_voice_robot's turn-meta publish so the maintenance dashboard can show
 # the grounding documents per turn.
 LAST_CONTEXT_DOCS: list[dict] = []
+LAST_CONTEXT_TEXT: list[str] = [""]   # the assembled grounding block of the last turn (fact gate)
 
 
 def build_context(
@@ -925,7 +926,9 @@ def build_context(
         for d in picked
     ]
 
-    return _assemble(source_docs)
+    ctx = _assemble(source_docs)
+    LAST_CONTEXT_TEXT[0] = ctx
+    return ctx
 
 
 # ============================================================
@@ -1013,7 +1016,7 @@ def generate_response_stream(
     max_tokens = _topic_max_tokens(routing, artifacts)  # P1: per-topic budget (fixed cap when dark)
     user_content = (
         f"{context}\n\n"
-        f"<grounding_note>\n{confidence_note}\n</grounding_note>\n\n"
+        f"<grounding_note>\n{confidence_note}\n{GROUNDING_RULE}\n</grounding_note>\n\n"
         f"<user_question>\n{question}\n</user_question>"
         f"{_length_note(max_tokens)}"
     )
@@ -1149,6 +1152,57 @@ def fidelity_check(
             "guardrail_violation": False,
             "reasoning": "fidelity check unavailable; fail-open",
         }
+
+
+# Source-side hallucination guard (2026-08-29): the composer is told to state
+# specifics only when the context carries them; the pre-TTS fact audit
+# (sentence_fact_audit) is the backstop.
+GROUNDING_RULE = (
+    "Specifics rule: state a date, year, number, count, amount, book/column/"
+    "case title or a person-organisation pairing ONLY if it appears in the "
+    "context above (or is a core persona fact stated there). If the context "
+    "does not give the specific, speak to the principle or the memory without "
+    "the specific — never estimate, round, or supply one from general knowledge."
+)
+
+FACT_AUDIT_SYSTEM = (
+    "You are a strict fact checker for a spoken answer given in the voice of "
+    "retired Philippine Chief Justice Artemio V. Panganiban. You receive the "
+    "grounding context that was available to the writer and ONE sentence of "
+    "the answer. Decide whether every specific claim in the sentence — dates, "
+    "years, numbers, counts, amounts, titles of books/columns/cases, names of "
+    "organisations and people paired with those facts — is supported by the "
+    "context or is common persona knowledge that the context does not "
+    "contradict. A year, number or title that the context does not mention, "
+    "or that conflicts with the context, is UNSUPPORTED. Opinions, general "
+    "principles and rhetoric are always supported. Reply with JSON only: "
+    '{"supported": true|false, "reason": "<one short clause>"}'
+)
+
+
+def sentence_fact_audit(client: Anthropic, sentence: str, context: str,
+                        timeout_s: float = 2.5) -> dict:
+    """Pre-TTS fact check of ONE fact-bearing sentence (2026-08-29, user:
+    "reduce all hallucinations in any form"). Haiku, ~0.4-0.8 s, only called
+    for sentences carrying a year / number / quoted title; fails OPEN on any
+    error or timeout so it can never stall an answer. Returns
+    {supported, reason}."""
+    try:
+        resp = client.messages.create(
+            model=ROUTER_MODEL, max_tokens=80, timeout=timeout_s,
+            system=[{"type": "text", "text": FACT_AUDIT_SYSTEM,
+                     "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content":
+                       f"<context>\n{context[:12000]}\n</context>\n\n<sentence>\n{sentence}\n</sentence>"}],
+        )
+        raw = resp.content[0].text.strip()
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```$", "", raw)
+        parsed = json.loads(raw)
+        return {"supported": bool(parsed.get("supported", True)),
+                "reason": str(parsed.get("reason", ""))[:160]}
+    except Exception as e:
+        return {"supported": True, "reason": f"audit unavailable ({type(e).__name__}); fail-open"}
 
 
 SAFE_OOC_FALLBACK = (

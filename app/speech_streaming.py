@@ -240,6 +240,14 @@ def classify_emotion(sentence: str) -> str:
     return max(scores, key=scores.get)
 
 
+# sentences worth a pre-TTS fact audit: years, 3+ digit numbers, counts of
+# things, quoted / italic titles (2026-08-29)
+_FACT_TRIGGER = re.compile(
+    r"\b(1[89]\d\d|20\d\d)\b|\b\d{3,}\b|\b\d+\s+(cases?|years?|decisions?|books?|ponencias?|"
+    r"columns?|scholars?|students?|million|billion|percent|pesos?|dollars?)\b|"
+    r"[*_\u201c\"][A-Z][^*_\u201d\"]{6,80}?[*_\u201d\"]")
+
+
 def split_ready(buf: str):
     """(complete_sentences, remainder) from a growing text buffer."""
     out, start = [], 0
@@ -709,6 +717,36 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
                 print(f"[answer-gate] sentence BLOCKED pre-TTS: "
                       f"{[t['detail'] for t in g['tripped']]}")
                 return
+            try:   # fact gate: years the composer had no source for (2026-08-29)
+                import answer_pipeline as _ap
+                fc = gate_mod.fact_check(s, _ap.LAST_CONTEXT_TEXT[0], question)
+            except Exception:
+                fc = {"ok": True, "bad_years": [], "unverified_titles": []}
+            if fc.get("unverified_titles"):
+                print(f"[fact-gate] unverified title(s) {fc['unverified_titles']} in: '{s[:70]}'")
+            if not fc.get("ok", True):
+                gate_blocked.append({"sentence": s, "tripped": [
+                    {"rule": "fact-gate", "kind": "year", "detail": fc["bad_years"]}]})
+                print(f"[fact-gate] sentence BLOCKED pre-TTS — year(s) {fc['bad_years']} "
+                      f"not in context/corpus: '{s[:70]}'")
+                return
+        # Fact-bearing sentence (year / number / quoted title / count)?
+        # → Haiku audit against the grounding context before TTS
+        # (~1.2 s, absorbed by the previous sentence's playback).
+        if _FACT_TRIGGER.search(s) and os.environ.get("CJ_FACT_AUDIT", "1").strip().lower() not in {"0", "off", "false"}:
+            try:
+                import answer_pipeline as _ap
+                t_a = time.monotonic()
+                au = _ap.sentence_fact_audit(client, s, _ap.LAST_CONTEXT_TEXT[0])
+                if not au.get("supported", True):
+                    gate_blocked.append({"sentence": s, "tripped": [
+                        {"rule": "fact-audit", "kind": "unsupported", "detail": au.get("reason", "")}]})
+                    print(f"[fact-gate] sentence BLOCKED pre-TTS ({time.monotonic() - t_a:.1f}s) — "
+                          f"unsupported: {au.get('reason', '')[:90]} | '{s[:70]}'")
+                    return
+                print(f"[fact-gate] ok ({time.monotonic() - t_a:.1f}s): '{s[:50]}'")
+            except Exception as e:
+                print(f"[fact-gate] audit skipped ({type(e).__name__})")
         speaker.add(s)
 
     buf, parts = "", []
