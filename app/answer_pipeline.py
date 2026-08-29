@@ -955,6 +955,7 @@ def generate_response(
 
 <grounding_note>
 {confidence_note}
+{GROUNDING_RULE}
 </grounding_note>
 
 <user_question>

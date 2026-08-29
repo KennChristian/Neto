@@ -1,4 +1,4 @@
-"""
+r"""
 Diagnose every file path the dashboard touches at startup.
 
 Run this with whichever Python interpreter your venv uses — same one
