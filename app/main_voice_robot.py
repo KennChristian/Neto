@@ -4,8 +4,6 @@ Modes:
   (default)  push-to-talk — Enter to speak
   --wake     hands-free with wake word — SLEEP until "Cee-Jap" (WW-5 matcher
              from app/wake_word.py), perk, capture one question, answer,
-             back to SLEEP. Wake STT runs on OpenAI whisper-1 (the "local"
-             faster-whisper backend is NOT installed on the Pi); windows are
              RMS-gated so silence never triggers an API call.
              STOP WORD (openwakeword backend only): the same phrase spoken
              WHILE the answer plays cuts playback and goes straight back to
@@ -116,6 +114,52 @@ _THANKS_RE = re.compile(
     re.I)
 
 
+def _say_curated_line(gestures, text, stop, voice_settings=None):
+    """Speak one curated line (farewell / quiet goodbye): talk gestures, the
+    expressive farewell delivery by default, transcript feed."""
+    gestures.start("talk")
+    interrupted = speak(text, None, stop=stop,
+                        voice_settings=voice_settings or speech_engines.farewell_settings())
+    _publish_transcript("cj", text)
+    return interrupted
+
+
+def _speak_curated(gestures, history, question, response, topic_id, stop, *,
+                   path, confidence, raw_asr, stt_s, voice_settings=None,
+                   interrupted_note="(answer interrupted by wake phrase — listening)"):
+    """One implementation for the curated answer paths (canned fast path and
+    /event question buttons — they used to be two identical 35-line blocks):
+    talk gestures → speak() → transcript → composed/spoken turn meta →
+    [trace] → history. Returns "interrupted" or True."""
+    t0 = time.monotonic()
+    gestures.start("talk")
+    interrupted = speak(response, None, stop=stop, voice_settings=voice_settings)
+    _publish_transcript("cj", response)
+    _publish_turn_meta({
+        "phase": "composed", "raw_asr": raw_asr, "question": question,
+        "answer": response, "topic": f"canned:{topic_id}", "theme": "",
+        "confidence": confidence, "token_budget": 0, "dynamic_tokens": False,
+        "stt_s": stt_s, "compose_s": 0.0,
+        "cost_usd": 0.0, "cost_total_usd": _cost_meta(None).get("cost_total_usd"),
+    })
+    _publish_turn_meta({
+        "phase": "spoken", "question": question,
+        "synth_s": round(time.monotonic() - t0, 2), "play_s": None,
+        "interrupted": bool(interrupted),
+        **_wpm_meta(_speak_timing.get("words"), _speak_timing.get("audio_s")),
+    })
+    _trace_turn(path=path, stt_s=stt_s, topic=f"canned:{topic_id}",
+                synth_s=_speak_timing.get("synth_s"), play_s=_speak_timing.get("play_s"),
+                words=_speak_timing.get("words"), interrupted=bool(interrupted))
+    history += [{"role": "user", "content": question},
+                {"role": "assistant", "content": response}]
+    del history[:-20]
+    if interrupted:
+        _publish_transcript("note", interrupted_note)
+        return "interrupted"
+    return True
+
+
 def _quiet_goodbye(gestures, stop):
     """Conversation ended by silence (2026-08-29, user: "if there is nothing
     to ask, make it say goodbye so there is an indicator"): a short curated
@@ -131,9 +175,7 @@ def _quiet_goodbye(gestures, stop):
         print(f"[canned] quiet_goodbye pool unavailable ({e})")
     text = text or "It seems we have come to a pause. Thank you — say my name again whenever you wish to continue."
     try:
-        gestures.start("talk")
-        speak(text, None, stop=stop, voice_settings=speech_engines.farewell_settings())
-        _publish_transcript("cj", text)
+        _say_curated_line(gestures, text, stop)
     except Exception as e:
         print(f"[lock] quiet goodbye failed ({type(e).__name__}: {e})")
 
@@ -222,8 +264,7 @@ TURN_META = "/dev/shm/cj_turn_meta.jsonl"
 LAST_ANSWER_WAV = "/dev/shm/cj_last_answer.wav"   # dashboard Replay source (wav since 2026-08-29)
 MUTE_TRIGGER = "/dev/shm/cj_mute_trigger"
 # Persistent mute (2026-08-25, /maintain Mute/Unmute): while this flag exists
-# the robot cuts any playback, ignores the wake word and event buttons, and
-# leaves a voice-locked conversation. Unmute = the dashboard removes the flag.
+
 MUTED_FLAG = "/dev/shm/cj_muted"
 
 
@@ -276,7 +317,7 @@ def prewarm_connections(client):
                 sys.path.insert(0, root)
             import requests                       # dep of voice.speak, present
             import voice.speak                    # noqa: F401 — register module
-            mod = sys.modules["voice.speak"]      # voice.speak attr is the FUNCTION
+            mod = sys.modules["voice.speak"]      # the voice.speak module
             for attempt in (0, 1):
                 try:
                     mod._session.get("https://api.elevenlabs.io/v1/user",
@@ -408,61 +449,44 @@ _wake_pub = {"hist": [], "fired_ts": 0.0, "fired_score": 0.0}
 # (sequence + line refs: docs/SYSTEM_TRACE.md)
 # ════════════════════════════════════════════════════════════════════════════
 
-def _publish_wake(score, fired=False):
-    st = _wake_pub
-    st["hist"].append(score)
-    del st["hist"][:-13]        # rolling ~1 s of 80 ms frames
-    now = time.time()
-    if fired:
-        st["fired_ts"], st["fired_score"] = now, score
-        try:
-            with open(WAKE_EVENTS, "a") as f:
-                f.write(json.dumps({"ts": now, "score": round(score, 4)}) + "\n")
-            if os.path.getsize(WAKE_EVENTS) > 20_000:
-                lines = open(WAKE_EVENTS).read().splitlines()[-50:]
-                open(WAKE_EVENTS, "w").write("\n".join(lines) + "\n")
-        except OSError:
-            pass
-    try:
-        with open(WAKE_LIVE + ".tmp", "w") as f:
-            json.dump({"ts": now, "score": round(score, 4),
-                       "peak1s": round(max(st["hist"]), 4),
-                       "fired_ts": st["fired_ts"],
-                       "fired_score": st["fired_score"]}, f)
-        os.replace(WAKE_LIVE + ".tmp", WAKE_LIVE)
-    except OSError:
-        pass
-
-
-_stop_pub = {"hist": [], "fired_ts": 0.0, "fired_score": 0.0}
-
-
-def _publish_stop(score, fired=False):
-    """Same shape as _publish_wake, for the barge-in listener while the answer
-    plays: /dev/shm/cj_stop_live.json (300 ms meter) + cj_stop_events.jsonl."""
-    st = _stop_pub
+def _publish_meter(st, live_path, events_path, score, fired=False):
+    """Shared body of the wake and stop meters (merged 2026-08-29): rolling
+    ~1 s of 80 ms frames → <live>.json for the dashboard bar; a fire appends
+    to <events>.jsonl (kept to the last 50 lines past 20 KB)."""
     st["hist"].append(score)
     del st["hist"][:-13]
     now = time.time()
     if fired:
         st["fired_ts"], st["fired_score"] = now, score
         try:
-            with open(STOP_EVENTS, "a") as f:
+            with open(events_path, "a") as f:
                 f.write(json.dumps({"ts": now, "score": round(score, 4)}) + "\n")
-            if os.path.getsize(STOP_EVENTS) > 20_000:
-                lines = open(STOP_EVENTS).read().splitlines()[-50:]
-                open(STOP_EVENTS, "w").write("\n".join(lines) + "\n")
+            if os.path.getsize(events_path) > 20_000:
+                lines = open(events_path).read().splitlines()[-50:]
+                open(events_path, "w").write("\n".join(lines) + "\n")
         except OSError:
             pass
     try:
-        with open(STOP_LIVE + ".tmp", "w") as f:
+        with open(live_path + ".tmp", "w") as f:
             json.dump({"ts": now, "score": round(score, 4),
                        "peak1s": round(max(st["hist"]), 4),
                        "fired_ts": st["fired_ts"],
                        "fired_score": st["fired_score"]}, f)
-        os.replace(STOP_LIVE + ".tmp", STOP_LIVE)
+        os.replace(live_path + ".tmp", live_path)
     except OSError:
         pass
+
+
+def _publish_wake(score, fired=False):
+    _publish_meter(_wake_pub, WAKE_LIVE, WAKE_EVENTS, score, fired)
+
+
+_stop_pub = {"hist": [], "fired_ts": 0.0, "fired_score": 0.0}
+
+
+def _publish_stop(score, fired=False):
+    """Barge-in meter while the answer plays (cj_stop_live.json / cj_stop_events.jsonl)."""
+    _publish_meter(_stop_pub, STOP_LIVE, STOP_EVENTS, score, fired)
 
 try:
     sd.check_input_settings(device="reachymini_audio_src_plug", samplerate=RATE, channels=1)
@@ -747,11 +771,6 @@ class Gestures:
 
     def start(self, mode):
         self.stop()
-        if mode == "sleep" and _muted() and self.mini:
-            # Mic muted (2026-08-29): the robot has no LEDs, so the body shows
-            # it — antennas drooped, head slightly bowed, no idle sway.
-            self._move(0, 8, 0, 0.9, antennas=[-0.6, 0.6])
-            return
         if mode == "talk":
             self.talk_style = "neutral"   # style is per-sentence; reset per answer
         elif mode == "sleep":
@@ -759,6 +778,11 @@ class Gestures:
         if not self.mini:
             return
         if os.path.exists(GESTURES_OFF_FLAG):   # /maintain "idle motion off" / motors off
+            return
+        if mode == "sleep" and _muted():
+            # Mic muted (2026-08-29): the robot has no LEDs, so the body shows
+            # it — antennas drooped, head slightly bowed, no idle sway.
+            self._move(0, 8, 0, 0.9, antennas=[-0.6, 0.6], wait=False)
             return
         self._stop.clear()
         self._gen = getattr(self, "_gen", 0) + 1   # orphaned loops see a stale gen and exit
@@ -1069,8 +1093,7 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
     stream = _mic_tap()
     kept = 0.0
     if keep_buffer and stream.buffered_s() > 3.0:
-        # Nobody drained the tap for seconds (stop-
-        # relisten callers, or a stalled turn): that is not a wake gap but
+        # Nobody drained the tap for seconds (a stalled turn
         # the robot's own answer — drop it (2026-08-25 review).
         stream.flush()
     if keep_buffer:                      # right after a wake: the gap audio is the question's start
@@ -2017,7 +2040,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             lock_box["thread"].start()
         except Exception as e:
             print(f"[lock] check skipped ({type(e).__name__}: {e})")
-    _stage("transcribe", "active", "transcribing (gpt-4o-mini-transcribe)…")
+    _stage("transcribe", "active", f"transcribing ({speech_engines.STT_MODEL_DEFAULT})…")
     _play_ack()   # sub-second "Ah."/"Hmm." NOW — sound before the STT wait
     if lock is not None and not followup:
         try:   # first question after the wake word: THIS voice owns the session
@@ -2126,7 +2149,6 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
                       "scope_reason": "the speaker said goodbye"})
         _stage("compose", "done", "curated farewell")
         _stage("fidelity", "done", "curated — pre-verified")
-        gestures.start("talk")
         # Warm, varied goodbye from the curated pool (2026-08-25, "improve
         # the emotion in the farewells"); the flat one-liner is the fallback.
         farewell = None
@@ -2135,10 +2157,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             farewell = answer_canned.get("thanks_goodbye")
         except Exception as e:
             print(f"[canned] farewell pool unavailable ({e})")
-        farewell = farewell or FAREWELL_TEXT
-        speak(farewell, None, stop=stop,
-              voice_settings=speech_engines.farewell_settings())
-        _publish_transcript("cj", farewell)
+        _say_curated_line(gestures, farewell or FAREWELL_TEXT, stop)
         return "bye"
     try:  # canned fast path: curated answers for common questions (fails open)
         import answer_canned
@@ -2166,35 +2185,11 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         _stage("compose", "done", "curated text — no composer")
         _stage("fidelity", "done", "curated — pre-verified")
         response = hit["answer"]
-        t0 = time.monotonic()
-        gestures.start("talk")
         # goodbyes get the expressive delivery (see speech_engines.farewell_settings)
         vs = speech_engines.farewell_settings() if hit["id"] == "thanks_goodbye" else None
-        interrupted = speak(response, None, stop=stop, voice_settings=vs)
-        _publish_transcript("cj", response)
-        _publish_turn_meta({
-            "phase": "composed", "raw_asr": raw_asr, "question": question,
-            "answer": response, "topic": f"canned:{hit['id']}", "theme": "",
-            "confidence": "canned", "token_budget": 0, "dynamic_tokens": False,
-            "stt_s": stt_s, "compose_s": 0.0,
-            "cost_usd": 0.0, "cost_total_usd": _cost_meta(None).get("cost_total_usd"),
-        })
-        _publish_turn_meta({
-            "phase": "spoken", "question": question,
-            "synth_s": round(time.monotonic() - t0, 2), "play_s": None,
-            "interrupted": bool(interrupted),
-            **_wpm_meta(_speak_timing.get("words"), _speak_timing.get("audio_s")),
-        })
-        _trace_turn(path="canned", stt_s=stt_s, topic=f"canned:{hit['id']}",
-                    synth_s=_speak_timing.get("synth_s"), play_s=_speak_timing.get("play_s"),
-                    words=_speak_timing.get("words"), interrupted=bool(interrupted))
-        history += [{"role": "user", "content": question},
-                    {"role": "assistant", "content": response}]
-        del history[:-20]
-        if interrupted:
-            _publish_transcript("note", "(answer interrupted by wake phrase — listening)")
-            return "interrupted"
-        return True
+        return _speak_curated(gestures, history, question, response, hit["id"], stop,
+                              path="canned", confidence="canned", raw_asr=raw_asr,
+                              stt_s=stt_s, voice_settings=vs)
     # Streaming is the only answer path (2026-08-29: the classic whole-answer
     # composer path was removed; CJ_STREAM_SPEECH no longer needs to be set).
     return _handle_turn_streaming(client, artifacts, gestures, history, stop,
@@ -2341,33 +2336,9 @@ def _ask_turn(gestures, history, ask, stop=None):
                   "scope_reason": "scripted question for today's event"})
     _stage("compose", "done", "curated text — no composer")
     _stage("fidelity", "done", "curated — pre-verified")
-    t0 = time.monotonic()
-    gestures.start("talk")
-    interrupted = speak(response, None, stop=stop)
-    _publish_transcript("cj", response)
-    _publish_turn_meta({
-        "phase": "composed", "raw_asr": question, "question": question,
-        "answer": response, "topic": f"canned:{entry_id}", "theme": "",
-        "confidence": "button", "token_budget": 0, "dynamic_tokens": False,
-        "stt_s": 0.0, "compose_s": 0.0,
-        "cost_usd": 0.0, "cost_total_usd": _cost_meta(None).get("cost_total_usd"),
-    })
-    _publish_turn_meta({
-        "phase": "spoken", "question": question,
-        "synth_s": round(time.monotonic() - t0, 2), "play_s": None,
-        "interrupted": bool(interrupted),
-        **_wpm_meta(_speak_timing.get("words"), _speak_timing.get("audio_s")),
-    })
-    _trace_turn(path="event-button", topic=f"canned:{entry_id}",
-                synth_s=_speak_timing.get("synth_s"), play_s=_speak_timing.get("play_s"),
-                words=_speak_timing.get("words"), interrupted=bool(interrupted))
-    history += [{"role": "user", "content": question},
-                {"role": "assistant", "content": response}]
-    del history[:-20]
-    if interrupted:
-        _publish_transcript("note", "(answer interrupted by wake phrase)")
-        return "interrupted"
-    return True
+    return _speak_curated(gestures, history, question, response, entry_id, stop,
+                          path="event-button", confidence="button", raw_asr=question,
+                          stt_s=0.0, interrupted_note="(answer interrupted by wake phrase)")
 
 
 # ════════════════════════════════════════════════════════════════════════════

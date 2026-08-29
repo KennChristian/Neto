@@ -1,30 +1,12 @@
-"""Hands-free WAKE-WORD front door for the CJ Panganiban pipeline.
+"""wake_word — openWakeWord detector for the "Hi Cee-Jap" wake phrase.
 
-Per the Reachy seam design (design/w2_7_reachy_seam.md §f), wake capture sits
-UPSTREAM of the pipeline: `WAKE detect -> record -> STT -> query_text`, and the
-pipeline receives only the final `query_text` — it has no wake logic. The wake
-phrase is a NAMED PARAMETER (config.WAKE_PHRASE, default "Cee-Jap" — the resolution
-of the long-flagged "Seejop"/"CJ"), never hardcoded.
+OpenWakeWordDetector wraps the ONNX model (CJ_WAKE_OWW_MODEL_PATH /
+CJ_WAKE_OWW_THRESHOLD); main_voice_robot._wake_stream feeds it 80 ms frames
+from the always-open mic tap, and the same resident model scores the stop
+phrase during playback. make_detector() is the only entry point.
 
-Why STT keyword-spotting (not openWakeWord)?
-  A custom phrase like "Cee-Jap" needs a *trained* model for openWakeWord/Porcupine
-  (the reverted PLAN-0008 shipped a hand-trained hey_cj.onnx). Keyword-spotting over
-  the STT we already run (speech_engines.transcribe, faster-whisper local) needs NO trained
-  model and is trivially re-parameterizable — change the phrase, done. openWakeWord
-  stays a pluggable backend for the robot (WakeDetector protocol) when a model exists.
-
-Layers (each independently testable / swappable):
-  * WakePhraseMatcher — pure text logic: does a transcript contain the wake phrase?
-    Tolerant of Cee-Jap mishears (see jap / cee jap / seejap / seejop); strict against
-    near-misses (see the map / japan / cheese) AND the legacy CJ/see-jay family, retired
-    per WW-5 (2026-07-27). Zero deps, offline.
-  * WakeDetector (protocol) — SttKeywordDetector | OpenWakeWordDetector (trained
-    hey_cee_jap.onnx, on-device; select via config.WAKE_BACKEND).
-  (the STT-keyword detector, mic window source and hands-free loop were removed 2026-08-29)
-    query_text to a pipeline callback. The pipeline stays decoupled (robot-portable).
-
-$0 / offline: importing this module and the matcher never touch the network, a model,
-or a mic. Live capture (sounddevice) and STT/pipeline are lazy and opt-in.
+The STT-keyword detector, its mic window source and the hands-free loop were
+removed 2026-08-29.
 """
 from __future__ import annotations
 
@@ -45,21 +27,6 @@ def _cfg(name, default):
 
 
 # Leading filler/carrier words stripped before matching ("hey see-jap" -> "see jap").
-_CARRIERS = {"hey", "ok", "okay", "hi", "hello", "yo", "um", "uh", "er", "so", "a", "the"}
-
-# Default accepted spoken forms of the wake phrase (config.WAKE_PHRASE_VARIANTS overrides).
-# Cee-Jap "-jap" mishears only — a custom phrase needs no model retrain (edit the list).
-# Multi-word forms match ADJACENT tokens (per-token fuzzy); single-word forms match a
-# whole TOKEN (never a substring — so a short token won't fire inside a longer word).
-_DEFAULT_VARIANTS = [
-    # Cee-Jap "-jap" mishears ONLY. The legacy "CJ"/"see jay"/"Jay" family is RETIRED
-    # per the WW-5 decision (2026-07-27): spoken "CJ" ("see jay") must stay silent.
-    # two-token (onset + coda)
-    "see jap", "cee jap", "see jab", "cee jab", "sea jap", "see jip", "see jop", "c jap",
-    # single-token (Whisper writes the OOV word glued together)
-    "seejap", "ceejap", "cjap", "seajap", "seejop", "ceejop", "seejip",
-]
-
 
 @dataclass
 class MatchResult:
@@ -128,4 +95,3 @@ def make_detector(backend: Optional[str] = None) -> WakeDetector:
     raise ValueError(f"unsupported WAKE_BACKEND: {backend!r} (only 'openwakeword')")
 
 
-# ---------------------------------------------------------------- audio source (pluggable)

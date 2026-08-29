@@ -1188,7 +1188,7 @@ def sentence_fact_audit(client: Anthropic, sentence: str, context: str,
     error or timeout so it can never stall an answer. Returns
     {supported, reason}."""
     try:
-        resp = client.messages.create(
+        resp = client.with_options(max_retries=0).messages.create(   # never stall first audio on retries
             model=ROUTER_MODEL, max_tokens=80, timeout=timeout_s,
             system=[{"type": "text", "text": FACT_AUDIT_SYSTEM,
                      "cache_control": {"type": "ephemeral"}}],

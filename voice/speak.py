@@ -1,19 +1,11 @@
-"""Voice output for Reachy Mini — ElevenLabs cloned voice with robust fallback.
+"""voice.speak — ElevenLabs synthesis for the cloned CJ voice.
 
-Public API:
+    from voice.speak import synthesize, effective_settings, SynthError
 
-    import voice
-    voice.init(mini=already_open_handle)   # optional, but preferred
-    voice.speak("Magandang umaga!")        # -> bool
-
-speak() never raises into the caller's control loop. On any TTS failure it
-plays a pre-rendered clip from voice/fallback/ (or espeak-ng as a last
-resort) so the robot never goes silent, and returns False.
-
-NOTE on the SDK: reachy_mini 1.9.0 has no ``mini.speaker.play_audio()``.
-The real playback surface is ``mini.media`` (MediaManager):
-``start_playing()`` + ``push_audio_sample(float32 (frames, channels))`` at
-``get_output_audio_samplerate()``. This module adapts to that API.
+synthesize(text, speed=…, align_out=…, previous_text=…, settings=…,
+previous_request_ids=…) → float32 PCM at audio.SYNTH_SAMPLE_RATE; raises
+SynthError (never leaks the key). Config in voice/config.py. The robot/host
+playback and offline fallback that used to live here were removed 2026-08-29.
 """
 
 from __future__ import annotations

@@ -10,7 +10,7 @@ This module measures each sentence's rate from the word alignment sidecar
 the audio a few percent toward the running average with WSOLA (pitch is
 unchanged — it is not a resample). The first sentence of an answer sets the
 target; later ones are pulled toward the EMA, never more than CJ_TEMPO_MAX
-(default 6 %). The word times in the sidecar are rescaled so captions and
+(default 10 %). The word times in the sidecar are rescaled so captions and
 the avatar lips stay in sync.
 
 The target is seeded from a session-wide running average persisted in
@@ -105,9 +105,16 @@ class TempoSmoother:
         self.deadband = _f("CJ_TEMPO_DEADBAND", 0.01)
         self.rate_max = _f("CJ_TEMPO_RATE_MAX", 15.0)        # chars/s ceiling
         self.speedup = os.environ.get("CJ_TEMPO_SPEEDUP", "0").strip() == "1"
+        self.step = _f("CJ_TEMPO_STEP", 0.05)   # max factor change between adjacent sentences
+        self._factors = {}                       # idx -> factor applied
 
-    def process(self, wav: str):
-        """Returns (factor, rate_before, rate_after) or None when skipped."""
+    def process(self, wav: str, idx=None, speed=None):
+        """Returns (factor, rate_before, rate_after) or None when skipped.
+        idx: sentence index in the answer (0 = opener; with the 2-worker synth
+        pool the first synth to FINISH is not always sentence 0, so "first" is
+        keyed on idx). speed: the ElevenLabs speed the sentence was requested
+        at — rates are normalised by it so an emotion slow-down does not drag
+        the session target down."""
         if not enabled():
             return None
         align = wav + ".align.json"
@@ -115,13 +122,15 @@ class TempoSmoother:
             words = json.load(open(align))
         except (OSError, ValueError):
             return None
-        r = rate_from_words(words)
-        if not r:
+        r0 = rate_from_words(words)
+        if not r0:
             return None
+        r = r0 / (speed or 1.0)          # pace at base speed (see docstring)
         with self._lock:
             target = self.avg
-            first = self._n == 0
+            first = (idx == 0) if idx is not None else (self._n == 0)
             self._n += 1
+            prev_factor = self._factors.get((idx or 0) - 1) if idx is not None else None
         factor = 1.0
         if first and r <= self.rate_max:
             # opener within the limit: no stretch (latency); seed the target
@@ -133,11 +142,16 @@ class TempoSmoother:
             return 1.0, r, r
         if first:
             target = self.rate_max          # too-fast opener: slow it to the ceiling
+            seed_blend = min(self.rate_max, r if self.seed is None else 0.5 * self.seed + 0.5 * r)
+            with self._lock:
+                self.avg = seed_blend
         if target:
             target = min(target, self.rate_max)
             factor = max(1.0 - self.max, min(1.0 + self.max, target / r))
             if not self.speedup:
                 factor = max(1.0, factor)   # limit only: never speed a sentence up
+            if prev_factor is not None:     # no tempo jump between neighbours either
+                factor = max(prev_factor - self.step, min(prev_factor + self.step, factor))
         if abs(factor - 1.0) >= self.deadband:
             try:
                 factor = stretch_wav(wav, factor)
@@ -150,7 +164,9 @@ class TempoSmoother:
                 factor = 1.0
         new_rate = r / factor
         with self._lock:
+            if idx is not None:
+                self._factors[idx] = factor
             self.avg = new_rate if self.avg is None else (
                 self.alpha * new_rate + (1.0 - self.alpha) * self.avg)
             _save_session_avg(self.avg)
-        return factor, r, new_rate
+        return factor, r0, r0 / factor

@@ -17,7 +17,7 @@ relationships, and a library of signature phrases and mnemonic frameworks.
 .
 ├── README.md                ← you are here
 ├── app/                     ← the runnable conversation app
-│   ├── cj_chat.py           ← entrypoint (text + voice modes)
+│   ├── answer_pipeline.py           ← entrypoint (text + voice modes)
 │   ├── artifacts/           ← copy of the corpus artifacts the app loads
 │   └── README.md            ← run instructions
 ├── corpus/                  ← the source corpus and pre-processing pipeline
@@ -55,7 +55,7 @@ sanity check (no audio needed):
 
 ```bash
 cd app
-.venv/Scripts/python.exe cj_chat.py --text "What is the rule of law?"
+.venv/Scripts/python.exe answer_pipeline.py --text "What is the rule of law?"
 ```
 
 For the full demo, run the Streamlit chat app (mic input, text fallback,
@@ -66,7 +66,7 @@ cd app
 .venv/Scripts/streamlit run dashboard.py
 ```
 
-The CLI (`cj_chat.py`) is still available for headless / terminal use.
+The CLI (`answer_pipeline.py`) is still available for headless / terminal use.
 
 ## Cost & performance targets
 

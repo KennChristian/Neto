@@ -4,7 +4,7 @@ Diagnose every file path the dashboard touches at startup.
 Run this with whichever Python interpreter your venv uses — same one
 you'd use to launch Streamlit:
 
-    .\.venv\Scripts\python.exe scripts\check_paths.py
+    .\\.venv\\Scripts\\python.exe scripts\\check_paths.py
     D:\some\where\python.exe scripts\check_paths.py
 
 Prints OK/MISSING for each path; exits 1 if any required file is

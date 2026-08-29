@@ -1,36 +1,14 @@
-"""
-Cost-efficient voice I/O for the CJ Panganiban dashboard.
+"""speech_engines — STT + TTS engines for the CJ robot.
 
-Replaces the prior faster-whisper + Piper TTS stack with OpenAI's
-hosted STT (Whisper-1) and TTS (tts-1 / tts-1-hd) — keeping push-to-talk
-recording and per-sentence chunked TTS so we never pay for an always-on
-realtime audio stream.
+* transcribe_openai(): OpenAI transcription (OPENAI_STT_MODEL) with the persona
+  steering prompt and echo guard.
+* tts_elevenlabs_wav(): the cloned ElevenLabs voice via the repo-root voice/
+  package (clip cache, alignment sidecar, request stitching); emotion speed
+  deltas, slew and limits; farewell_settings().
+* OpenAI tts-1 chain (tts_concatenate_parallel & co): the fallback used by
+  main_voice_robot.speak() and SentenceSpeaker._synth when ElevenLabs fails.
 
-Design constraints (per the user's spec):
-
-  - Push-to-talk ONLY: the mic is never continuously open. The user
-    presses "Start Talking", speaks, presses "Stop", and we transcribe
-    the resulting blob in ONE Whisper call. No streaming STT.
-
-  - Progressive TTS: Claude's response is sentence-chunked; each chunk
-    fires an OpenAI TTS request IN PARALLEL via asyncio.gather. The
-    audio chunks are concatenated (pydub if available, raw byte
-    concatenation otherwise) and returned as one MP3 blob — so the
-    Streamlit `st.audio(autoplay=True)` element starts playing the
-    full response within ~1-2 s of the text stream finishing.
-
-  - No always-on streaming: we don't use OpenAI's per-minute Realtime
-    API; per-utterance Whisper at $0.006/min and per-sentence TTS at
-    $0.015/1k chars is roughly 10-20× cheaper.
-
-Per-turn voice-IO cost (late-2025 prices, typical 10-15 s utterance
-and 200-300 char response):
-  - STT (whisper-1)       : ~$0.001
-  - TTS (tts-1, parallel) : ~$0.003 - $0.005
-  - Total voice overhead  : ~$0.004 - $0.006
-
-This module deliberately has NO Streamlit imports — it's plain
-Python and is reusable from answer_pipeline.py CLI smoke tests.
+Renamed from voice_io.py on 2026-08-29.
 """
 
 from __future__ import annotations
@@ -571,70 +549,6 @@ def _echoes_stt_prompt(text: str, prompt: str) -> bool:
     return len(tw) >= 8 and sum(covered) / len(tw) >= 0.7
 
 
-# Wake-window STT prompt: the wake phrase AND its forbidden near-misses as
-# contrast vocabulary. A bare "Cee-Jap" in a 1.5s window is an OOV word whisper
-# otherwise mangles ("You"), but biasing toward ONLY "Cee-Jap" flips a spoken
-# "See Jay" into the wake phrase (WW-5 violation, measured 2026-08-03). Listing
-# both lets whisper pick the acoustically closer spelling.
-_WAKE_PROMPT = "Words that may occur: Cee-Jap, See Jay, CJ, Japan."
-
-_LOCAL_WHISPER = None
-
-
-def _local_whisper():
-    """Resident faster-whisper model for on-device wake spotting (loaded once).
-    CJ_WAKE_LOCAL_MODEL sizes it; tiny/int8 is the Pi 4 budget."""
-    global _LOCAL_WHISPER
-    if _LOCAL_WHISPER is None:
-        from faster_whisper import WhisperModel
-        _LOCAL_WHISPER = WhisperModel(os.environ.get("CJ_WAKE_LOCAL_MODEL", "tiny"),
-                                      device="cpu", compute_type="int8")
-    return _LOCAL_WHISPER
-
-
-def transcribe(audio_path: str | Path, backend: Optional[str] = None,
-               language: Optional[str] = None) -> str:
-    """Adapter for develop-branch callers (wake_word.SttKeywordDetector expects
-    speech_engines.transcribe(path, backend=..., language=...)). backend "local" runs
-    faster-whisper ON the robot — the idle wake loop then needs no network and
-    costs $0 — with OpenAI whisper-1 as the exception fallback; any other
-    backend value goes straight to whisper-1.
-
-    Echo guard (both backends): on noisy windows whisper sometimes parrots the
-    bias prompt itself ('Cee-Jap, See Jay, CJ, Japan.') — which contains the
-    wake phrase and caused a false wake (journal 2026-08-03 15:59). A real
-    visitor never says two-plus contrast terms in one 1.5s breath, so such
-    transcripts are dropped."""
-    def _local(p):
-        segments, _ = _local_whisper().transcribe(
-            str(p), language=language or "en", initial_prompt=_WAKE_PROMPT,
-            beam_size=1, condition_on_previous_text=False)
-        return " ".join(s.text.strip() for s in segments).strip()
-
-    def _cloud(p):
-        return transcribe_openai(p, language=language, prompt=_WAKE_PROMPT)
-
-    # Measured on the Pi 4 (2026-08-03): local tiny takes ~5.2s per 1.5s window
-    # and misses most spoken forms of "Cee-Jap" — NOT viable as the primary.
-    # whisper-1 (~1s, accurate) leads; local is the no-network degraded mode.
-    order = [("local", _local), ("openai", _cloud)] if (backend or "").lower() == "local" \
-        else [("openai", _cloud), ("local", _local)]
-    text = None
-    for name, fn in order:
-        try:
-            text = fn(audio_path)
-            break
-        except Exception as e:
-            print(f"[stt] {name} wake STT failed ({type(e).__name__}: {e}); trying next")
-    if text is None:
-        return ""
-    norm = text.lower()
-    echo_hits = ("see jay" in norm) + ("japan" in norm) + bool(re.search(r"\bcj\b", norm))
-    if echo_hits >= 2:
-        return ""
-    return text
-
-
 # ============================================================
 # Cadence enhancement — inject reflective pauses for CJP's voice
 # ============================================================
@@ -856,79 +770,12 @@ PRICE_PER_KCHAR_TTS_1_HD = 0.030
 PRICE_PER_MIN_WHISPER = 0.006
 
 
-def estimate_voice_cost(text: str, tts_model: str = TTS_MODEL_DEFAULT) -> dict:
-    """Return a dict {tts_usd, …} estimating the cost of one turn's TTS.
-    STT cost is estimated separately by the caller because it depends
-    on audio duration, which the module doesn't see."""
-    n_chars = len(text or "")
-    rate = PRICE_PER_KCHAR_TTS_1_HD if "hd" in tts_model else PRICE_PER_KCHAR_TTS_1
-    return {
-        "tts_chars": n_chars,
-        "tts_model": tts_model,
-        "tts_usd": round(rate * n_chars / 1000, 5),
-    }
-
-
-def measure_mp3_duration_ms(mp3_bytes: bytes) -> int:
-    """Length of an MP3 blob in milliseconds.  Returns 0 on any failure.
-
-    Used by the kiosk to gate wake-engine restart on TTS playback
-    completion (PLAN-0008 Task 2 — without this duration we'd risk
-    restarting the wake engine onto the tail of our own TTS and
-    self-triggering).
-
-    Implementation note (post-mortem 2026-06-09):
-        The original implementation used pydub's `AudioSegment.from_file`,
-        which shells out to **ffprobe** to parse the MP3 header.  Our
-        `_FFMPEG_PATH` discovery only validated `ffmpeg` (the encoder),
-        not `ffprobe` (the prober) — so on a Windows kiosk where
-        imageio-ffmpeg supplied ffmpeg but ffprobe was absent, the guard
-        passed and the call raised `[WinError 2] The system cannot find
-        the file specified.` mid-turn, crashing the response.
-
-        We now use **mutagen** (pure-Python, no external binary).  Same
-        accurate result, no toolchain dependency, consistent with this
-        project's "minimise Windows binary deps" history.  A blanket
-        try/except guarantees the caller's text-length fallback (see
-        `_run_pipeline`) can always run — a timing helper must never
-        be able to crash a turn.
-    """
-    if not mp3_bytes:
-        return 0
-    try:
-        from mutagen.mp3 import MP3  # type: ignore[import-not-found]
-        return int(MP3(io.BytesIO(mp3_bytes)).info.length * 1000)
-    except Exception:
-        # ImportError (mutagen missing), HeaderNotFoundError (corrupt
-        # MP3), FileNotFoundError (shouldn't apply to mutagen but
-        # belt-and-braces), or anything else — return 0 so the caller
-        # falls back to a text-length estimate. Never raise.
-        return 0
-
-
-def voice_io_summary() -> dict[str, object]:
-    """Sidebar-friendly summary of the active OpenAI voice config."""
-    return {
-        "openai_key_present": bool(os.environ.get("OPENAI_API_KEY")),
-        "stt_model": STT_MODEL_DEFAULT,
-        "tts_model": TTS_MODEL_DEFAULT,
-        "tts_voice": TTS_VOICE_DEFAULT,
-        "tts_speed": TTS_SPEED_DEFAULT,
-        "pydub_available": _PYDUB_AVAILABLE,
-        "ffmpeg_path": _FFMPEG_PATH or "(missing — using raw byte concat)",
-        "ffprobe_path": _FFPROBE_PATH or "(missing — pydub from_file will fail; mutagen used for duration)",
-    }
-
-
 __all__ = [
     "transcribe_openai",
     "add_reflective_pauses",
     "sentence_chunks",
     "tts_chunks_parallel_async",
     "tts_concatenate_parallel",
-    "measure_mp3_duration_ms",
-    "estimate_voice_cost",
-    "voice_io_summary",
     "STT_MODEL_DEFAULT",
     "TTS_MODEL_DEFAULT",
     "TTS_VOICE_DEFAULT",

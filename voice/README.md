@@ -1,3 +1,5 @@
+> **2026-08-29:** this package now only does synthesis (`voice.speak.synthesize`, `effective_settings`, `SynthError`, `voice.cache`, `voice.audio`). Playback / espeak / fallback clips were removed; the robot app plays audio itself.
+
 # voice/ — Reachy Mini cloned-voice output
 
 Speaks through an ElevenLabs cloned voice, post-EQ'd for the robot's

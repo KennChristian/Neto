@@ -5,7 +5,7 @@ Sonnet's answer, cuts it into sentences as tokens arrive, synthesizes each
 sentence (one ahead), and starts PLAYING as soon as the first sentence's
 audio is ready — first audio lands during composition of the rest.
 
-Used by main_voice_robot.handle_turn for every composed answer; the whole-answer
+Used by main_voice_robot.handle_turn for every composed answer; main_voice_robot.speak()
 whole-answer path remains the fallback. Fail behavior: any error raises to
 the caller, which owns the offline/bail handling.
 
@@ -331,7 +331,7 @@ class SentenceSpeaker:
                     cls._oai = OpenAI()
         return cls._oai
 
-    def _synth(self, text, previous_text=None, speed=None):
+    def _synth(self, text, previous_text=None, speed=None, idx=None):
         import speech_engines
         try:
             from text_entities import process_tts_sentence
@@ -362,7 +362,7 @@ class SentenceSpeaker:
                         self._rids.append(meta["request_id"])
                 if self._tempo is not None:   # smooth the tempo across sentences
                     try:
-                        res = self._tempo.process(wav)
+                        res = self._tempo.process(wav, idx=idx, speed=speed)
                         if res and abs(res[0] - 1.0) >= 0.01:
                             print(f"[tempo] {res[1]:.1f} -> {res[2]:.1f} chars/s "
                                   f"(x{res[0]:.3f}) '{text[:40]}'")
@@ -415,7 +415,7 @@ class SentenceSpeaker:
                     self._speed_cur = spd if spd is not None else self._speed_cur
             except Exception:
                 spd = None
-            fut = self._pool.submit(self._synth, sentence, prev, spd)
+            fut = self._pool.submit(self._synth, sentence, prev, spd, idx)
             self._futures.append((sentence, fut))
             if self._player is None:
                 self._player = threading.Thread(target=self._play_loop, daemon=True)
@@ -613,7 +613,7 @@ class SentenceSpeaker:
 
 def _fidelity_audit_enabled():
     # Deliberately independent of CJ_SKIP_FIDELITY: that flag exists to skip
-    # the classic path's verify-before-speak retry loop (a LATENCY cost, and
+    # the CLI run_turn path's verify-before-speak retry loop (a LATENCY cost, and
     # it is set in app/.env for that reason). This audit is async during
     # playback — free — so it gets its own switch only.
     return os.environ.get("CJ_FIDELITY_AUDIT", "1").strip().lower() not in {
@@ -717,19 +717,22 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
                 print(f"[answer-gate] sentence BLOCKED pre-TTS: "
                       f"{[t['detail'] for t in g['tripped']]}")
                 return
-            try:   # fact gate: years the composer had no source for (2026-08-29)
-                import answer_pipeline as _ap
-                fc = gate_mod.fact_check(s, _ap.LAST_CONTEXT_TEXT[0], question)
-            except Exception:
-                fc = {"ok": True, "bad_years": [], "unverified_titles": []}
-            if fc.get("unverified_titles"):
-                print(f"[fact-gate] unverified title(s) {fc['unverified_titles']} in: '{s[:70]}'")
-            if not fc.get("ok", True):
-                gate_blocked.append({"sentence": s, "tripped": [
-                    {"rule": "fact-gate", "kind": "year", "detail": fc["bad_years"]}]})
-                print(f"[fact-gate] sentence BLOCKED pre-TTS — year(s) {fc['bad_years']} "
-                      f"not in context/corpus: '{s[:70]}'")
-                return
+        if ooc_text is not None:   # curated out-of-topic text: nothing to fact-check
+            speaker.add(s)
+            return
+        try:   # fact gate: years the composer had no source for (2026-08-29)
+            import answer_pipeline as _ap
+            fc = gate_mod.fact_check(s, _ap.LAST_CONTEXT_TEXT[0], question)
+        except Exception:
+            fc = {"ok": True, "bad_years": [], "unverified_titles": []}
+        if fc.get("unverified_titles"):
+            print(f"[fact-gate] unverified title(s) {fc['unverified_titles']} in: '{s[:70]}'")
+        if not fc.get("ok", True):
+            gate_blocked.append({"sentence": s, "tripped": [
+                {"rule": "fact-gate", "kind": "year", "detail": fc["bad_years"]}]})
+            print(f"[fact-gate] sentence BLOCKED pre-TTS — year(s) {fc['bad_years']} "
+                  f"not in context/corpus: '{s[:70]}'")
+            return
         # Fact-bearing sentence (year / number / quoted title / count)?
         # → Haiku audit against the grounding context before TTS
         # (~1.2 s, absorbed by the previous sentence's playback).
@@ -806,7 +809,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         if tail:
             # Cap-hit truncation guard: if the stream stopped on max_tokens
             # and the leftover buffer is not a complete sentence, it is a
-            # mid-clause fragment — never voice it (the classic path trims
+            # mid-clause fragment — never voice it (the CLI run_turn path trims
             # the same way; the streaming path used to speak it).
             if (stream_info.get("stop_reason") == "max_tokens"
                     and tail[-1] not in ".!?…\"”'’"):

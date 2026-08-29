@@ -28,7 +28,7 @@ Behaviour is decided by `/etc/systemd/system/supervaise.service` + its drop-in
 | `CJ_WAKE_BACKEND` | `openwakeword` | `wake_loop` uses `_wake_stream` (on-device, 80 ms frames) |
 | `CJ_WAKE_OWW_MODEL_PATH` / `_THRESHOLD` | `hi_see_jap.onnx` / `0.08` | wake model + fire threshold |
 | `CJ_STOP_OWW_THRESHOLD` | `0.01` | barge-in (stop phrase) threshold |
-| `CJ_STREAM_SPEECH` | `1` | `handle_turn` → `_handle_turn_streaming` (classic path is dead in prod) |
+| (streaming is the only answer path since 2026-08-29) |
 | `CJ_TTS_BACKEND` (app/.env) | `elevenlabs` | `speech_engines.tts_elevenlabs_wav` → `voice/speak.synthesize` |
 | `CJ_CANNED_ENABLED` | `1` | curated fast path before any LLM call |
 | `CJ_VOICE_LOCK` / `_IDLE_S` / `_THRESHOLD` | `1` / `10` / `0.32` | lock-mode conversation after each wake |
