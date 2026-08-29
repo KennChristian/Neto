@@ -2,7 +2,6 @@
 
 Modes:
   (default)  push-to-talk — Enter to speak
-  --auto     hands-free, no wake word — answers any speech it hears
   --wake     hands-free with wake word — SLEEP until "Cee-Jap" (WW-5 matcher
              from app/wake_word.py), perk, capture one question, answer,
              back to SLEEP. Wake STT runs on OpenAI whisper-1 (the "local"
@@ -17,7 +16,7 @@ from collections import deque
 import numpy as np
 import sounddevice as sd
 from scipy.io import wavfile
-from answer_pipeline import CorpusArtifacts, cache_savings_summary, make_client, run_turn
+from answer_pipeline import CorpusArtifacts, cache_savings_summary, make_client
 import speech_engines
 from speech_engines import transcribe_openai, tts_concatenate_parallel
 
@@ -1070,7 +1069,7 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
     stream = _mic_tap()
     kept = 0.0
     if keep_buffer and stream.buffered_s() > 3.0:
-        # Nobody drained the tap for seconds (press-Enter / --auto / stop-
+        # Nobody drained the tap for seconds (stop-
         # relisten callers, or a stalled turn): that is not a wake gap but
         # the robot's own answer — drop it (2026-08-25 review).
         stream.flush()
@@ -1756,7 +1755,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                            question, raw_asr, stt_s):
     """Streaming variant of the compose+speak half of handle_turn: speech
     starts at the FIRST composed sentence (speech_streaming.py). Same filler,
-    bail-out, offline, history, and stop-word semantics as the classic path."""
+    bail-out, offline, history, and stop-word semantics as the whole-answer speak() path."""
     t0 = time.monotonic()
     cost0 = _api_cost_snapshot()
     filler = play_filler()
@@ -1975,7 +1974,7 @@ def _safe_turn(*args, **kwargs):
 
 # ════════════════════════════════════════════════════════════════════════════
 # 8. TURN — CAPTURE, STT, DISPATCH
-# record → ack → voice lock → STT → language/lock gates → farewell | canned | streaming | (classic path, dead in prod)
+# record → ack → voice lock → STT → language/lock gates → farewell | canned | streaming
 # (sequence + line refs: docs/SYSTEM_TRACE.md)
 # ════════════════════════════════════════════════════════════════════════════
 
@@ -2387,7 +2386,6 @@ def wake_loop(client, artifacts, gestures):
     loops straight back into listening, no fresh wake required."""
     import wake_word    # inserts the repo root on sys.path, where config lives
     import config
-    import speech_engines
     detector = wake_word.make_detector()        # config.WAKE_BACKEND picks the backend
     # Post-answer pause before re-arming. The answer has fully played by then,
     # so this only needs to cover speaker/room tail — near-zero re-arms instantly.

@@ -32,7 +32,6 @@ import json
 import os
 import threading
 
-import numpy as np
 import soundfile as sf
 
 SESSION_AVG = "/dev/shm/cj_tempo_avg.json"

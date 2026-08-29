@@ -19,20 +19,15 @@ The real playback surface is ``mini.media`` (MediaManager):
 from __future__ import annotations
 
 import base64
-import json
 import logging
 import os
-import subprocess
-import tempfile
-import threading
 import time
-from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 import numpy as np
 import requests
 
-from . import audio, cache, config
+from . import audio, config
 
 log = logging.getLogger("voice")
 

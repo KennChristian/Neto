@@ -303,7 +303,7 @@ class Config:
 DEFAULT_CONFIG = Config.from_env()
 
 # Backwards-compatibility alias kept so `from answer_pipeline import ARTIFACTS_DIR`
-# in app/dashboard.py keeps working. New code should accept a Config.
+# in app/legacy/dashboard_streamlit.py keeps working. New code should accept a Config.
 ARTIFACTS_DIR = DEFAULT_CONFIG.voice_dir
 
 # Piper paths — set these to wherever you installed piper and the voice model
@@ -1682,10 +1682,10 @@ def main():
         msg = (
             "answer_pipeline.py is the CLI entrypoint, not a Streamlit app.\n"
             "Run the dashboard instead:\n"
-            "    streamlit run app/dashboard.py            (from repo root)\n"
-            "    streamlit run dashboard.py                (from app/)\n"
+            "    (legacy Streamlit UI: app/legacy/dashboard_streamlit.py)\n"
+            "    robot service: main_voice_robot.py --wake (systemd supervaise.service)\n"
             "For a text-only smoke test (no Whisper download):\n"
-            "    set CJ_TEXT_ONLY=1 && streamlit run app/dashboard.py"
+            "    set CJ_TEXT_ONLY=1 for a text-only smoke test"
         )
         print(msg, file=sys.stderr)
         raise SystemExit(2)

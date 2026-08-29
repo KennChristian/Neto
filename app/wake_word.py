@@ -20,8 +20,7 @@ Layers (each independently testable / swappable):
     per WW-5 (2026-07-27). Zero deps, offline.
   * WakeDetector (protocol) — SttKeywordDetector | OpenWakeWordDetector (trained
     hey_cee_jap.onnx, on-device; select via config.WAKE_BACKEND).
-  * AudioSource (protocol) — MicAudioSource (sounddevice, lazy/optional) | inject frames.
-  * wait_for_wake() / run_hands_free_loop() — arm, detect, capture the query, hand
+  (the STT-keyword detector, mic window source and hands-free loop were removed 2026-08-29)
     query_text to a pipeline callback. The pipeline stays decoupled (robot-portable).
 
 $0 / offline: importing this module and the matcher never touch the network, a model,
@@ -29,13 +28,10 @@ or a mic. Live capture (sounddevice) and STT/pipeline are lazy and opt-in.
 """
 from __future__ import annotations
 
-import difflib
-import re
 import sys
-import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Iterable, Optional
+from typing import Optional
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:

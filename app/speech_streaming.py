@@ -5,7 +5,7 @@ Sonnet's answer, cuts it into sentences as tokens arrive, synthesizes each
 sentence (one ahead), and starts PLAYING as soon as the first sentence's
 audio is ready — first audio lands during composition of the rest.
 
-Used by main_voice_robot.handle_turn when CJ_STREAM_SPEECH is on; the classic
+Used by main_voice_robot.handle_turn for every composed answer; the whole-answer
 whole-answer path remains the fallback. Fail behavior: any error raises to
 the caller, which owns the offline/bail handling.
 
