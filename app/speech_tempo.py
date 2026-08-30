@@ -10,7 +10,7 @@ This module measures each sentence's rate from the word alignment sidecar
 the audio a few percent toward the running average with WSOLA (pitch is
 unchanged — it is not a resample). The first sentence of an answer sets the
 target; later ones are pulled toward the EMA, never more than CJ_TEMPO_MAX
-(default 10 %). The word times in the sidecar are rescaled so captions and
+(default 15 %). The word times in the sidecar are rescaled so captions and
 the avatar lips stay in sync.
 
 The target is seeded from a session-wide running average persisted in
@@ -92,6 +92,47 @@ def stretch_wav(path: str, factor: float) -> float:
     return out.shape[0] / max(1, n0)
 
 
+CAP_CACHE = os.path.expanduser("~/.voice_cache/tempo")
+
+
+def cap_clip(wav: str) -> tuple | None:
+    """Speed ceiling for a whole curated clip (canned / event / farewell —
+    the paths that bypass SentenceSpeaker). If the clip's articulation rate
+    exceeds CJ_TEMPO_RATE_MAX it is slowed (≤ CJ_TEMPO_MAX) and the result is
+    cached under CAP_CACHE keyed by the clip's bytes + factor, so a clip pays
+    the WSOLA cost (~0.1 s per second of audio) once, then plays instantly.
+    Returns (factor, rate_before, rate_after) or None when nothing changed."""
+    if not enabled():
+        return None
+    align = wav + ".align.json"
+    try:
+        words = json.load(open(align))
+    except (OSError, ValueError):
+        return None
+    r = rate_from_words(words)
+    rate_max, max_stretch = _f("CJ_TEMPO_RATE_MAX", 13.0), _f("CJ_TEMPO_MAX", 0.15)
+    if not r or r <= rate_max * 1.01:
+        return None
+    factor = min(1.0 + max_stretch, r / rate_max)   # > 1 = slower
+    try:
+        import hashlib, shutil
+        key = hashlib.sha1(open(wav, "rb").read()).hexdigest()[:16] + f"_x{factor:.3f}"
+        os.makedirs(CAP_CACHE, exist_ok=True)
+        cached = os.path.join(CAP_CACHE, key + ".wav")
+        if os.path.exists(cached):
+            shutil.copyfile(cached, wav)
+        else:
+            factor = stretch_wav(wav, factor)
+            shutil.copyfile(wav, cached)
+        scaled = [[w, round(float(s) * factor, 3), round(float(e) * factor, 3)] for w, s, e in words]
+        with open(align, "w") as af:
+            json.dump(scaled, af)
+        return factor, r, r / factor
+    except Exception as e:
+        print(f"[tempo] clip cap skipped ({type(e).__name__}: {e})")
+        return None
+
+
 class TempoSmoother:
     """One per answer. process(wav) is thread-safe (synth pool has 2 workers)."""
 
@@ -100,10 +141,10 @@ class TempoSmoother:
         self.avg = None          # EMA of the (post-stretch) rate, chars/s
         self.seed = _load_session_avg()   # previous answers' tempo (may be None)
         self._n = 0
-        self.max = _f("CJ_TEMPO_MAX", 0.10)
+        self.max = _f("CJ_TEMPO_MAX", 0.15)
         self.alpha = _f("CJ_TEMPO_ALPHA", 0.5)
         self.deadband = _f("CJ_TEMPO_DEADBAND", 0.01)
-        self.rate_max = _f("CJ_TEMPO_RATE_MAX", 15.0)        # chars/s ceiling
+        self.rate_max = _f("CJ_TEMPO_RATE_MAX", 13.0)        # chars/s ceiling (user 2026-08-30: "a bit fast")
         self.speedup = os.environ.get("CJ_TEMPO_SPEEDUP", "0").strip() == "1"
         self.step = _f("CJ_TEMPO_STEP", 0.05)   # max factor change between adjacent sentences
         self._factors = {}                       # idx -> factor applied
@@ -147,7 +188,8 @@ class TempoSmoother:
                 self.avg = seed_blend
         if target:
             target = min(target, self.rate_max)
-            factor = max(1.0 - self.max, min(1.0 + self.max, target / r))
+            # duration multiplier: rate above target → factor > 1 (longer, slower)
+            factor = max(1.0 - self.max, min(1.0 + self.max, r / target))
             if not self.speedup:
                 factor = max(1.0, factor)   # limit only: never speed a sentence up
             if prev_factor is not None:     # no tempo jump between neighbours either

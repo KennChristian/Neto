@@ -1723,6 +1723,13 @@ def speak(text, filler=None, stop=None, voice_settings=None):
             shutil.copyfile(wav_path, LAST_ANSWER_WAV)
         except OSError:
             pass
+        try:  # speed ceiling for curated clips too (2026-08-30, "speaking is a bit fast")
+            import speech_tempo
+            _cap = speech_tempo.cap_clip(wav_path)
+            if _cap:
+                print(f"[tempo] curated clip {_cap[1]:.1f} -> {_cap[2]:.1f} chars/s (x{_cap[0]:.3f})")
+        except Exception as _e:
+            print(f"[tempo] curated cap skipped ({type(_e).__name__})")
         _speak_timing["synth_s"] = round(time.monotonic() - _t_synth, 2)
         try:  # speaking-rate fields for the maintenance page
             from speech_streaming import wav_duration as _wd
