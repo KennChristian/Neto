@@ -1553,7 +1553,7 @@ def _load_wav_mono_int16(path):
     return int(rate), np.ascontiguousarray(a)
 
 
-def _trim_edges(a, rate, thr_dbfs=-42.0):
+def _trim_edges(a, rate, thr_dbfs=-54.0):
     """Strip the TTS clip's baked-in leading silence and normalise its trailing
     silence to CJ_SENT_GAP_MS (default 150) so every sentence boundary is the
     same short pause; 5 ms fades keep the cut click-free. Clips measured
@@ -1568,7 +1568,7 @@ def _trim_edges(a, rate, thr_dbfs=-42.0):
     if not len(idx):
         return a
     start = max(0, int(idx[0]) - int(rate * 0.02))
-    end = int(idx[-1]) + gap
+    end = int(idx[-1]) + int(rate * 0.04) + gap   # 40 ms margin: quiet final consonants survive
     out = a[start:min(len(a), end)]
     if end > len(a):
         out = np.concatenate([out, np.zeros(end - len(a), dtype=np.int16)])

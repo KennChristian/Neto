@@ -183,3 +183,4 @@
 {"ts": 1788064590.682, "source": "llm", "surface": "government", "canonical": "Government", "class": "org", "kind": "canonical", "confidence": 1.0}
 {"ts": 1788064703.296, "source": "llm", "surface": "government", "canonical": "Government", "class": "org", "kind": "canonical", "confidence": 1.0}
 {"ts": 1788064710.501, "source": "llm", "surface": "father", "canonical": "Father", "class": "person", "kind": "canonical", "confidence": 1.0}
+{"ts": 1788064902.443, "source": "llm", "surface": "judiciary", "canonical": "Judiciary", "class": "org", "kind": "canonical", "confidence": 1.0}

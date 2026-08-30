@@ -182,7 +182,7 @@ _NO_BREAK = re.compile(
     r"(?:\b(?:v|vs|Mr|Mrs|Ms|Dr|Jr|Sr|St|No|Nos|Rep|Sen|Atty|Hon|Gov|Sec|"
     r"Gen|Col|Fr|Br|Prof|Ph|G\.R|R\.A|Vol|Ch|Art|Sec)|\b[A-Z])\.$")
 _BOUNDARY = re.compile(r"(?<=[.!?…])[\"'”’)]*\s+")
-_MIN_SENT = 25  # chars; shorter fragments merge forward to avoid choppy TTS
+_MIN_SENT = 35  # chars; shorter fragments merge forward to avoid choppy TTS (25 → 35 on 2026-08-30)
 
 # ---------------------------------------------------------------------------
 # per-sentence emotion -> gesture style (consumed by Gestures.talk_style)
@@ -283,6 +283,8 @@ class SentenceSpeaker:
         self._emos = {}              # idx -> emotion tag (classified once, in add)
         self._rids = []              # ElevenLabs request ids (stitching context)
         self._deliv_cur = None       # (stability, style) of the last sentence (slew state)
+        self._params = {}            # idx -> (speed, voice_settings, emotion) as synthesized
+        self._skip = set()           # idx replaced by a merged re-synthesis (tail merge)
         try:
             from speech_tempo import TempoSmoother
             self._tempo = TempoSmoother()   # per-answer tempo normaliser
@@ -434,19 +436,59 @@ class SentenceSpeaker:
                         vs = base
             except Exception:
                 vs = None
-            fut = self._pool.submit(self._synth, sentence, prev, spd, idx, emo, vs)
-            self._futures.append((sentence, fut))
-            if self._player is None:
-                self._player = threading.Thread(target=self._play_loop, daemon=True)
-                self._player.start()
+            fut = self._submit_locked(sentence, prev, spd, idx, emo, vs)
         # outside the lock: a done future runs the callback inline
+        fut.add_done_callback(lambda f, i=idx: self._prefeed(i))
+
+    def _submit_locked(self, sentence, prev, spd, idx, emo, vs):
+        """Queue one sentence for synthesis (caller holds self._lock)."""
+        self._emos[idx] = emo
+        self._params[idx] = (spd, vs, emo)
+        fut = self._pool.submit(self._synth, sentence, prev, spd, idx, emo, vs)
+        self._futures.append((sentence, fut))
+        if self._player is None:
+            self._player = threading.Thread(target=self._play_loop, daemon=True)
+            self._player.start()
+        return fut
+
+    def merge_tail(self, tail):
+        """A short closing fragment ("Cheers!", "God bless.") voiced on its own
+        request comes back as a different take (2026-08-30, user: "the cheers
+        at the last part is different"). If the last queued sentence has not
+        started playing, re-synthesize it WITH the tail as one request and
+        skip the original; otherwise voice the tail with that sentence's exact
+        speed / delivery so at least the settings match."""
+        if self._abort.is_set():
+            return
+        self.n_sentences += 1
+        with self._lock:
+            last = len(self._futures) - 1
+            if last < 0:
+                self.n_sentences -= 1
+                fut = None
+            else:
+                prev_sentence = self._futures[last][0]
+                spd, vs, emo = self._params.get(last, (None, None, None))
+                idx = len(self._futures)
+                if self._playing < last and last not in self._pub and last not in self._skip:
+                    self._skip.add(last)
+                    before = self._futures[last - 1][0] if last >= 1 else None
+                    merged = prev_sentence.rstrip() + " " + tail.strip()
+                    print(f"[stream-speak] tail merged into the previous sentence: {tail.strip()!r}")
+                    fut = self._submit_locked(merged, before, spd, idx, emo, vs)
+                else:
+                    print(f"[stream-speak] tail voiced with the previous sentence's delivery: {tail.strip()!r}")
+                    fut = self._submit_locked(tail.strip(), prev_sentence, spd, idx, emo, vs)
+        if fut is None:
+            self.add(tail)
+            return
         fut.add_done_callback(lambda f, i=idx: self._prefeed(i))
 
     def _prefeed(self, idx):
         """Synth for sentence idx just landed: if the sentence before it is
         on the air, publish it as `next` so the avatar uploads it now."""
         with self._lock:
-            if idx != self._playing + 1 or self._playing < 0 or idx in self._pub:
+            if idx in self._skip or idx != self._playing + 1 or self._playing < 0 or idx in self._pub:
                 return
             row = self._futures[idx] if idx < len(self._futures) else None
         if row is None or self._abort.is_set():
@@ -483,6 +525,16 @@ class SentenceSpeaker:
                 wav = fut.result()
             except Exception as e:
                 print(f"[stream-speak] sentence synth failed, skipping: {e}")
+                i += 1
+                continue
+            with self._lock:
+                skipped = i in self._skip
+            if skipped:   # replaced by a merged re-synthesis (tail merge)
+                for p in (wav, wav + ".align.json"):
+                    try:
+                        os.unlink(p)
+                    except OSError:
+                        pass
                 i += 1
                 continue
             if self._abort.is_set():
@@ -727,7 +779,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
     speaker = SentenceSpeaker(play_fn, on_first_audio=on_first_audio, abort=abort,
                               style_fn=style_fn)
 
-    def _add_gated(s):
+    def _add_gated(s, tail_merge=False):
         if gate_mod is not None:
             g = gate_mod.check_answer(question, s, topic_ids=gate_topics,
                                       forbid_only=True)
@@ -737,7 +789,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
                       f"{[t['detail'] for t in g['tripped']]}")
                 return
         if ooc_text is not None:   # curated out-of-topic text: nothing to fact-check
-            speaker.add(s)
+            (speaker.merge_tail(s) if (tail_merge and (len(s) < 40 or len(s.split()) <= 5)) else speaker.add(s))
             return
         try:   # fact gate: years the composer had no source for (2026-08-29)
             import answer_pipeline as _ap
@@ -769,7 +821,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
                 print(f"[fact-gate] ok ({time.monotonic() - t_a:.1f}s): '{s[:50]}'")
             except Exception as e:
                 print(f"[fact-gate] audit skipped ({type(e).__name__})")
-        speaker.add(s)
+        (speaker.merge_tail(s) if (tail_merge and (len(s) < 40 or len(s.split()) <= 5)) else speaker.add(s))
 
     buf, parts = "", []
     stream_info = {}
@@ -836,7 +888,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
                 print(f"[stream] cap-hit fragment dropped (never voiced): "
                       f"{tail[:60]!r}")
             else:
-                _add_gated(tail)
+                _add_gated(tail, tail_merge=True)
     compose_s = round(time.monotonic() - t0, 2)
     if ooc_text is None:
         publish_stage("compose", "done",
