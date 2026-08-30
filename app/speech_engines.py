@@ -343,6 +343,48 @@ _EMOTION_DELIVERY = {
 }
 
 
+def smooth_delivery(target: tuple | None, prev: tuple | None) -> tuple:
+    """Slew (stability, style) toward the emotion target by at most
+    CJ_DELIVERY_STEP_STABILITY / _STYLE per sentence (defaults 0.05 / 0.10),
+    starting from the base settings. 2026-08-30, user: "there are times his
+    voice changes" — adjacent sentences jumping 0.50/0.00 → 0.30/0.55 read as
+    a different voice; a gradual glide does not."""
+    try:
+        import sys as _sys
+        root = str(Path(__file__).resolve().parent.parent)
+        if root not in _sys.path:
+            _sys.path.insert(0, root)
+        from voice import config as v_config
+        base = (float(v_config.VOICE_SETTINGS.get("stability", 0.5)),
+                float(v_config.VOICE_SETTINGS.get("style", 0.0)))
+    except Exception:
+        base = (0.5, 0.0)
+    tgt = target or base
+    cur = prev or base
+    try:
+        ds = float(os.environ.get("CJ_DELIVERY_STEP_STABILITY", "0.05"))
+        dy = float(os.environ.get("CJ_DELIVERY_STEP_STYLE", "0.10"))
+    except ValueError:
+        ds, dy = 0.05, 0.10
+    stab = cur[0] + max(-ds, min(ds, tgt[0] - cur[0]))
+    style = cur[1] + max(-dy, min(dy, tgt[1] - cur[1]))
+    return (round(stab, 3), round(style, 3))
+
+
+def emotion_delivery_target(emotion: str) -> tuple | None:
+    """(stability, style) target for an emotion, None = base settings."""
+    if os.environ.get("CJ_DYNAMIC_DELIVERY", "1").strip().lower() in {"0", "off", "false"}:
+        return None
+    spec = os.environ.get(f"CJ_VOICE_{(emotion or 'neutral').upper()}")
+    try:
+        if spec:
+            stab, _, style = spec.partition(":")
+            return (float(stab), float(style))
+    except ValueError:
+        pass
+    return _EMOTION_DELIVERY.get(emotion or "neutral")
+
+
 def emotion_voice_settings(emotion: str, speed: float | None = None) -> dict | None:
     """Full voice_settings for a sentence of this emotion (base settings +
     stability/style override + the given speed), or None → caller uses the

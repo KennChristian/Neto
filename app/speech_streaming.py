@@ -282,6 +282,7 @@ class SentenceSpeaker:
         self._replay = None          # wave writer for LAST_ANSWER_WAV (.tmp)
         self._emos = {}              # idx -> emotion tag (classified once, in add)
         self._rids = []              # ElevenLabs request ids (stitching context)
+        self._deliv_cur = None       # (stability, style) of the last sentence (slew state)
         try:
             from speech_tempo import TempoSmoother
             self._tempo = TempoSmoother()   # per-answer tempo normaliser
@@ -331,7 +332,7 @@ class SentenceSpeaker:
                     cls._oai = OpenAI()
         return cls._oai
 
-    def _synth(self, text, previous_text=None, speed=None, idx=None, emo=None):
+    def _synth(self, text, previous_text=None, speed=None, idx=None, emo=None, vs=None):
         import speech_engines
         try:
             from text_entities import process_tts_sentence
@@ -353,10 +354,9 @@ class SentenceSpeaker:
                 with self._lock:
                     rids = list(self._rids[-3:])
                 meta = {}
-                # per-emotion delivery (stability/style) on top of the speed
-                vs = speech_engines.emotion_voice_settings(emo, speed=speed)
-                if vs is not None and emo not in (None, "neutral"):
-                    print(f"[delivery] {emo}: stability {vs['stability']:.2f} style {vs['style']:.2f} "
+                # per-emotion delivery, slewed in add() so neighbours never jump
+                if vs is not None:
+                    print(f"[delivery] {emo or 'neutral'}: stability {vs['stability']:.2f} style {vs['style']:.2f} "
                           f"speed {vs.get('speed', 1.0):.2f}")
                 wav = speech_engines.tts_elevenlabs_wav(text, speed=speed,
                                                   previous_text=previous_text,
@@ -420,7 +420,21 @@ class SentenceSpeaker:
                     self._speed_cur = spd if spd is not None else self._speed_cur
             except Exception:
                 spd = None
-            fut = self._pool.submit(self._synth, sentence, prev, spd, idx, emo)
+            vs = None
+            try:   # delivery (stability/style) slewed toward the emotion target
+                import speech_engines
+                if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
+                    pair = speech_engines.smooth_delivery(
+                        speech_engines.emotion_delivery_target(emo), self._deliv_cur)
+                    self._deliv_cur = pair
+                    from voice.speak import effective_settings
+                    base = effective_settings(spd)
+                    if (round(base.get("stability", 0.5), 3), round(base.get("style", 0.0), 3)) != pair:
+                        base["stability"], base["style"] = pair
+                        vs = base
+            except Exception:
+                vs = None
+            fut = self._pool.submit(self._synth, sentence, prev, spd, idx, emo, vs)
             self._futures.append((sentence, fut))
             if self._player is None:
                 self._player = threading.Thread(target=self._play_loop, daemon=True)

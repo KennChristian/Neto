@@ -141,7 +141,7 @@ class TempoSmoother:
         self.avg = None          # EMA of the (post-stretch) rate, chars/s
         self.seed = _load_session_avg()   # previous answers' tempo (may be None)
         self._n = 0
-        self.max = _f("CJ_TEMPO_MAX", 0.15)
+        self.max = _f("CJ_TEMPO_MAX", 0.10)   # >10 % stretch starts to colour the timbre
         self.alpha = _f("CJ_TEMPO_ALPHA", 0.5)
         self.deadband = _f("CJ_TEMPO_DEADBAND", 0.01)
         self.rate_max = _f("CJ_TEMPO_RATE_MAX", 13.0)        # chars/s ceiling (user 2026-08-30: "a bit fast")
