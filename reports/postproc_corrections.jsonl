@@ -178,3 +178,4 @@
 {"ts": 1787325412.023, "source": "llm", "surface": "rose", "canonical": "Rose", "class": "person", "kind": "canonical", "confidence": 1.0}
 {"ts": 1787325414.86, "source": "llm", "surface": "five children", "canonical": "Five children", "class": "person", "kind": "canonical", "confidence": 1.0}
 {"ts": 1787978735.183, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1788063444.76, "source": "llm", "surface": "The Panganiban Court", "canonical": "The Panganiban court", "class": "org", "kind": "canonical", "confidence": 1.0}

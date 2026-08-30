@@ -331,7 +331,7 @@ class SentenceSpeaker:
                     cls._oai = OpenAI()
         return cls._oai
 
-    def _synth(self, text, previous_text=None, speed=None, idx=None):
+    def _synth(self, text, previous_text=None, speed=None, idx=None, emo=None):
         import speech_engines
         try:
             from text_entities import process_tts_sentence
@@ -353,10 +353,15 @@ class SentenceSpeaker:
                 with self._lock:
                     rids = list(self._rids[-3:])
                 meta = {}
+                # per-emotion delivery (stability/style) on top of the speed
+                vs = speech_engines.emotion_voice_settings(emo, speed=speed)
+                if vs is not None and emo not in (None, "neutral"):
+                    print(f"[delivery] {emo}: stability {vs['stability']:.2f} style {vs['style']:.2f} "
+                          f"speed {vs.get('speed', 1.0):.2f}")
                 wav = speech_engines.tts_elevenlabs_wav(text, speed=speed,
                                                   previous_text=previous_text,
                                                   previous_request_ids=rids or None,
-                                                  meta_out=meta)
+                                                  meta_out=meta, voice_settings=vs)
                 if meta.get("request_id"):
                     with self._lock:
                         self._rids.append(meta["request_id"])
@@ -415,7 +420,7 @@ class SentenceSpeaker:
                     self._speed_cur = spd if spd is not None else self._speed_cur
             except Exception:
                 spd = None
-            fut = self._pool.submit(self._synth, sentence, prev, spd, idx)
+            fut = self._pool.submit(self._synth, sentence, prev, spd, idx, emo)
             self._futures.append((sentence, fut))
             if self._player is None:
                 self._player = threading.Thread(target=self._play_loop, daemon=True)
