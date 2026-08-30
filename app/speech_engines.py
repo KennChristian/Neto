@@ -324,6 +324,55 @@ def smooth_speed(target: float | None, prev: float | None) -> float | None:
     return _clamp_speed(prev + delta)
 
 
+# Per-emotion delivery on Flash v2.5 (2026-08-30, user A/B'd three takes of an
+# emphatic line and picked the strongest: stability .30 / style .55). The same
+# per-sentence emotion tag that drives gestures and pace now also sets the
+# ElevenLabs stability/style, so the delivery follows the meaning without a
+# different model (Eleven v3 was tried and sounded less like him). Composed
+# answers are not cached, so this costs no re-rendering; curated clips keep
+# the base settings (farewells have their own override below).
+# Override any entry with CJ_VOICE_<EMOTION>="stability:style"; disable all
+# with CJ_DYNAMIC_DELIVERY=0 (speed-only, as before).
+_EMOTION_DELIVERY = {
+    "neutral": None,                 # base VOICE_SETTINGS
+    "solemn": (0.55, 0.15),
+    "warm": (0.40, 0.30),
+    "question": (0.45, 0.20),
+    "emphatic": (0.30, 0.55),
+    "amused": (0.30, 0.55),
+}
+
+
+def emotion_voice_settings(emotion: str, speed: float | None = None) -> dict | None:
+    """Full voice_settings for a sentence of this emotion (base settings +
+    stability/style override + the given speed), or None → caller uses the
+    plain speed path."""
+    if os.environ.get("CJ_DYNAMIC_DELIVERY", "1").strip().lower() in {"0", "off", "false"}:
+        return None
+    spec = os.environ.get(f"CJ_VOICE_{(emotion or 'neutral').upper()}")
+    try:
+        if spec:
+            stab, _, style = spec.partition(":")
+            over = (float(stab), float(style))
+        else:
+            over = _EMOTION_DELIVERY.get(emotion or "neutral")
+    except ValueError:
+        over = None
+    if over is None:
+        return None
+    try:
+        import sys as _sys
+        root = str(Path(__file__).resolve().parent.parent)
+        if root not in _sys.path:
+            _sys.path.insert(0, root)
+        from voice.speak import effective_settings
+        st = effective_settings(speed)
+        st["stability"], st["style"] = round(over[0], 3), round(over[1], 3)
+        return st
+    except Exception:
+        return None
+
+
 # Farewell delivery (A/B'd by ear 2026-08-25, user picked the most expressive
 # of three): lower stability + style exaggeration + a touch slower makes the
 # goodbye sound warm instead of flat. Separate cache keys (settings are part
