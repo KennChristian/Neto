@@ -289,6 +289,10 @@ def emotion_speed(emotion: str) -> float | None:
         base = float(v_config.VOICE_SETTINGS.get("speed", 0.9))
     except Exception:
         base = 0.9
+    try:   # CJ_SPEED_BASE (2026-08-30, "he reads a bit fast"): base pace for
+        base = float(os.environ.get("CJ_SPEED_BASE", base))   # composed answers only —
+    except ValueError:                                         # curated clips keep the
+        pass                                                   # config speed (cache keys)
     return _clamp_speed(base + _EMOTION_SPEED_DELTA.get(emotion, 0.0))
 
 
@@ -320,6 +324,10 @@ def smooth_speed(target: float | None, prev: float | None) -> float | None:
             prev = float(v_config.VOICE_SETTINGS.get("speed", 0.9))
         except Exception:
             prev = 0.9
+        try:
+            prev = float(os.environ.get("CJ_SPEED_BASE", prev))
+        except ValueError:
+            pass
     delta = max(-step, min(step, target - prev))
     return _clamp_speed(prev + delta)
 
