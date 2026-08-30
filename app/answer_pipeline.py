@@ -194,8 +194,22 @@ def _topic_max_tokens(routing: dict, artifacts) -> int:
         return _scale_budget(COMPOSER_MAX_TOKENS)
 
 
+def _max_words() -> int:
+    """CJ_MAX_WORDS (2026-08-30, user: "make the answers a bit concise —
+    the bigger answers are the ones with voice jumps"): a direct ceiling on
+    spoken words that overrides the per-topic budgets. 0 = off."""
+    try:
+        return max(0, int(float(os.environ.get("CJ_MAX_WORDS", "0"))))
+    except ValueError:
+        return 0
+
+
 def _scale_budget(budget: int) -> int:
-    return max(TOKEN_BUDGET_MIN, int(budget * TOKEN_BUDGET_SCALE))
+    b = max(TOKEN_BUDGET_MIN, int(budget * TOKEN_BUDGET_SCALE))
+    mw = _max_words()
+    if mw:
+        b = min(b, max(TOKEN_BUDGET_MIN, int(mw / 0.6)))   # 0.6 words/token
+    return b
 
 
 def _cap_with_headroom(budget: int) -> int:
@@ -204,7 +218,7 @@ def _cap_with_headroom(budget: int) -> int:
     and headroom above the target lets a final sentence FINISH instead of
     truncating mid-clause (live turns were writing exactly to the cap and
     getting cut). Without a note (scale >= 1.0) the cap stays == budget."""
-    if TOKEN_BUDGET_SCALE >= 1.0:
+    if TOKEN_BUDGET_SCALE >= 1.0 and not _max_words():
         return budget
     try:
         h = float(os.environ.get("CJ_TOKEN_CAP_HEADROOM", "1.35"))
@@ -219,18 +233,20 @@ def _length_note(max_tokens: int) -> str:
     or it composes a full-length answer and the cap truncates it mid-arc.
     ~0.6 words/token leaves headroom below the hard cap (at 0.7 the live META
     turns wrote exactly to the cap and got sentence-trimmed); ~2.5 words/s."""
-    if TOKEN_BUDGET_SCALE >= 1.0:
+    if TOKEN_BUDGET_SCALE >= 1.0 and not _max_words():
         return ""
     words = max(20, int(max_tokens * 0.6))
+    if _max_words():
+        words = min(words, _max_words())
     # CJ_FAST_OPEN: speech starts when the FIRST sentence is complete, so a
     # short opener directly cuts time-to-first-audio on the streaming path.
     fast_open = (" Open with a short first sentence — under ten words — then "
                  "elaborate." if os.environ.get("CJ_FAST_OPEN", "0") == "1" else "")
     return (
-        f"\n\n<length_note>\nThis is a live spoken conversation. Reply in about "
-        f"{words} words or fewer (~{max(10, int(words / 2.5))} seconds of speech): "
-        f"make ONE focused point in voice, end on a complete sentence, and yield "
-        f"the floor. Do not pad with preamble or summary.{fast_open}\n</length_note>")
+        f"\n\n<length_note>\nThis is a live spoken conversation. HARD LIMIT: no more than "
+        f"{words} words (~{max(10, int(words / 2.5))} seconds of speech); shorter is better. "
+        f"Make ONE focused point in voice, end on a complete sentence, and yield "
+        f"the floor. No preamble, no summary, no lists.{fast_open}\n</length_note>")
 
 
 _theme_max_tokens = _topic_max_tokens  # retired name — kept for any stale caller

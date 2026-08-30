@@ -180,3 +180,6 @@
 {"ts": 1787978735.183, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
 {"ts": 1788063444.76, "source": "llm", "surface": "The Panganiban Court", "canonical": "The Panganiban court", "class": "org", "kind": "canonical", "confidence": 1.0}
 {"ts": 1788063899.695, "source": "llm", "surface": "government", "canonical": "Government", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1788064590.682, "source": "llm", "surface": "government", "canonical": "Government", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1788064703.296, "source": "llm", "surface": "government", "canonical": "Government", "class": "org", "kind": "canonical", "confidence": 1.0}
+{"ts": 1788064710.501, "source": "llm", "surface": "father", "canonical": "Father", "class": "person", "kind": "canonical", "confidence": 1.0}
