@@ -114,6 +114,47 @@ _THANKS_RE = re.compile(
     re.I)
 
 
+def _gate_start(path):
+    """Phase 1 voice-isolation gates, LOG-ONLY (2026-08-30): capture the
+    direction the speech came from and start a Silero VAD measurement of the
+    utterance in a thread (parallel with STT). Nothing is rejected here."""
+    g = {"doa": _speaker_doa.last_yaw_raw,
+         "doa_age": (time.monotonic() - _speaker_doa.ts) if _speaker_doa.ts else None,
+         "vad": None, "thread": None}
+    try:
+        import voice_vad
+        import soundfile as _sf
+        data, sr = _sf.read(path, dtype="float32")   # read now: STT unlinks the wav later
+
+        def _run():
+            g["vad"] = voice_vad.analyze(data, sr)
+        g["thread"] = threading.Thread(target=_run, daemon=True)
+        g["thread"].start()
+    except Exception as e:
+        print(f"[gate] vad not started ({type(e).__name__})")
+    return g
+
+
+def _gate_report(g, sim=None, outcome=""):
+    """One `[gate]` journal line per captured utterance (log-only)."""
+    try:
+        if g.get("thread") is not None:
+            g["thread"].join(timeout=1.0)
+        d = g.get("doa")
+        if d is None or (g.get("doa_age") or 99) > 4.0:
+            doa = "doa=?"
+        else:
+            zone = "front" if abs(d) <= _speaker_doa.max_yaw else ("BEHIND" if abs(d) > 90 else "side")
+            doa = f"doa={d:+.0f}° ({zone})"
+        v = g.get("vad")
+        vad = (f"vad speech {v['speech_s']:.1f}s/{v['total_s']:.1f}s ({v['fraction']:.2f}, {v['segments']} seg)"
+               if v else "vad=?")
+        lock = f"lock sim {sim:.2f}" if isinstance(sim, (int, float)) else "lock sim -"
+        print(f"[gate] {doa} · {vad} · {lock}{(' · ' + outcome) if outcome else ''} — log-only", flush=True)
+    except Exception:
+        pass
+
+
 def _say_curated_line(gestures, text, stop, voice_settings=None):
     """Speak one curated line (farewell / quiet goodbye): talk gestures, the
     expressive farewell delivery by default, transcript feed."""
@@ -520,6 +561,7 @@ class _SpeakerDoA:
         except ValueError:
             self.max_yaw = 45.0
         self.angle, self.ts = None, 0.0
+        self.last_yaw_raw = None      # unclamped yaw of the latest speech (for the [gate] line)
         self._doa, self._started = None, False
         self._usb_lock = threading.Lock()   # one USB control transfer at a time
 
@@ -563,7 +605,13 @@ class _SpeakerDoA:
         y = 90.0 - self.angle
         if self.flip:
             y = -y
-        return max(-self.max_yaw, min(self.max_yaw, y))
+        self.last_yaw_raw = y
+        # Phase 1 (2026-08-30, user): a source outside the frontal cone — the
+        # side, or the audience mics/speakers at the BACK — must not pull the
+        # head toward it: stare straight ahead instead of clamping to the edge.
+        if abs(y) > self.max_yaw:
+            return 0.0
+        return y
 
 
 _speaker_doa = _SpeakerDoA()
@@ -2027,6 +2075,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         _publish_transcript("note", "(mic timeout — no speech captured)")
         _stage("transcribe", "pending", "no speech captured")
         return False
+    gate = _gate_start(path)   # Phase 1 isolation gates (log-only)
     lock = _voice_lock_obj() if _lock_enabled() else None
     lock_box = {}
     if lock is not None and followup and lock.active():
@@ -2094,6 +2143,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
     finally:
         os.unlink(path)
     if not question.strip():
+        _gate_report(gate, outcome="empty transcript")
         print("[stt] empty transcript")
         _publish_transcript("note", "(empty transcript — STT heard nothing)")
         _stage("transcribe", "pending", "heard nothing")
@@ -2136,6 +2186,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             return "ignored"
         if sim is not None:
             print(f"[lock] locked voice confirmed (similarity {sim:.2f})")
+    _gate_report(gate, sim=lock_box.get("res", (None, None))[1], outcome="heard")
     print(f"[stt] heard: \"{question}\"  ({stt_s:.1f}s)")
     _stage("transcribe", "done", f"heard in {stt_s:.1f}s")
     raw_asr = question

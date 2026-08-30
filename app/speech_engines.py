@@ -248,9 +248,9 @@ def tts_create_kwargs(model: str, voice: str, speed: float, text: str) -> dict:
 # Kept small (2026-08-25, user: "his voice changes a bit"): a tempo jump
 # between adjacent sentences reads as a change of voice. Was -0.06..+0.05.
 _EMOTION_SPEED_DELTA = {
-    "solemn": -0.02, "warm": -0.01, "neutral": 0.0,
-    "question": 0.01, "emphatic": 0.02, "amused": 0.02,
-}
+    "solemn": -0.04, "warm": -0.02, "neutral": 0.0,
+    "question": 0.01, "emphatic": 0.03, "amused": 0.03,
+}   # widened 2026-08-30 (user: "widen the dynamic speaking speed a bit"); was ±0.02
 
 
 # Dynamic-speed limits (2026-08-29, user: "limit the dynamic speaking speed").
@@ -262,10 +262,10 @@ _EMOTION_SPEED_DELTA = {
 # the manual Say box use their own settings.
 def _speed_limits() -> tuple[float, float]:
     try:
-        lo = float(os.environ.get("CJ_SPEED_MIN", "0.95"))
-        hi = float(os.environ.get("CJ_SPEED_MAX", "1.00"))   # 2026-08-29 evening: never faster than base
+        lo = float(os.environ.get("CJ_SPEED_MIN", "0.94"))
+        hi = float(os.environ.get("CJ_SPEED_MAX", "1.03"))   # widened 2026-08-30 (was 0.95/1.00)
     except ValueError:
-        lo, hi = 0.95, 1.00
+        lo, hi = 0.94, 1.03
     lo, hi = max(0.7, lo), min(1.2, hi)
     return (lo, hi) if lo <= hi else (hi, lo)
 
@@ -305,7 +305,7 @@ def smooth_speed(target: float | None, prev: float | None) -> float | None:
     if target is None:
         return None
     try:
-        step = float(os.environ.get("CJ_SPEED_MAX_STEP", "0.01"))
+        step = float(os.environ.get("CJ_SPEED_MAX_STEP", "0.02"))
     except ValueError:
         step = 0.01
     if step <= 0:
