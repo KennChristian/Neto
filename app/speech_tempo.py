@@ -110,7 +110,7 @@ def cap_clip(wav: str) -> tuple | None:
     except (OSError, ValueError):
         return None
     r = rate_from_words(words)
-    rate_max, max_stretch = _f("CJ_TEMPO_RATE_MAX", 13.0), _f("CJ_TEMPO_MAX", 0.15)
+    rate_max, max_stretch = _f("CJ_TEMPO_RATE_MAX", 13.0), _f("CJ_TEMPO_MAX", 0.10)
     if not r or r <= rate_max * 1.01:
         return None
     factor = min(1.0 + max_stretch, r / rate_max)   # > 1 = slower
