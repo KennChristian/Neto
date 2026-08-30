@@ -1189,10 +1189,16 @@ FACT_AUDIT_SYSTEM = (
     "the answer. Decide whether every specific claim in the sentence — dates, "
     "years, numbers, counts, amounts, titles of books/columns/cases, names of "
     "organisations and people paired with those facts — is supported by the "
-    "context or is common persona knowledge that the context does not "
-    "contradict. A year, number or title that the context does not mention, "
-    "or that conflicts with the context, is UNSUPPORTED. Opinions, general "
-    "principles and rhetoric are always supported. Reply with JSON only: "
+    "context, OR is a well-established public fact of Philippine law and "
+    "history that the context does not contradict (e.g. the 1987 Constitution "
+    "was ratified on 2 February 1987; EDSA People Power was February 1986; "
+    "martial law was declared in 1972; who served as President or Chief "
+    "Justice and when). Mark UNSUPPORTED only a specific that CONFLICTS with "
+    "the context, or a claim about this speaker's own life, works, cases, "
+    "foundation or numbers that the context does not back (dates of his own "
+    "books, decisions, honours, the foundation's founding, counts and "
+    "amounts). Opinions, general principles and rhetoric are always "
+    "supported. Reply with JSON only: "
     '{"supported": true|false, "reason": "<one short clause>"}'
 )
 
