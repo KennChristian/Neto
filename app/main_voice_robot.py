@@ -141,7 +141,8 @@ def _gate_report(g, sim=None, outcome=""):
         if g.get("thread") is not None:
             g["thread"].join(timeout=1.0)
         d = g.get("doa")
-        if d is None or (g.get("doa_age") or 99) > 4.0:
+        age = g.get("doa_age")
+        if d is None or age is None or age > 4.0:
             doa = "doa=?"
         else:
             zone = "front" if abs(d) <= _speaker_doa.max_yaw else ("BEHIND" if abs(d) > 90 else "side")
@@ -562,6 +563,7 @@ class _SpeakerDoA:
             self.max_yaw = 45.0
         self.angle, self.ts = None, 0.0
         self.last_yaw_raw = None      # unclamped yaw of the latest speech (for the [gate] line)
+        self._out_of_cone = False
         self._doa, self._started = None, False
         self._usb_lock = threading.Lock()   # one USB control transfer at a time
 
@@ -609,7 +611,11 @@ class _SpeakerDoA:
         # Phase 1 (2026-08-30, user): a source outside the frontal cone — the
         # side, or the audience mics/speakers at the BACK — must not pull the
         # head toward it: stare straight ahead instead of clamping to the edge.
-        if abs(y) > self.max_yaw:
+        # Hysteresis: leave the cone at max_yaw, re-enter only below max_yaw-10
+        # so a speaker sitting near the edge does not flip the head edge/centre.
+        limit = self.max_yaw - (10.0 if self._out_of_cone else 0.0)
+        self._out_of_cone = abs(y) > limit
+        if self._out_of_cone:
             return 0.0
         return y
 
@@ -1767,10 +1773,6 @@ def speak(text, filler=None, stop=None, voice_settings=None):
     try:
         if wav_from_eleven is None:  # openai mp3 → wav for playback
             subprocess.run(["ffmpeg", "-y", "-loglevel", "quiet", "-i", mp3_path, wav_path], check=True)
-        try:  # keep the last answer for the dashboard "Replay" button
-            shutil.copyfile(wav_path, LAST_ANSWER_WAV)
-        except OSError:
-            pass
         try:  # speed ceiling for curated clips too (2026-08-30, "speaking is a bit fast")
             import speech_tempo
             _cap = speech_tempo.cap_clip(wav_path)
@@ -1778,6 +1780,10 @@ def speak(text, filler=None, stop=None, voice_settings=None):
                 print(f"[tempo] curated clip {_cap[1]:.1f} -> {_cap[2]:.1f} chars/s (x{_cap[0]:.3f})")
         except Exception as _e:
             print(f"[tempo] curated cap skipped ({type(_e).__name__})")
+        try:  # keep the last answer for the dashboard "Replay" button
+            shutil.copyfile(wav_path, LAST_ANSWER_WAV)
+        except OSError:
+            pass
         _speak_timing["synth_s"] = round(time.monotonic() - _t_synth, 2)
         try:  # speaking-rate fields for the maintenance page
             from speech_streaming import wav_duration as _wd
@@ -2109,6 +2115,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         if voice_identity.gate_active():
             ok, sim = voice_identity.verify(path)
             if not ok:
+                _gate_report(gate, sim=None, outcome="ignored — not the enrolled speaker")
                 print(f"[speaker] ignored — similarity {sim:.2f} < "
                       f"{voice_identity.threshold():.2f}")
                 _publish_transcript(
@@ -2156,10 +2163,12 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             _stage("transcribe", "active", "listening again…")
             if lock is not None and not followup:
                 lock.release()   # don't lock onto a 1 s "CJAP" clip; the retry re-locks on the real question
+            _gate_report(gate, sim=None, outcome="wake phrase only — rewake")
             return "rewake"
         print(f"[stt] wake phrase inside the question stripped ({_nwake}x) -> {question!r}")
     non_latin = sum(ord(c) > 127 for c in question) / len(question)
     if non_latin > 0.3:   # EN/Filipino are Latin-script; this is a hallucination
+        _gate_report(gate, sim=None, outcome="discarded — non-Latin")
         print(f"[stt] discarded non-Latin hallucination: {question!r}")
         _publish_transcript("note", f"(discarded non-Latin hallucination: {question})")
         return False
@@ -2169,6 +2178,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
     except Exception as _e:
         _ok, _why = True, f"gate unavailable ({type(_e).__name__})"
     if not _ok:
+        _gate_report(gate, sim=None, outcome="discarded — language gate")
         print(f"[stt] discarded — not Filipino/English: {question!r} ({_why})")
         _publish_transcript("note", f"(discarded — not Filipino/English: {question} · {_why})")
         _stage("transcribe", "pending", "not Filipino/English — ignored")
@@ -2178,6 +2188,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         lock_box["thread"].join(timeout=10)
         ok, sim = lock_box.get("res", (True, None))
         if not ok:
+            _gate_report(gate, sim=sim, outcome="ignored — not the voice in conversation")
             print(f"[lock] ignored — not the voice in conversation "
                   f"(similarity {sim:.2f}): {question!r}")
             _publish_transcript("note", f"(ignored — another voice, similarity "

@@ -307,7 +307,7 @@ def smooth_speed(target: float | None, prev: float | None) -> float | None:
     try:
         step = float(os.environ.get("CJ_SPEED_MAX_STEP", "0.02"))
     except ValueError:
-        step = 0.01
+        step = 0.02
     if step <= 0:
         return target
     if prev is None:
@@ -329,8 +329,8 @@ def smooth_speed(target: float | None, prev: float | None) -> float | None:
 # per-sentence emotion tag that drives gestures and pace now also sets the
 # ElevenLabs stability/style, so the delivery follows the meaning without a
 # different model (Eleven v3 was tried and sounded less like him). Composed
-# answers are not cached, so this costs no re-rendering; curated clips keep
-# the base settings (farewells have their own override below).
+# answers are not cached, so this costs no re-rendering; curated text (canned
+# clips, farewells, the out-of-topic deflection) stays at the base settings.
 # Override any entry with CJ_VOICE_<EMOTION>="stability:style"; disable all
 # with CJ_DYNAMIC_DELIVERY=0 (speed-only, as before).
 _EMOTION_DELIVERY = {
@@ -383,36 +383,6 @@ def emotion_delivery_target(emotion: str) -> tuple | None:
     except ValueError:
         pass
     return _EMOTION_DELIVERY.get(emotion or "neutral")
-
-
-def emotion_voice_settings(emotion: str, speed: float | None = None) -> dict | None:
-    """Full voice_settings for a sentence of this emotion (base settings +
-    stability/style override + the given speed), or None → caller uses the
-    plain speed path."""
-    if os.environ.get("CJ_DYNAMIC_DELIVERY", "1").strip().lower() in {"0", "off", "false"}:
-        return None
-    spec = os.environ.get(f"CJ_VOICE_{(emotion or 'neutral').upper()}")
-    try:
-        if spec:
-            stab, _, style = spec.partition(":")
-            over = (float(stab), float(style))
-        else:
-            over = _EMOTION_DELIVERY.get(emotion or "neutral")
-    except ValueError:
-        over = None
-    if over is None:
-        return None
-    try:
-        import sys as _sys
-        root = str(Path(__file__).resolve().parent.parent)
-        if root not in _sys.path:
-            _sys.path.insert(0, root)
-        from voice.speak import effective_settings
-        st = effective_settings(speed)
-        st["stability"], st["style"] = round(over[0], 3), round(over[1], 3)
-        return st
-    except Exception:
-        return None
 
 
 # Farewell delivery (A/B'd by ear 2026-08-25, user picked the most expressive

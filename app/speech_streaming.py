@@ -284,6 +284,7 @@ class SentenceSpeaker:
         self._rids = []              # ElevenLabs request ids (stitching context)
         self._deliv_cur = None       # (stability, style) of the last sentence (slew state)
         self._params = {}            # idx -> (speed, voice_settings, emotion) as synthesized
+        self.curated = False         # True for canned prose (out-of-topic): base speed/delivery, so the clip cache hits
         self._skip = set()           # idx replaced by a merged re-synthesis (tail merge)
         try:
             from speech_tempo import TempoSmoother
@@ -415,6 +416,8 @@ class SentenceSpeaker:
             self._emos[idx] = emo      # reused by _play_loop (gesture + captions)
             try:
                 import speech_engines
+                if self.curated:
+                    raise StopIteration   # curated text: base settings (cache-stable)
                 if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
                     spd = speech_engines.smooth_speed(
                         speech_engines.emotion_speed(emo or "neutral"),
@@ -425,6 +428,8 @@ class SentenceSpeaker:
             vs = None
             try:   # delivery (stability/style) slewed toward the emotion target
                 import speech_engines
+                if self.curated:
+                    raise StopIteration
                 if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
                     pair = speech_engines.smooth_delivery(
                         speech_engines.emotion_delivery_target(emo), self._deliv_cur)
@@ -778,6 +783,7 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
 
     speaker = SentenceSpeaker(play_fn, on_first_audio=on_first_audio, abort=abort,
                               style_fn=style_fn)
+    speaker.curated = ooc_text is not None   # canned deflection: base settings → clip cache hits
 
     def _add_gated(s, tail_merge=False):
         if gate_mod is not None:
@@ -793,7 +799,11 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
             return
         try:   # fact gate: years the composer had no source for (2026-08-29)
             import answer_pipeline as _ap
-            fc = gate_mod.fact_check(s, _ap.LAST_CONTEXT_TEXT[0], question)
+            if gate_mod is None:
+                import answer_gate as _ag
+                fc = _ag.fact_check(s, _ap.LAST_CONTEXT_TEXT[0], question)
+            else:
+                fc = gate_mod.fact_check(s, _ap.LAST_CONTEXT_TEXT[0], question)
         except Exception:
             fc = {"ok": True, "bad_years": [], "unverified_titles": []}
         if fc.get("unverified_titles"):
@@ -808,6 +818,30 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
         # → Haiku audit against the grounding context before TTS
         # (~1.2 s, absorbed by the previous sentence's playback).
         if _FACT_TRIGGER.search(s) and os.environ.get("CJ_FACT_AUDIT", "1").strip().lower() not in {"0", "off", "false"}:
+            if speaker.n_sentences == 0:
+                # OPENER: the audit would sit on first audio. Queue the sentence
+                # now and audit concurrently; if it fails before playback starts
+                # the clip is skipped (speaker._skip), else it is logged.
+                import answer_pipeline as _ap
+                my_idx = len(speaker._futures)
+                (speaker.merge_tail(s) if (tail_merge and (len(s) < 40 or len(s.split()) <= 5)) else speaker.add(s))
+
+                def _audit_opener(sent=s, idx=my_idx):
+                    t_a = time.monotonic()
+                    au = _ap.sentence_fact_audit(client, sent, _ap.LAST_CONTEXT_TEXT[0])
+                    if au.get("supported", True):
+                        print(f"[fact-gate] ok ({time.monotonic() - t_a:.1f}s, opener, concurrent): '{sent[:50]}'")
+                        return
+                    with speaker._lock:
+                        late = speaker._playing >= idx
+                        if not late:
+                            speaker._skip.add(idx)
+                    gate_blocked.append({"sentence": sent, "tripped": [
+                        {"rule": "fact-audit", "kind": "unsupported", "detail": au.get("reason", "")}]})
+                    print(f"[fact-gate] opener {'ALREADY PLAYING — logged only' if late else 'SKIPPED before playback'} "
+                          f"({time.monotonic() - t_a:.1f}s) — unsupported: {au.get('reason', '')[:80]}")
+                threading.Thread(target=_audit_opener, daemon=True).start()
+                return
             try:
                 import answer_pipeline as _ap
                 t_a = time.monotonic()

@@ -10,7 +10,7 @@ This module measures each sentence's rate from the word alignment sidecar
 the audio a few percent toward the running average with WSOLA (pitch is
 unchanged — it is not a resample). The first sentence of an answer sets the
 target; later ones are pulled toward the EMA, never more than CJ_TEMPO_MAX
-(default 15 %). The word times in the sidecar are rescaled so captions and
+(default 10 %). The word times in the sidecar are rescaled so captions and
 the avatar lips stay in sync.
 
 The target is seeded from a session-wide running average persisted in
@@ -19,8 +19,8 @@ first sentence of an answer is never stretched (first-audio latency) — it
 only refines the target.
 
 Speed limit (2026-08-29 evening, user: "can we limit the speaking speed"):
-the target is capped at CJ_TEMPO_RATE_MAX chars/s (default 15.0 ≈ the median
-of the clip cache; p75 is 17.2) and sentences are only ever SLOWED
+the target is capped at CJ_TEMPO_RATE_MAX chars/s (default 13.0; the clip-cache median
+is 15.8, p75 17.2) and sentences are only ever SLOWED
 (CJ_TEMPO_SPEEDUP=1 re-enables speeding up). A too-fast opener is slowed too.
 
 Env: CJ_TEMPO_SMOOTH=0 disables; CJ_TEMPO_MAX (0.10); CJ_TEMPO_ALPHA (0.5);
@@ -32,6 +32,7 @@ import json
 import os
 import threading
 
+import numpy as np
 import soundfile as sf
 
 SESSION_AVG = "/dev/shm/cj_tempo_avg.json"
@@ -84,10 +85,13 @@ def stretch_wav(path: str, factor: float) -> float:
     from audiotsm.io.array import ArrayReader, ArrayWriter
     pcm, sr = sf.read(path, dtype="float32", always_2d=True)   # (n, ch)
     n0 = pcm.shape[0]
-    reader = ArrayReader(pcm.T.copy())                          # (ch, n)
+    pad = int(0.3 * sr)          # WSOLA under-delivers by ~one frame at the tail:
+    padded = np.concatenate([pcm, np.zeros((pad, pcm.shape[1]), np.float32)])   # pad, then trim
+    reader = ArrayReader(padded.T.copy())                       # (ch, n)
     writer = ArrayWriter(channels=pcm.shape[1])
     wsola(channels=pcm.shape[1], speed=1.0 / factor).run(reader, writer)
     out = writer.data.T                                         # (m, ch)
+    out = out[:max(1, out.shape[0] - int(pad * factor))]
     sf.write(path, out, sr, subtype="PCM_16")
     return out.shape[0] / max(1, n0)
 
@@ -106,7 +110,8 @@ def cap_clip(wav: str) -> tuple | None:
         return None
     align = wav + ".align.json"
     try:
-        words = json.load(open(align))
+        with open(align) as af:
+            words = json.load(af)
     except (OSError, ValueError):
         return None
     r = rate_from_words(words)
@@ -116,14 +121,18 @@ def cap_clip(wav: str) -> tuple | None:
     factor = min(1.0 + max_stretch, r / rate_max)   # > 1 = slower
     try:
         import hashlib, shutil
-        key = hashlib.sha1(open(wav, "rb").read()).hexdigest()[:16] + f"_x{factor:.3f}"
+        with open(wav, "rb") as fh:
+            key = hashlib.sha1(fh.read()).hexdigest()[:16] + f"_x{factor:.3f}"
         os.makedirs(CAP_CACHE, exist_ok=True)
         cached = os.path.join(CAP_CACHE, key + ".wav")
+        n_before = sf.info(wav).frames
         if os.path.exists(cached):
             shutil.copyfile(cached, wav)
+            factor = sf.info(wav).frames / max(1, n_before)   # the ACHIEVED factor of the cached clip
         else:
             factor = stretch_wav(wav, factor)
-            shutil.copyfile(wav, cached)
+            shutil.copyfile(wav, cached + ".tmp")
+            os.replace(cached + ".tmp", cached)
         scaled = [[w, round(float(s) * factor, 3), round(float(e) * factor, 3)] for w, s, e in words]
         with open(align, "w") as af:
             json.dump(scaled, af)
@@ -160,7 +169,8 @@ class TempoSmoother:
             return None
         align = wav + ".align.json"
         try:
-            words = json.load(open(align))
+            with open(align) as af:
+                words = json.load(af)
         except (OSError, ValueError):
             return None
         r0 = rate_from_words(words)
@@ -179,6 +189,8 @@ class TempoSmoother:
             new_rate = min(new_rate, self.rate_max)
             with self._lock:
                 self.avg = new_rate
+                if idx is not None:
+                    self._factors[idx] = 1.0   # the step bound applies from sentence 1
             _save_session_avg(new_rate)
             return 1.0, r, r
         if first:
@@ -186,8 +198,10 @@ class TempoSmoother:
             seed_blend = min(self.rate_max, r if self.seed is None else 0.5 * self.seed + 0.5 * r)
             with self._lock:
                 self.avg = seed_blend
+        # a non-opener may finish before the opener (2-worker pool): the
+        # ceiling still applies, seeded from the session average if any
+        target = min(target or self.seed or self.rate_max, self.rate_max)
         if target:
-            target = min(target, self.rate_max)
             # duration multiplier: rate above target → factor > 1 (longer, slower)
             factor = max(1.0 - self.max, min(1.0 + self.max, r / target))
             if not self.speedup:
@@ -208,6 +222,7 @@ class TempoSmoother:
         with self._lock:
             if idx is not None:
                 self._factors[idx] = factor
+            new_rate = min(new_rate, self.rate_max)   # never save a target above the ceiling
             self.avg = new_rate if self.avg is None else (
                 self.alpha * new_rate + (1.0 - self.alpha) * self.avg)
             _save_session_avg(self.avg)
