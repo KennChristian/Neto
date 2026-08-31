@@ -84,8 +84,13 @@ def _work(client, question, filler, note):
         import speech_engines
         wav = None
         if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
-            try:  # cloned voice, matches the answer + canned filler pool
-                wav = speech_engines.tts_elevenlabs_wav(text)
+            try:  # cloned voice; rendered at the ANSWER's base speed so the
+                # filler -> opening-sentence handoff keeps one pace
+                # (2026-08-31, user: "smooth transition to the opening
+                # sentence" — config speed 1.0 vs CJ_SPEED_BASE 0.91 was a
+                # ~9% pace drop at the seam)
+                spd = speech_engines.emotion_speed("neutral")
+                wav = speech_engines.tts_elevenlabs_wav(text, speed=spd)
             except Exception as e:
                 print(f"[dynfiller] elevenlabs failed ({type(e).__name__}) "
                       f"— openai fallback")

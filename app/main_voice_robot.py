@@ -609,6 +609,50 @@ class _SpeakerDoA:
         threading.Thread(target=self._run, daemon=True).start()
         print(f"[doa] speaker tracking on (max yaw ±{self.max_yaw:.0f}°"
               f"{', mirrored' if self.flip else ''})")
+        self.beam_auto(boot=True)   # chip keeps a fixed beam across app restarts — clear it
+
+    # ── Phase 2 (2026-08-31): steer the XVF3800 beam at the locked speaker ──
+    # While a voice lock holds, the 4 adaptive beams are replaced by a fixed
+    # beam pointed at the lock-time DoA angle (mic array is body-fixed, so the
+    # angle stays valid when the head moves). Off-axis voices are attenuated
+    # in hardware, stacking with the Phase-1 gates. Auto restored on every
+    # lock release and at boot. CJ_BEAM_FIXED=0 disables.
+
+    def _beam_enabled(self):
+        return self.on and self._doa is not None and os.environ.get(
+            "CJ_BEAM_FIXED", "1").strip().lower() not in {"0", "false", "no", "off"}
+
+    def beam_fix(self, max_age=5.0):
+        """Fix the beam at the current smoothed speech angle (chip frame)."""
+        if not self._beam_enabled():
+            return
+        if self.angle is None or time.monotonic() - self.ts > max_age:
+            print("[beam] no fresh speech angle — staying on auto beams")
+            return
+        try:
+            rad = math.radians(self.angle)
+            with self._usb_lock:
+                rs = self._doa._respeaker
+                rs.write("AEC_FIXEDBEAMSAZIMUTH_VALUES", [rad, rad])
+                rs.write("AEC_FIXEDBEAMSONOFF", [1])
+            self._beam_fixed = True
+            print(f"[beam] FIXED @ {self.angle:.0f}° chip frame "
+                  f"(yaw {90.0 - self.angle:+.0f}°) — auto on lock release", flush=True)
+        except Exception as e:
+            print(f"[beam] fix failed ({type(e).__name__}: {e}) — auto beams stay")
+
+    def beam_auto(self, boot=False):
+        """Back to the chip's 4 adaptive beams."""
+        if self._doa is None or (not boot and not getattr(self, "_beam_fixed", False)):
+            return
+        try:
+            with self._usb_lock:
+                self._doa._respeaker.write("AEC_FIXEDBEAMSONOFF", [0])
+            if getattr(self, "_beam_fixed", False) or not boot:
+                print("[beam] auto beams restored", flush=True)
+            self._beam_fixed = False
+        except Exception as e:
+            print(f"[beam] auto restore failed ({type(e).__name__}: {e})")
 
     def _run(self):
         while True:
@@ -2134,6 +2178,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         try:   # first question after the wake word: THIS voice owns the session
             lock.lock(path)
             print("[lock] voice locked — conversing with this speaker only")
+            _speaker_doa.beam_fix()   # Phase 2: hardware beam onto this speaker
         except Exception as e:
             print(f"[lock] could not lock ({type(e).__name__}: {e}) — no conversation mode")
     try:
@@ -2191,6 +2236,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             # not a person: release so the next real question can lock properly
             try:
                 lock.release()
+                _speaker_doa.beam_auto()
                 print("[lock] released — locked on a noise capture")
             except Exception:
                 pass
@@ -2209,6 +2255,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
             _stage("transcribe", "active", "listening again…")
             if lock is not None and not followup:
                 lock.release()   # don't lock onto a 1 s "CJAP" clip; the retry re-locks on the real question
+                _speaker_doa.beam_auto()
             _gate_report(gate, sim=None, outcome="wake phrase only — rewake")
             return "rewake"
         print(f"[stt] wake phrase inside the question stripped ({_nwake}x) -> {question!r}")
@@ -2564,9 +2611,11 @@ def wake_loop(client, artifacts, gestures):
                 # "ignored" (another voice), empty STT, mic timeout: keep
                 # listening until the deadline
             lock.release()
+            _speaker_doa.beam_auto()
             _publish_transcript("note", "(conversation closed — say the wake word to start again)")
         elif lock is not None:
             lock.release()
+            _speaker_doa.beam_auto()
         if r == "interrupted":
             print(f"[stop] answer stopped — back to sleep, say \"{phrase}\" to ask again")
         gestures.neutral()

@@ -1,11 +1,42 @@
 {
-  "add": [],
-  "merge": {
-    "x": {
-      "add_variants": [
-        "y"
-      ]
-    }
+ "add": [
+  {
+   "id": "person::elenita-leni-carpio-panganiban",
+   "class": "person",
+   "canonical": "Elenita Carpio-Panganiban",
+   "variants": [
+    "Elenita C. Panganiban"
+   ],
+   "misrecognitions": [
+    "Marisita Carpio Panganiban",
+    "Marisita Carpio-Panganiban",
+    "Marisita Panganiban"
+   ],
+   "gloss": [
+    "CJ's late wife Leni; full first name Elenita, NOT Marisita"
+   ],
+   "doc_freq": 3
   },
-  "remove": []
+  {
+   "id": "person::elenita-first-name",
+   "class": "person",
+   "canonical": "Elenita",
+   "variants": [],
+   "misrecognitions": [
+    "Marisita"
+   ],
+   "gloss": [
+    "bare wrong first name for CJ's wife -> Elenita"
+   ],
+   "doc_freq": 3
+  }
+ ],
+ "merge": {
+  "x": {
+   "add_variants": [
+    "y"
+   ]
+  }
+ },
+ "remove": []
 }

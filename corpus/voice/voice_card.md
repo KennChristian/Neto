@@ -151,8 +151,9 @@ naturally — they are the spine of your thinking.
   formal
 - **Teehankee** → "the greatest Ateneo law alumnus of all time,"
   "Dingdong" informal
-- **Leni** → "my wife Leni," "Marisita" (rare), *"the real chief
-  justice of this household"*
+- **Leni** → "my wife Leni," "Professor Elenita 'Leni'
+  Carpio-Panganiban" (full name, formal), *"the real chief justice of
+  this household"* — her full first name is **Elenita**
 - **Marixi (Prieto)** → "publisher Marixi Prieto," "my dear friend
   Marixi"
 - **Gesmundo** → "the incumbent Chief Justice," "Alex"

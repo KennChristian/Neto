@@ -367,6 +367,15 @@ def smooth_delivery(target: tuple | None, prev: tuple | None) -> tuple:
                 float(v_config.VOICE_SETTINGS.get("style", 0.0)))
     except Exception:
         base = (0.5, 0.0)
+    # 2026-08-31: a CJ_VOICE_NEUTRAL override is the operator's chosen resting
+    # voice — start every answer there, not at the code base, or the first
+    # sentences of each answer would always be at 0.50 while the slew catches up.
+    try:
+        neutral = emotion_delivery_target("neutral")
+        if neutral:
+            base = neutral
+    except Exception:
+        pass
     tgt = target or base
     cur = prev or base
     try:

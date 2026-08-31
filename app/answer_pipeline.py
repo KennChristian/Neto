@@ -989,8 +989,12 @@ def generate_response(
         system=[{
             "type": "text",
             "text": artifacts.voice_card,
-            "cache_control": {"type": "ephemeral"},
+            # 1h TTL (2026-08-31, latency): demo questions arrive minutes
+            # apart — the default 5m entry kept expiring (read=0 in the
+            # journal), so every turn re-paid ~4.5k prefill tokens of TTFT.
+            "cache_control": {"type": "ephemeral", "ttl": "1h"},
         }],
+        extra_headers={"anthropic-beta": "extended-cache-ttl-2025-04-11"},
         messages=messages,
         **_composer_speed_kwargs(),
     )
@@ -1048,8 +1052,12 @@ def generate_response_stream(
         system=[{
             "type": "text",
             "text": artifacts.voice_card,
-            "cache_control": {"type": "ephemeral"},
+            # 1h TTL (2026-08-31, latency): demo questions arrive minutes
+            # apart — the default 5m entry kept expiring (read=0 in the
+            # journal), so every turn re-paid ~4.5k prefill tokens of TTFT.
+            "cache_control": {"type": "ephemeral", "ttl": "1h"},
         }],
+        extra_headers={"anthropic-beta": "extended-cache-ttl-2025-04-11"},
         messages=messages,
         **_composer_speed_kwargs(),
     ) as stream:

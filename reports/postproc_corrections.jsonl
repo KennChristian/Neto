@@ -185,3 +185,5 @@
 {"ts": 1788064710.501, "source": "llm", "surface": "father", "canonical": "Father", "class": "person", "kind": "canonical", "confidence": 1.0}
 {"ts": 1788064902.443, "source": "llm", "surface": "judiciary", "canonical": "Judiciary", "class": "org", "kind": "canonical", "confidence": 1.0}
 {"ts": 1788065842.265, "source": "llm", "surface": "decision", "canonical": "Decision", "class": "event", "kind": "canonical", "confidence": 1.0}
+{"ts": 1788138016.695, "source": "llm", "surface": "Marisita Carpio Panganiban", "canonical": "Elenita Carpio-Panganiban", "class": "person", "kind": "misrecognition", "confidence": 0.95}
+{"ts": 1788138016.696, "source": "llm", "surface": "Marisita", "canonical": "Elenita", "class": "person", "kind": "misrecognition", "confidence": 0.95}
