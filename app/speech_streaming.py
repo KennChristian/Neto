@@ -697,7 +697,8 @@ def _fidelity_audit_enabled():
 
 
 def stream_turn(client, artifacts, question, history, *, play_fn,
-                on_first_audio=None, abort=None, style_fn=None):
+                on_first_audio=None, on_first_token=None, abort=None,
+                style_fn=None):
     """Gate -> route -> STREAMED compose, speaking sentence-by-sentence.
 
     Returns {response, routing, interrupted, first_audio_s, compose_s} or
@@ -865,6 +866,11 @@ def stream_turn(client, artifacts, question, history, *, play_fn,
     for piece in stream_src:
         if not parts:
             print(f"[stream] first composer token {time.monotonic() - t0:.1f}s")
+            if on_first_token:   # filler hold: the answer is now imminent
+                try:
+                    on_first_token()
+                except Exception:
+                    pass
             if ooc_text is None:
                 publish_stage("compose", "active", "streaming — speaking as it writes")
         if abort.is_set():

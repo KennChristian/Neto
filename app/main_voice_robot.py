@@ -1324,6 +1324,11 @@ class FillerLoop:
         self.exhausted = threading.Event()
         self._next = None        # P3: one-shot injected clip (dynamic filler)
         self._next_is_tmp = False
+        # silent-hold bookkeeping for defer() (2026-08-31): the hold deadline
+        # is an attribute so the turn can push it out once the composer's
+        # first token is in; None once the hold is over (a clip is on air)
+        self._hold_start = None
+        self._deadline = None
         self._thread = threading.Thread(target=self._run, daemon=True)
         if self._clips:
             self._thread.start()
@@ -1346,6 +1351,35 @@ class FillerLoop:
         self._next, self._next_is_tmp = wav_path, True
         return True
 
+    def defer(self, grace_s=None):
+        """The composer's FIRST TOKEN is in — the first sentence's audio
+        usually follows within ~0.5-1.3 s (traces 2026-08-31), so if we are
+        still in the silent hold, extend it by CJ_FILLER_TOKEN_GRACE_S
+        (default 1.6 s) instead of starting a 2.6 s+ clip the answer would
+        then have to wait behind (both streamed turns that day: audio READY
+        at 2.4-3.1 s, ON AIR at 5.1-5.6 s — the filler was the whole gap).
+        The total hold never exceeds CJ_FILLER_HOLD_MAX_S (default 3.6 s;
+        the 4 s v1 hold read as a "big pause"). No-op once a clip is playing
+        or when fillers are off. Returns the extra seconds granted."""
+        if self._deadline is None or self._stop.is_set():
+            return 0.0
+        if grace_s is None:
+            grace_s = _env_num("CJ_FILLER_TOKEN_GRACE_S", 1.6)
+        if grace_s <= 0:
+            return 0.0
+        now = time.monotonic()
+        if now >= self._deadline:
+            return 0.0
+        cap = (self._hold_start or now) + _env_num("CJ_FILLER_HOLD_MAX_S", 3.6)
+        new_deadline = min(max(self._deadline, now + grace_s), cap)
+        extra = new_deadline - self._deadline
+        if extra <= 0.05:
+            return 0.0
+        self._deadline = new_deadline
+        print(f"[filler] first token in at {now - self._hold_start:.1f}s — "
+              f"holding {new_deadline - now:.1f}s more for the answer, no clip")
+        return extra
+
     def _run(self):
         pool, played = [], 0
         # Dynamic-filler priority, v2 (2026-08-21 — v1's 4s silent hold read
@@ -1359,10 +1393,14 @@ class FillerLoop:
             first_wait = float(os.environ.get("CJ_FILLER_FIRST_WAIT_S", "1.2"))
         except ValueError:
             first_wait = 1.2
-        deadline = time.monotonic() + max(0.0, first_wait)
-        while (self._next is None and time.monotonic() < deadline
+        self._hold_start = time.monotonic()
+        self._deadline = self._hold_start + max(0.0, first_wait)
+        while (self._next is None and time.monotonic() < self._deadline
                and not self._stop.is_set()):
             time.sleep(0.1)
+        self._deadline = None      # hold over — defer() is a no-op from here
+        if self._stop.is_set():    # answer landed during the hold: no clip at all
+            return
         first = True
         while not self._stop.is_set():
             nxt, self._next = self._next, None
@@ -1937,7 +1975,16 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         filler.stop()          # waits for the current clip, then we speak
         gestures.start("talk")
         first_audio.set()
-        print(f"[stream] first audio {time.monotonic() - t0:.1f}s after transcript")
+        on_air_box["t"] = round(time.monotonic() - t0, 2)
+        print(f"[stream] first audio {on_air_box['t']:.1f}s after transcript")
+
+    on_air_box = {}    # on-air time (after any filler clip) for the [trace] line
+
+    def _on_token():   # composer streaming: hold the filler a beat longer
+        try:
+            filler.defer()
+        except Exception:
+            pass
 
     def _style(sentence, emotion):
         gestures.talk_style = emotion
@@ -1949,7 +1996,8 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
             import speech_streaming
             result["out"] = speech_streaming.stream_turn(
                 client, artifacts, question, history, play_fn=_play,
-                on_first_audio=_on_first, abort=abort, style_fn=_style)
+                on_first_audio=_on_first, on_first_token=_on_token,
+                abort=abort, style_fn=_style)
         except Exception as e:
             result["err"] = e
         finally:
@@ -2033,7 +2081,8 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         except Exception as e:
             print(f"[meta] publish skipped: {e}")
         _trace_turn(path="streamed", stt_s=stt_s, compose_s=out.get("compose_s"),
-                    first_audio_s=out.get("first_audio_s"), audio_s=out.get("audio_s"),
+                    first_audio_s=out.get("first_audio_s"), on_air_s=on_air_box.get("t"),
+                    audio_s=out.get("audio_s"),
                     words=out.get("spoken_words"),
                     topic=(routing or {}).get("primary_topic"),
                     interrupted=bool(out.get("interrupted")))
