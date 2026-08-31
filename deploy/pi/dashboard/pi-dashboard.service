@@ -7,7 +7,7 @@ Wants=network-online.target
 Type=simple
 User=pollen
 Environment=XDG_RUNTIME_DIR=/run/user/1000
-ExecStart=/usr/bin/python3 /home/pollen/pi_dashboard/dashboard.py
+ExecStart=/usr/bin/python3 /home/pollen/pi_dashboard/ui_server.py
 Restart=always
 RestartSec=5
 

@@ -18,13 +18,13 @@ for line in open(os.path.join(APP, ".env")):
 
 import shutil  # noqa: E402
 
-import voice_io  # noqa: E402
-from voice_io import tts_concatenate_parallel  # noqa: E402
+import speech_engines  # noqa: E402
+from speech_engines import tts_concatenate_parallel  # noqa: E402
 
 text, out = sys.argv[1], sys.argv[2]
-if getattr(voice_io, "TTS_BACKEND", "openai") == "elevenlabs":
+if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
     try:
-        src = voice_io.tts_elevenlabs_wav(text)
+        src = speech_engines.tts_elevenlabs_wav(text)
         shutil.move(src, out)
         try:   # alignment sidecar rides along (deleted with the wav)
             shutil.move(src + ".align.json", out + ".align.json")

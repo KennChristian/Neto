@@ -1,14 +1,13 @@
-"""Reachy Mini voice output — ElevenLabs cloned voice with offline fallback.
+"""voice — ElevenLabs cloned-voice synthesis for the CJ robot.
 
-    import voice
-    voice.init(mini=my_open_handle)   # optional but preferred
-    voice.speak("Hello there")        # -> bool, never raises
+    from voice.speak import synthesize, effective_settings, SynthError
 
 Config lives in voice/config.py (gitignored; copy config.example.py).
+Playback/fallback helpers were removed 2026-08-29 (the app plays audio).
 """
 
-from .speak import init, speak  # noqa: F401
+from .speak import synthesize, effective_settings, SynthError  # noqa: F401
 from .cache import prerender  # noqa: F401
 from .audio import rms_envelope  # noqa: F401
 
-__all__ = ["init", "speak", "prerender", "rms_envelope"]
+__all__ = ["synthesize", "effective_settings", "SynthError", "prerender", "rms_envelope"]

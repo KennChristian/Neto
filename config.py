@@ -23,7 +23,7 @@ SHIPPING pipeline consumes:
   [BASELINE]  knobs for the LEGACY pre-W1.8 kiosk (Haiku router/gate → curated
               35-topic map → Sonnet composer → Haiku fidelity check; no
               embeddings/RRF). Consumed ONLY by the CJ_ALLOW_LEGACY-guarded
-              app/cj_chat.py path (the `pre-wake-word-integration` kiosk); NOT
+              app/answer_pipeline.py path (the `pre-wake-word-integration` kiosk); NOT
               by the develop pipeline. Kept for that branch; inert on develop.
 
 Usage:
@@ -338,7 +338,7 @@ COMPOSER_MODEL_ID: str = _env_str(
 )
 # DEPRECATED (W1.8): the Haiku pre-retrieval router/gate is REMOVED from the new
 # serial path — routing is now a local centroid soft-prior (zero LLM round-trips
-# before composition). Retained only for the legacy cj_chat.py path; do not add
+# before composition). Retained only for the legacy answer_pipeline.py path; do not add
 # new pre-composition uses.
 ROUTER_MODEL_ID: str = _env_str(
     "ROUTER_MODEL", _env_str("CJ_ROUTER_MODEL_ID", "claude-haiku-4-5-20251001")
@@ -359,7 +359,7 @@ WHISPER_MODEL_SIZE: str = _env_str("WHISPER_MODEL", "medium")
 # word edit on the SAPI sample; "baron" -> "barren" on openai). STT_BACKEND=local
 # remains the OFFLINE-READY path (no network, no API spend) — one env flip.
 STT_BACKEND: str = _env_str("STT_BACKEND", "openai")
-# [BASELINE] Cloud STT/TTS (voice_io.py OpenAI path).
+# [BASELINE] Cloud STT/TTS (speech_engines.py OpenAI path).
 OPENAI_STT_MODEL: str = _env_str("OPENAI_STT_MODEL", "whisper-1")
 # Local faster-whisper knobs (used when STT_BACKEND=="local"). base/int8/cpu is
 # the recommended local default per the re-bench: 3.75x faster than small
@@ -660,9 +660,9 @@ WAKE_PHRASE_VARIANTS: list[str] = _env_list("CJ_WAKE_PHRASE_VARIANTS", [
 # Master switch for the hands-free mic loop (wake_demo.py). OFF by default so it never
 # disturbs the push-to-talk Streamlit demo; the loop is opt-in.
 WAKE_WORD_ENABLED: bool = _env_bool("CJ_WAKE_WORD_ENABLED", False)
-# Detector backend: "stt_keyword" (default — keyword-spot the existing STT, no trained
+# Detector backend: "openwakeword" (default — keyword-spot the existing STT, no trained
 # model, re-parameterizable) | "openwakeword" (robot/production; needs a trained model).
-WAKE_BACKEND: str = _env_str("CJ_WAKE_BACKEND", "stt_keyword")
+WAKE_BACKEND: str = _env_str("CJ_WAKE_BACKEND", "openwakeword")
 # STT backend for the wake WINDOW specifically (independent of the main STT_BACKEND).
 # "local" (faster-whisper) is preferred — cheap + offline for the always-listening loop.
 WAKE_STT_BACKEND: str = _env_str("CJ_WAKE_STT_BACKEND", "local")
@@ -706,7 +706,7 @@ STOP_OWW_THRESHOLD: float = _env_float("CJ_STOP_OWW_THRESHOLD", 0.4)
 #    HARDWARE-week work. Until then the "signal inputs" are HARD-CODED here (a fixed
 #    azimuth + a level/distance gate) and the head-turn is a logging stub — the seam is
 #    parameterized and unit-tested so the real DOA/controller drop in without rewiring.
-#    Consumed by app/head_orient.py + app/wake_word.run_hands_free_loop.
+#    Consumed by app/main_voice_robot.wake_loop.
 # ===========================================================================
 # Master switch (OFF by default — opt-in; never disturbs the laptop demo).
 HEAD_ORIENT_ENABLED: bool = _env_bool("CJ_HEAD_ORIENT_ENABLED", False)
@@ -735,11 +735,11 @@ TOPIC_DISPLAY_NAMES_PATH: Path = _env_path(
 
 # ===========================================================================
 # 14. POST-PROCESSING — dictionary-grounded NER + ASR-mishear correction  [P0]
-#    app/postprocess.py (ported from develop 2026-08-11): detects domain
+#    app/text_entities.py (ported from develop 2026-08-11): detects domain
 #    entities (person/org/case/event/book) against data/entities/entity_dict.json
 #    (+ hand-curated entity_overrides.json, hot-reloaded on mtime — no restart
 #    needed), corrects ASR mishears to the canonical form, and enforces exact
-#    SC-citation strings. Wired in cj_voice_cloud.handle_turn (transcript) and
+#    SC-citation strings. Wired in main_voice_robot.handle_turn (transcript) and
 #    speak() (TTS text). DARK unless enabled.
 # ===========================================================================
 # Master switch (OFF = byte-identical passthrough; postprocess never loads the dict).

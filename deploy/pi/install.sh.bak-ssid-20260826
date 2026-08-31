@@ -15,7 +15,7 @@
 #   3. openWakeWord shared feature models + faster-whisper tiny (STT fallback)
 #   4. speaker-ID model (~26 MB from the sherpa-onnx release page)
 #   5. audio clip pools -> ~/fillers, ~/fillers_ack, ~/fillers_bail, ~/demo_clips
-#   6. dotfiles: ~/.asoundrc(.route), ~/bin/audio-out, ~/speaker-watchdog.sh, ~/bt-keepalive.sh,
+#   6. dotfiles: ~/.asoundrc(.route), ~/bin/audio-out, ~/speaker-watchdog.sh,
 #      ~/bin/{verify,export-private,import-private,snapshot-push}.sh
 #   6b. PipeWire realtime + quantum tuning (the 2026-07-21 choppy-audio fix):
 #      ~/.config/pipewire/*.conf.d, ~/.config/systemd/user/*.service.d/rt.conf,
@@ -111,8 +111,7 @@ sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/bin/audio-out" > "$HOME/bin/audio-out
 # robot-specific speaker MACs: keep them in ~/bin/audio-out.local (sourced
 # by audio-out if present) so a re-run never clobbers them
 sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/speaker-watchdog.sh" > "$HOME/speaker-watchdog.sh"
-sed "s#/home/pollen#$HOME#g" "$DP/dotfiles/bt-keepalive.sh" > "$HOME/bt-keepalive.sh"
-chmod +x "$HOME/bin/audio-out" "$HOME/speaker-watchdog.sh" "$HOME/bt-keepalive.sh"
+chmod +x "$HOME/bin/audio-out" "$HOME/speaker-watchdog.sh"
 for t in verify.sh export-private.sh import-private.sh snapshot-push.sh; do
   [ -f "$DP/tools/$t" ] && install -m 755 "$DP/tools/$t" "$HOME/bin/$t"
 done
@@ -149,7 +148,7 @@ fi
 # ---------------------------------------------------------------- 8. systemd
 log "systemd units"
 tmp="$(mktemp -d)"
-for u in supervaise.service pi-dashboard.service wifi-fallback.service speaker-watchdog.service bt-keepalive.service; do
+for u in supervaise.service pi-dashboard.service wifi-fallback.service speaker-watchdog.service; do
   sed -e "s#/home/pollen#$HOME#g" -e "s#^User=pollen#User=$ME#" \
       -e "s#^Group=pollen#Group=$ME#" -e "s#/run/user/1000#/run/user/$UID_#g" \
       "$DP/systemd/$u" > "$tmp/$u"
@@ -161,7 +160,7 @@ sudo install -m 644 "$DP/systemd/supervaise.service.d/wakeword.conf" \
 rm -rf "$tmp"
 sudo loginctl enable-linger "$ME"          # PipeWire user session up at boot
 sudo systemctl daemon-reload
-sudo systemctl enable supervaise pi-dashboard wifi-fallback bt-keepalive >/dev/null
+sudo systemctl enable supervaise pi-dashboard wifi-fallback >/dev/null
 # speaker-watchdog is tied to one Sony speaker's MAC — install but leave it
 # to the operator:  sudo systemctl enable --now speaker-watchdog
 sudo systemctl disable speaker-watchdog >/dev/null 2>&1 || true
@@ -170,7 +169,7 @@ sudo systemctl disable speaker-watchdog >/dev/null 2>&1 || true
 log "ReachySetup hotspot profile (autoconnect off; wifi_fallback.sh raises it)"
 if ! nmcli -t -f NAME con show | grep -qx ReachySetup; then
   sudo nmcli con add type wifi ifname wlan0 con-name ReachySetup autoconnect no \
-    ssid "CJAP Reachy" 802-11-wireless.mode ap 802-11-wireless.band bg \
+    ssid ReachyMini-Setup 802-11-wireless.mode ap 802-11-wireless.band bg \
     ipv4.method shared wifi-sec.key-mgmt wpa-psk wifi-sec.psk reachymini >/dev/null
 fi
 

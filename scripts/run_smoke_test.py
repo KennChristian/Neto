@@ -95,8 +95,8 @@ def main() -> int:
     args = parser.parse_args()
 
     # Lazy import so module-level Anthropic import doesn't break --help
-    import cj_chat  # noqa: F401
-    from cj_chat import (
+    import answer_pipeline  # noqa: F401
+    from answer_pipeline import (
         CACHE_STATS, make_client, CorpusArtifacts,
         input_gate, route_question, force_meta_routing,
         build_context, generate_response_with_fidelity, _approx_tokens,

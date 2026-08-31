@@ -1,51 +1,27 @@
-"""Voice output for Reachy Mini — ElevenLabs cloned voice with robust fallback.
+"""voice.speak — ElevenLabs synthesis for the cloned CJ voice.
 
-Public API:
+    from voice.speak import synthesize, effective_settings, SynthError
 
-    import voice
-    voice.init(mini=already_open_handle)   # optional, but preferred
-    voice.speak("Magandang umaga!")        # -> bool
-
-speak() never raises into the caller's control loop. On any TTS failure it
-plays a pre-rendered clip from voice/fallback/ (or espeak-ng as a last
-resort) so the robot never goes silent, and returns False.
-
-NOTE on the SDK: reachy_mini 1.9.0 has no ``mini.speaker.play_audio()``.
-The real playback surface is ``mini.media`` (MediaManager):
-``start_playing()`` + ``push_audio_sample(float32 (frames, channels))`` at
-``get_output_audio_samplerate()``. This module adapts to that API.
+synthesize(text, speed=…, align_out=…, previous_text=…, settings=…,
+previous_request_ids=…) → float32 PCM at audio.SYNTH_SAMPLE_RATE; raises
+SynthError (never leaks the key). Config in voice/config.py. The robot/host
+playback and offline fallback that used to live here were removed 2026-08-29.
 """
 
 from __future__ import annotations
 
 import base64
-import json
 import logging
 import os
-import subprocess
-import tempfile
-import threading
 import time
-from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 import numpy as np
 import requests
 
-from . import audio, cache, config
+from . import audio, config
 
 log = logging.getLogger("voice")
-
-_FALLBACK_DIR = Path(__file__).resolve().parent / "fallback"
-
-# Canned situations worth pre-rendering (see fallback/README.md and
-# fallback/generate_fallback_clips.py).
-REASON_PHRASES: dict[str, str] = {
-    "network": "I seem to have lost my connection. Give me a moment.",
-    "quota": "My voice allowance is used up for now. Bear with me.",
-    "error": "Something went wrong with my voice. Bear with me.",
-}
-
 
 class SynthError(Exception):
     """Internal: ElevenLabs synthesis failed. Carries a fallback reason.
@@ -58,41 +34,6 @@ class SynthError(Exception):
 
 # ---------------------------------------------------------------------------
 # Robot handle — accept an already-open ReachyMini rather than one per call
-# ---------------------------------------------------------------------------
-_mini: Any = None
-_mini_lock = threading.Lock()
-
-
-def init(mini: Any = None) -> None:
-    """Hand this module an already-open ReachyMini instance. The SDK does not
-    like concurrent connections, so share the one your control loop owns."""
-    global _mini
-    with _mini_lock:
-        _mini = mini
-
-
-def _get_mini() -> Any:
-    """Return the shared handle, lazily opening one only if none was given."""
-    global _mini
-    with _mini_lock:
-        if _mini is None and config.HARDWARE == "wireless":
-            try:
-                from reachy_mini import ReachyMini
-                log.warning("no ReachyMini handle provided — opening one; "
-                            "prefer voice.init(mini=...) from your control loop")
-                _mini = ReachyMini()
-            except ModuleNotFoundError:
-                log.error("reachy_mini SDK is not installed in this Python "
-                          "environment — robot playback unavailable, using "
-                          "host audio (aplay routes to the robot speaker "
-                          "when running on the robot itself)")
-            except Exception as e:
-                log.error("could not open ReachyMini handle: %s", type(e).__name__)
-        return _mini
-
-
-# ---------------------------------------------------------------------------
-# Synthesis (ElevenLabs REST — raw PCM back, retries with backoff)
 # ---------------------------------------------------------------------------
 def effective_settings(speed: Optional[float] = None) -> dict:
     """config.VOICE_SETTINGS with an optional per-call speed override,
@@ -127,8 +68,15 @@ def _want_timestamps() -> bool:
 def synthesize(text: str, speed: Optional[float] = None,
                align_out: Optional[dict] = None,
                previous_text: Optional[str] = None,
-               settings: Optional[dict] = None) -> np.ndarray:
+               settings: Optional[dict] = None,
+               previous_request_ids: Optional[list] = None) -> np.ndarray:
     """Text → float32 mono PCM at audio.SYNTH_SAMPLE_RATE via ElevenLabs.
+
+    previous_request_ids (2026-08-29): ElevenLabs request stitching — ids of
+    the sentences generated just before this one (max 3). Conditions prosody
+    on the actual previous AUDIO, not just previous_text. The response's
+    request id is returned in align_out["_request_id"]. If the API rejects
+    the ids (stale), the request is retried once without them.
     Raises SynthError (never leaks the API key in messages).
 
     previous_text: the sentence spoken just before this one (request
@@ -156,6 +104,8 @@ def synthesize(text: str, speed: Optional[float] = None,
             "voice_settings": settings or effective_settings(speed)}
     if previous_text:
         body["previous_text"] = previous_text[-400:]
+    if previous_request_ids:
+        body["previous_request_ids"] = [r for r in previous_request_ids if r][-3:]
     params = {"output_format": config.OUTPUT_FORMAT}
 
     last_detail = "unknown"
@@ -173,6 +123,8 @@ def synthesize(text: str, speed: Optional[float] = None,
             raise SynthError("network", last_detail)
 
         if resp.status_code == 200:
+            if align_out is not None:
+                align_out["_request_id"] = resp.headers.get("request-id")
             if use_ts:
                 try:
                     doc = resp.json()
@@ -189,6 +141,12 @@ def synthesize(text: str, speed: Optional[float] = None,
                 raise SynthError("error", "empty audio response")
             return pcm
 
+        if body.get("previous_request_ids") and resp.status_code in (400, 422):
+            # stale/unknown stitching ids: drop them and try again once
+            log.warning("previous_request_ids rejected (HTTP %d) — retrying without",
+                        resp.status_code)
+            body.pop("previous_request_ids", None)
+            continue
         if use_ts and resp.status_code in (400, 404, 405, 422):
             # with-timestamps not available for this model/tier — drop to the
             # plain endpoint for the rest of the process (lip sync degrades
@@ -256,163 +214,3 @@ def synthesize(text: str, speed: Optional[float] = None,
 # ---------------------------------------------------------------------------
 # Playback
 # ---------------------------------------------------------------------------
-def _play_on_robot(pcm: np.ndarray, sr: int, blocking: bool) -> bool:
-    """Push PCM through mini.media (16 kHz stereo float32 on current SDK)."""
-    mini = _get_mini()
-    if mini is None:
-        return False
-    try:
-        media = mini.media
-        out_sr = int(media.get_output_audio_samplerate())
-        out_ch = int(media.get_output_channels())
-        data = audio.resample(pcm, sr, out_sr)
-        frames = np.repeat(data[:, None], out_ch, axis=1) if out_ch > 1 \
-            else data[:, None]
-        frames = np.ascontiguousarray(frames, dtype=np.float32)
-        media.start_playing()
-        chunk = int(out_sr * 0.1)  # 100 ms pushes
-        for i in range(0, frames.shape[0], chunk):
-            media.push_audio_sample(frames[i:i + chunk])
-        if blocking:
-            time.sleep(frames.shape[0] / out_sr + 0.15)
-        return True
-    except Exception as e:
-        log.warning("robot playback failed (%s) — trying host audio",
-                    type(e).__name__)
-        return False
-
-
-def _play_on_host(pcm: np.ndarray, sr: int, blocking: bool) -> bool:
-    """Host audio: sounddevice, then aplay as a last resort."""
-    try:
-        import sounddevice as sd
-        # many ALSA routes only negotiate 44.1/48 kHz — resample up front
-        play_sr = 48_000
-        sd.play(audio.resample(pcm, sr, play_sr), play_sr)
-        if blocking:
-            sd.wait()
-        return True
-    except Exception as e:
-        log.warning("sounddevice playback failed (%s) — trying aplay",
-                    type(e).__name__)
-    try:
-        import soundfile as sf
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
-            tmp = Path(f.name)
-        sf.write(tmp, pcm, sr, subtype="PCM_16")
-        proc = subprocess.Popen(["aplay", "-q", str(tmp)],
-                                stdout=subprocess.DEVNULL,
-                                stderr=subprocess.DEVNULL)
-        if blocking:
-            rc = proc.wait(timeout=max(10.0, pcm.size / sr + 5.0))
-            if rc != 0:
-                log.error("aplay exited %d — no audio was played", rc)
-                return False
-        return True
-    except Exception as e:
-        log.error("all playback paths failed (%s)", type(e).__name__)
-        return False
-
-
-def _play(pcm: np.ndarray, sr: int, blocking: bool) -> bool:
-    if config.HARDWARE == "wireless":
-        return _play_on_robot(pcm, sr, blocking) or _play_on_host(pcm, sr, blocking)
-    return _play_on_host(pcm, sr, blocking)
-
-
-# ---------------------------------------------------------------------------
-# Fallback — the robot must never go silent
-# ---------------------------------------------------------------------------
-def _fallback_clip(normalized: str) -> Optional[tuple[np.ndarray, int]]:
-    """Look up a pre-rendered clip for this exact phrase in voice/fallback/."""
-    index = _FALLBACK_DIR / "index.json"
-    if not index.is_file():
-        return None
-    try:
-        import soundfile as sf
-        mapping: dict[str, str] = json.loads(index.read_text(encoding="utf-8"))
-        name = mapping.get(normalized)
-        if not name:
-            return None
-        pcm, sr = sf.read(_FALLBACK_DIR / name, dtype="float32",
-                          always_2d=False)
-        return pcm, int(sr)
-    except Exception as e:
-        log.warning("fallback clip lookup failed: %s", type(e).__name__)
-        return None
-
-
-def _espeak(text: str) -> Optional[tuple[np.ndarray, int]]:
-    """Last-resort synthesis with espeak-ng so *something* comes out."""
-    try:
-        import soundfile as sf
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
-            tmp = Path(f.name)
-        subprocess.run(["espeak-ng", "-w", str(tmp), text], check=True,
-                       timeout=15, stdout=subprocess.DEVNULL,
-                       stderr=subprocess.DEVNULL)
-        pcm, sr = sf.read(tmp, dtype="float32", always_2d=False)
-        if pcm.ndim > 1:
-            pcm = pcm.mean(axis=1).astype(np.float32)
-        return pcm, int(sr)
-    except FileNotFoundError:
-        log.error("espeak-ng is not installed (apt install espeak-ng) — "
-                  "no last-resort voice available")
-        return None
-    except Exception as e:
-        log.error("espeak-ng fallback failed: %s", type(e).__name__)
-        return None
-
-
-def _speak_fallback(normalized: str, reason: str, blocking: bool) -> None:
-    """Fallback ladder: exact clip → reason clip → espeak-ng → silence."""
-    clip = _fallback_clip(normalized)
-    if clip is None and reason in REASON_PHRASES:
-        clip = _fallback_clip(cache.normalize_text(REASON_PHRASES[reason]))
-    if clip is None:
-        clip = _espeak(normalized)
-    if clip is not None:
-        _play(clip[0], clip[1], blocking)
-    else:
-        log.error("fallback exhausted — staying silent for this line")
-
-
-# ---------------------------------------------------------------------------
-# Public entry point
-# ---------------------------------------------------------------------------
-def speak(text: str, blocking: bool = True) -> bool:
-    """Speak text in the cloned voice. Returns True on success, False if it
-    fell back or failed. NEVER raises into the caller's control loop."""
-    try:
-        normalized = cache.normalize_text(text)
-        if not normalized:
-            return False
-        key = cache.cache_key(normalized)
-
-        hit = cache.get(key)
-        if hit is not None:
-            pcm, sr = hit
-        else:
-            try:
-                raw = synthesize(normalized)
-            except SynthError as e:
-                log.warning("TTS unavailable (%s) — falling back", e.reason)
-                _speak_fallback(normalized, e.reason, blocking)
-                return False
-            pcm = audio.process(raw, audio.SYNTH_SAMPLE_RATE)
-            sr = audio.SYNTH_SAMPLE_RATE
-            cache.put(key, pcm, sr)
-
-        if blocking:
-            return _play(pcm, sr, blocking=True)
-        threading.Thread(target=_play, args=(pcm, sr, True),
-                         daemon=True, name="voice-speak").start()
-        return True
-    except Exception as e:
-        # Absolute backstop: a TTS problem must never crash the control loop.
-        log.error("speak() suppressed unexpected %s: %s", type(e).__name__, e)
-        try:
-            _speak_fallback(cache.normalize_text(text), "error", blocking)
-        except Exception:
-            pass
-        return False

@@ -1,10 +1,5 @@
 # Written by ~/bin/audio-out - do not edit by hand.
-# Route: Sony ULT FIELD 1 (50:1B:6A:8B:16:F2) via BlueALSA.
+# Route: internal speaker (XMOS) via PipeWire default sink.
 pcm.!audio_out_route {
-    type plug
-    slave.pcm {
-        type bluealsa
-        device "50:1B:6A:8B:16:F2"
-        profile "a2dp"
-    }
+    type pulse
 }

@@ -1,0 +1,152 @@
+"""Transcript language gate (2026-08-25, user: "strictly limit to Filipino
+and English words in transcribing").
+
+The STT API takes ONE language hint, and under room noise it hallucinates
+whole sentences in random languages (Dutch, Hungarian, Latin seen in the
+journal). This gate lets English, Filipino (Tagalog) and Taglish through and
+rejects everything else. Two layers, cheapest first:
+
+  1. vocabulary evidence — share of words found in a built-in English +
+     Tagalog common-word set, the pronunciation lexicon (corpus Tagalog,
+     names, places) and the entity dictionary (cases, people);
+  2. langdetect (n-gram model) on the sentence: accepted when English or
+     Tagalog is the top guess or together carry >= 35% probability.
+
+Very short utterances (< 3 words) are always accepted — too little signal
+to judge, and they are usually "Sige po." / "Yes." Fails OPEN on any error.
+Disable with CJ_STT_LANG_STRICT=0.
+"""
+import json, os, re
+
+_WORD_RE = re.compile(r"[A-Za-zÀ-ɏ']+")
+
+EN_COMMON = set("""versus vs the a an and or but if so of to in on at by for with from about as into
+than that this these those it its is are was were be been being am do does did done
+have has had having i you he she we they me him her us them my your his our their
+what which who whom whose where when why how not no yes can could will would shall
+should may might must there here then now just only also very more most much many
+some any all each every other such own same too again ever never always often
+please thank thanks sorry hello hi okay ok right well good great bad new old
+one two three four five six seven eight nine ten first last next before after
+still because while until since during between over under out up down off
+tell say said ask asked know think want need like love make made give get got
+go going come came see saw look take took work time year day people man woman
+country nation government law court justice chief president rule liberty
+prosperity freedom rights right wrong truth god faith family life people
+bye goodbye hello later thanks welcome fine sure maybe really actually
+question answer questions answers ask about tell explain describe story
+retire retired retirement judge judges lawyer lawyers case cases decision
+decisions ruling opinion dissent constitution congress senate house election
+elections vote voters democracy republic philippines philippine filipino
+filipinos manila school schools student students teacher teachers education
+book books wrote write writing column columns speech speeches foundation
+museum money business economy economic investors investor poor poverty rich
+richest wife husband children child son daughter mother father friend friends
+enemy enemies experience memorable favorite advice young youth future past
+history today tomorrow yesterday morning afternoon evening night week month
+big small long short hard easy important difficult happy sad afraid proud
+help hope dream believe change world war peace church catholic prayer pray
+name age born live lived die death health doctor food eat drink water""".split())
+
+TL_COMMON = set("""ang ng mga sa na po ba ano ako ikaw ka siya kayo tayo kami sila
+niya nila natin namin ninyo ko mo ito iyan iyon yun yung dito diyan doon ay at
+o pero kasi kaya tapos naman lang din rin pa pala daw raw nga ba ho opo oo hindi
+wala may meron mayroon kailangan dapat pwede puwede gusto ayaw alam kilala
+sino saan kailan bakit paano alin ilan magkano sige salamat kumusta kamusta
+maganda mabuti masama mahal malaki maliit marami konti lahat bawat isa dalawa
+tatlo apat lima ngayon bukas kahapon mamaya kanina dati noon araw gabi taon
+tao bata lalaki babae pamilya bayan bansa gobyerno batas hukuman katarungan
+kalayaan kaunlaran karapatan mabuhay dios diyos pananampalataya buhay
+ganun ganyan ganito paren parin nyo kayo yan yon eh ah oh""".split())
+
+_STRICT = os.environ.get("CJ_STT_LANG_STRICT", "1").strip().lower() not in {"0", "false", "no", "off"}
+_vocab_cache = {"ts": None, "words": set()}
+
+
+def _extra_vocab():
+    """Words from the pronunciation lexicon + entity dictionary (hot-reloaded)."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    root = os.path.dirname(here)
+    paths = [os.environ.get("CJ_PRONUNCIATION_LEXICON")
+             or os.path.join(root, "data", "entities", "pronunciation_lexicon.json"),
+             os.path.join(root, "data", "entities", "entity_dict.json"),
+             os.path.join(root, "data", "entities", "entity_overrides.json")]
+    try:
+        stamp = tuple(os.path.getmtime(p) if os.path.exists(p) else 0 for p in paths)
+    except OSError:
+        stamp = None
+    if stamp == _vocab_cache["ts"]:
+        return _vocab_cache["words"]
+    words = set()
+
+    def walk(x):
+        if isinstance(x, dict):
+            for k, v in x.items():
+                if isinstance(k, str):
+                    words.update(w.lower() for w in _WORD_RE.findall(k))
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+        elif isinstance(x, str):
+            words.update(w.lower() for w in _WORD_RE.findall(x))
+
+    for p in paths:
+        try:
+            with open(p, encoding="utf-8") as f:
+                walk(json.load(f))
+        except (OSError, ValueError):
+            pass
+    _vocab_cache.update(ts=stamp, words=words)
+    return words
+
+
+def check(text: str):
+    """Return (accepted: bool, reason: str)."""
+    if not _STRICT:
+        return True, "strict off"
+    try:
+        toks = [w.lower() for w in _WORD_RE.findall(text or "")]
+        if len(toks) < 3:
+            # too little text for the detector ("Bye" reads as Danish): keep
+            # anything with a known word; drop only confident foreign calls
+            known = EN_COMMON | TL_COMMON | _extra_vocab()
+            if any(w in known for w in toks):
+                return True, "short, known word"
+            try:
+                from langdetect import DetectorFactory, detect_langs
+                DetectorFactory.seed = 0
+                langs = detect_langs(text)
+                top, p = (langs[0].lang, langs[0].prob) if langs else ("?", 0.0)
+            except Exception:
+                return True, "short"
+            if top in ("en", "tl") or p < 0.95:
+                return True, f"short, lang {top} p={p:.2f}"
+            return False, f"short, no known word, lang {top} p={p:.2f}"
+        core = EN_COMMON | TL_COMMON
+        extra = _extra_vocab()
+        n = len(toks)
+        core_hits = sum(1 for w in toks if w in core)
+        extra_hits = sum(1 for w in toks if w not in core and w in extra)
+        frac_all = (core_hits + extra_hits) / n
+        tag = f"core {core_hits} names {extra_hits} /{n}"
+        # everyday English/Tagalog words decide; names/lexicon words alone do
+        # not (foreign sentences share short tokens with the name lists)
+        if core_hits >= 2 and frac_all >= 0.4:
+            return True, "vocab " + tag
+        try:
+            from langdetect import DetectorFactory, detect_langs
+            DetectorFactory.seed = 0
+            langs = detect_langs(text)
+        except Exception as e:
+            return (core_hits >= 1 and frac_all >= 0.3), f"{tag} (no detector: {type(e).__name__})"
+        probs = {l.lang: l.prob for l in langs}
+        top = langs[0].lang if langs else "?"
+        en_tl = probs.get("en", 0.0) + probs.get("tl", 0.0)
+        if top in ("en", "tl") or en_tl >= 0.35:
+            return True, f"lang {top} en+tl={en_tl:.2f} {tag}"
+        if core_hits >= 1 and extra_hits >= 2 and frac_all >= 0.6:   # "Lambino versus COMELEC decision"
+            return True, "names " + tag
+        return False, f"lang {top} p={probs.get(top, 0):.2f} en+tl={en_tl:.2f} {tag}"
+    except Exception as e:
+        return True, f"gate error {type(e).__name__}"

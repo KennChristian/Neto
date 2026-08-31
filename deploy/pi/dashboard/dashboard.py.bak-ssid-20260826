@@ -40,7 +40,6 @@ TEST_WAV = os.path.join(HOME, "fillers", "01.wav")
 UNITS = {
     "supervaise": "supervaise.service",
     "speaker-watchdog": "speaker-watchdog.service",
-    "bt-keepalive": "bt-keepalive.service",
     "bluealsa": "bluealsa.service",
     "pi-dashboard": "pi-dashboard.service",
     "wifi-fallback": "wifi-fallback.service",
@@ -151,7 +150,7 @@ def wifi_connect(ssid, password=None):
         threading.Thread(target=_switch, daemon=True).start()
         return True, (f'trying to join "{ssid}" — reconnect your phone to that '
                       "network and reopen the dashboard; if joining fails, the "
-                      "CJAP Reachy hotspot returns within a minute")
+                      "ReachyMini-Setup hotspot returns within a minute")
     return _wifi_join(ssid, password)
 
 
@@ -726,7 +725,6 @@ PAGE = """<!DOCTYPE html>
   <select id="log-unit" onchange="loadLogs()">
     <option value="supervaise">supervaise</option>
     <option value="speaker-watchdog">speaker-watchdog</option>
-    <option value="bt-keepalive">bt-keepalive</option>
     <option value="bluealsa">bluealsa</option>
     <option value="pi-dashboard">pi-dashboard</option>
   </select></h2>
@@ -1126,7 +1124,7 @@ class Handler(BaseHTTPRequestHandler):
         if supervaise_ui and self.path.partition("?")[0] in (
                 "/api/ctl", "/api/entities", "/api/avatar-session",
                 "/api/avatar-stop", "/api/avatar-lag", "/api/avatar-status",
-                "/api/ask", "/api/tuning"):
+                "/api/ask"):
             try:
                 n = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(n) or b"{}")

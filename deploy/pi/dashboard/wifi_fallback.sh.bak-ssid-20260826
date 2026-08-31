@@ -5,7 +5,7 @@
 # start its own access point so a phone can connect and open the dashboard
 # to add the venue WiFi:
 #
-#     network  CJAP Reachy   password  reachymini
+#     network  ReachyMini-Setup   password  reachymini
 #     dashboard at  http://10.42.0.1:8080  (WiFi card -> add network)
 #
 # While the hotspot is up, every ~5 min it drops for 45s to let
@@ -16,7 +16,7 @@
 # Runs as root via wifi-fallback.service. Override the AP name/password with
 # CJ_SETUP_SSID / CJ_SETUP_PW in the unit's Environment.
 
-SSID="${CJ_SETUP_SSID:-CJAP Reachy}"
+SSID="${CJ_SETUP_SSID:-ReachyMini-Setup}"
 PW="${CJ_SETUP_PW:-reachymini}"
 CON="ReachySetup"
 CHECK_S=20

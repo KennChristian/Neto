@@ -1,0 +1,20 @@
+[Unit]
+Description=Keep the connected Bluetooth speaker awake (inaudible pulse every 4 min while idle)
+After=bluetooth.service bluealsa.service speaker-watchdog.service
+Wants=bluetooth.service bluealsa.service
+
+[Service]
+User=pollen
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+# Tuning (uncomment to change): pulse period / tone / level / length
+#Environment=BT_KEEPALIVE_INTERVAL_S=240
+#Environment=BT_KEEPALIVE_TONE_HZ=20
+#Environment=BT_KEEPALIVE_DB=-30
+#Environment=BT_KEEPALIVE_DUR_S=2
+#Environment=BT_KEEPALIVE_LOG=1
+ExecStart=/home/pollen/bt-keepalive.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

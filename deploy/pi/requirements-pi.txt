@@ -1,4 +1,4 @@
-# Frozen from the live Reachy Mini venv (app/.venv, Python 3.13.5, aarch64) on 2026-08-26.
+# Frozen from the live Reachy Mini venv (app/.venv, Python 3.13.5, aarch64) on 2026-08-31.
 # Install with --no-deps (see deploy/pi/install.sh): openwakeword 0.6.0 declares
 # tflite-runtime, which has no Python 3.13 wheel — we run its onnx path only.
 # pyarrow must stay >= 24 on the Pi 4/CM4 (21.0.0 wheels SIGILL on Cortex-A72).
@@ -11,6 +11,7 @@ anthropic==0.120.2
 anyio==4.14.2
 asgiref==3.12.1
 attrs==26.1.0
+audiotsm==0.1.2
 av==18.0.0
 blinker==1.9.0
 certifi==2026.7.22
@@ -69,6 +70,7 @@ pydantic==2.13.4
 pydantic_core==2.46.4
 pydeck==0.9.3
 pydub==0.25.1
+pyflakes==3.4.0
 Pygments==2.20.0
 PyGObject==3.46.0
 pyserial==3.5

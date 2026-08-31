@@ -25,10 +25,10 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 try:  # P2.5 dual demo UI (/audience, /maintain) — optional module, fail-open
-    import supervaise_ui
+    import ui_routes as ui   # dashboard pages + routes (split 2026-08-29)
 except Exception as _e:
-    supervaise_ui = None
-    print(f"[dashboard] supervaise_ui unavailable: {_e}")
+    ui = None
+    print(f"[dashboard] ui unavailable: {_e}")
 
 PORT = 8080
 HOME = os.path.expanduser("~")
@@ -51,6 +51,16 @@ SPEAKERS = {
     "Marshall EMBERTON": "04:21:44:84:1F:C1",
 }
 
+# relay-file paths live in ui_common (single source since 2026-08-29)
+try:
+    from ui_common import (WAKE_LIVE, WAKE_EVENTS, STOP_LIVE, STOP_EVENTS,   # noqa: E402
+                           TRANSCRIPT, SPEAKING, WAKE_TRIGGER)
+except Exception:   # degrade like `ui = None` above instead of dying at import
+    WAKE_LIVE, WAKE_EVENTS = "/dev/shm/cj_wake_live.json", "/dev/shm/cj_wake_events.jsonl"
+    STOP_LIVE, STOP_EVENTS = "/dev/shm/cj_stop_live.json", "/dev/shm/cj_stop_events.jsonl"
+    TRANSCRIPT, SPEAKING, WAKE_TRIGGER = ("/dev/shm/cj_transcript.jsonl", "/dev/shm/cj_speaking.json",
+                                          "/dev/shm/cj_wake_trigger")
+
 ACTIONS = {
     "restart-app":      ["sudo", "-n", "systemctl", "restart", "supervaise.service"],
     "stop-app":         ["sudo", "-n", "systemctl", "stop", "supervaise.service"],
@@ -62,18 +72,13 @@ ACTIONS = {
     "audio-marshall":   [AUDIO_OUT, "marshall"],
     "test-sound":       ["aplay", "-q", TEST_WAV],
     "tagalog-sample":   ["aplay", "-q", os.path.join(HOME, "demo_clips", "tagalog_sample_2026-08-13.wav")],
-    "activate-listening": ["touch", "/dev/shm/cj_wake_trigger"],
+    "activate-listening": ["touch", WAKE_TRIGGER],
     "enroll-voice":     ["touch", "/dev/shm/cj_enroll_trigger"],
     "gate-on":          ["touch", os.path.join(HOME, "speaker_id", "enabled")],
     "gate-off":         ["rm", "-f", os.path.join(HOME, "speaker_id", "enabled")],
     "reboot":           ["sudo", "-n", "reboot"],
 }
 
-WAKE_LIVE = "/dev/shm/cj_wake_live.json"
-WAKE_EVENTS = "/dev/shm/cj_wake_events.jsonl"
-STOP_LIVE = "/dev/shm/cj_stop_live.json"        # barge-in scores (2026-08-26)
-STOP_EVENTS = "/dev/shm/cj_stop_events.jsonl"
-TRANSCRIPT = "/dev/shm/cj_transcript.jsonl"
 SPEAKER_LAST = "/dev/shm/cj_speaker_last.json"
 SPEAKER_ENROLLED = os.path.join(HOME, "speaker_id", "enrolled.npz")
 SPEAKER_ENABLED = os.path.join(HOME, "speaker_id", "enabled")
@@ -209,13 +214,12 @@ SAY_HELPER = os.path.join(HOME, "pi_dashboard", "say_text_helper.py")
 
 
 def _robot_busy():
-    """'muted' / 'speaking' / None — typed speech must not play over the
+    """'speaking' / None — typed speech must not play over the
     app's own answer (it also clobbers cj_speaking.json and freezes the
-    avatar portrait mid-answer) or while the operator has muted the robot."""
-    if os.path.exists(supervaise_ui.MUTED_FLAG):
-        return "muted"
+    avatar portrait mid-answer). Mic mute (2026-08-29) does NOT block typed
+    speech — the operator muted the microphone, not the robot's voice."""
     try:
-        with open("/dev/shm/cj_speaking.json") as f:
+        with open(SPEAKING) as f:
             doc = json.load(f)
         # "current" without "done" = a clip on air; but if the app was
         # restarted/crashed mid-answer nobody writes done=true, so bound the
@@ -281,13 +285,13 @@ def _publish_say_speaking(text, done, wav=None, dur=None, play_ts=None):
             doc["play_ts"] = play_ts
         with open(tmp, "w") as f:
             json.dump(doc, f)
-        os.replace(tmp, "/dev/shm/cj_speaking.json")
+        os.replace(tmp, SPEAKING)
     except OSError:
         pass
 
 
 def _publish_sentence_copy(wav):
-    """Same contract as stream_speak.publish_sentence_wav (kept in step by
+    """Same contract as speech_streaming.publish_sentence_wav (kept in step by
     hand — the dashboard runs on system python, not the app venv)."""
     try:
         import glob as _glob
@@ -352,6 +356,44 @@ def play_phone_audio(blob):
         for p in (src, wav):
             if os.path.exists(p):
                 os.unlink(p)
+
+
+# Fire-and-forget actions (2026-08-29, user: "make the actions fire and
+# forget"): POST /api/action answers at once with a job id; the command runs
+# in a thread and the page polls GET /api/action/status?id=N until done. A
+# 30 s systemctl restart or BT reconnect no longer holds the browser's
+# request slot (and the "ok" note) hostage.
+_JOBS = {}
+_JOBS_LOCK = threading.Lock()
+_JOB_SEQ = [0]
+
+
+def start_job(name, cmd, timeout, who=""):
+    with _JOBS_LOCK:
+        _JOB_SEQ[0] += 1
+        jid = _JOB_SEQ[0]
+        _JOBS[jid] = {"id": jid, "name": name, "state": "running", "ok": None,
+                      "output": "", "started": time.time(), "finished": None}
+        for old_id in sorted(_JOBS)[:-40]:   # keep the last 40
+            _JOBS.pop(old_id, None)
+
+    def _worker():
+        code, out = run(cmd, timeout=timeout)
+        try:
+            print(f"[action] {who} {name} -> rc={code}", flush=True)
+        except Exception:
+            pass
+        with _JOBS_LOCK:
+            _JOBS[jid].update({"state": "done", "ok": code == 0,
+                               "output": out[-500:], "finished": time.time()})
+    threading.Thread(target=_worker, daemon=True, name=f"action-{name}").start()
+    return jid
+
+
+def job_status(jid):
+    with _JOBS_LOCK:
+        j = _JOBS.get(jid)
+        return dict(j) if j else None
 
 
 def run(cmd, timeout=10):
@@ -809,7 +851,14 @@ async function act(name) {
     const r = await fetch("/api/action", { method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({action: name}) });
-    const out = await r.json();
+    let out = await r.json();
+    if (out.queued) {           // fire-and-forget: poll the job until it finishes
+      toast(name + " sent…");
+      for (let i = 0; i < 400 && out.state !== "done"; i++) {
+        await new Promise(res => setTimeout(res, 300));
+        out = await (await fetch("/api/action/status?id=" + out.id)).json();
+      }
+    }
     toast(name + ": " + (out.ok ? "ok" : "FAILED — " + (out.output || "")));
   } catch (e) { toast(name + " failed: " + e.message); }
   setTimeout(refresh, 1200);
@@ -1072,6 +1121,15 @@ setInterval(() => { if (!document.hidden) wakePoll(); }, 300);
 
 
 class Handler(BaseHTTPRequestHandler):
+    # HTTP/1.1 keep-alive (2026-08-29, user: "make the maintenance UI faster"):
+    # the /maintain page polls ~10 req/s (wake meter 300 ms, state 500 ms,
+    # camera 200 ms). Under the HTTP/1.0 default every poll paid a fresh TCP
+    # handshake over WiFi and the browser's 6-connection cap queued the rest.
+    # Every response must carry Content-Length (or set close_connection) —
+    # _send does; the 302 redirects and the MJPEG stream were patched to.
+    protocol_version = "HTTP/1.1"
+    timeout = 60   # idle keep-alive connection → reap its thread
+
     def log_message(self, *a):  # journald picks up real errors; skip access noise
         pass
 
@@ -1094,7 +1152,14 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path, _, query = self.path.partition("?")
         params = dict(p.split("=", 1) for p in query.split("&") if "=" in p)
-        if supervaise_ui and supervaise_ui.handle_get(self, path, params):
+        if path == "/api/action/status":
+            try:
+                j = job_status(int(params.get("id", "0")))
+            except ValueError:
+                j = None
+            self._send(200 if j else 404, json.dumps(j or {"error": "no such job"}))
+            return
+        if ui and ui.handle_get(self, path, params):
             return
         if path == "/":
             self._send(200, PAGE, "text/html; charset=utf-8")
@@ -1123,7 +1188,7 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, json.dumps({"error": "not found"}))
 
     def do_POST(self):
-        if supervaise_ui and self.path.partition("?")[0] in (
+        if ui and self.path.partition("?")[0] in (
                 "/api/ctl", "/api/entities", "/api/avatar-session",
                 "/api/avatar-stop", "/api/avatar-lag", "/api/avatar-status",
                 "/api/ask", "/api/tuning"):
@@ -1132,7 +1197,7 @@ class Handler(BaseHTTPRequestHandler):
                 body = json.loads(self.rfile.read(n) or b"{}")
             except Exception:
                 body = {}
-            if supervaise_ui.handle_post(self, self.path.partition("?")[0], body):
+            if ui.handle_post(self, self.path.partition("?")[0], body):
                 return
         if self.path == "/api/wifi/connect":
             try:
@@ -1160,7 +1225,7 @@ class Handler(BaseHTTPRequestHandler):
                 from urllib.parse import parse_qs
                 params = {k: v[0] for k, v in
                           parse_qs(self.path.partition("?")[2]).items()}
-                if not supervaise_ui._authed(params, body):
+                if not ui._authed(params, body):
                     # anyone on the LAN could make the robot speak / spend
                     # ElevenLabs credits (2026-08-25 review)
                     self._send(403, json.dumps({
@@ -1177,6 +1242,7 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 n = int(self.headers.get("Content-Length", 0))
                 if n > 15_000_000:
+                    self.close_connection = True   # body left unread: don't reuse the socket
                     raise ValueError("audio too large")
                 ok, out = play_phone_audio(self.rfile.read(n))
             except Exception as e:
@@ -1184,6 +1250,10 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, json.dumps({"ok": ok, "output": out}))
             return
         if self.path != "/api/action":
+            try:  # drain the body so the keep-alive stream stays in sync
+                self.rfile.read(int(self.headers.get("Content-Length", 0) or 0))
+            except Exception:
+                pass
             self._send(404, json.dumps({"error": "not found"}))
             return
         try:
@@ -1206,13 +1276,15 @@ class Handler(BaseHTTPRequestHandler):
                 pass
             threading.Timer(1.5, lambda: subprocess.run(ACTIONS["reboot"], timeout=30)).start()
             return
+        if name == "activate-listening" and ui is not None and os.path.exists(ui.MUTED_FLAG):
+            self._send(200, json.dumps({"ok": False, "output": "mic is MUTED — press Unmute mic first"}))
+            return
         # tagalog-sample is a ~45 s clip — the generic 30 s cap would cut it off
-        code, out = run(ACTIONS[name], timeout=90 if name == "tagalog-sample" else 30)
-        try:
-            print(f"[action] {self.client_address[0]} {name} -> rc={code}", flush=True)
-        except Exception:
-            pass
-        self._send(200, json.dumps({"ok": code == 0, "output": out[-500:]}))
+        jid = start_job(name, ACTIONS[name],
+                        timeout=90 if name == "tagalog-sample" else 30,
+                        who=self.client_address[0])
+        self._send(200, json.dumps({"ok": True, "queued": True, "id": jid,
+                                    "output": "queued"}))
 
 
 def serve_https():
@@ -1225,11 +1297,11 @@ def serve_https():
     ctx.load_cert_chain(cert, key)
     srv = ThreadingHTTPServer(("0.0.0.0", HTTPS_PORT), Handler)
     srv.socket = ctx.wrap_socket(srv.socket, server_side=True)
-    print(f"[dashboard] HTTPS (phone mic) on 0.0.0.0:{HTTPS_PORT}")
+    print(f"[dashboard] HTTPS (phone mic) on 0.0.0.0:{HTTPS_PORT}", flush=True)
     srv.serve_forever()
 
 
 if __name__ == "__main__":
     threading.Thread(target=serve_https, daemon=True).start()
-    print(f"[dashboard] serving on 0.0.0.0:{PORT}")
+    print(f"[dashboard] serving on 0.0.0.0:{PORT}", flush=True)
     ThreadingHTTPServer(("0.0.0.0", PORT), Handler).serve_forever()

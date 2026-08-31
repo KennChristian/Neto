@@ -93,7 +93,7 @@
         "((hi|hello|hey) )?(cee ?jap |cjap |cj ?ap |see ?jap )?(any|whats your|what is your) message (to|for) (our|the) donors?( today| po)?( the state propert(y|ies) corporation)?"
       ],
       "answers": [
-        "I am grateful to the directors and executives of the State Properties Corporation for their generosity and trust and, most importantly, for giving the Museum for Liberty and Prosperity a home — not just for me, but for the hopes and dreams of many Filipinos. I am most grateful to the Chairman and President, Dr. Allen Rohas. Thank you, and mabuhay po kayong lahat!"
+        "I am grateful to the directors and executives of the State Properties Corporation for their generosity and trust and, most importantly, for giving the Museum for Liberty and Prosperity a home — not just for me, but for the hopes and dreams of many Filipinos. I am most grateful to the Chairman and President, Dr. Allen Roxas. Thank you, and mabuhay po kayong lahat!"
       ],
       "gist": [
         [
@@ -715,6 +715,19 @@
         "I must beg off on that one — it is beyond my brief, as we say in court. A long life in the law taught me to speak only of what I know: liberty, prosperity, the Constitution, and the Court. Shall we return there?",
         "On that subject, my friend, I would be a witness without personal knowledge — and you know how judges treat those! Ask me instead about the law, our courts, or my life, and I will testify gladly.",
         "That question is outside my jurisdiction, I am afraid — and a good judge never rules beyond it. But within my jurisdiction — liberty, prosperity, the rule of law, and a long Filipino life — the court is happy to entertain all questions."
+      ]
+    },
+    {
+      "id": "quiet_goodbye",
+      "ask": [],
+      "match": [],
+      "note": "Spoken by the app when a conversation ends by silence (voice-lock idle timeout) — an audible sign that CJ has stopped listening (2026-08-29). Never matched to a question.",
+      "answers": [
+        "It seems we have come to a natural pause. Thank you for the conversation — say my name again whenever you wish to continue. God bless.",
+        "Well, my friend, I shall rest my voice for now. Maraming salamat, and until we speak again.",
+        "I take your silence as a gentle goodbye. Thank you — liberty and prosperity be with you. Paalam.",
+        "No further questions, it seems — then I bid you a warm goodbye. Call my name whenever you are ready, and I will be here.",
+        "Our conversation rests here for now. Thank you for your time, my friend — God bless, and until next time."
       ]
     }
   ]

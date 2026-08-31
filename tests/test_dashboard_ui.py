@@ -16,7 +16,7 @@ from pathlib import Path
 from urllib.request import urlopen, Request
 
 sys.path.insert(0, os.path.join(os.path.expanduser("~"), "pi_dashboard"))
-import supervaise_ui as ui  # noqa: E402
+import ui_routes as ui  # noqa: E402
 
 TMP = Path(tempfile.mkdtemp(prefix="cj_ui_test_"))
 
@@ -49,6 +49,7 @@ def _point_at_fixtures(missing=False):
     ui.ENTITY_OVERLAY = str(base / "overlay.json")
     ui.WAKE_TRIGGER = str(base / "wake_trigger")
     ui.MUTE_TRIGGER = str(base / "mute_trigger")
+    ui.MUTED_FLAG = str(base / "muted")          # never read the live mic-mute flag
     ui._health_cache.update(ts=9e18, data={"stub": True})  # skip live probes
 
 

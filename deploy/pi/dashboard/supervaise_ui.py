@@ -236,7 +236,8 @@ ERROR_RE = re.compile(
     r"Timeout|denied|\[ctl\]|\[action\]|\[ask\] (bad|question)|muted from|— answer cut|"
     r"fidelity\] AUDIT flagged|no speech heard|empty transcript|PLAYBACK|discarded", re.I)
 ERROR_SKIP_RE = re.compile(r"fails? open|failed open|Pending kernel|Consumed .* CPU|onnxruntime|"
-                           r"GetGpuDevices|stop word armed|avatar-voice-", re.I)
+                           r"GetGpuDevices|stop word armed|avatar-voice-|"
+                           r"D: bluealsa-pcm\.c", re.I)   # BlueALSA plugin debug chatter ("Getting BlueALSA PCM: PLAYBACK ...")
 
 
 def _env_value(name):
@@ -431,7 +432,116 @@ def avatar_status_put(body):
     return True, "ok"
 
 
+# ---- Manual actions card (2026-08-26): operator tuning without SSH ---------
+TUNING_CONF = "/etc/systemd/system/supervaise.service.d/wakeword.conf"
+TUNING_KNOBS = {   # field -> (env var, min, max, label)
+    "wake":   ("CJ_WAKE_OWW_THRESHOLD",     0.01,  1.0,  "wake threshold"),
+    "stop":   ("CJ_STOP_OWW_THRESHOLD",     0.001, 1.0,  "stop threshold"),
+    "listen": ("CJ_MIC_TRAILING_SILENCE_S", 0.3,   10.0, "listen time (s)"),
+}
+BT_MACS = {"sony": "50:1B:6A:8B:16:F2", "marshall": "04:21:44:84:1F:C1"}
+
+
+def tuning_get():
+    """Current values of the operator knobs, read from the wakeword.conf drop-in."""
+    out = {}
+    try:
+        text = open(TUNING_CONF).read()
+    except OSError as e:
+        return {"error": str(e)}
+    for field, (var, _lo, _hi, _lbl) in TUNING_KNOBS.items():
+        m = re.search(rf"^Environment={var}=([0-9.]+)\s*$", text, re.M)
+        out[field] = float(m.group(1)) if m else None
+    return out
+
+
+def tuning_set(body):
+    """Rewrite changed Environment= lines in wakeword.conf (via sudo, with a
+    timestamped backup), then daemon-reload + restart the voice app in the
+    background. Returns (ok, message)."""
+    try:
+        text = open(TUNING_CONF).read()
+    except OSError as e:
+        return False, f"cannot read {TUNING_CONF}: {e}"
+    changes = []
+    for field, (var, lo, hi, lbl) in TUNING_KNOBS.items():
+        if body.get(field) in (None, ""):
+            continue
+        try:
+            val = float(body[field])
+        except (TypeError, ValueError):
+            return False, f"{lbl}: not a number"
+        if not lo <= val <= hi:
+            return False, f"{lbl}: must be between {lo} and {hi}"
+        pat = re.compile(rf"^Environment={var}=([0-9.]+)\s*$", re.M)
+        m = pat.search(text)
+        if not m:
+            return False, f"{var} not found in wakeword.conf"
+        if abs(float(m.group(1)) - val) < 1e-9:
+            continue
+        text = pat.sub(f"Environment={var}={val:g}", text, count=1)
+        changes.append(f"{lbl} {m.group(1)} -> {val:g}")
+    if not changes:
+        return True, "no change"
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    tmp = f"/dev/shm/wakeword.conf.{stamp}"
+    with open(tmp, "w") as f:
+        f.write(text)
+    for cmd in (["sudo", "-n", "cp", TUNING_CONF, f"{TUNING_CONF}.bak-dash-{stamp}"],
+                ["sudo", "-n", "install", "-m", "644", tmp, TUNING_CONF],
+                ["sudo", "-n", "systemctl", "daemon-reload"]):
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+        if r.returncode != 0:
+            return False, f"{' '.join(cmd[2:4])} failed: {r.stderr.strip()[:120]}"
+    try:
+        os.unlink(tmp)
+    except OSError:
+        pass
+    threading.Thread(target=lambda: subprocess.run(
+        ["sudo", "-n", "systemctl", "restart", "supervaise.service"], timeout=60),
+        daemon=True).start()
+    return True, "applied: " + "; ".join(changes) + " — voice app restarting (~25 s)"
+
+
+def _manual_action(action):
+    """Extra operator buttons; returns (ok, msg) or None when not ours."""
+    if action == "bt-pulse":
+        r = subprocess.run([os.path.expanduser("~/bt-keepalive.sh"), "test"],
+                           capture_output=True, text=True, timeout=30)
+        return r.returncode == 0, (r.stdout + r.stderr).strip()[-200:] or "done"
+    for name, mac in BT_MACS.items():
+        if action == f"bt-connect-{name}":
+            r = subprocess.run(["bluetoothctl", "connect", mac],
+                               capture_output=True, text=True, timeout=20)
+            ok = "Connection successful" in r.stdout
+            last = ((r.stdout + r.stderr).strip().splitlines() or ["no reply"])[-1]
+            return ok, (f"{name} connected" if ok else f"{name}: {last[:120]}")
+        if action == f"bt-disconnect-{name}":
+            r = subprocess.run(["bluetoothctl", "disconnect", mac],
+                               capture_output=True, text=True, timeout=20)
+            return "Successful" in r.stdout, f"{name} disconnect: " + r.stdout.strip()[-80:]
+    units = {"restart-keepalive": "bt-keepalive.service",
+             "restart-watchdog": "speaker-watchdog.service",
+             "restart-dashboard": "pi-dashboard.service"}
+    if action in units:
+        unit = units[action]
+        if action == "restart-dashboard":   # reply first, then restart ourselves
+            def _later():
+                time.sleep(0.8)
+                subprocess.run(["sudo", "-n", "systemctl", "restart", unit], timeout=30)
+            threading.Thread(target=_later, daemon=True).start()
+            return True, "dashboard restarting — reload this page in a few seconds"
+        r = subprocess.run(["sudo", "-n", "systemctl", "restart", unit],
+                           capture_output=True, text=True, timeout=30)
+        return r.returncode == 0, (f"{unit} restarted" if r.returncode == 0
+                                   else r.stderr.strip()[-120:])
+    return None
+
+
 def control(action):
+    r = _manual_action(action)
+    if r is not None:
+        return r
     if action == "avatar-page-stop":
         _avatar_page_cmd("stop")
         return True, "avatar page: stop sent (portrait held)"
@@ -648,8 +758,12 @@ html,body{height:100%;color:var(--ink);overflow:hidden;
 #a::-webkit-scrollbar{display:none}
 #a span{color:var(--ink2);transition:color .5s}
 #a .cur{color:var(--maroon);animation:rise .45s ease-out}
-#a.idle-text{display:flex;align-items:center;font-style:italic;color:var(--faint);font-size:2.6vh}
-#a.idle-text em{color:var(--maroon);font-style:normal;padding:0 .4vw}
+#a.idle-text,#qidle{display:flex;flex-wrap:wrap;align-items:center;row-gap:.6vh;font-style:italic;
+  color:var(--faint);font-size:2.6vh;line-height:1.5}
+#a.idle-text em,#qidle em{color:var(--maroon);font-style:normal;padding:0 .4vw;white-space:nowrap}
+/* opening display (2026-08-26, user): the wake phrases show on BOTH plaques */
+#qidle{display:none;flex:1} #qbox.idle #qidle{display:flex}
+#qbox.idle #qtext,#qbox.idle #rows{display:none}
 .rise{animation:rise .45s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(1.2vh)}to{opacity:1;transform:none}}
 .think::after{content:'';animation:dots 1.5s steps(4,end) infinite}
@@ -686,12 +800,15 @@ html,body{height:100%;color:var(--ink);overflow:hidden;
 
 EXHIBIT_PLAQUES = """<div id="scrim"></div>
 <div id="bar">
-  <div class="card hide" id="qbox"><h3 class="big">The Question</h3><div id="qtext"></div><div id="rows"></div></div>
+  <div class="card hide" id="qbox"><h3 class="big">The Question</h3><div id="qidle"></div><div id="qtext"></div><div id="rows"></div></div>
   <div class="card" id="abox"><h3>The Chief Justice Answers</h3><div id="a" class="idle-text"></div></div>
 </div>"""
 
 EXHIBIT_JS = """const esc=s=>{const d=document.createElement('div');d.innerText=s||'';return d.innerHTML};
-const IDLE='Approach and say <em>&ldquo;Hi Cee-Jap&rdquo;</em> to begin';
+const IDLE='Approach and say <em>&ldquo;Hey, Cee-Jap&rdquo;</em> <em>&ldquo;Hi, Cee-Jap&rdquo;</em> <em>&ldquo;Cee-Jap&rdquo;</em>';
+// seconds after the answer ends before the question/answer plaques clear back
+// to the idle display (2026-08-26, user); ?idle=<s> overrides, 0 = never clear
+const IDLE_AFTER_S=(()=>{const v=parseFloat(new URLSearchParams(location.search).get('idle'));return v>=0?v:8;})();
 let curState='';
 function setState(st){
   if(st===curState)return;curState=st;
@@ -732,7 +849,10 @@ function render(html,idle,showQ){
   const a=document.getElementById('a');
   const key=html+(showQ?1:0);
   if(key===lastRender)return;lastRender=key;
-  document.getElementById('qbox').classList.toggle('hide',!showQ);
+  const opening=idle&&!showQ;   // first-turned-on display: wake phrases on both plaques
+  const qb=document.getElementById('qbox');
+  qb.classList.toggle('hide',!showQ&&!opening);qb.classList.toggle('idle',opening);
+  if(opening)document.getElementById('qidle').innerHTML=html;
   a.classList.toggle('idle-text',!!idle);
   a.innerHTML=html;
   const cur=a.querySelector('.cur');
@@ -764,8 +884,11 @@ function renderExhibit(s){
       render('<span class="think">The Chief Justice is considering</span>',true,true);return;}
     // 4. finished: keep the full answer and its intake on screen
     setState('idle');
-    if(sp&&sp.done&&(sp.spoken||[]).length){render(esc(sp.spoken.join(' ')),false,!!lastU);return;}
-    if(lastC){render(esc(lastC.text),false,!!lastU);return;}
+    // ...then IDLE_AFTER_S seconds later (robot clock) fade back to the opening display
+    const endTs=(sp&&sp.done&&(sp.spoken||[]).length)?sp.ts:(lastC?lastC.ts:0);
+    const stale=IDLE_AFTER_S>0&&endTs>0&&(s.ts-endTs)>=IDLE_AFTER_S;
+    if(!stale&&sp&&sp.done&&(sp.spoken||[]).length){render(esc(sp.spoken.join(' ')),false,!!lastU);return;}
+    if(!stale&&lastC){render(esc(lastC.text),false,!!lastU);return;}
     render(IDLE,true,false);
 }
 """
@@ -975,6 +1098,33 @@ pre{max-height:280px;overflow:auto;white-space:pre-wrap;background:#0d1117;borde
     <button id="say-btn" onclick="sayText()">&#128483; Speak</button></div>
   <span id="msg"></span>
 </div>
+<div class="card c8"><h2>Manual actions</h2>
+  <div class="btns"><span class="lbl">Tuning</span>
+    <label class="dim">Wake threshold <input type="number" id="tn-wake" step="0.01" min="0.01" max="1" style="width:92px"></label>
+    <label class="dim">Stop threshold <input type="number" id="tn-stop" step="0.005" min="0.001" max="1" style="width:92px"></label>
+    <label class="dim">Listen time (s) <input type="number" id="tn-listen" step="0.1" min="0.3" max="10" style="width:92px"></label>
+    <button onclick="applyTuning()">&#10003; Apply &amp; restart app</button>
+    <span class="dim" id="tn-hint">values from wakeword.conf; listen time = silence after your last word before CJ answers; applying restarts the voice app (~25 s quiet)</span></div>
+  <div class="btns"><span class="lbl">Speaker</span>
+    <button onclick="act('audio-sony')">&#128264; Sony</button>
+    <button onclick="act('audio-marshall')">&#128264; Marshall</button>
+    <button onclick="act('audio-internal')">&#129302; Internal</button>
+    <button onclick="ctl('bt-connect-sony')">&#128268; Reconnect Sony</button>
+    <button onclick="ctl('bt-connect-marshall')">&#128268; Reconnect Marshall</button>
+    <button onclick="ctl('bt-pulse')">&#12336; Pulse BT speaker</button>
+    <button onclick="act('stop-watchdog')">Watchdog off</button>
+    <button onclick="act('start-watchdog')">Watchdog on</button>
+    <span class="dim">the watchdog puts audio back on a connected Bluetooth speaker within 15 s — switch it off first to stay on Internal</span></div>
+  <div class="btns"><span class="lbl">Voice ID</span>
+    <button onclick="act('enroll-voice')">&#127908; Enroll voice</button>
+    <button onclick="act('gate-on')">Gate on</button>
+    <button onclick="act('gate-off')">Gate off</button></div>
+  <div class="btns"><span class="lbl">Services</span>
+    <button onclick="ctl('restart-keepalive')">&#8635; bt-keepalive</button>
+    <button onclick="ctl('restart-watchdog')">&#8635; speaker-watchdog</button>
+    <button onclick="ctl('restart-dashboard')">&#8635; dashboard</button></div>
+  <span id="msg2" class="dim"></span>
+</div>
 <div class="card"><h2>Camera</h2><img id="cam" alt="(camera offline)"></div>
 <div class="card"><h2>System</h2><div id="services"></div><div id="sys" class="dim">loading&hellip;</div></div>
 <div class="card"><h2>Wake meter <span class="dim" id="wakenow"></span></h2>
@@ -1056,9 +1206,18 @@ const KEY=new URLSearchParams(location.search).get('key')||localStorage.getItem(
 if(KEY)localStorage.setItem('cjkey',KEY);
 const esc=s=>{const d=document.createElement('div');d.innerText=s==null?'':s;return d.innerHTML};
 const $=id=>document.getElementById(id);
-async function ctl(a){const r=await(await fetch('/api/ctl',{method:'POST',
+function note(t){$('msg').innerText=t;if($('msg2'))$('msg2').innerText=t;}
+async function ctl(a){note(a+'\\u2026');const r=await(await fetch('/api/ctl',{method:'POST',
   body:JSON.stringify({action:a,key:KEY})})).json();
-  $('msg').innerText=r.output||'';}
+  note(r.output||'');}
+async function loadTuning(){try{const r=await(await fetch('/api/tuning?key='+KEY)).json();const t=r.tuning||{};
+  for(const k of ['wake','stop','listen']){const el=$('tn-'+k);if(el&&t[k]!=null&&document.activeElement!==el)el.value=t[k];}
+  if(t.error)$('tn-hint').innerText=t.error;}catch(e){}}
+async function applyTuning(){const b={key:KEY};for(const k of ['wake','stop','listen'])b[k]=$('tn-'+k).value;
+  if(!confirm('Apply tuning and restart the voice app? CJ goes quiet for about 25 s.'))return;
+  note('applying\\u2026');const r=await(await fetch('/api/tuning',{method:'POST',body:JSON.stringify(b)})).json();
+  note((r.ok?'':'FAILED: ')+(r.output||''));setTimeout(loadTuning,3000);}
+loadTuning();
 async function sayText(){const t=$('say-text').value.trim();if(!t)return;
   const b=$('say-btn');b.disabled=true;$('msg').innerText='speaking\\u2026';
   try{const r=await(await fetch('/api/say-text',{method:'POST',headers:{'Content-Type':'application/json'},
@@ -1068,10 +1227,10 @@ async function sayText(){const t=$('say-text').value.trim();if(!t)return;
   catch(e){$('msg').innerText='FAILED: '+e.message}
   b.disabled=false;}
 $('say-text').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sayText();}});
-async function act(a){$('msg').innerText=a+'\\u2026';
+async function act(a){note(a+'\\u2026');
   const r=await(await fetch('/api/action',{method:'POST',
     body:JSON.stringify({action:a})})).json();
-  $('msg').innerText=r.ok?a+' ok':'FAILED: '+(r.output||'');}
+  note(r.ok?a+' ok':'FAILED: '+(r.output||''));}
 async function rebootPi(){
   if(!confirm('Reboot the Pi? The robot goes quiet for about a minute.'))return;
   const say=t=>{$('msg').innerText=t;};
@@ -1874,6 +2033,11 @@ def handle_get(h, path, params):
         h.send_response(302)
         h.send_header("Location", "/event?key=" + DASH_KEY)
         h.end_headers()
+    elif path == "/api/tuning":
+        if not _authed(params):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            h._send(200, json.dumps({"ok": True, "tuning": tuning_get()}))
     elif path == "/api/usage":
         h._send(200, json.dumps(usage()))
     elif path == "/api/providers":
@@ -1920,7 +2084,14 @@ def handle_get(h, path, params):
 
 
 def handle_post(h, path, body):
-    if path == "/api/ctl":
+    if path == "/api/tuning":
+        if not _authed({}, body):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            ok, out = tuning_set(body)
+            print(f"[ctl] {h.client_address[0]} tuning -> {out}", flush=True)
+            h._send(200, json.dumps({"ok": ok, "output": out}))
+    elif path == "/api/ctl":
         if not _authed({}, body):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
         else:

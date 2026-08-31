@@ -42,7 +42,7 @@ for pat in "app/*.py" "app/*.md" "data/entities/*.json" \
 done
 
 # 3. dashboard, systemd units, dotfiles, notes, home-dir tools
-cp "$D"/dashboard.py "$D"/supervaise_ui.py "$D"/say_text_helper.py \
+cp "$D"/ui_server.py "$D"/ui_common.py "$D"/ui_routes.py "$D"/ui_page_*.py "$D"/say_text_helper.py \
    "$D"/wifi_fallback.sh "$D"/wifi-fallback.service \
    "$D"/pi-dashboard.service deploy/pi/dashboard/
 cp /etc/systemd/system/supervaise.service deploy/pi/systemd/ 2>/dev/null || true

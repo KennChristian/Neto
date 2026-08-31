@@ -1,10 +1,10 @@
-"""
+r"""
 Diagnose every file path the dashboard touches at startup.
 
 Run this with whichever Python interpreter your venv uses — same one
 you'd use to launch Streamlit:
 
-    .\.venv\Scripts\python.exe scripts\check_paths.py
+    .\\.venv\\Scripts\\python.exe scripts\\check_paths.py
     D:\some\where\python.exe scripts\check_paths.py
 
 Prints OK/MISSING for each path; exits 1 if any required file is
@@ -40,7 +40,7 @@ def main() -> int:
 
     print("== Required files ==")
     ok &= check("dashboard.py",   APP_DIR / "dashboard.py")
-    ok &= check("cj_chat.py",     APP_DIR / "cj_chat.py")
+    ok &= check("answer_pipeline.py",     APP_DIR / "answer_pipeline.py")
     ok &= check("topic_map.json", PROJECT_ROOT / "corpus" / "voice" / "topic_map.json")
     ok &= check("voice_card.md",  PROJECT_ROOT / "corpus" / "voice" / "voice_card.md")
     print()
@@ -76,8 +76,8 @@ def main() -> int:
 
     print("== Environment ==")
     dotenv = APP_DIR / ".env"
-    check("app/.env (read by python-dotenv on cj_chat import)", dotenv, required=False)
-    # Try loading .env without touching the rest of cj_chat
+    check("app/.env (read by python-dotenv on answer_pipeline import)", dotenv, required=False)
+    # Try loading .env without touching the rest of answer_pipeline
     try:
         from dotenv import load_dotenv  # type: ignore[import-not-found]
         load_dotenv(dotenv, override=True)
