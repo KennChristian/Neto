@@ -135,8 +135,32 @@ def _gate_start(path):
     return g
 
 
+def _vad_gate_min() -> float:
+    """VAD gate (ARMED 2026-08-30 evening, user: "arm the VAD gate"): a capture
+    whose Silero-measured speech is shorter than CJ_VAD_MIN_SPEECH_S (default
+    0.4 s) is discarded after STT returns — the VAD runs in parallel with the
+    transcription, so real turns pay no latency; noise captures (applause,
+    PA bleed, a knock) no longer become hallucinated questions. Evidence from
+    the log-only day: real questions 1.6-3.1 s of speech, noise captures 0.0 s.
+    0 disables (back to log-only)."""
+    try:
+        return max(0.0, float(os.environ.get("CJ_VAD_MIN_SPEECH_S", "0.4")))
+    except ValueError:
+        return 0.4
+
+
+def _gate_vad(g):
+    """Join the VAD thread (bounded) and return its result dict or None."""
+    try:
+        if g.get("thread") is not None:
+            g["thread"].join(timeout=1.5)
+        return g.get("vad")
+    except Exception:
+        return None
+
+
 def _gate_report(g, sim=None, outcome=""):
-    """One `[gate]` journal line per captured utterance (log-only)."""
+    """One `[gate]` journal line per captured utterance."""
     try:
         if g.get("thread") is not None:
             g["thread"].join(timeout=1.0)
@@ -151,7 +175,9 @@ def _gate_report(g, sim=None, outcome=""):
         vad = (f"vad speech {v['speech_s']:.1f}s/{v['total_s']:.1f}s ({v['fraction']:.2f}, {v['segments']} seg)"
                if v else "vad=?")
         lock = f"lock sim {sim:.2f}" if isinstance(sim, (int, float)) else "lock sim -"
-        print(f"[gate] {doa} · {vad} · {lock}{(' · ' + outcome) if outcome else ''} — log-only", flush=True)
+        vmin = _vad_gate_min()
+        mode = f"vad gate ≥{vmin:.1f}s armed" if vmin > 0 else "log-only"
+        print(f"[gate] {doa} · {vad} · {lock}{(' · ' + outcome) if outcome else ''} — {mode}", flush=True)
     except Exception:
         pass
 
@@ -2149,6 +2175,26 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         return True
     finally:
         os.unlink(path)
+    v, vmin = _gate_vad(gate), _vad_gate_min()
+    if vmin > 0 and v is not None and v["speech_s"] < vmin:
+        # VAD gate (armed 2026-08-30): not enough real speech in the capture —
+        # whatever STT made of it is noise. Fails open when the VAD itself
+        # did not run (v is None).
+        _gate_report(gate, outcome=f"REJECTED by VAD gate ({v['speech_s']:.1f}s < {vmin:.1f}s)"
+                                   + (f" — stt said {question.strip()!r}" if question.strip() else ""))
+        print(f"[stt] discarded — VAD gate: {v['speech_s']:.1f}s speech in "
+              f"{v['total_s']:.1f}s capture (transcript {question.strip()!r})")
+        _publish_transcript("note", f"(ignored — no real speech in the capture, VAD {v['speech_s']:.1f}s)")
+        _stage("transcribe", "pending", "no speech (VAD gate)")
+        if lock is not None and not followup:
+            # the lock was taken on THIS capture (before STT) — it holds noise,
+            # not a person: release so the next real question can lock properly
+            try:
+                lock.release()
+                print("[lock] released — locked on a noise capture")
+            except Exception:
+                pass
+        return False
     if not question.strip():
         _gate_report(gate, outcome="empty transcript")
         print("[stt] empty transcript")
