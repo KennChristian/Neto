@@ -44,7 +44,7 @@ def internet_up(timeout=3.0):
 
 def say_offline():
     if os.path.exists(NO_NET_WAV):
-        subprocess.run(["aplay", "-q", NO_NET_WAV], stderr=subprocess.DEVNULL)
+        subprocess.run(_aplay_cmd(NO_NET_WAV), stderr=subprocess.DEVNULL)
     else:
         print(f"[net] (missing {NO_NET_WAV} — cannot voice the offline notice)")
 
@@ -98,7 +98,7 @@ def _say_apology(err):
         speak(APOLOGY_TEXT, None)
     except Exception:
         try:
-            subprocess.run(["aplay", "-q", NO_NET_WAV], stderr=subprocess.DEVNULL)
+            subprocess.run(_aplay_cmd(NO_NET_WAV), stderr=subprocess.DEVNULL)
         except Exception:
             pass
 _FAREWELL_RE = re.compile(
@@ -1166,6 +1166,165 @@ def _bt_route():
     return _bt_route_cache["bt"]
 
 
+# ── AEC reference feed for Bluetooth speakers (2026-09-01) ──────────────────
+class _RefFeed:
+    """Bluetooth self-hearing fix (user: "so that it will not hear itself when
+    a bluetooth speaker is used"). The XVF3800 cancels the robot's own voice
+    only against the reference it receives over USB playback; on a Bluetooth
+    route the USB path is idle, so the chip hears the speaker as a stranger
+    (stop word masked, STT fed with our own tail). With CJ_AEC_REF_FEED=1 and
+    a bluealsa route, every sentence/clip the app plays is ALSO written,
+    delayed by CJ_AEC_REF_DELAY_MS, to pcm cj_ref_feed (PipeWire -> XMOS)
+    while ~/bin/audio-volume feed-on parks the XMOS mixer at -55 dB
+    (inaudible) and AUDIO_MGR_REF_GAIN goes 8 -> CJ_AEC_REF_GAIN (1000), which
+    measured a -16 dBFS reference at the chip. Measured 2026-09-01: the chip's
+    SYS_DELAY clamps at 256 samples and its AEC tail is 3072 samples (192 ms),
+    so the HOST delays the copy: echo should land ~80 ms after the reference —
+    ~/tools/aec_ref_calib.py prints the delay for the speaker in use. Fails
+    open: any feed trouble only costs the cancellation, never the answer."""
+    FEED_PCM = "cj_ref_feed"
+
+    def __init__(self):
+        self.q = queue.Queue()
+        self.on = False
+        self._gen = 0
+        self.stream, self.rate = None, None
+        self._thread = None
+        self._pushed = 0
+
+    @staticmethod
+    def wanted():
+        return os.environ.get("CJ_AEC_REF_FEED", "0").strip().lower() in {
+            "1", "true", "yes", "on"} and _bt_route()
+
+    def sync(self):
+        """Follow the route; returns True when the feed is on. Cheap (one stat)."""
+        want = self.wanted()
+        if want != self.on:
+            self.on = want
+            if want:
+                self._gen += 1
+            self.q.put(("chip", want))
+            if not want:
+                self.abort()
+            self._ensure_thread()
+        return self.on
+
+    def push(self, pcm, rate, at=None):
+        """Queue mono int16 samples that are being written to the speaker now."""
+        if not self.on:
+            return
+        delay = _env_num("CJ_AEC_REF_DELAY_MS", 120) / 1000.0
+        self.q.put(("pcm", self._gen, (at or time.monotonic()) + delay,
+                    np.ascontiguousarray(pcm, dtype=np.int16), int(rate)))
+        self._pushed += 1
+        self._ensure_thread()
+
+    def push_wav(self, path):
+        if not self.on:
+            return
+        try:
+            rate, a = _load_wav_mono_int16(path)
+        except Exception as e:
+            print(f"[aec] feed skipped {os.path.basename(str(path))} ({e})")
+            return
+        self.push(a, rate)
+
+    def abort(self):
+        """Stop word / mute / route change: drop what is queued and buffered."""
+        self._gen += 1
+        with self.q.mutex:
+            self.q.queue.clear()
+        self.q.put(("abort",))
+
+    # ── worker ──
+    def _ensure_thread(self):
+        if self._thread is None or not self._thread.is_alive():
+            self._thread = threading.Thread(target=self._run, daemon=True,
+                                            name="aec-ref-feed")
+            self._thread.start()
+
+    def _set_chip(self, on):
+        vol = os.path.expanduser("~/bin/audio-volume")
+        xvf = os.path.expanduser("~/bin/xvf-ctl")
+        gain = _env_num("CJ_AEC_REF_GAIN", 1000) if on else 8
+        try:
+            subprocess.run([vol, "feed-on" if on else "feed-off"], timeout=10,
+                           capture_output=True)
+            r = subprocess.run([xvf, "write", "AUDIO_MGR_REF_GAIN", str(gain)],
+                               timeout=10, capture_output=True, text=True)
+            ok = '"ok": true' in r.stdout
+            print(f"[aec] reference feed {'ON' if on else 'off'} — XMOS mixer "
+                  f"{'-55 dB' if on else 'restored'}, REF_GAIN {gain:g}"
+                  f"{'' if ok else ' (chip write FAILED)'}, delay "
+                  f"{_env_num('CJ_AEC_REF_DELAY_MS', 120):g} ms", flush=True)
+        except Exception as e:
+            print(f"[aec] chip setup failed ({type(e).__name__}: {e})", flush=True)
+
+    def _open(self, rate):
+        if self.stream is not None and self.rate == rate:
+            return self.stream
+        self._close(abort=False)
+        st = sd.OutputStream(device=self.FEED_PCM, samplerate=rate, channels=1,
+                             dtype="int16", blocksize=int(rate * 0.05),
+                             latency=_env_num("CJ_AEC_REF_OUT_LATENCY_S", 0.1))
+        st.start()
+        self.stream, self.rate = st, rate
+        return st
+
+    def _close(self, abort):
+        st, self.stream = self.stream, None
+        if st is not None:
+            try:
+                (st.abort if abort else st.stop)()
+                st.close()
+            except Exception:
+                pass
+
+    def _run(self):
+        idle_since = None
+        while True:
+            try:
+                item = self.q.get(timeout=1.0)
+            except queue.Empty:
+                if self.stream is not None and idle_since and time.monotonic() - idle_since > 3:
+                    self._close(abort=False)   # release PipeWire between answers
+                continue
+            kind = item[0]
+            if kind == "chip":
+                self._set_chip(item[1]); continue
+            if kind == "abort":
+                self._close(abort=True); idle_since = None; continue
+            _, gen, due, pcm, rate = item
+            if gen != self._gen:
+                continue
+            wait = due - time.monotonic()
+            if wait > 0:
+                time.sleep(wait)
+            elif wait < -0.5:        # fell behind (device stall): resync on the next chunk
+                continue
+            try:
+                self._open(rate).write(pcm)
+                idle_since = time.monotonic()
+            except Exception as e:
+                print(f"[aec] feed write failed ({type(e).__name__}: {e})", flush=True)
+                self._close(abort=True)
+
+
+_REF_FEED = _RefFeed()
+
+
+def _aplay_cmd(path):
+    """['aplay', '-q', path] for the clip players — and, on a Bluetooth route
+    with the AEC feed on, the same clip is queued to the XMOS reference."""
+    try:
+        if _REF_FEED.sync():
+            _REF_FEED.push_wav(path)
+    except Exception as e:
+        print(f"[aec] feed skip ({type(e).__name__}: {e})")
+    return ["aplay", "-q", path]
+
+
 class _StopTrace:
     """Stop-word diagnostics (2026-08-25, user: "it does not stop when saying
     cjap"): keeps the mic audio the listener scored (<= 40 s) and the top
@@ -1469,7 +1628,7 @@ def _play_wav_interruptible(wav_path, stop):
     model and kill playback if the phrase clears stop.threshold. Returns True
     if playback was cut short by the stop word, False if it played out.
     Any listener failure degrades to normal (uninterruptible) playback."""
-    proc = subprocess.Popen(["aplay", "-q", wav_path])
+    proc = subprocess.Popen(_aplay_cmd(wav_path))
     fired = peak = 0.0
     trace = _StopTrace()
     try:
@@ -1655,7 +1814,7 @@ def _play_aside(clip, stop=None):
             time.sleep(0.05)
         if mode == "solo":
             return
-    subprocess.run(["aplay", "-q", clip], stderr=subprocess.DEVNULL)
+    subprocess.run(_aplay_cmd(clip), stderr=subprocess.DEVNULL)
 
 
 def _load_wav_mono_int16(path):
@@ -1779,6 +1938,7 @@ class _SentenceOut:
 
     def abort(self):    # stop word / mute: drop what is buffered now
         self._release(abort=True)
+        _REF_FEED.abort()
 
     def play(self, wav_path, listener, trim=True):
         """True if the listener cut it, False when written out. Raises on
@@ -1787,6 +1947,7 @@ class _SentenceOut:
         if trim:
             a = _trim_edges(a, rate)
         st = self._open(rate)
+        feed = _REF_FEED.sync()      # Bluetooth AEC reference copy (2026-09-01)
         n = int(rate * self.CHUNK_S)
         for k in range(0, len(a), n):
             if listener.fired:
@@ -1795,6 +1956,8 @@ class _SentenceOut:
             with self.lock:
                 st.write(a[k:k + n])
                 self._last_write = time.monotonic()
+            if feed:
+                _REF_FEED.push(a[k:k + n], rate, self._last_write)
         return False
 
 
@@ -1836,7 +1999,7 @@ def _play_wav_listener(wav_path, listener, prefed_age=None):
             _SENT_OUT.abort()
             print(f"[audio] stream player failed ({type(e).__name__}: {e}) "
                   "— aplay for this sentence")
-    proc = subprocess.Popen(["aplay", "-q", wav_path])
+    proc = subprocess.Popen(_aplay_cmd(wav_path))
     while proc.poll() is None:
         if listener.fired:
             proc.terminate()
@@ -1924,7 +2087,7 @@ def speak(text, filler=None, stop=None, voice_settings=None):
         elif stop is not None:
             interrupted = _play_wav_interruptible(wav_path, stop)
         else:
-            r = subprocess.run(["aplay", "-q", wav_path])
+            r = subprocess.run(_aplay_cmd(wav_path))
             if r.returncode != 0:
                 print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
         if publish_speaking:
@@ -1964,7 +2127,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         listener = listener_box.get("l")
         if listener is not None:
             return _play_wav_listener(wav, listener, prefed_age)
-        r = subprocess.run(["aplay", "-q", wav])
+        r = subprocess.run(_aplay_cmd(wav))
         if r.returncode != 0:
             print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
         return False
@@ -2017,7 +2180,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
                 _publish_transcript("note", "(no answer in time — asked for a more specific question)")
                 gestures.start("talk")
                 if os.path.exists(BAIL_WAV):
-                    subprocess.run(["aplay", "-q", BAIL_WAV], stderr=subprocess.DEVNULL)
+                    subprocess.run(_aplay_cmd(BAIL_WAV), stderr=subprocess.DEVNULL)
                 return True
         if "err" in result:
             if not internet_up():
@@ -2123,7 +2286,7 @@ def _play_ack():
             threading.Thread(target=_play_aside, args=(clip,),
                              daemon=True).start()
         else:
-            subprocess.Popen(["aplay", "-q", clip],
+            subprocess.Popen(_aplay_cmd(clip),
                              stderr=subprocess.DEVNULL)
 
 
@@ -2504,7 +2667,7 @@ def _run_enrollment(gestures):
     import voice_identity
     gestures.perk()
     if os.path.exists(ENROLL_PROMPT_WAV):
-        subprocess.run(["aplay", "-q", ENROLL_PROMPT_WAV], stderr=subprocess.DEVNULL)
+        subprocess.run(_aplay_cmd(ENROLL_PROMPT_WAV), stderr=subprocess.DEVNULL)
     print("[speaker] enrollment: speak for ~10 s")
     gestures.start("listen")
     path = record_with_meter(max_s=15, no_speech_timeout_s=10)
@@ -2519,7 +2682,7 @@ def _run_enrollment(gestures):
         _publish_transcript("note", "(voice enrolled — speaker gate is now ON)")
         if os.path.exists(ENROLL_DONE_WAV):
             gestures.start("talk")
-            subprocess.run(["aplay", "-q", ENROLL_DONE_WAV], stderr=subprocess.DEVNULL)
+            subprocess.run(_aplay_cmd(ENROLL_DONE_WAV), stderr=subprocess.DEVNULL)
     except Exception as e:
         print(f"[speaker] enrollment error: {e}")
         _publish_transcript("note", f"(enrollment error: {e})")
