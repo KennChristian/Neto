@@ -655,6 +655,637 @@ class _SpeakerDoA:
             print(f"[beam] auto restore failed ({type(e).__name__}: {e})")
 
     def _run(self):
+        while True:
+            try:
+                with self._usb_lock:
+                    r = self._doa.get_DoA()
+                if r is not None and r[1]:            # speech-flagged reading
+                    deg = math.degrees(r[0])
+                    if self.angle is None or abs(deg - self.angle) > 40:
+                        self.angle = deg               # new speaker: jump
+                    else:
+                        self.angle = 0.7 * self.angle + 0.3 * deg
+                    self.ts = time.monotonic()
+            except Exception:
+                pass
+            time.sleep(0.1)
+
+    def yaw(self, max_age=1.5):
+        """Head yaw (deg, + = left) toward the latest speech, or None."""
+        if not self.on or self.angle is None or time.monotonic() - self.ts > max_age:
+            return None
+        y = 90.0 - self.angle
+        if self.flip:
+            y = -y
+        self.last_yaw_raw = y
+        # Phase 1 (2026-08-30, user): a source outside the frontal cone — the
+        # side, or the audience mics/speakers at the BACK — must not pull the
+        # head toward it: stare straight ahead instead of clamping to the edge.
+        # Hysteresis: leave the cone at max_yaw, re-enter only below max_yaw-10
+        # so a speaker sitting near the edge does not flip the head edge/centre.
+        limit = self.max_yaw - (10.0 if self._out_of_cone else 0.0)
+        self._out_of_cone = abs(y) > limit
+        if self._out_of_cone:
+            return 0.0
+        return y
+
+
+_speaker_doa = _SpeakerDoA()
+
+
+
+class Gestures:
+    """Background head/antenna motion. Safe no-op if the SDK/daemon is absent."""
+
+    def __init__(self):
+        self.mini, self._thread = None, None
+        self._stop = threading.Event()
+        self._busy_until = 0.0   # monotonic time the goto in flight ends (see _move)
+        # Yaw the speaker is at (deg; 0 = straight ahead). Talk-mode motion is
+        # anchored here so the robot keeps FACING the person while gesturing.
+        self.gaze_yaw = 0.0
+        # Emotion of the sentence being spoken (set per sentence by the
+        # streaming path): neutral | warm | solemn | emphatic | question.
+        # The distinctive accent gesture (nod/bow/tilt) fires ONCE when a new
+        # sentence's style arrives, then rate-limited by a cooldown — repeating
+        # it every loop cycle read as constant redundant nodding (2026-08-13).
+        self._style_new = threading.Event()
+        self._last_accent = 0.0
+        self.accent_cooldown_s = float(
+            os.environ.get("CJ_GESTURE_NOD_COOLDOWN_S", "6"))
+        # Idle ("sleep") mode: a distinct "alive" gesture every this many
+        # seconds, subtle sway in between (2026-08-13 user request).
+        self.idle_gesture_s = float(os.environ.get("CJ_IDLE_GESTURE_S", "10"))
+        self._last_idle = 0.0
+        self.talk_style = "neutral"
+        global _gestures_inst
+        _gestures_inst = self
+        try:
+            from reachy_mini import ReachyMini
+            from reachy_mini.utils import create_head_pose
+            self._pose = create_head_pose
+            self.mini = ReachyMini(media_backend="no_media")
+            self.mini.enable_motors(); print("[gestures] connected, motors on")
+        except Exception as e:
+            print(f"[gestures] disabled ({e})")
+        if self.mini:
+            _speaker_doa.start()
+
+    def face_speaker(self, max_age=1.5, min_change=8.0):
+        """Point gaze_yaw at the latest speech direction; True if it moved."""
+        y = _speaker_doa.yaw(max_age)
+        if y is None or abs(y - self.gaze_yaw) < min_change:
+            return False
+        self.gaze_yaw = y
+        return True
+
+    @property
+    def talk_style(self):
+        return self._talk_style
+
+    @talk_style.setter
+    def talk_style(self, value):
+        self._talk_style = value
+        self._style_new.set()   # new sentence style → one accent gesture allowed
+
+    def _move(self, yaw=0.0, pitch=0.0, roll=0.0, duration=0.6, antennas=None,
+              wait=True, defer=False):
+        if not self.mini:
+            return
+        if not wait:
+            # Fire-and-forget: the SDK's goto_target blocks for `duration`, so
+            # run it in a helper thread and let the caller carry on (idle loop
+            # waiting on _stop, or the wake perk). The daemon IGNORES a goto
+            # while another is still running, so defer=True first sleeps out
+            # the move already in flight instead of losing the gesture
+            # (2026-08-26, user: "listen immediately after the wake word").
+            delay = max(0.0, self._busy_until - time.monotonic()) if defer else 0.0
+
+            def _go():
+                if delay:
+                    time.sleep(delay)
+                self._move(yaw, pitch, roll, duration, antennas)
+            threading.Thread(target=_go, daemon=True).start()
+            return
+        self._busy_until = time.monotonic() + duration
+        try:
+            kw = {"head": self._pose(yaw=yaw, pitch=pitch, roll=roll)}
+            if antennas is not None:
+                kw["antennas"] = antennas
+            try:
+                self.mini.goto_target(duration=duration, **kw)
+            except TypeError:
+                self.mini.goto_target(**kw)
+        except Exception:
+            pass
+
+    def _glide(self, yaw, pitch, roll, duration, antennas=None, dwell=0.0):
+        """Idle-mode move that never holds up stop(): send the goto without
+        waiting, then wait on the stop event for its duration (+ dwell).
+        Returns True when stop() was called meanwhile — a wake word landing
+        mid-gesture used to wait up to 1.8 s for the head to finish."""
+        self._move(yaw, pitch, roll, duration, antennas, wait=False)
+        return self._stop.wait(duration + dwell)
+
+    def _run(self, mode, gen=None):
+        # goto_target blocks for its duration (up to ~1.8 s) while stop() joins
+        # for 1.5 s: a previous loop can still be inside _move when the next
+        # start() clears _stop. The generation token ends it (2026-08-25 review).
+        while not self._stop.is_set() and (gen is None or gen == getattr(self, "_gen", gen)):
+            if mode == "listen":      # attentive, head turned to whoever is speaking
+                moved = self.face_speaker(max_age=1.0)
+                self._move(self.gaze_yaw + random.uniform(-4, 4), random.uniform(-12, -4),
+                           random.uniform(-3, 3), 0.5 if moved else 0.9)
+                self._stop.wait(random.uniform(0.5, 0.9) if moved else random.uniform(1.0, 1.8))
+            elif mode == "think":     # slow pondering sway around the speaker, gaze up
+                self._move(self.gaze_yaw + random.uniform(-20, 20), random.uniform(-18, -6),
+                           random.uniform(-8, 8), 1.3)
+                self._stop.wait(random.uniform(1.3, 2.4))
+            elif mode == "sleep":     # armed idle: sway + periodic "alive" gesture
+                # Every move here is a _glide (non-blocking goto + interruptible
+                # wait): a wake word mid-gesture is no longer held up by the
+                # head — stop() returns at once and the mic opens immediately.
+                # Step = (yaw, pitch, roll, duration, antennas, dwell after).
+                if time.monotonic() - self._last_idle >= self.idle_gesture_s:
+                    self._last_idle = time.monotonic()
+                    pick = random.randrange(4)
+                    if pick == 0:      # slow look-around, then back to center
+                        steps = [(random.uniform(18, 30), random.uniform(-6, 0), 0, 1.4, None, 1.0),
+                                 (random.uniform(-30, -18), random.uniform(-6, 0), 0, 1.8, None, 1.0),
+                                 (0, 0, 0, 1.2, None, 0.0)]
+                    elif pick == 1:    # curious glance up + antenna perk
+                        steps = [(random.uniform(-8, 8), random.uniform(-16, -10),
+                                  random.uniform(-4, 4), 1.0, [0.45, -0.45], 1.2),
+                                 (0, 0, 0, 1.0, [0.15, -0.15], 0.0)]
+                    elif pick == 2:    # slow stretch up, settle down
+                        steps = [(0, -14, 0, 1.2, [0.3, -0.3], 0.8),
+                                 (0, 4, 0, 1.4, None, 0.5),
+                                 (0, 0, 0, 0.9, None, 0.0)]
+                    else:              # antenna wiggle, head still
+                        steps = [(0, 0, 0, 0.25, [a, -a], 0.2) for a in (0.4, -0.3, 0.25)]
+                        steps.append((0, 0, 0, 0.4, [0.15, -0.15], 0.0))
+                    if any(self._glide(*step) for step in steps):
+                        continue       # stopped mid-gesture (wake word) — loop exits
+                    self._stop.wait(random.uniform(1.0, 2.0))
+                else:                  # barely-there sway between alive gestures
+                    self._glide(random.uniform(-4, 4), random.uniform(-2, 3),
+                                random.uniform(-2, 2), 1.6, dwell=random.uniform(2.5, 4.5))
+            else:                     # talk: nods + emphasis tilts, gaze LOCKED on the person
+                # (2026-08-12) yaw pins to gaze_yaw so the head keeps facing the
+                # speaker; expressiveness comes from pitch nods, roll tilts and
+                # antenna flicks, shaped by the emotion of the CURRENT sentence
+                # (self.talk_style, set per sentence by the streaming path).
+                # (2026-08-13) the styled ACCENT plays once per new sentence
+                # style and then at most every accent_cooldown_s; in between,
+                # only the gentle speaking bob — no more back-to-back nods.
+                yaw = self.gaze_yaw + random.uniform(-3.5, 3.5)
+                style = self.talk_style
+                accent = (self._style_new.is_set()
+                          or time.monotonic() - self._last_accent
+                          >= self.accent_cooldown_s)
+                if accent:
+                    self._style_new.clear()
+                    self._last_accent = time.monotonic()
+                if accent and style == "solemn":  # slow bow, still antennas, long dwell
+                    self._move(yaw, random.uniform(8, 14), random.uniform(-2, 2),
+                               1.1, antennas=[-0.1, 0.1])
+                    self._stop.wait(random.uniform(1.0, 1.6))
+                    self._move(self.gaze_yaw, random.uniform(2, 6), 0, 0.9)
+                    self._stop.wait(random.uniform(0.6, 1.0))
+                elif accent and style == "warm":  # brighter: raised antennas, light bob
+                    self._move(yaw, random.uniform(-8, -2), random.uniform(-5, 5),
+                               0.45, antennas=[random.uniform(0.15, 0.45),
+                                               random.uniform(-0.45, -0.15)])
+                    self._stop.wait(random.uniform(0.35, 0.7))
+                elif accent and style == "emphatic":  # one firm, deeper nod stroke
+                    self._move(yaw, random.uniform(8, 14), random.uniform(-6, 6),
+                               0.3, antennas=[random.uniform(-0.35, 0.0),
+                                              random.uniform(0.0, 0.35)])
+                    self._stop.wait(0.2)
+                    self._move(self.gaze_yaw, random.uniform(-5, -1),
+                               random.uniform(-3, 3), 0.35)
+                    self._stop.wait(random.uniform(0.3, 0.6))
+                elif accent and style == "question":  # curious tilt, held
+                    self._move(yaw, random.uniform(-8, -3), random.uniform(9, 14),
+                               0.6, antennas=[0.35, 0.1])
+                    self._stop.wait(random.uniform(0.9, 1.4))
+                elif accent and style == "amused":  # playful roll wiggle + antenna flicks
+                    self._move(yaw, random.uniform(-6, -2), random.uniform(8, 12),
+                               0.3, antennas=[0.4, -0.1])
+                    self._stop.wait(0.2)
+                    self._move(yaw, random.uniform(-6, -2), random.uniform(-12, -8),
+                               0.3, antennas=[-0.1, 0.4])
+                    self._stop.wait(0.2)
+                    self._move(self.gaze_yaw, random.uniform(-4, 0),
+                               random.uniform(-2, 2), 0.4, antennas=[0.25, -0.25])
+                    self._stop.wait(random.uniform(0.4, 0.8))
+                elif accent and style == "neutral" and random.random() < 0.3:
+                    self._move(yaw, random.uniform(6, 12), random.uniform(-4, 4),
+                               0.35, antennas=[random.uniform(-0.3, 0.05),
+                                               random.uniform(-0.05, 0.3)])
+                    self._stop.wait(0.25)
+                    self._move(self.gaze_yaw + random.uniform(-2, 2),
+                               random.uniform(-4, 0), random.uniform(-3, 3), 0.4)
+                    self._stop.wait(random.uniform(0.35, 0.8))
+                else:                       # between accents: gentle speaking bob
+                    self._move(yaw, random.uniform(-4, 6), random.uniform(-6, 6),
+                               0.5, antennas=[random.uniform(-0.2, 0.2),
+                                              random.uniform(-0.2, 0.2)])
+                    self._stop.wait(random.uniform(0.35, 0.8))
+
+    def start(self, mode):
+        self.stop()
+        if mode == "talk":
+            self.talk_style = "neutral"   # style is per-sentence; reset per answer
+        elif mode == "sleep":
+            self._last_idle = time.monotonic()   # first alive gesture after N s
+        if not self.mini:
+            return
+        if os.path.exists(GESTURES_OFF_FLAG):   # /maintain "idle motion off" / motors off
+            return
+        if mode == "sleep" and _muted():
+            # Mic muted (2026-08-29): the robot has no LEDs, so the body shows
+            # it — antennas drooped, head slightly bowed, no idle sway.
+            self._move(0, 8, 0, 0.9, antennas=[-0.6, 0.6], wait=False)
+            return
+        self._stop.clear()
+        self._gen = getattr(self, "_gen", 0) + 1   # orphaned loops see a stale gen and exit
+        self._thread = threading.Thread(target=self._run, args=(mode, self._gen), daemon=True)
+        self._thread.start()
+
+    def stop(self):
+        self._stop.set()
+        if self._thread:
+            self._thread.join(timeout=1.5)
+            self._thread = None
+
+    def neutral(self):
+        self.stop()
+        self.gaze_yaw = 0.0
+        self._move(0, 0, 0, 1.0, antennas=[0.15, -0.15])
+
+    def perk(self):
+        """Instant wake acknowledgment: antennas up + head raise, ~250ms —
+        visible feedback well before the STT confirmation lands. Turns toward
+        the voice that woke it when the mic array knows where it came from."""
+        self.stop()
+        if self.face_speaker(max_age=2.5, min_change=5.0):
+            print(f"[doa] speaker at {_speaker_doa.angle:.0f}° -> facing yaw {self.gaze_yaw:+.0f}°")
+        # Non-blocking so the mic opens right away; deferred past any goto
+        # still in flight so the daemon does not drop the perk.
+        self._move(self.gaze_yaw, -12, 0, 0.3, antennas=[0.5, -0.5],
+                   wait=False, defer=True)
+
+    # /maintain "Mechanical actions" (2026-08-29). Each entry is a scripted
+    # move run by manual(); the idle sway is stopped first and resumed after.
+    MANUAL = ("center", "nod", "shake", "look-left", "look-right", "look-up",
+              "look-down", "tilt-left", "tilt-right", "bow", "antennas-up",
+              "antennas-down", "antennas-wiggle", "perk", "scan",
+              "idle-off", "idle-on", "motors-off", "motors-on")
+
+    def manual(self, name):
+        """Run one named mechanical action from the dashboard. Blocking (call
+        from a thread); returns a short status string for the log."""
+        if name not in self.MANUAL:
+            return f"unknown gesture {name!r}"
+        if not self.mini:
+            return "gestures disabled (no daemon)"
+        mv, w = self._move, time.sleep
+        try:
+            if name == "idle-off":
+                open(GESTURES_OFF_FLAG, "w").close()
+                self.stop(); mv(0, 0, 0, 0.8, antennas=[0.15, -0.15])
+                return "idle motion off (head centered)"
+            if name == "idle-on":
+                try: os.unlink(GESTURES_OFF_FLAG)
+                except OSError: pass
+                self.start("sleep")
+                return "idle motion on"
+            if name == "motors-off":
+                open(GESTURES_OFF_FLAG, "w").close()
+                self.stop(); self.mini.disable_motors()
+                return "motors OFF (robot limp — 'Motors on' to restore)"
+            if name == "motors-on":
+                self.mini.enable_motors()
+                try: os.unlink(GESTURES_OFF_FLAG)
+                except OSError: pass
+                mv(0, 0, 0, 1.0, antennas=[0.15, -0.15]); w(1.0)
+                self.start("sleep")
+                return "motors on, idle motion resumed"
+            self.stop()
+            if name == "center":
+                self.gaze_yaw = 0.0; mv(0, 0, 0, 0.8, antennas=[0.15, -0.15]); w(0.8)
+            elif name == "nod":
+                for _ in range(2):
+                    mv(0, 14, 0, 0.3); w(0.3); mv(0, -4, 0, 0.3); w(0.3)
+                mv(0, 0, 0, 0.3); w(0.3)
+            elif name == "shake":
+                for _ in range(2):
+                    mv(-22, 0, 0, 0.3); w(0.3); mv(22, 0, 0, 0.3); w(0.3)
+                mv(0, 0, 0, 0.35); w(0.35)
+            elif name == "look-left":
+                mv(35, -4, 0, 0.7); w(1.5); mv(0, 0, 0, 0.7); w(0.7)
+            elif name == "look-right":
+                mv(-35, -4, 0, 0.7); w(1.5); mv(0, 0, 0, 0.7); w(0.7)
+            elif name == "look-up":
+                mv(0, -22, 0, 0.7); w(1.5); mv(0, 0, 0, 0.7); w(0.7)
+            elif name == "look-down":
+                mv(0, 20, 0, 0.7); w(1.5); mv(0, 0, 0, 0.7); w(0.7)
+            elif name == "tilt-left":
+                mv(0, -3, 16, 0.6); w(1.4); mv(0, 0, 0, 0.6); w(0.6)
+            elif name == "tilt-right":
+                mv(0, -3, -16, 0.6); w(1.4); mv(0, 0, 0, 0.6); w(0.6)
+            elif name == "bow":
+                mv(0, 24, 0, 0.9, antennas=[-0.3, 0.3]); w(1.6)
+                mv(0, 0, 0, 0.9, antennas=[0.15, -0.15]); w(0.9)
+            elif name == "antennas-up":
+                mv(0, 0, 0, 0.4, antennas=[0.6, -0.6]); w(1.2)
+            elif name == "antennas-down":
+                mv(0, 0, 0, 0.4, antennas=[-0.5, 0.5]); w(1.2)
+            elif name == "antennas-wiggle":
+                for _ in range(3):
+                    mv(0, 0, 0, 0.2, antennas=[0.5, 0.1]); w(0.2)
+                    mv(0, 0, 0, 0.2, antennas=[-0.1, -0.5]); w(0.2)
+                mv(0, 0, 0, 0.3, antennas=[0.15, -0.15]); w(0.3)
+            elif name == "perk":
+                mv(0, -12, 0, 0.3, antennas=[0.5, -0.5]); w(1.0)
+                mv(0, 0, 0, 0.5, antennas=[0.15, -0.15]); w(0.5)
+            elif name == "scan":
+                self.scan(); w(0.7)
+            return "done"
+        except Exception as e:
+            return f"failed ({type(e).__name__}: {e})"
+        finally:
+            if name not in ("idle-off", "motors-off") and not os.path.exists(GESTURES_OFF_FLAG):
+                self.start("sleep")   # resume the armed-idle sway
+
+    def scan(self):
+        """Boot/arm behavior: a deliberate look-around so bystanders see the
+        robot come alive and start listening."""
+        self.stop()
+        self._move(-30, -8, 0, 0.7); time.sleep(0.8)
+        self._move(30, -8, 0, 0.9); time.sleep(1.0)
+        self._move(0, -5, 0, 0.6, antennas=[0.3, -0.3])
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# 4. MIC CAPTURE
+# always-open input tap, RMS thresholds, record_with_meter() = one utterance to a wav
+# (sequence + line refs: docs/SYSTEM_TRACE.md)
+# ════════════════════════════════════════════════════════════════════════════
+
+class _MicTap:
+    """One always-open capture stream shared by the wake detector and the
+    question recorder (2026-08-25, user: "a bit late in listening"). Frames
+    land in a queue from the audio callback, so the ~0.3 s between the wake
+    word firing and the recorder starting is buffered as pre-roll instead of
+    lost — the question's first syllable used to fall in that gap. The mic is
+    a dsnoop device, so the stop-word listeners still open their own streams.
+    Also tracks the idle noise floor (30th percentile of recent frame RMS) so
+    the recorder can set its speech threshold without probing the pre-roll."""
+    FRAME = 1280   # 80 ms at 16 kHz
+
+    MAXQ = 7500    # ~10 min of frames; older audio is dropped rather than hoarded
+
+    def __init__(self):
+        self.q = queue.Queue()
+        self._rem = None
+        self.rms_hist = deque(maxlen=60)   # ~4.8 s
+        self.stream = sd.InputStream(samplerate=RATE, channels=1, dtype="int16",
+                                     blocksize=self.FRAME, callback=self._cb)
+        self.stream.start()
+
+    def _cb(self, indata, frames, t, status):
+        if self.q.qsize() > self.MAXQ:
+            try:
+                self.q.get_nowait()
+            except queue.Empty:
+                pass
+        self.q.put(indata[:, 0].copy())
+
+    def read(self, n):
+        parts, have = [], 0
+        if self._rem is not None and len(self._rem):
+            parts.append(self._rem); have = len(self._rem)
+        self._rem = None
+        while have < n:
+            try:
+                a = self.q.get(timeout=2.0)
+            except queue.Empty:
+                # No frames for 2 s: the USB mic went away / PortAudio stopped
+                # the callback. Raise (as the per-open stream.read() used to)
+                # so the caller's error path and systemd restart take over
+                # instead of hanging silently (2026-08-25 review).
+                if not self.stream.active:
+                    raise sd.PortAudioError("mic stream stopped")
+                continue
+            parts.append(a); have += len(a)
+        buf = np.concatenate(parts)
+        self._rem = buf[n:]
+        return buf[:n].reshape(-1, 1), False
+
+    def note_rms(self, frame):
+        self.rms_hist.append(float(np.sqrt(np.mean(frame.astype(np.float64) ** 2)) or 0.0))
+
+    def noise_rms(self):
+        return int(np.percentile(self.rms_hist, 30)) if len(self.rms_hist) >= 12 else None
+
+    def buffered_s(self):
+        return (self.q.qsize() * self.FRAME +
+                (len(self._rem) if self._rem is not None else 0)) / RATE
+
+    def flush(self):
+        self._rem = None
+        while True:
+            try:
+                self.q.get_nowait()
+            except queue.Empty:
+                return
+
+
+_mic_tap_box = {}
+
+
+def _mic_tap():
+    tap = _mic_tap_box.get("tap")
+    if tap is None or not tap.stream.active:
+        if tap is not None:
+            try:
+                tap.stream.close()
+            except Exception:
+                pass
+        tap = _MicTap()
+        _mic_tap_box["tap"] = tap
+    return tap
+
+
+def _env_num(name, default):
+    """Numeric env knob; a blank or malformed value falls back to the default
+    instead of taking down every turn (2026-08-25 review)."""
+    try:
+        return float(os.environ.get(name, "").strip() or default)
+    except ValueError:
+        print(f"[mic] ignoring bad {name}={os.environ.get(name)!r}, using {default}")
+        return float(default)
+
+
+def _speech_threshold(noise_rms):
+    """RMS above which a 30 ms frame counts as speech (CJ_MIC_RMS_* knobs;
+    lower floor/multiplier = more sensitive mic)."""
+    floor_ = int(_env_num("CJ_MIC_RMS_FLOOR", 350))
+    mult = _env_num("CJ_MIC_RMS_MULT", 3.5)
+    cap = int(_env_num("CJ_MIC_RMS_CAP", 2000))
+    return min(max(int(noise_rms * mult), floor_), cap)
+
+
+def _min_speech_frames(frame_ms):
+    """Frames above threshold needed before a recording counts as 'speech
+    started' (CJ_MIC_MIN_SPEECH_MS, default 240). Added 2026-08-26: half of
+    the 'did not hear me' turns that day were false starts — a knock, the
+    perk motor or a speaker tail tripped ONE frame, the 1 s trailing-silence
+    rule then closed the mic and STT got a silent clip (4-5 s wasted, prompt
+    echo discarded). 0 restores the single-frame trigger."""
+    return max(0, int(_env_num("CJ_MIC_MIN_SPEECH_MS", 240) // frame_ms))
+
+
+_bt_route_cache = {"mtime": None, "bt": False}
+
+
+def _bt_route():
+    """True when ~/bin/audio-out has playback on a Bluetooth speaker (route
+    file says bluealsa). Cached by mtime — read per turn, not per frame."""
+    path = os.path.expanduser("~/.asoundrc.route")
+    try:
+        m = os.path.getmtime(path)
+        if m != _bt_route_cache["mtime"]:
+            with open(path) as f:
+                _bt_route_cache["bt"] = "bluealsa" in f.read()
+            _bt_route_cache["mtime"] = m
+    except OSError:
+        _bt_route_cache["bt"] = False
+    return _bt_route_cache["bt"]
+
+
+# ── AEC reference feed for Bluetooth speakers (2026-09-01) ──────────────────
+class _RefFeed:
+    """Bluetooth self-hearing fix (user: "so that it will not hear itself when
+    a bluetooth speaker is used"). The XVF3800 cancels the robot's own voice
+    only against the reference it receives over USB playback; on a Bluetooth
+    route the USB path is idle, so the chip hears the speaker as a stranger
+    (stop word masked, STT fed with our own tail). With CJ_AEC_REF_FEED=1 and
+    a bluealsa route, every sentence/clip the app plays is ALSO written,
+    delayed by CJ_AEC_REF_DELAY_MS, to pcm cj_ref_feed (PipeWire -> XMOS)
+    while ~/bin/audio-volume feed-on parks the XMOS mixer at -55 dB
+    (inaudible) and AUDIO_MGR_REF_GAIN goes 8 -> CJ_AEC_REF_GAIN (1000), which
+    measured a -16 dBFS reference at the chip. Measured 2026-09-01: the chip's
+    SYS_DELAY clamps at 256 samples and its AEC tail is 3072 samples (192 ms),
+    so the HOST delays the copy: echo should land ~80 ms after the reference —
+    ~/tools/aec_ref_calib.py prints the delay for the speaker in use. Fails
+    open: any feed trouble only costs the cancellation, never the answer."""
+    FEED_PCM = "cj_ref_feed"
+
+    def __init__(self):
+        self.q = queue.Queue()
+        self.on = False
+        self._gen = 0
+        self.stream, self.rate = None, None
+        self._thread = None
+        self._pushed = 0
+
+    @staticmethod
+    def wanted():
+        return os.environ.get("CJ_AEC_REF_FEED", "0").strip().lower() in {
+            "1", "true", "yes", "on"} and _bt_route()
+
+    def sync(self):
+        """Follow the route; returns True when the feed is on. Cheap (one stat)."""
+        want = self.wanted()
+        if want != self.on:
+            self.on = want
+            if want:
+                self._gen += 1
+            self.q.put(("chip", want))
+            if not want:
+                self.abort()
+            self._ensure_thread()
+        return self.on
+
+    def push(self, pcm, rate, at=None, lead_ms=0.0):
+        """Queue mono int16 samples that are being written to the speaker now.
+        Timing: the feed stream is paced by its own output buffer, exactly like
+        the speaker stream, so writes mirrored immediately stay aligned (the
+        calibration measured both paths this way). CJ_AEC_REF_DELAY_MS and
+        `lead_ms` are realised as leading silence at the start of a burst."""
+        if not self.on:
+            return
+        self.q.put(("pcm", self._gen, np.ascontiguousarray(pcm, dtype=np.int16), int(rate),
+                    float(lead_ms)))
+        self._pushed += 1
+        self._ensure_thread()
+
+    def push_wav(self, path):
+        if not self.on:
+            return
+        try:
+            rate, a = _load_wav_mono_int16(path)
+        except Exception as e:
+            print(f"[aec] feed skipped {os.path.basename(str(path))} ({e})")
+            return
+        # aplay needs ~80 ms to open the device; keep the reference just ahead of the echo
+        self.push(a, rate, lead_ms=_env_num("CJ_AEC_REF_CLIP_LEAD_MS", 80))
+
+    def abort(self):
+        """Stop word / mute / route change: drop what is queued and buffered."""
+        self._gen += 1
+        with self.q.mutex:
+            self.q.queue.clear()
+        self.q.put(("abort",))
+
+    # ── worker ──
+    def _ensure_thread(self):
+        if self._thread is None or not self._thread.is_alive():
+            self._thread = threading.Thread(target=self._run, daemon=True,
+                                            name="aec-ref-feed")
+            self._thread.start()
+
+    def _set_chip(self, on):
+        vol = os.path.expanduser("~/bin/audio-volume")
+        xvf = os.path.expanduser("~/bin/xvf-ctl")
+        gain = _env_num("CJ_AEC_REF_GAIN", 1000) if on else 8
+        try:
+            subprocess.run([vol, "feed-on" if on else "feed-off"], timeout=10,
+                           capture_output=True)
+            r = subprocess.run([xvf, "write", "AUDIO_MGR_REF_GAIN", str(gain)],
+                               timeout=10, capture_output=True, text=True)
+            ok = '"ok": true' in r.stdout
+            print(f"[aec] reference feed {'ON' if on else 'off'} — XMOS mixer "
+                  f"{'-55 dB' if on else 'restored'}, REF_GAIN {gain:g}"
+                  f"{'' if ok else ' (chip write FAILED)'}, delay "
+                  f"{_env_num('CJ_AEC_REF_DELAY_MS', 120):g} ms", flush=True)
+        except Exception as e:
+            print(f"[aec] chip setup failed ({type(e).__name__}: {e})", flush=True)
+
+    def _open(self, rate):
+        if self.stream is not None and self.rate == rate:
+            return self.stream
+        self._close(abort=False)
+        st = sd.OutputStream(device=self.FEED_PCM, samplerate=rate, channels=1,
+                             dtype="int16", blocksize=int(rate * 0.05),
+                             latency=_env_num("CJ_AEC_REF_OUT_LATENCY_S", 0.1))
+        st.start()
+        self.stream, self.rate = st, rate
+        return st
+
+    def _close(self, abort):
+        st, self.stream = self.stream, None
+        if st is not None:
+            try:
+                (st.abort if abort else st.stop)()
+                st.close()
+            except Exception:
+                pass
+
+    def _run(self):
         idle_since = None
         burst_open = False
         while True:
