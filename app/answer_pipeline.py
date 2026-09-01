@@ -198,8 +198,17 @@ def _max_words() -> int:
     """CJ_MAX_WORDS (2026-08-30, user: "make the answers a bit concise —
     the bigger answers are the ones with voice jumps"): a direct ceiling on
     spoken words that overrides the per-topic budgets. 0 = off."""
+    # 2026-09-01 per-mode (user: "per mode"): event mode = scripted Q&A pace,
+    # CJ_MAX_WORDS_EVENT (default 40 ≈ 15 s); free conversation keeps CJ_MAX_WORDS.
+    key = "CJ_MAX_WORDS"
     try:
-        return max(0, int(float(os.environ.get("CJ_MAX_WORDS", "0"))))
+        from answer_canned import event_mode
+        if event_mode() and os.environ.get("CJ_MAX_WORDS_EVENT", "40").strip():
+            key = "CJ_MAX_WORDS_EVENT"
+    except Exception:
+        pass
+    try:
+        return max(0, int(float(os.environ.get(key, "40" if key.endswith("_EVENT") else "0"))))
     except ValueError:
         return 0
 
