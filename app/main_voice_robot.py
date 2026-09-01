@@ -1301,8 +1301,15 @@ class _RefFeed:
             wait = due - time.monotonic()
             if wait > 0:
                 time.sleep(wait)
-            elif wait < -0.5:        # fell behind (device stall): resync on the next chunk
-                continue
+            elif wait < -0.05:
+                # Late (the chip setup took ~1 s, or the device stalled): keep the
+                # alignment by skipping the part that has already sounded — a
+                # whole canned answer used to be dropped here (2026-09-01 test:
+                # reference tap silent, nothing cancelled).
+                skip = int(-wait * rate)
+                if skip >= len(pcm):
+                    continue
+                pcm = pcm[skip:]
             try:
                 self._open(rate).write(pcm)
                 idle_since = time.monotonic()
