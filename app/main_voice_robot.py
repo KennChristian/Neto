@@ -1204,6 +1204,7 @@ class _RefFeed:
             self.on = want
             if want:
                 self._gen += 1
+                self.q.put(("warm", int(_env_num("CJ_AEC_REF_RATE", 24000))))
             self.q.put(("chip", want))
             if not want:
                 self.abort()
@@ -1223,6 +1224,13 @@ class _RefFeed:
         self._pushed += 1
         self._ensure_thread()
 
+    def warm(self, rate):
+        """Open the feed stream now (same moment the speaker stream opens) so the
+        first reference samples are not delayed by a PipeWire stream start."""
+        if self.on:
+            self.q.put(("warm", int(rate)))
+            self._ensure_thread()
+
     def push_wav(self, path):
         if not self.on:
             return
@@ -1231,8 +1239,8 @@ class _RefFeed:
         except Exception as e:
             print(f"[aec] feed skipped {os.path.basename(str(path))} ({e})")
             return
-        # aplay needs ~80 ms to open the device; keep the reference just ahead of the echo
-        self.push(a, rate, lead_ms=_env_num("CJ_AEC_REF_CLIP_LEAD_MS", 80))
+        # queued before aplay is even launched: the reference leads the echo by aplay's open time
+        self.push(a, rate, lead_ms=_env_num("CJ_AEC_REF_CLIP_LEAD_MS", 0))
 
     def abort(self):
         """Stop word / mute / route change: drop what is queued and buffered."""
@@ -1286,37 +1294,43 @@ class _RefFeed:
                 pass
 
     def _run(self):
-        idle_since = None
-        burst_open = False
+        zeros = None
         while True:
             try:
-                item = self.q.get(timeout=1.0)
+                item = self.q.get(timeout=0.05)
             except queue.Empty:
-                if self.stream is not None and idle_since and time.monotonic() - idle_since > 3:
-                    self._close(abort=False)   # release PipeWire between answers
-                    burst_open = False
+                st = self.stream
+                if st is not None and zeros is not None:
+                    try:
+                        st.write(zeros)          # keep-alive: stream stays open + running
+                    except Exception:
+                        self._close(abort=True)
                 continue
             kind = item[0]
             if kind == "chip":
                 threading.Thread(target=self._set_chip, args=(item[1],), daemon=True).start()
                 continue
+            if kind == "warm":
+                try:
+                    self._open(item[1]); zeros = np.zeros(int(item[1] * 0.05), dtype=np.int16)
+                except Exception as e:
+                    print(f"[aec] feed open failed ({type(e).__name__}: {e})", flush=True)
+                continue
             if kind == "abort":
-                self._close(abort=True); idle_since = None; burst_open = False; continue
+                self._close(abort=True); zeros = None; continue
             _, gen, pcm, rate, lead_ms = item
             if gen != self._gen:
                 continue
             try:
                 st = self._open(rate)
-                if not burst_open or (idle_since and time.monotonic() - idle_since > 1.0):
-                    pre = int(rate * (_env_num("CJ_AEC_REF_DELAY_MS", 0) + lead_ms) / 1000.0)
-                    if pre > 0:
-                        st.write(np.zeros(pre, dtype=np.int16))
-                    burst_open = True
+                zeros = np.zeros(int(rate * 0.05), dtype=np.int16)
+                pre = int(rate * (_env_num("CJ_AEC_REF_DELAY_MS", 0) + lead_ms) / 1000.0)
+                if pre > 0:
+                    st.write(np.zeros(pre, dtype=np.int16))
                 st.write(pcm)
-                idle_since = time.monotonic()
             except Exception as e:
                 print(f"[aec] feed write failed ({type(e).__name__}: {e})", flush=True)
-                self._close(abort=True); burst_open = False
+                self._close(abort=True); zeros = None
 
 
 _REF_FEED = _RefFeed()
@@ -1938,6 +1952,8 @@ class _SentenceOut:
                              dtype="int16", blocksize=int(rate * self.CHUNK_S),
                              latency=_env_num("CJ_SENT_OUT_LATENCY_S", 0.15))
         st.start()
+        if _REF_FEED.sync():
+            _REF_FEED.warm(rate)     # Bluetooth AEC reference stream opens alongside
         self.stream, self.rate = st, rate
         self._last_write = time.monotonic()
         print(f"[audio] stream player: audio_out_route open @ {rate} Hz "
