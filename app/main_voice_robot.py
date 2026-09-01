@@ -1314,6 +1314,33 @@ class _RefFeed:
 _REF_FEED = _RefFeed()
 
 
+def _playback_failed(where="aplay"):
+    """A clip failed to play. On a Bluetooth route that usually means the
+    speaker dropped (2026-09-01: Sony answered 'Host is down' 4 s after
+    connecting, then every clip failed with 'PCM not found' until the watchdog
+    moved audio back a minute later). `audio-out ensure` switches to the
+    internal speaker at once when the BT PCM is gone; returns True when the
+    caller should retry the clip on the new route."""
+    if not _bt_route():
+        print(f"[audio] PLAYBACK FAILED ({where}) — speaker/route trouble")
+        return False
+    try:
+        r = subprocess.run([os.path.expanduser("~/bin/audio-out"), "ensure"],
+                           capture_output=True, text=True, timeout=20)
+    except Exception as e:
+        print(f"[audio] PLAYBACK FAILED ({where}) — audio-out ensure: {e}")
+        return False
+    if r.returncode == 10:
+        _alsa_config_refresh()
+        _SENT_OUT.abort()
+        print("[audio] Bluetooth speaker gone — switched to the internal speaker, "
+              "retrying the clip", flush=True)
+        return True
+    print(f"[audio] PLAYBACK FAILED ({where}) — Bluetooth speaker connected? "
+          f"({(r.stdout or r.stderr).strip()[-80:]})")
+    return False
+
+
 def _aplay_cmd(path):
     """['aplay', '-q', path] for the clip players — and, on a Bluetooth route
     with the AEC feed on, the same clip is queued to the XMOS reference."""
@@ -1666,8 +1693,8 @@ def _play_wav_interruptible(wav_path, stop):
     if fired:
         print(f"[stop] wake phrase during playback (score {fired:.3f}) — answer cut")
         return True
-    if r != 0:
-        print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
+    if r != 0 and _playback_failed("canned"):
+        subprocess.run(_aplay_cmd(wav_path))   # replay on the internal speaker (not interruptible)
     return False
 
 
@@ -2008,8 +2035,15 @@ def _play_wav_listener(wav_path, listener, prefed_age=None):
     r = proc.wait()
     if listener.fired:
         return True
-    if r != 0:
-        print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
+    if r != 0 and _playback_failed("sentence"):
+        proc = subprocess.Popen(_aplay_cmd(wav_path))
+        while proc.poll() is None:
+            if listener.fired:
+                proc.terminate()
+                break
+            time.sleep(0.05)
+        proc.wait()
+        return bool(listener.fired)
     return False
 
 
@@ -2088,8 +2122,8 @@ def speak(text, filler=None, stop=None, voice_settings=None):
             interrupted = _play_wav_interruptible(wav_path, stop)
         else:
             r = subprocess.run(_aplay_cmd(wav_path))
-            if r.returncode != 0:
-                print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
+            if r.returncode != 0 and _playback_failed("answer"):
+                subprocess.run(_aplay_cmd(wav_path))
         if publish_speaking:
             publish_speaking([text], None, done=True, interrupted=interrupted)
         _speak_timing["play_s"] = round(time.monotonic() - _t_play, 2)
@@ -2128,8 +2162,8 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
         if listener is not None:
             return _play_wav_listener(wav, listener, prefed_age)
         r = subprocess.run(_aplay_cmd(wav))
-        if r.returncode != 0:
-            print("[audio] PLAYBACK FAILED — Bluetooth speaker connected?")
+        if r.returncode != 0 and _playback_failed("sentence"):
+            subprocess.run(_aplay_cmd(wav))
         return False
 
     def _on_first():
