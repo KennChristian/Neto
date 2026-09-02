@@ -336,13 +336,25 @@ MUTE_TRIGGER = "/dev/shm/cj_mute_trigger"
 MUTED_FLAG = "/dev/shm/cj_muted"
 
 
+VIDEO_MUTE = "/dev/shm/cj_video_mute"   # dashboard video clip playing until <epoch>
+
+
 def _muted():
     """Operator MIC mute (2026-08-29, user: "mute mic instead of muting the
     robot"): while /dev/shm/cj_muted exists the wake word and the barge-in
     stop word are ignored and lock-mode follow-ups close, but the robot keeps
     speaking — event buttons and typed Say text still play. Only
-    MUTE_TRIGGER (the Interrupt button) cuts playback."""
-    return os.path.exists(MUTED_FLAG)
+    MUTE_TRIGGER (the Interrupt button) cuts playback.
+    2026-09-02 (user: "why is it always speaking"): also muted while the
+    dashboard plays an uploaded video clip — the robot woke on the clip's own
+    voice, locked onto it and held a conversation with it. The flag file holds
+    the clip-end epoch, so a stale flag self-expires."""
+    if os.path.exists(MUTED_FLAG):
+        return True
+    try:
+        return float(open(VIDEO_MUTE).read()) > time.time()
+    except (OSError, ValueError):
+        return False
 _speak_timing = {}  # populated by speak(): synth_s, play_s
 _STDOUT_TTY = sys.stdout.isatty()   # interactive run vs. systemd/journald
 
