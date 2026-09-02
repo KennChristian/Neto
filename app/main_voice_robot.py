@@ -589,7 +589,9 @@ class _SpeakerDoA:
     daemon's own handle — measured) and keeps a smoothed angle of the latest
     SPEECH-flagged readings. SDK convention: 0 rad = left, pi/2 = front,
     pi = right -> head yaw = 90 - angle (CJ_DOA_FLIP=1 mirrors it if the
-    head turns the wrong way). Off with CJ_FACE_SPEAKER=0."""
+    head turns the wrong way). Off with CJ_FACE_SPEAKER=0.
+    CJ_LISTEN_DIRECTION=back|front|left|right|<deg>[,<deg>] parks the chip's
+    fixed beams on that side while idle (see home_beams)."""
 
     def __init__(self):
         self.on = os.environ.get("CJ_FACE_SPEAKER", "1").strip().lower() not in {
@@ -653,18 +655,57 @@ class _SpeakerDoA:
         except Exception as e:
             print(f"[beam] fix failed ({type(e).__name__}: {e}) — auto beams stay")
 
+    # ── Listen direction (2026-09-02, user: "make it listen on the back part
+    # of the robot"): CJ_LISTEN_DIRECTION parks the two fixed beams on one
+    # side of the body whenever no voice lock is steering them (boot + every
+    # lock release). Chip frame: 0° = left, 90° = front, 180° = right,
+    # 270° = back. "back" = 225°/315° (back-right + back-left), "front" =
+    # 45°/135°, "left" = 315°/45°, "right" = 135°/225°; a number (or two,
+    # comma-separated) is used verbatim; "auto" (default) = the chip's own
+    # 4 adaptive beams. Lock-time beam_fix() still follows the real DoA.
+    _HOME_BEAMS = {"back": (225.0, 315.0), "front": (45.0, 135.0),
+                   "left": (315.0, 45.0), "right": (135.0, 225.0)}
+
+    def home_beams(self):
+        """(deg, deg) chip-frame azimuths for the parked beams, or None = auto."""
+        raw = os.environ.get("CJ_LISTEN_DIRECTION", "auto").strip().lower()
+        if raw in {"", "auto", "0", "off", "adaptive"}:
+            return None
+        if raw in self._HOME_BEAMS:
+            return self._HOME_BEAMS[raw]
+        try:
+            vals = [float(v) % 360.0 for v in raw.split(",") if v.strip()]
+            return (vals[0], vals[1] if len(vals) > 1 else vals[0])
+        except (ValueError, IndexError):
+            print(f"[beam] ignoring bad CJ_LISTEN_DIRECTION={raw!r}, using auto")
+            return None
+
     def beam_auto(self, boot=False):
-        """Back to the chip's 4 adaptive beams."""
-        if self._doa is None or (not boot and not getattr(self, "_beam_fixed", False)):
+        """Back to the resting beams: the chip's 4 adaptive beams, or the
+        CJ_LISTEN_DIRECTION home beams when a listen side is configured."""
+        home = self.home_beams()
+        if self._doa is None or (not boot and not home
+                                 and not getattr(self, "_beam_fixed", False)):
             return
         try:
             with self._usb_lock:
-                self._doa._respeaker.write("AEC_FIXEDBEAMSONOFF", [0])
-            if getattr(self, "_beam_fixed", False) or not boot:
+                rs = self._doa._respeaker
+                if home:
+                    rs.write("AEC_FIXEDBEAMSAZIMUTH_VALUES",
+                             [math.radians(home[0]), math.radians(home[1])])
+                    rs.write("AEC_FIXEDBEAMSONOFF", [1])
+                else:
+                    rs.write("AEC_FIXEDBEAMSONOFF", [0])
+            if home:
+                if boot or getattr(self, "_beam_fixed", False):
+                    print(f"[beam] HOME beams @ {home[0]:.0f}°/{home[1]:.0f}° chip frame "
+                          f"(CJ_LISTEN_DIRECTION={os.environ.get('CJ_LISTEN_DIRECTION')})",
+                          flush=True)
+            elif getattr(self, "_beam_fixed", False) or not boot:
                 print("[beam] auto beams restored", flush=True)
             self._beam_fixed = False
         except Exception as e:
-            print(f"[beam] auto restore failed ({type(e).__name__}: {e})")
+            print(f"[beam] resting beams failed ({type(e).__name__}: {e})")
 
     def _run(self):
         while True:
@@ -1160,22 +1201,39 @@ def _min_speech_frames(frame_ms):
     return max(0, int(_env_num("CJ_MIC_MIN_SPEECH_MS", 240) // frame_ms))
 
 
-_bt_route_cache = {"mtime": None, "bt": False}
+_bt_route_cache = {"mtime": None, "bt": False, "secondary": "none"}
 
 
-def _bt_route():
-    """True when ~/bin/audio-out has playback on a Bluetooth speaker (route
-    file says bluealsa). Cached by mtime — read per turn, not per frame."""
+def _route_state():
+    """~/.asoundrc.route as written by ~/bin/audio-out: {"bt": playback on a
+    Bluetooth device, "secondary": "none" | "internal" | MAC} — the second
+    output of a dual route (2026-09-02, `audio-out both/dual`). Cached by
+    mtime — read per turn, not per frame."""
     path = os.path.expanduser("~/.asoundrc.route")
     try:
         m = os.path.getmtime(path)
         if m != _bt_route_cache["mtime"]:
             with open(path) as f:
-                _bt_route_cache["bt"] = "bluealsa" in f.read()
+                text = f.read()
+            _bt_route_cache["bt"] = "bluealsa" in text
+            mm = re.search(r"^# Secondary: (\S+)", text, re.M)
+            _bt_route_cache["secondary"] = (mm.group(1) if mm else "none")
             _bt_route_cache["mtime"] = m
     except OSError:
-        _bt_route_cache["bt"] = False
-    return _bt_route_cache["bt"]
+        _bt_route_cache.update(bt=False, secondary="none")
+    return _bt_route_cache
+
+
+def _bt_route():
+    """True when ~/bin/audio-out has playback on a Bluetooth speaker (route
+    file says bluealsa)."""
+    return _route_state()["bt"]
+
+
+def _dual_route():
+    """True when the route has a real second output (pcm audio_out_route2):
+    every clip and streamed sentence is mirrored to it."""
+    return _route_state()["secondary"] != "none"
 
 
 # ── AEC reference feed for Bluetooth speakers (2026-09-01) ──────────────────
@@ -1348,6 +1406,132 @@ class _RefFeed:
 _REF_FEED = _RefFeed()
 
 
+# ── ElevenLabs Voice Isolator before STT (2026-09-02, switchable) ───────────
+# First added and reverted the same day (the ~2-3 s round trip per turn was
+# not worth it); brought back behind a switch per user: "a toggle button for
+# elevenlabs voice isolator so that we can activate and deactivate it in case
+# there are problems". ON while ~/.cj_stt_isolate_on exists (the /maintain
+# "Voice isolator" button) or CJ_STT_ISOLATE=1. Findings that shape this:
+# the API rejects input under 4.6 s (we pad with silence and trim it back),
+# answers with MP3 (ffmpeg -> 16 kHz mono wav), and is a whole-file call —
+# it can never sit in the 80 ms wake loop. Any failure or a slow call
+# (CJ_STT_ISOLATE_TIMEOUT_S, default 8) falls back to the raw capture.
+ISOLATE_FLAG = os.path.expanduser("~/.cj_stt_isolate_on")
+ISOLATE_LAST = "/dev/shm/cj_isolate_last.json"
+ISOLATE_URL = "https://api.elevenlabs.io/v1/audio-isolation"
+ISOLATE_MIN_S = 5.0        # API minimum is 4.6 s; pad to this
+
+
+def _stt_isolate_on():
+    if os.environ.get("CJ_STT_ISOLATE", "").strip().lower() in {"1", "true", "yes", "on"}:
+        return True
+    return os.path.exists(ISOLATE_FLAG)
+
+
+def _eleven_api_key():
+    """ELEVEN_API_KEY the way the voice stack resolves it: environment, then
+    voice/config.py (repo root), then app/.env."""
+    key = os.environ.get("ELEVEN_API_KEY", "").strip()
+    if key:
+        return key
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        if root not in sys.path:
+            sys.path.insert(0, root)
+        from voice import config as _vc      # gitignored literal
+        key = str(getattr(_vc, "ELEVEN_API_KEY", "") or "").strip()
+        if key:
+            return key
+    except Exception:
+        pass
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")) as f:
+            for line in f:
+                m = re.match(r"^ELEVEN_API_KEY=(.+)$", line.strip())
+                if m:
+                    return m.group(1).strip().strip('"').strip("'")
+    except OSError:
+        pass
+    return ""
+
+
+def _isolate_record(ok, ms, secs, note=""):
+    try:
+        with open(ISOLATE_LAST + ".tmp", "w") as f:
+            json.dump({"ts": time.time(), "ok": bool(ok), "ms": int(ms),
+                       "in_s": round(float(secs), 2), "note": note[:120]}, f)
+        os.replace(ISOLATE_LAST + ".tmp", ISOLATE_LAST)
+    except Exception:
+        pass
+
+
+def _stt_isolate(path):
+    """Run the capture through the Voice Isolator; returns the path to use
+    for STT — a cleaned wav, or the original on any failure / when off."""
+    if not _stt_isolate_on():
+        return path
+    t0 = time.monotonic()
+    secs = 0.0
+    try:
+        key = _eleven_api_key()
+        if not key:
+            raise RuntimeError("no ELEVEN_API_KEY")
+        rate, a = wavfile.read(path)
+        if a.ndim > 1:
+            a = a[:, 0]
+        a = np.asarray(a, dtype=np.int16)
+        secs = len(a) / float(rate)
+        need = int(rate * ISOLATE_MIN_S) - len(a)
+        if need > 0:                       # API minimum input length
+            a = np.concatenate([a, np.zeros(need, dtype=np.int16)])
+        _stage("transcribe", "active", "isolating voice (ElevenLabs)…")
+        import io, secrets, urllib.request, urllib.error
+        buf = io.BytesIO()
+        wavfile.write(buf, rate, a)
+        boundary = "----reachy" + secrets.token_hex(12)
+        body = (f"--{boundary}\r\n"
+                f'Content-Disposition: form-data; name="audio"; filename="capture.wav"\r\n'
+                "Content-Type: audio/wav\r\n\r\n").encode() + buf.getvalue() + \
+               f"\r\n--{boundary}--\r\n".encode()
+        req = urllib.request.Request(ISOLATE_URL, data=body, headers={
+            "xi-api-key": key, "Content-Type": f"multipart/form-data; boundary={boundary}"})
+        timeout = _env_num("CJ_STT_ISOLATE_TIMEOUT_S", 8)
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                mp3 = resp.read()
+        except urllib.error.HTTPError as exc:
+            detail = exc.read(300).decode(errors="replace")
+            try:
+                detail = json.loads(detail)["detail"]["message"]
+            except Exception:
+                pass
+            raise RuntimeError(f"HTTP {exc.code}: {detail}") from exc
+        mp3_path = path[:-4] + ".iso.mp3"
+        out = path[:-4] + ".iso.wav"
+        with open(mp3_path, "wb") as f:
+            f.write(mp3)
+        r = subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", mp3_path,
+                            "-ar", str(rate), "-ac", "1", "-t", f"{max(secs, 0.5):.3f}",
+                            "-c:a", "pcm_s16le", out],
+                           capture_output=True, text=True, timeout=15)
+        try:
+            os.unlink(mp3_path)
+        except OSError:
+            pass
+        if r.returncode != 0 or not os.path.exists(out):
+            raise RuntimeError(f"ffmpeg: {r.stderr.strip()[-80:]}")
+        os.replace(out, path)              # same path: the caller's unlink still cleans up
+        ms = (time.monotonic() - t0) * 1000
+        print(f"[isolate] cleaned {secs:.1f} s capture in {ms / 1000:.1f} s")
+        _isolate_record(True, ms, secs)
+        return path
+    except Exception as e:
+        ms = (time.monotonic() - t0) * 1000
+        print(f"[isolate] skipped ({type(e).__name__}: {str(e)[:80]}) after {ms / 1000:.1f} s — raw capture to STT")
+        _isolate_record(False, ms, secs, f"{type(e).__name__}: {str(e)[:80]}")
+        return path
+
+
 def _playback_failed(where="aplay"):
     """A clip failed to play. On a Bluetooth route that usually means the
     speaker dropped (2026-09-01: Sony answered 'Host is down' 4 s after
@@ -1375,14 +1559,23 @@ def _playback_failed(where="aplay"):
     return False
 
 
+_APLAY_DUAL = os.path.expanduser("~/bin/aplay-dual")
+
+
 def _aplay_cmd(path):
     """['aplay', '-q', path] for the clip players — and, on a Bluetooth route
-    with the AEC feed on, the same clip is queued to the XMOS reference."""
+    with the AEC feed on, the same clip is queued to the XMOS reference.
+    On a dual route (2026-09-02: `audio-out both` = Bluetooth speaker +
+    laptop) the clip goes through ~/bin/aplay-dual, which plays it on the
+    primary route and on pcm audio_out_route2 at the same time; its exit code
+    is the primary's, so a dropped second device never fails the clip."""
     try:
         if _REF_FEED.sync():
             _REF_FEED.push_wav(path)
     except Exception as e:
         print(f"[aec] feed skip ({type(e).__name__}: {e})")
+    if _dual_route() and os.access(_APLAY_DUAL, os.X_OK):
+        return [_APLAY_DUAL, path]
     return ["aplay", "-q", path]
 
 
@@ -1947,6 +2140,7 @@ class _SentenceOut:
 
     def __init__(self):
         self.stream, self.rate = None, None
+        self.stream2 = None      # second output of a dual route (2026-09-02)
         self.lock = threading.Lock()
         self._alive = None
         self._last_write = 0.0
@@ -1966,10 +2160,27 @@ class _SentenceOut:
         st.start()
         if _REF_FEED.sync():
             _REF_FEED.warm(rate)     # Bluetooth AEC reference stream opens alongside
+        self.stream2 = None
+        if _dual_route():
+            # dual route (speaker + laptop): the same samples go to the second
+            # pcm; both streams are buffered ~0.15 s and paced by their own
+            # device, so the two outputs stay within a few ms of each other.
+            # Fails soft — the primary keeps streaming, aplay-dual still mirrors
+            # canned clips.
+            try:
+                st2 = sd.OutputStream(device="audio_out_route2", samplerate=rate, channels=1,
+                                      dtype="int16", blocksize=int(rate * self.CHUNK_S),
+                                      latency=_env_num("CJ_SENT_OUT_LATENCY_S", 0.15))
+                st2.start()
+                self.stream2 = st2
+            except Exception as e:
+                print(f"[audio] stream player: second output (audio_out_route2) unavailable "
+                      f"({type(e).__name__}: {str(e)[:60]}) — sentences on the primary only")
         self.stream, self.rate = st, rate
         self._last_write = time.monotonic()
         print(f"[audio] stream player: audio_out_route open @ {rate} Hz "
-              f"(buffer {st.latency:.2f}s) — sentences play gapless")
+              f"(buffer {st.latency:.2f}s) — sentences play gapless"
+              + (" — mirrored to audio_out_route2" if self.stream2 is not None else ""))
         self._alive = threading.Thread(target=self._keepalive, args=(st,), daemon=True)
         self._alive.start()
         return st
@@ -1984,17 +2195,20 @@ class _SentenceOut:
                         self._last_write = time.monotonic()
                     except Exception:
                         pass
+                    self._write2(zeros)
             time.sleep(self.CHUNK_S / 2)
 
     def _release(self, abort):
         with self.lock:
             st, self.stream = self.stream, None
-        if st is not None:
-            try:
-                (st.abort if abort else st.stop)()
-                st.close()
-            except Exception:
-                pass
+            st2, self.stream2 = self.stream2, None
+        for s_ in (st, st2):
+            if s_ is not None:
+                try:
+                    (s_.abort if abort else s_.stop)()
+                    s_.close()
+                except Exception:
+                    pass
 
     def close(self):    # answer finished: let the tail drain, then release
         self._release(abort=False)
@@ -2019,9 +2233,26 @@ class _SentenceOut:
             with self.lock:
                 st.write(a[k:k + n])
                 self._last_write = time.monotonic()
+                self._write2(a[k:k + n])
             if feed:
                 _REF_FEED.push(a[k:k + n], rate, self._last_write)
         return False
+
+    def _write2(self, chunk):
+        """Mirror a chunk to the second output; drop that output on error
+        (laptop went away) instead of stalling the primary. Lock held."""
+        st2 = self.stream2
+        if st2 is None:
+            return
+        try:
+            st2.write(chunk)
+        except Exception as e:
+            self.stream2 = None
+            print(f"[audio] second output dropped mid-answer ({type(e).__name__}) — primary continues")
+            try:
+                st2.abort(); st2.close()
+            except Exception:
+                pass
 
 
 _SENT_OUT = _SentenceOut()
@@ -2490,6 +2721,7 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         if _net_probe.get("up") is False and not internet_up(0.6):
             raise ConnectionError("offline at wake")   # -> offline notice below
         lang = os.environ.get("CJ_STT_LANGUAGE", "en").strip() or None
+        path = _stt_isolate(path)     # ElevenLabs Voice Isolator, only while switched on
         question = transcribe_openai(path, language=lang)
     except Exception as e:
         if internet_up():
