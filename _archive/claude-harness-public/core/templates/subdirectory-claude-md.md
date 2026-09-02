@@ -1,9 +1,0 @@
-# {SUBSYSTEM_NAME}
-
-## Conventions
-
-{SUBSYSTEM_CONVENTIONS}
-
-## Reference
-
-{L2_POINTERS}

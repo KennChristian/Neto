@@ -19,5 +19,4 @@ Sequence + line refs: [../docs/SYSTEM_TRACE.md](../docs/SYSTEM_TRACE.md). Old→
 | `wake_word.py` | openWakeWord detector (`wake/models/hi_see_jap.onnx`) |
 | `usage_meter.py` | API usage tally for the dashboard |
 | `wake/` | wake model, training scripts, data |
-| `legacy/` | Streamlit kiosk + old dashboard — not used by the robot |
 | `requirements.txt` | venv deps |

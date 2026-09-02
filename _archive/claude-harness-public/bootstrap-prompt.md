@@ -1,1 +1,0 @@
-core/bootstrap-prompt.md
