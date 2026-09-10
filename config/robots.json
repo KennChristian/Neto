@@ -1,0 +1,21 @@
+{
+  "_readme": "Machine identity and the lease authority for the two-robot installation. `slots` maps the two logical slots (alpha, beta — the values the floor and cjap_is use) to real hostnames; a machine finds its own slot by hostname (override: CJ_ROBOT_SLOT). Hostnames identify MACHINES only — the persona (Panganiban vs Host) is `cjap_is`, held by the authority and assignable from the console. `authority` is where the console/lease server runs (one machine); the other machine's dashboard proxies /console there and its robot polls it. Relocating the authority = change `authority.host`, sync, restart pi-dashboard on both. Robots never talk to each other.",
+  "slots": {
+    "alpha": "reachy-cjap",
+    "beta": "cj-beta"
+  },
+  "labels": {
+    "cjap": "Panganiban",
+    "host": "Host"
+  },
+  "authority": {
+    "host": "reachy-cjap",
+    "port": 8080,
+    "bind": "0.0.0.0",
+    "url_template": "http://{host}.local:{port}"
+  },
+  "sync_remote": {
+    "_note": "bare repo for offline git sync between the two machines (no internet needed); ~/git/cjap.git on the authority machine today, add the other machine with `git remote add <name> pollen@<host>.local:git/cjap.git` when it is reachable",
+    "path": "~/git/cjap.git"
+  }
+}

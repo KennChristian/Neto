@@ -15,6 +15,7 @@ import numpy as np
 import sounddevice as sd
 from scipy.io import wavfile
 from answer_pipeline import CorpusArtifacts, cache_savings_summary, make_client
+import personas          # both characters loaded at boot, one active (2026-09-10)
 import speech_engines
 from speech_engines import transcribe_openai, tts_concatenate_parallel
 
@@ -34,6 +35,8 @@ _FLOOR = {"client": None}          # floor_lease.LeaseClient, started in main()
 _TURN = {"active": False}          # a question/answer turn is running (console drains on this)
 _OPEN_INPUTS = set()               # input streams currently open on the mic (reported as "observed")
 _WAKE = {"detector": None}         # live wake detector so the console can retune its threshold
+_INTRO = {"done": 0}               # intro_seq the host finished speaking (reported to the console)
+ROLE_SWITCH = -2.0                 # _wake_stream sentinel: persona changed while idle-listening
 
 
 def _floor_ok():
@@ -2875,7 +2878,10 @@ def _safe_turn(*args, **kwargs):
     """handle_turn that cannot take the service down: any unexpected error is
     logged with its traceback, apologised for, and treated as a finished
     turn (True) so a locked conversation keeps going."""
-    _TURN["active"] = True          # console drains floor/mode changes until this clears
+    if not personas.is_cjap():
+        print("[persona] host role — no STT, router or composer; turn refused", flush=True)
+        return False
+    _TURN["active"] = True          # console drains floor/mode/role changes until this clears
     try:
         return handle_turn(*args, **kwargs)
     except Exception as e:
@@ -3165,6 +3171,9 @@ def _wake_stream(det):
                 except (OSError, ValueError) as e:
                     print(f"[ask] bad trigger ignored: {e}")
                 # (mic mute does not block the event buttons — they are not the mic)
+                if ask and ask.get("a") and not personas.is_cjap():
+                    print(f"[ask] question button ignored — this robot is the Host, not Panganiban")
+                    ask = None
                 if ask and ask.get("a"):
                     _pending_ask["ask"] = ask
                     print(f"[ask] question button: {ask.get('id')}")
@@ -3196,6 +3205,9 @@ def _wake_stream(det):
                             _publish_wake(1.0, fired=True)
                         model.reset()
                         return ret
+            if not personas.is_cjap():
+                model.reset()
+                return ROLE_SWITCH   # role swapped to Host while idle — leave the wake loop body
             if not _floor_ok() or tap.stream is None:
                 # No floor (console says none / other robot / lease expired):
                 # the tap is closed by the lease thread; keep serving the
@@ -3332,9 +3344,27 @@ def wake_loop(client, artifacts, gestures):
         stop = StopWord(detector, getattr(config, "STOP_OWW_THRESHOLD", 0.4))
         print(f"[stop] stop word armed — \"{phrase}\" mid-answer cuts playback "
               f"(threshold {stop.threshold})")
+    announced = None
     while True:
+        if not personas.is_cjap():
+            # Host role (or no persona yet): no wake word, no STT, no router,
+            # no composer. Intro / duet playback are driven by the lease
+            # callbacks; here we only keep the room level flowing to the
+            # console and serve the gesture triggers. A role swap back to
+            # Panganiban needs no restart — the next iteration arms the wake word.
+            if announced != personas.active():
+                announced = personas.active()
+                print(f"[persona] idle as {announced or 'no persona yet'} — wake word off, composer off", flush=True)
+                gestures.start("sleep")
+            _host_step(gestures)
+            continue
+        if announced != "cjap":
+            announced = "cjap"
+            print(f"[wake] armed as Panganiban — say \"{phrase}\"", flush=True)
         gestures.start("sleep")
         score = _wake_stream(detector)
+        if score == ROLE_SWITCH:
+            continue
         if score < 0:
             _run_enrollment(gestures)
             continue
@@ -3400,6 +3430,9 @@ def wake_loop(client, artifacts, gestures):
                 if _muted():
                     print("[lock] mic muted from the dashboard — conversation closed")
                     break
+                if not personas.is_cjap():
+                    print("[lock] role swapped to Host — conversation closed")
+                    break
                 gestures.perk()
                 r = _safe_turn(client, artifacts, gestures, history, stop=stop,
                                followup=True, listen_s=remaining)
@@ -3448,6 +3481,8 @@ def _floor_observe():
             "speech_threshold": _speech_threshold(noise) if noise is not None else None,
             "speaking": bool(_SENT_OUT.stream is not None or _SENT_OUT._busy),
             "turn_active": bool(_TURN["active"]),
+            "persona": personas.active(),
+            "intro_done": int(_INTRO["done"]),
             "muted": _muted()}
 
 
@@ -3479,9 +3514,10 @@ def _floor_interrupt():
 
 
 def _floor_intro():
-    """on_intro (Host robot only): say the intro line once, then stay silent."""
+    """on_intro (Host role only): say the intro line once, then stay silent,
+    and report intro_done so the console hands the floor to Panganiban."""
     c = _FLOOR["client"]
-    if c is None or c.role != "beta":
+    if c is None or not personas.is_host():
         return
     if os.environ.get("CJ_HOST_INTRO", "1").strip().lower() in {"0", "false", "no", "off"}:
         print("[host] intro requested but 'Host says the intro line' is off")
@@ -3490,6 +3526,8 @@ def _floor_intro():
     if not text:
         print("[host] intro requested but the profile has no host_intro_text")
         return
+
+    seq = c.intro_seq
 
     def _say():
         _TURN["active"] = True
@@ -3500,38 +3538,48 @@ def _floor_intro():
             print(f"[host] intro failed ({type(e).__name__}: {e})")
         finally:
             _TURN["active"] = False
+            _INTRO["done"] = seq if isinstance(seq, int) else _INTRO["done"]
             if _gestures_inst is not None:
                 _gestures_inst.neutral()
     threading.Thread(target=_say, daemon=True).start()
 
 
-def host_loop(gestures):
-    """cj-beta, the Host: never composes an answer. Follows the floor lease
-    for its microphone (so the console can meter its room and the one-mic
-    invariant holds), speaks the intro line when the console asks, and
-    honours the dashboard gesture triggers. Otherwise silent."""
-    gestures.scan()
-    print("[host] Host role — intro line on request, otherwise silent; mic follows the floor lease")
+def _host_step(gestures):
+    """One idle iteration in the Host role (or before any persona is known):
+    serve the dashboard gesture trigger, keep the room level flowing when
+    this robot holds the floor (the visitor's transmitter is heard by
+    whichever robot has the floor), otherwise sleep. Never composes."""
+    if os.path.exists(GESTURE_TRIGGER):   # /maintain mechanical action
+        try:
+            fresh = (time.time() - os.path.getmtime(GESTURE_TRIGGER)) < 10
+            gname = json.loads(open(GESTURE_TRIGGER).read() or "{}").get("g", "")
+            os.unlink(GESTURE_TRIGGER)
+        except (OSError, ValueError):
+            fresh, gname = False, ""
+        if fresh and gname:
+            print(f"[gesture] {gname}: {gestures.manual(gname)}", flush=True)
+    if os.path.exists(ASK_TRIGGER):       # event button pressed while we are the Host
+        with contextlib.suppress(OSError):
+            os.unlink(ASK_TRIGGER)
+        print("[ask] question button ignored — this robot is the Host, not Panganiban")
     tap = _mic_tap()
-    gestures.start("sleep")
-    while True:
-        if os.path.exists(GESTURE_TRIGGER):   # /maintain mechanical action
-            try:
-                fresh = (time.time() - os.path.getmtime(GESTURE_TRIGGER)) < 10
-                gname = json.loads(open(GESTURE_TRIGGER).read() or "{}").get("g", "")
-                os.unlink(GESTURE_TRIGGER)
-            except (OSError, ValueError):
-                fresh, gname = False, ""
-            if fresh and gname:
-                print(f"[gesture] {gname}: {gestures.manual(gname)}", flush=True)
-        if _floor_ok() and tap.is_open():
-            try:
-                frame, _ = tap.read(1280)
-                tap.note_rms(frame[:, 0])   # room level for the console's threshold warning
-            except sd.PortAudioError:
-                time.sleep(0.1)
-        else:
+    if _floor_ok() and tap.is_open():
+        try:
+            frame, _ = tap.read(1280)
+            tap.note_rms(frame[:, 0])   # room level for the console's threshold warning
+        except sd.PortAudioError:
             time.sleep(0.1)
+    else:
+        time.sleep(0.1)
+
+
+def _floor_persona(persona, cjap_is):
+    """on_persona: activate the character this slot now plays. No restart,
+    no corpus reload — both are resident since boot (personas.load())."""
+    c = _FLOOR["client"]
+    personas.activate(persona)
+    who = f"{c.machine} ({c.slot})" if c is not None else "this robot"
+    _publish_transcript("note", f"({who} is now the {'Panganiban' if persona == 'cjap' else 'Host'} role)")
 
 
 def main():
@@ -3540,20 +3588,23 @@ def main():
                     help='hands-free behind the wake phrase (the only mode; flag kept for the systemd unit)')
     ap.parse_args()
 
+    # Both characters resident from boot; the lease says which one is live.
+    personas.load()
     # Floor lease first: from here on the mic can only open on a grant.
     import floor_lease
-    role = floor_lease.robot_role()
+    slot = floor_lease.robot_slot()
     url = floor_lease.console_url()
-    lease = floor_lease.LeaseClient(role, url, on_mic=_floor_mic, on_settings=_floor_settings,
-                                    on_interrupt=_floor_interrupt, on_intro=_floor_intro,
-                                    observe=_floor_observe)
+    lease = floor_lease.LeaseClient(slot, url, on_mic=_floor_mic, on_settings=_floor_settings,
+                                    on_persona=_floor_persona, on_interrupt=_floor_interrupt,
+                                    on_intro=_floor_intro, observe=_floor_observe)
     _FLOOR["client"] = lease
     lease.start()
-    print(f"[floor] role {role or 'UNKNOWN'} — console {url} — the mic opens only while the "
-          f"console grants the floor (lease {lease.ttl_s:.0f} s, fail closed)", flush=True)
-    if role is None:
-        print("[floor] UNKNOWN ROLE: set CJ_ROBOT_ROLE=alpha|beta or name the host cj-alpha / "
-              "cj-beta — this robot's microphone will NEVER open", flush=True)
+    print(f"[floor] machine {lease.machine} = slot {slot or 'UNKNOWN'} — authority {url} — the mic "
+          f"opens only while it grants the floor (lease {lease.ttl_s:.0f} s, fail closed); "
+          f"the persona (Panganiban/Host) comes from its cjap_is and is HELD if it goes away", flush=True)
+    if slot is None:
+        print("[floor] UNKNOWN SLOT: add this hostname to config/robots.json slots or set "
+              "CJ_ROBOT_SLOT=alpha|beta — this robot's microphone will NEVER open", flush=True)
 
     print("Loading artifacts...")
     artifacts = CorpusArtifacts()
@@ -3565,10 +3616,7 @@ def main():
     prewarm_boot()   # heavy imports + entity dictionary off the first turn
 
     try:
-        if role == "beta":
-            host_loop(gestures)
-        else:
-            wake_loop(client, artifacts, gestures)
+        wake_loop(client, artifacts, gestures)   # one loop for both roles; persona decides per iteration
     except KeyboardInterrupt:
         gestures.neutral()
         print("\n" + cache_savings_summary())

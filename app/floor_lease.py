@@ -1,30 +1,31 @@
-"""Floor lease client — the robot side of the ONE-OPEN-MIC invariant.
+"""Floor lease client — the robot side of the ONE-OPEN-MIC invariant, plus
+the assignable persona (2026-09-10).
 
-Two Reachy Mini units share one installation. The operator console (served
-by the maintenance dashboard, dashboard/console.py) holds a single value,
-the *floor*: ``alpha`` | ``beta`` | ``none``. A robot may open its
-microphone only while it holds a fresh lease on the floor.
+Two Reachy Mini units share one installation. Each machine occupies one
+SLOT, ``alpha`` or ``beta`` — a fixed identity looked up by hostname in
+``config/robots.json`` (override: ``CJ_ROBOT_SLOT``). The lease authority
+(dashboard/console.py, on the machine named in ``config/robots.json``
+``authority``) holds two single values:
 
-Lease semantics (fail closed everywhere):
+* the *floor* — ``alpha`` | ``beta`` | ``none`` — who may open a mic;
+* ``cjap_is`` — ``alpha`` | ``beta`` — who is Panganiban. The other slot is
+  the Host. Two Panganibans cannot be expressed.
 
-* the robot POSTs its observation to ``<console>/api/lease`` about once a
-  second and receives the current floor;
-* a response naming this robot renews the lease for ``ttl_s`` (3 s cap —
-  the server may shorten it, never lengthen it);
+Lease semantics (fail closed for the MIC, hold for the PERSONA):
+
+* the robot POSTs its observation to ``<authority>/api/lease`` about once a
+  second and receives the floor, ``cjap_is``, its persona and the settings;
+* a reply naming this slot as the floor renews the lease for ``ttl_s``
+  (3 s cap — the server may shorten it, never lengthen it);
 * any other floor value, an unreachable server, a malformed reply, or a
   fresh boot (no reply yet) leaves the lease unheld — the mic closes;
-* ``has_floor()`` is the ONLY question the mic code asks. It is a pure
-  function of (granted, lease_until, clock), so an expired lease closes the
-  mic even if the poll thread is stuck.
+* the persona is the LAST KNOWN one: an unreachable authority never
+  changes it (losing the mic is safe, losing the persona mid-sentence is
+  not). A fresh boot has no persona until the first reply.
 
-Role comes from ``CJ_ROBOT_ROLE`` or the hostname (cj-alpha / cj-beta). An
-unknown role never holds the floor.
-
-The same reply carries the effective settings resolved by the console
-(mode profile -> drop-in -> .env -> console override); ``on_settings`` is
-invoked when they change so the app can apply them live. ``interrupt_seq``
-and ``intro_seq`` are monotonically increasing counters the console bumps
-to ask for "cut the answer short" and "host, say the intro line".
+``has_floor()`` is the ONLY question the mic code asks; it is a pure
+function of (granted, lease_until, clock), so an expired lease closes the
+mic even if the poll thread is stuck.
 
 Stdlib only; injectable clock and transport so it is unit-testable without
 a network (tests/test_floor_lease.py).
@@ -38,27 +39,84 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from pathlib import Path
 
-ROLE_BY_HOST = {"cj-alpha": "alpha", "cj-beta": "beta"}
-ROLES = ("alpha", "beta")
+SLOTS = ("alpha", "beta")
+PERSONAS = ("cjap", "host")
 DEFAULT_URL = "http://127.0.0.1:8080"
 TTL_CAP_S = 3.0        # never trust a longer lease than this
 POLL_S = 1.0
 HTTP_TIMEOUT_S = 0.8   # < POLL_S so a hung server still yields one tick per second
+ROBOTS_PATH = Path(__file__).resolve().parent.parent / "config" / "robots.json"
+
+_robots_cache: dict = {}
 
 
-def robot_role() -> str | None:
-    """'alpha' | 'beta' from CJ_ROBOT_ROLE, else from the hostname; None when
+def hostname() -> str:
+    return socket.gethostname().split(".")[0].strip().lower()
+
+
+def robots_config(path: Path | str = ROBOTS_PATH) -> dict:
+    """config/robots.json (slots -> hostnames, authority), cached by mtime.
+    Missing/invalid file -> {} (the caller falls back to env/defaults)."""
+    p = str(path)
+    try:
+        mtime = os.path.getmtime(p)
+    except OSError:
+        return {}
+    hit = _robots_cache.get(p)
+    if hit and hit[0] == mtime:
+        return hit[1]
+    try:
+        with open(p, encoding="utf-8") as f:
+            doc = json.load(f)
+        if not isinstance(doc, dict):
+            doc = {}
+    except (OSError, ValueError):
+        doc = {}
+    _robots_cache[p] = (mtime, doc)
+    return doc
+
+
+def robot_slot() -> str | None:
+    """'alpha' | 'beta' from CJ_ROBOT_SLOT (legacy alias CJ_ROBOT_ROLE),
+    else by matching the hostname in config/robots.json slots; None when
     neither resolves (the mic then never opens — logged loudly by the app)."""
-    r = os.environ.get("CJ_ROBOT_ROLE", "").strip().lower()
-    if r in ROLES:
-        return r
-    host = socket.gethostname().split(".")[0].strip().lower()
-    return ROLE_BY_HOST.get(host)
+    for var in ("CJ_ROBOT_SLOT", "CJ_ROBOT_ROLE"):
+        r = os.environ.get(var, "").strip().lower()
+        if r in SLOTS:
+            return r
+    host = hostname()
+    for slot, name in (robots_config().get("slots") or {}).items():
+        if slot in SLOTS and str(name).strip().lower() == host:
+            return slot
+    return None
+
+
+def authority() -> dict:
+    a = robots_config().get("authority") or {}
+    return {"host": str(a.get("host") or "").strip().lower(),
+            "port": int(a.get("port") or 8080),
+            "bind": str(a.get("bind") or "0.0.0.0"),
+            "url_template": str(a.get("url_template") or "http://{host}.local:{port}")}
+
+
+def is_authority_host() -> bool:
+    return bool(authority()["host"]) and authority()["host"] == hostname()
 
 
 def console_url() -> str:
-    return (os.environ.get("CJ_CONSOLE_URL", "").strip() or DEFAULT_URL).rstrip("/")
+    """Where the lease authority answers. CJ_CONSOLE_URL wins; else derived
+    from config/robots.json (loopback when this machine IS the authority)."""
+    env = os.environ.get("CJ_CONSOLE_URL", "").strip()
+    if env:
+        return env.rstrip("/")
+    a = authority()
+    if not a["host"]:
+        return DEFAULT_URL
+    if a["host"] == hostname():
+        return f"http://127.0.0.1:{a['port']}"
+    return a["url_template"].format(host=a["host"], port=a["port"]).rstrip("/")
 
 
 def http_transport(url: str, timeout_s: float = HTTP_TIMEOUT_S):
@@ -82,26 +140,37 @@ def http_transport(url: str, timeout_s: float = HTTP_TIMEOUT_S):
 
 class LeaseClient:
     """See module docstring. All callbacks are optional and must not raise
-    (exceptions are swallowed and logged so the poll loop keeps ticking)."""
+    (exceptions are swallowed and logged so the poll loop keeps ticking).
 
-    def __init__(self, role: str | None, url: str = DEFAULT_URL, *,
+    on_mic(bool)                      — open/close the capture stream
+    on_settings(settings, mode, profile, env)
+    on_persona(persona, cjap_is)      — 'cjap' | 'host', fires on every change
+                                        (including the first reply)
+    on_interrupt()                    — operator "cut short"
+    on_intro()                        — host: say the intro line now
+    observe() -> dict                 — what the mic is actually doing
+    """
+
+    def __init__(self, slot: str | None, url: str = DEFAULT_URL, *,
                  ttl_s: float = TTL_CAP_S, poll_s: float = POLL_S,
                  clock=time.monotonic, transport=None,
-                 on_mic=None, on_settings=None, on_interrupt=None, on_intro=None,
-                 observe=None, log=print):
-        self.role = role if role in ROLES else None
+                 on_mic=None, on_settings=None, on_persona=None,
+                 on_interrupt=None, on_intro=None, observe=None, log=print):
+        self.slot = slot if slot in SLOTS else None
         self.url = url
         self.ttl_s = min(float(ttl_s), TTL_CAP_S)
         self.poll_s = float(poll_s)
         self.clock = clock
         self.transport = transport or http_transport(url)
-        self.on_mic, self.on_settings = on_mic, on_settings
+        self.on_mic, self.on_settings, self.on_persona = on_mic, on_settings, on_persona
         self.on_interrupt, self.on_intro = on_interrupt, on_intro
         self.observe, self.log = observe, log
-        # lease state — fresh boot = nothing held
+        # lease state — fresh boot = nothing held, no persona known
         self.granted = False
         self.lease_until = 0.0
         self.floor = None
+        self.cjap_is = None
+        self.persona = None
         self.settings: dict = {}
         self.env: dict = {}            # setting -> robot env mapping, resolved by the console
         self.host_intro_text = ""
@@ -115,17 +184,24 @@ class LeaseClient:
         self._lock = threading.Lock()
         self._stop = threading.Event()
         self._thread = None
-        self.boot_id = f"{socket.gethostname()}-{os.getpid()}-{int(time.time())}"
+        self.machine = hostname()
+        self.boot_id = f"{self.machine}-{os.getpid()}-{int(time.time())}"
+
+    # legacy name — the slot used to be called "role"
+    @property
+    def role(self):
+        return self.slot
 
     # ── the one question the mic code asks ────────────────────────────────
     def has_floor(self) -> bool:
-        return bool(self.role) and self.granted and self.clock() < self.lease_until
+        return bool(self.slot) and self.granted and self.clock() < self.lease_until
 
     def lease_left_s(self) -> float:
         return max(0.0, self.lease_until - self.clock()) if self.granted else 0.0
 
     def status(self) -> dict:
-        return {"role": self.role, "floor": self.floor, "has_floor": self.has_floor(),
+        return {"slot": self.slot, "machine": self.machine, "floor": self.floor,
+                "has_floor": self.has_floor(), "persona": self.persona, "cjap_is": self.cjap_is,
                 "lease_left_s": round(self.lease_left_s(), 2), "mode": self.mode,
                 "profile": self.profile, "polls": self.polls, "failures": self.failures,
                 "last_error": self.last_error,
@@ -137,8 +213,9 @@ class LeaseClient:
         """Report our observation, apply the reply. Returns True on a good
         reply. Never raises."""
         self.polls += 1
-        payload = {"robot": self.role, "boot_id": self.boot_id,
-                   "has_floor": self.has_floor(),
+        payload = {"robot": self.slot, "slot": self.slot, "machine": self.machine,
+                   "boot_id": self.boot_id, "has_floor": self.has_floor(),
+                   "persona": self.persona,
                    # the dashboard's shared key (CJ_DASH_KEY, default "cjap") —
                    # the same gate every operator POST passes
                    "key": os.environ.get("CJ_DASH_KEY", "cjap")}
@@ -154,7 +231,7 @@ class LeaseClient:
         except Exception as e:
             self.failures += 1
             self.last_error = f"{type(e).__name__}: {str(e)[:120]}"
-            self.enforce()
+            self.enforce()            # mic follows the clock; persona is HELD
             return False
         try:
             self.apply(reply)
@@ -180,7 +257,7 @@ class LeaseClient:
         ttl = max(0.0, min(ttl, self.ttl_s))   # server may shorten, never lengthen
         with self._lock:
             self.floor = floor
-            if self.role and floor == self.role:
+            if self.slot and floor == self.slot:
                 self.granted = True
                 self.lease_until = now + ttl
             else:
@@ -199,8 +276,21 @@ class LeaseClient:
             if isinstance(reply.get("host_intro_text"), str):
                 self.host_intro_text = reply["host_intro_text"]
             self.mode, self.profile = mode, profile
+            # persona: from the reply's cjap_is (authoritative), else an
+            # explicit persona field; unknown -> keep what we have
+            cjap_is = reply.get("cjap_is")
+            persona = reply.get("persona")
+            if cjap_is in SLOTS and self.slot:
+                persona = "cjap" if cjap_is == self.slot else "host"
+            persona_changed = persona in PERSONAS and persona != self.persona
+            if cjap_is in SLOTS:
+                self.cjap_is = cjap_is
+            if persona in PERSONAS:
+                self.persona = persona
             iseq, nseq = reply.get("interrupt_seq"), reply.get("intro_seq")
         self.enforce()
+        if persona_changed and self.on_persona is not None:
+            self._call(self.on_persona, self.persona, self.cjap_is)
         if changed and self.on_settings is not None:
             self._call(self.on_settings, self.settings, mode, profile, self.env)
         # counters: fire only on a CHANGE we witnessed (never on first sight —

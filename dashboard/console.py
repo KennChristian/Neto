@@ -51,7 +51,8 @@ import time
 from collections import deque
 
 FLOORS = ("alpha", "beta", "none")
-ROBOTS = ("alpha", "beta")
+ROBOTS = ("alpha", "beta")      # the two SLOTS (machine identities, by hostname)
+ROLES = ("cjap", "host")        # personas; cjap_is names the slot that is Panganiban
 MODES = ("duet", "direct")
 PROFILES = ("kiosk", "event")
 
@@ -67,6 +68,7 @@ MAIN = os.path.join(HOME, "Supervaise-Reachy-Mini-Project-main")
 MODES_DIR = os.path.join(MAIN, "config", "modes")
 DROPIN_PATH = "/etc/systemd/system/supervaise.service.d/wakeword.conf"
 DOTENV_PATH = os.path.join(MAIN, "app", ".env")
+ROBOTS_PATH = os.path.join(MAIN, "config", "robots.json")
 STATE_PATH = os.path.join(HOME, ".cj_console_state.json")
 JOURNAL_PATH = os.path.join(HOME, ".cj_console_journal.jsonl")
 
@@ -157,9 +159,27 @@ def env_string(kind, value):
 # Config sources (profiles, drop-in, .env), cached by mtime
 # ────────────────────────────────────────────────────────────────────────────
 class ConfigSources:
-    def __init__(self, modes_dir=MODES_DIR, dropin_path=DROPIN_PATH, dotenv_path=DOTENV_PATH):
+    def __init__(self, modes_dir=MODES_DIR, dropin_path=DROPIN_PATH, dotenv_path=DOTENV_PATH,
+                 robots_path=ROBOTS_PATH):
         self.modes_dir, self.dropin_path, self.dotenv_path = modes_dir, dropin_path, dotenv_path
+        self.robots_path = robots_path
         self._cache: dict = {}
+
+    # ── machines / authority (config/robots.json) ─────────────────────────
+    def robots(self):
+        return self._cached(self.robots_path, json.loads) or {}
+
+    def machine_of(self, slot):
+        return str((self.robots().get("slots") or {}).get(slot) or slot)
+
+    def label_of(self, role):
+        return str((self.robots().get("labels") or {}).get(role) or role)
+
+    def authority(self):
+        a = self.robots().get("authority") or {}
+        return {"host": str(a.get("host") or ""), "port": int(a.get("port") or 8080),
+                "bind": str(a.get("bind") or "0.0.0.0"),
+                "url_template": str(a.get("url_template") or "http://{host}.local:{port}")}
 
     def _cached(self, path, parser):
         try:
@@ -288,8 +308,12 @@ class Console:
         self.state_path, self.journal_path = state_path, journal_path
         self.ttl_s = float(ttl_s)
         self._lock = threading.RLock()
-        # the one value
+        # the one value (mic) …
         self.floor = "none"
+        self.floor_role = None     # which ROLE the floor is bound to (direct mode: follows role swaps)
+        # … and the other one value (persona): the slot that is Panganiban
+        self.cjap_is = "alpha"
+        self._handoff_seq = 0      # intro_seq already handed from host to cjap
         self.mode, self.profile = "direct", "kiosk"
         self.overrides: dict = {}
         self.transition = None     # {"target", "started", "deadline"}
@@ -316,6 +340,11 @@ class Console:
             self.mode = saved["mode"]
         if saved.get("profile") in PROFILES:
             self.profile = saved["profile"]
+        if saved.get("cjap_is") in ROBOTS:
+            self.cjap_is = saved["cjap_is"]
+        if saved.get("floor_role") in ROLES:
+            self.floor_role = saved["floor_role"]
+        self._handoff_seq = int(saved.get("handoff_seq", 0))
         if isinstance(saved.get("overrides"), dict):
             self.overrides = {k: v for k, v in saved["overrides"].items() if k in SETTINGS}
         for r in ROBOTS:
@@ -324,14 +353,21 @@ class Console:
         self.config_seq = int(saved.get("config_seq", 0))
         want = saved.get("floor")
         # A restart never hands a mic straight back: the saved floor is re-taken
-        # through the normal close-both-then-open transition.
+        # through the normal close-both-then-open transition. The floor stays
+        # bound to the role it had (state files from before 2026-09-10 have no
+        # floor_role: derive it, so a later role swap still moves the floor).
         if want in ROBOTS and self.mode != "duet":
+            if self.floor_role not in ROLES:
+                self.floor_role = self.role_of(want)
             self._begin_transition(want, who="restore")
+        elif want == "none":
+            self.floor_role = None
         self._journal("restore", f"console restarted — mode {self.mode}, profile {self.profile}, "
                                  f"floor {'re-taking ' + want if want in ROBOTS else 'none'}", who="system")
 
     def _persist(self):
         doc = {"floor": self.transition["target"] if self.transition else self.floor,
+               "floor_role": self.floor_role, "cjap_is": self.cjap_is, "handoff_seq": self._handoff_seq,
                "mode": self.mode, "profile": self.profile, "overrides": self.overrides,
                "interrupt_seq": self.interrupt_seq, "intro_seq": self.intro_seq,
                "config_seq": self.config_seq, "saved": self.wall()}
@@ -364,6 +400,41 @@ class Console:
     def journal(self, n=50):
         with self._lock:
             return list(self.journal_mem)[-max(1, min(int(n), JOURNAL_KEEP)):]
+
+    # ── roles ─────────────────────────────────────────────────────────────
+    def role_of(self, slot):
+        return "cjap" if slot == self.cjap_is else "host"
+
+    def slot_of(self, role):
+        if role == "cjap":
+            return self.cjap_is
+        return "beta" if self.cjap_is == "alpha" else "alpha"
+
+    def name(self, slot):
+        """'machine · Role' — never identify a robot by its hostname alone."""
+        return f"{self.sources.machine_of(slot)} · {self.sources.label_of(self.role_of(slot))}"
+
+    def set_role(self, cjap_is, force=False, who="console", now=None):
+        """-> (ok, message, http_status). Two Panganibans are unrepresentable:
+        this is the single value. In direct mode the floor follows the role."""
+        now = self._now(now)
+        if cjap_is not in ROBOTS:
+            return False, "cjap_is must be alpha or beta", 400
+        with self._lock:
+            self.tick(now)
+            if cjap_is == self.cjap_is and self.pending is None:
+                return True, f"{self.sources.machine_of(cjap_is)} is already Panganiban", 200
+            active = self._any_turn_active(now)
+            if active and not force:
+                self.pending = {"cjap_is": cjap_is, "queued_at": now, "who": who}
+                self._journal("queued", f"role swap (Panganiban -> {self.sources.machine_of(cjap_is)}) queued "
+                                        f"until {', '.join(active)} finishes", who=who, cjap_is=cjap_is)
+                return True, f"queued — applies when {', '.join(active)} finishes; use Cut short to apply now", 202
+            if active and force:
+                self._cut(active, who, now)
+            self.pending = None
+            self._apply_change({"cjap_is": cjap_is}, now=now, who=who)
+            return True, f"Panganiban is now {self.sources.machine_of(cjap_is)}", 200
 
     # ── config ────────────────────────────────────────────────────────────
     def _recompute(self, announce=False, who="console"):
@@ -478,8 +549,9 @@ class Console:
             if active and force:
                 self._cut(active, who, now)
             self.pending = None
+            self.floor_role = self.role_of(target) if target in ROBOTS else None
             self._begin_transition(target, who=who, now=now)
-            return True, f"floor -> {target}", 200
+            return True, f"floor -> {self.name(target) if target in ROBOTS else 'no one'}", 200
 
     def _cut(self, robots, who, now):
         for r in robots:
@@ -566,7 +638,20 @@ class Console:
             else:
                 self._begin_transition(change["floor"], who=who, now=now)
             return
-        old_mode, old_profile = self.mode, self.profile
+        old_mode, old_profile, old_cjap = self.mode, self.profile, self.cjap_is
+        if change.get("cjap_is") in ROBOTS and change["cjap_is"] != self.cjap_is:
+            self.cjap_is = change["cjap_is"]
+            self._journal("role", f"Panganiban is now {self.sources.machine_of(self.cjap_is)} ({self.cjap_is}); "
+                                  f"Host is {self.sources.machine_of(self.slot_of('host'))}",
+                          who=who, cjap_is=self.cjap_is)
+            if self.mode == "direct" and self.floor_role in ROLES:
+                # the floor is bound to a ROLE: move it with the swap so the
+                # visitor's transmitter feeds the right robot
+                target = self.slot_of(self.floor_role)
+                self._journal("floor", f"floor follows the {self.sources.label_of(self.floor_role)} role -> {self.name(target)}",
+                              who=who, target=target)
+                self._begin_transition(target, who=who, now=now)
+            self._persist()
         if change.get("mode") in MODES:
             self.mode = change["mode"]
         if change.get("profile") in PROFILES:
@@ -580,6 +665,7 @@ class Console:
             self._journal("mode", f"mode -> {self.mode}" + (" — floor forced to none" if self.mode == "duet" else ""),
                           who=who, mode=self.mode)
             if self.mode == "duet":
+                self.floor_role = None
                 self._begin_transition("none", who=who, now=now)
         if self.profile != old_profile:
             self._journal("profile", f"profile -> {self.profile}", who=who, profile=self.profile)
@@ -587,9 +673,18 @@ class Console:
             self._journal("settings", "override " + ", ".join(
                 f"{k}={'cleared' if v is None else v}" for k, v in change["settings"].items()), who=who)
         eff = self._recompute(announce=True, who=who)
-        if self.mode == "direct" and old_mode != "direct" and eff["values"].get("host_intro"):
-            self.intro_seq += 1
-            self._journal("intro", "host asked to say the intro line", who=who)
+        if self.mode == "direct" and old_mode != "direct":
+            # direct: the floor follows the role. With the intro on, the Host
+            # holds the floor for the intro and hands it to Panganiban when
+            # done (see report()); otherwise Panganiban takes it straight away.
+            if eff["values"].get("host_intro"):
+                self.intro_seq += 1
+                self.floor_role = "host"
+                self._journal("intro", f"host ({self.sources.machine_of(self.slot_of('host'))}) asked to say the intro line — "
+                                       "it holds the floor until the intro is done", who=who)
+            else:
+                self.floor_role = "cjap"
+            self._begin_transition(self.slot_of(self.floor_role), who=who, now=now)
         self._persist()
 
     # ── robots ────────────────────────────────────────────────────────────
@@ -609,6 +704,9 @@ class Console:
                if isinstance(obs.get("speech_threshold"), (int, float)) else None,
                "boot_id": str(obs.get("boot_id") or "")[:80],
                "has_floor": bool(obs.get("has_floor")),
+               "machine": str(obs.get("machine") or "")[:64],
+               "persona": obs.get("persona") if obs.get("persona") in ROLES else None,
+               "intro_done": int(obs["intro_done"]) if isinstance(obs.get("intro_done"), int) else 0,
                "role_ok": obs.get("robot") == robot}
         with self._lock:
             prev = self.observed.get(robot)
@@ -617,6 +715,15 @@ class Console:
             elif prev.get("mic_open") != rec["mic_open"]:
                 self._journal("observed", f"{robot} mic {'open' if rec['mic_open'] else 'closed'}", who=robot)
             self.observed[robot] = rec
+            # intro handoff: the Host finished the intro -> floor to Panganiban
+            if (self.mode == "direct" and self.floor_role == "host" and robot == self.slot_of("host")
+                    and self.intro_seq > 0 and rec["intro_done"] >= self.intro_seq
+                    and self._handoff_seq < self.intro_seq and self.pending is None):
+                self._handoff_seq = self.intro_seq
+                self.floor_role = "cjap"
+                target = self.slot_of("cjap")
+                self._journal("floor", f"intro done — floor to Panganiban ({self.name(target)})", who=robot, target=target)
+                self._begin_transition(target, who=robot, now=now)
             self.tick(now)
             return True, self.lease_for(robot, now), 200
 
@@ -624,6 +731,8 @@ class Console:
         with self._lock:
             eff = self.effective()
             return {"floor": self.floor, "granted": self.floor == robot, "ttl": self.ttl_s,
+                    "cjap_is": self.cjap_is, "persona": self.role_of(robot), "slot": robot,
+                    "machine": self.sources.machine_of(robot),
                     "mode": self.mode, "profile": self.profile,
                     "settings": eff["values"], "env": eff["env"],
                     "interrupt_seq": self.interrupt_seq.get(robot, 0),
@@ -653,7 +762,10 @@ class Console:
                 o = self.observed.get(r)
                 fresh = self._obs_fresh(r, now)
                 intended = self.floor == r
-                view = {"intended": "open" if intended else "closed",
+                view = {"machine": self.sources.machine_of(r),
+                        "role": self.role_of(r), "label": self.name(r),
+                        "reported_persona": (o or {}).get("persona"),
+                        "intended": "open" if intended else "closed",
                         "mic": None if not fresh else o["mic_open"],
                         "fresh": fresh,
                         "age_s": None if not o else round(now - o["ts"], 1),
@@ -672,6 +784,10 @@ class Console:
                     elif o is None:
                         warnings.append({"level": "info", "robot": r, "msg": f"{r} has never reported"})
                 else:
+                    if o.get("persona") and o["persona"] != self.role_of(r):
+                        view["diverges"] = True
+                        warnings.append({"level": "bad", "robot": r,
+                                         "msg": f"{self.name(r)} still reports the {self.sources.label_of(o['persona'])} role — waiting for it to switch"})
                     if o["mic_open"] is True and not intended:
                         view["diverges"] = True
                         warnings.append({"level": "bad", "robot": r,
@@ -699,7 +815,8 @@ class Console:
                 warnings.append({"level": "warn", "kind": "config", "msg": e})
             if self.pending:
                 p = self.pending
-                what = (f"floor -> {p['floor']}" if p.get("floor") else
+                what = (f"floor -> {self.name(p['floor']) if p['floor'] in ROBOTS else 'no one'}" if p.get("floor") else
+                        f"Panganiban -> {self.sources.machine_of(p['cjap_is'])}" if p.get("cjap_is") else
                         ", ".join(f"{k} -> {v}" for k, v in p.items()
                                   if k in ("mode", "profile") and v) or "settings")
                 pending = {"what": what, "queued_s": round(now - p["queued_at"], 1),
@@ -711,8 +828,15 @@ class Console:
                 tr = self.transition
                 transition = {"target": tr["target"], "elapsed_s": round(now - tr["started"], 1),
                               "settle_s": round(tr["deadline"] - tr["started"], 1)}
+            auth = self.sources.authority()
             return {
                 "floor": self.floor,
+                "floorRole": self.floor_role,
+                "cjap_is": self.cjap_is,
+                "roles": {r: {"machine": self.sources.machine_of(r), "role": self.role_of(r),
+                              "label": self.name(r)} for r in ROBOTS},
+                "authority": {"host": auth["host"], "port": auth["port"],
+                              "url": auth["url_template"].format(host=auth["host"], port=auth["port"])},
                 "floorTarget": self.transition["target"] if self.transition else self.floor,
                 "transition": transition,
                 "pending": pending,
@@ -765,6 +889,12 @@ def api(console: Console, method, path, params=None, body=None, authed=False, no
             return d
         ok, out, st = console.request_floor(body.get("floor"), force=bool(body.get("force")), who=who, now=now)
         return st, {"ok": ok, "output": out, "floor": console.floor}
+    if method == "POST" and path == "/api/role":
+        d = need_auth()
+        if d:
+            return d
+        ok, out, st = console.set_role(body.get("cjap_is"), force=bool(body.get("force")), who=who, now=now)
+        return st, {"ok": ok, "output": out, "cjap_is": console.cjap_is}
     if method == "POST" and path == "/api/config":
         d = need_auth()
         if d:
@@ -788,7 +918,20 @@ def api(console: Console, method, path, params=None, body=None, authed=False, no
 
 
 CONSOLE_PATHS_GET = ("/api/journal", "/api/lease")
-CONSOLE_PATHS_POST = ("/api/lease", "/api/floor", "/api/config", "/api/pending", "/api/unlock-request")
+CONSOLE_PATHS_POST = ("/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending", "/api/unlock-request")
+
+
+def is_authority(sources: ConfigSources | None = None) -> bool:
+    """True when THIS machine is the one config/robots.json names as the
+    lease authority (or no authority is configured at all)."""
+    import socket
+    a = (sources or ConfigSources()).authority()
+    return not a["host"] or a["host"].strip().lower() == socket.gethostname().split(".")[0].lower()
+
+
+def authority_url(sources: ConfigSources | None = None) -> str:
+    a = (sources or ConfigSources()).authority()
+    return a["url_template"].format(host=a["host"], port=a["port"]) if a["host"] else ""
 
 _singleton = {}
 

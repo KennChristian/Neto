@@ -106,14 +106,24 @@ def handle_get(h, path, params):
         # keeps the caption feed the older pages read and gains the per-robot
         # flags {alpha, beta} the console needs.
         try:
-            cdoc = _console.get_console().state()
-            cdoc["speaking"] = {**(doc.get("speaking") or {}), **cdoc["speaking"]}
-            doc.update(cdoc)
+            if _console.is_authority():
+                cdoc = _console.get_console().state()
+                cdoc["speaking"] = {**(doc.get("speaking") or {}), **cdoc["speaking"]}
+                doc.update(cdoc)
+            else:
+                doc["console_authority"] = _console.authority_url()
         except Exception as e:
             doc["console_error"] = f"{type(e).__name__}: {e}"
         h._send(200, json.dumps(doc))
     elif path == "/console":
-        if _authed(params):
+        if not _console.is_authority():
+            # this machine is not the lease authority: send the operator to
+            # the one that is (config/robots.json) — one console, one truth
+            h.send_response(302)
+            h.send_header("Location", _console.authority_url() + "/console?key=" + params.get("key", ""))
+            h.send_header("Content-Length", "0")
+            h.end_headers()
+        elif _authed(params):
             h._send(200, CONSOLE_PAGE, "text/html; charset=utf-8")
         else:
             h._send(200, GATE_PAGE.replace("/maintain?key=", "/console?key="),
@@ -176,6 +186,10 @@ def handle_post(h, path, body):
     if path in _console.CONSOLE_PATHS_POST:
         # /api/lease is the robots' 1 Hz poll — never logged. The operator
         # calls are journaled by the console itself.
+        if not _console.is_authority():
+            h._send(409, json.dumps({"ok": False, "output": "not the lease authority — use "
+                                     + _console.authority_url(), "authority": _console.authority_url()}))
+            return True
         who = body.get("who") or f"console@{h.client_address[0]}"
         code, out = _console.api(_console.get_console(), "POST", path, {}, body,
                                  authed=_authed({}, body), who=who)

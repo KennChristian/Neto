@@ -53,7 +53,8 @@ class Clock:
 def make_console(tmp_path, clock, **kw):
     src = cs.ConfigSources(modes_dir=str(ROOT / "config" / "modes"),
                            dropin_path=str(tmp_path / "absent.conf"),
-                           dotenv_path=str(tmp_path / "absent.env"))
+                           dotenv_path=str(tmp_path / "absent.env"),
+                           robots_path=str(ROOT / "config" / "robots.json"))
     return cs.Console(src, clock=clock, wall=clock, state_path=str(tmp_path / "state.json"),
                       journal_path=str(tmp_path / "journal.jsonl"), log=lambda *a, **k: None,
                       restore=False, **kw)
@@ -79,9 +80,12 @@ def test_no_api_sequence_grants_both(tmp_path, seed):
     clock = Clock()
     c = make_console(tmp_path, clock)
     for _ in range(300):
-        op = rng.choice(["floor", "floor", "config", "report", "pending", "wait", "state"])
+        op = rng.choice(["floor", "floor", "role", "config", "report", "pending", "wait", "state"])
         now = clock()
-        if op == "floor":
+        if op == "role":
+            cs.api(c, "POST", "/api/role", body={"cjap_is": rng.choice(cs.ROBOTS),
+                                                 "force": rng.random() < 0.3}, authed=True, now=now)
+        elif op == "floor":
             cs.api(c, "POST", "/api/floor", body={"floor": rng.choice(cs.FLOORS),
                                                   "force": rng.random() < 0.3}, authed=True, now=now)
         elif op == "config":
@@ -111,6 +115,11 @@ def test_no_api_sequence_grants_both(tmp_path, seed):
         assert sum(g.values()) <= 1
         if doc["mode"] == "duet":
             assert doc["floor"] == "none" and not any(g.values())
+        # exactly one Panganiban, always — from the state AND from what each robot is told
+        personas = {r: lease(c, r, clock())["persona"] for r in ROBOTS}
+        assert sorted(personas.values()) == ["cjap", "host"], personas
+        assert doc["cjap_is"] in ROBOTS and personas[doc["cjap_is"]] == "cjap"
+        assert [r for r, x in doc["roles"].items() if x["role"] == "cjap"] == [doc["cjap_is"]]
 
 
 # ────────────────────────────────────────────────────────────────────────────
@@ -134,7 +143,7 @@ class SimRobot:
 
     def _observe(self):
         return {"mic_open": self.mic_open, "turn_active": self.turn_active,
-                "rms": 300, "speaking": self.turn_active}
+                "rms": 300, "speaking": self.turn_active, "persona": self.client.persona}
 
     def _on_mic(self, want):
         self.mic_open = want
@@ -184,6 +193,9 @@ def test_two_robots_never_both_open(tmp_path, seed):
                                                   "force": rng.random() < 0.5}, authed=True, now=now)
         if rng.random() < 0.02:
             cs.api(c, "POST", "/api/config", body={"mode": rng.choice(cs.MODES), "force": True},
+                   authed=True, now=now)
+        if rng.random() < 0.03:
+            cs.api(c, "POST", "/api/role", body={"cjap_is": rng.choice(cs.ROBOTS), "force": rng.random() < 0.5},
                    authed=True, now=now)
         if rng.random() < 0.02:
             r = rng.choice(ROBOTS)
@@ -339,7 +351,8 @@ def test_duet_forces_none_and_refuses_floor(tmp_path):
     clock.advance(10)
     assert not any(granted(c, clock()).values())
     cs.api(c, "POST", "/api/config", body={"mode": "direct"}, authed=True, now=clock())
-    assert c.floor == "none"                 # direct does not re-open anything by itself
+    # direct: the floor follows the role — with the intro on, the Host holds it first
+    assert c.floor == "none" and c.transition["target"] == c.slot_of("host") and c.floor_role == "host"
 
 
 def test_mid_answer_change_drains_unless_cut(tmp_path):
@@ -407,6 +420,102 @@ def test_state_document_shape_and_divergence_warning(tmp_path):
     clock.advance(5)
     doc = cs.api(c, "GET", "/api/state", now=clock())[1]
     assert doc["observed"]["alpha"]["mic"] is None and doc["observed"]["alpha"]["fresh"] is False
+
+
+def test_no_sequence_produces_two_cjap(tmp_path):
+    """Structural: cjap_is is one value; role_of() derives both personas."""
+    clock = Clock()
+    c = make_console(tmp_path, clock)
+    for bad in ("both", "alpha,beta", None, ["alpha", "beta"], "cjap"):
+        st, d = cs.api(c, "POST", "/api/role", body={"cjap_is": bad}, authed=True, now=clock())
+        assert st == 400
+    for want in ("beta", "alpha", "beta", "beta"):
+        st, d = cs.api(c, "POST", "/api/role", body={"cjap_is": want}, authed=True, now=clock())
+        assert st == 200 and c.cjap_is == want
+        assert {r: c.role_of(r) for r in ROBOTS} == {want: "cjap", ("alpha" if want == "beta" else "beta"): "host"}
+        assert sorted(lease(c, r, clock())["persona"] for r in ROBOTS) == ["cjap", "host"]
+
+
+def test_role_swap_in_direct_moves_floor(tmp_path):
+    clock = Clock()
+    c = make_console(tmp_path, clock)
+    # intro off so entering direct hands the floor straight to Panganiban
+    cs.api(c, "POST", "/api/config", body={"mode": "duet"}, authed=True, now=clock())
+    cs.api(c, "POST", "/api/config", body={"mode": "direct", "settings": {"host_intro": False}},
+           authed=True, now=clock())
+    assert c.cjap_is == "alpha" and c.floor_role == "cjap" and c.transition["target"] == "alpha"
+    clock.advance(4); c.tick()
+    assert c.floor == "alpha" and lease(c, "alpha", clock())["granted"]
+    # swap: Panganiban -> beta. The floor is bound to the cjap ROLE, so it moves.
+    st, d = cs.api(c, "POST", "/api/role", body={"cjap_is": "beta"}, authed=True, now=clock())
+    assert st == 200
+    assert c.floor == "none" and c.transition["target"] == "beta"      # closed both first
+    assert not lease(c, "alpha", clock())["granted"] and not lease(c, "beta", clock())["granted"]
+    assert lease(c, "alpha", clock())["persona"] == "host" and lease(c, "beta", clock())["persona"] == "cjap"
+    clock.advance(4)
+    assert lease(c, "beta", clock())["granted"] and not lease(c, "alpha", clock())["granted"]
+    # the same swap with the floor bound to the HOST role moves it to the new host
+    cs.api(c, "POST", "/api/floor", body={"floor": "alpha"}, authed=True, now=clock())   # alpha is host now
+    assert c.floor_role == "host"
+    clock.advance(4); c.tick()
+    cs.api(c, "POST", "/api/role", body={"cjap_is": "alpha"}, authed=True, now=clock())
+    assert c.transition["target"] == "beta" and c.floor_role == "host"
+    # in duet the floor stays none through a swap
+    cs.api(c, "POST", "/api/config", body={"mode": "duet"}, authed=True, now=clock())
+    cs.api(c, "POST", "/api/role", body={"cjap_is": "beta"}, authed=True, now=clock())
+    clock.advance(4); c.tick()
+    assert c.floor == "none" and c.transition is None
+    # a role swap mid-answer drains like everything else
+    cs.api(c, "POST", "/api/config", body={"mode": "direct", "settings": {"host_intro": False}},
+           authed=True, now=clock())
+    clock.advance(4)
+    lease(c, "beta", clock(), mic_open=True, turn_active=True)
+    st, d = cs.api(c, "POST", "/api/role", body={"cjap_is": "alpha"}, authed=True, now=clock())
+    assert st == 202 and c.cjap_is == "beta" and c.pending["cjap_is"] == "alpha"
+    lease(c, "beta", clock(), mic_open=True, turn_active=False)
+    assert c.cjap_is == "alpha" and c.pending is None
+
+
+def test_intro_handoff_host_then_panganiban(tmp_path):
+    clock = Clock()
+    c = make_console(tmp_path, clock)
+    cs.api(c, "POST", "/api/config", body={"mode": "duet"}, authed=True, now=clock())
+    cs.api(c, "POST", "/api/config", body={"mode": "direct", "settings": {"host_intro": None}},
+           authed=True, now=clock())
+    host, cjap = c.slot_of("host"), c.slot_of("cjap")
+    assert c.floor_role == "host" and c.transition["target"] == host and c.intro_seq == 1
+    clock.advance(4)
+    r = lease(c, host, clock(), mic_open=True, intro_done=0)
+    assert r["granted"] and r["intro_seq"] == 1
+    # host reports the intro done -> floor hands over to Panganiban (close both first)
+    lease(c, host, clock(), mic_open=True, intro_done=1)
+    assert c.floor == "none" and c.transition["target"] == cjap and c.floor_role == "cjap"
+    clock.advance(4)
+    assert lease(c, cjap, clock())["granted"] and not lease(c, host, clock())["granted"]
+    # a stale intro_done never hands over twice
+    lease(c, host, clock(), mic_open=False, intro_done=1)
+    assert c.floor == cjap
+
+
+def test_client_holds_persona_when_authority_unreachable():
+    clock = Clock()
+    seen = []
+    replies = [{"floor": "alpha", "ttl": 3.0, "cjap_is": "alpha"},
+               ConnectionError("down"), ConnectionError("down"), ConnectionError("down"),
+               {"floor": "alpha", "ttl": 3.0, "cjap_is": "beta"}]
+    mic = []
+    cl = fl.LeaseClient("alpha", "sim://", clock=clock, transport=lambda p: (_ for _ in ()).throw(replies[0])
+                        if isinstance(replies[0], Exception) and replies.pop(0) else replies.pop(0),
+                        on_mic=mic.append, on_persona=lambda p, w: seen.append((p, w)), log=lambda *a: None)
+    assert cl.persona is None                          # fresh boot: no persona yet
+    cl.poll_once()
+    assert cl.persona == "cjap" and seen == [("cjap", "alpha")] and mic[-1] is True
+    for _ in range(3):
+        clock.advance(1.2)
+        cl.poll_once()
+    assert cl.persona == "cjap" and cl.has_floor() is False and mic[-1] is False   # mic gone, role held
+    cl.poll_once()
+    assert cl.persona == "host" and seen[-1] == ("host", "beta")
 
 
 def test_config_resolution_order(tmp_path):

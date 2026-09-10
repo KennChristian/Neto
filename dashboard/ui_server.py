@@ -41,6 +41,15 @@ except Exception as _e:
     print(f"[dashboard] ui unavailable: {_e}")
 
 PORT = 8080
+# Bind address (2026-09-10): config/robots.json authority.bind, env CJ_DASH_BIND wins.
+def _bind_host():
+    try:
+        import console as _console
+        b = _console.ConfigSources().authority().get("bind") or "0.0.0.0"
+    except Exception:
+        b = "0.0.0.0"
+    return os.environ.get("CJ_DASH_BIND", "").strip() or b
+BIND = _bind_host()
 HOME = os.path.expanduser("~")
 AUDIO_OUT = os.path.join(HOME, "bin", "audio-out")
 WAKE_MODEL = os.path.join(HOME, "Supervaise-Reachy-Mini-Project-main",
@@ -1285,7 +1294,7 @@ class Handler(BaseHTTPRequestHandler):
                 "/api/avatar-conf",
                 "/api/ask", "/api/tuning", "/api/volume", "/api/mic",
                 # operator console (2026-09-10): floor lease + mode/profile
-                "/api/lease", "/api/floor", "/api/config", "/api/pending",
+                "/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending",
                 "/api/unlock-request"):
             try:
                 n = int(self.headers.get("Content-Length", 0))
@@ -1390,13 +1399,13 @@ def serve_https():
         return
     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ctx.load_cert_chain(cert, key)
-    srv = _QuietServer(("0.0.0.0", HTTPS_PORT), Handler)
+    srv = _QuietServer((BIND, HTTPS_PORT), Handler)
     srv.socket = ctx.wrap_socket(srv.socket, server_side=True)
-    print(f"[dashboard] HTTPS (phone mic) on 0.0.0.0:{HTTPS_PORT}", flush=True)
+    print(f"[dashboard] HTTPS (phone mic) on {BIND}:{HTTPS_PORT}", flush=True)
     srv.serve_forever()
 
 
 if __name__ == "__main__":
     threading.Thread(target=serve_https, daemon=True).start()
-    print(f"[dashboard] serving on 0.0.0.0:{PORT}", flush=True)
-    _QuietServer(("0.0.0.0", PORT), Handler).serve_forever()
+    print(f"[dashboard] serving on {BIND}:{PORT}", flush=True)
+    _QuietServer((BIND, PORT), Handler).serve_forever()

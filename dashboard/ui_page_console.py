@@ -108,15 +108,22 @@ button:focus-visible,input:focus-visible,[role=switch]:focus-visible,select:focu
 <h1>CJAP Operator Console
  <span class="pill" id="modechip">…</span><span class="pill" id="profchip">…</span>
  <span id="status">connecting…</span></h1>
+<p class="sub" id="authline"></p>
 <p class="sub">Only one microphone can be open at a time. Pick who has the floor; the robots follow within a second and close on their own if this page's server goes away.</p>
 
 <div class="card wide">
  <h2>Who has the floor</h2>
  <div id="floor" role="group" aria-label="Who has the floor">
-  <button class="fbtn" id="f-alpha" onclick="setFloor('alpha')"><span class="who">Panganiban</span><span class="role">robot cj-alpha · composes answers live</span><span class="obs"><span class="pill" id="o-alpha">no report</span><span id="r-alpha"></span></span></button>
-  <button class="fbtn" id="f-beta" onclick="setFloor('beta')"><span class="who">Host</span><span class="role">robot cj-beta · intro line, then silent</span><span class="obs"><span class="pill" id="o-beta">no report</span><span id="r-beta"></span></span></button>
+  <button class="fbtn" id="f-alpha" onclick="setFloor('alpha')"><span class="who" id="w-alpha">…</span><span class="role" id="rl-alpha"></span><span class="obs"><span class="pill" id="o-alpha">no report</span><span id="r-alpha"></span></span></button>
+  <button class="fbtn" id="f-beta" onclick="setFloor('beta')"><span class="who" id="w-beta">…</span><span class="role" id="rl-beta"></span><span class="obs"><span class="pill" id="o-beta">no report</span><span id="r-beta"></span></span></button>
   <button class="fbtn" id="f-none" onclick="setFloor('none')"><span class="who">No one</span><span class="role">both microphones closed</span><span class="obs"><span class="pill" id="o-none">closed</span></span></button>
  </div>
+ <h2 style="margin-top:16px">Who is Panganiban</h2>
+ <div class="seg" role="group" aria-label="Who is Panganiban" id="rolesel">
+  <button id="c-alpha" onclick="setRole('alpha')">…</button>
+  <button id="c-beta" onclick="setRole('beta')">…</button>
+ </div>
+ <div class="hint">The other robot is the Host. One choice, never two: two Panganibans cannot be set. In direct mode the floor moves with the role, so the visitor's mic keeps feeding the right robot.</div>
  <div id="transition"></div>
  <div id="pending"></div>
  <div id="warnings" aria-live="polite"></div>
@@ -178,6 +185,14 @@ async function post(path,body){
   catch(e){toast('server not reachable: '+e,true);return{ok:false};}
 }
 function setFloor(f){post('/api/floor',{floor:f});}
+function setRole(slot){post('/api/role',{cjap_is:slot});}
+function rname(s,r){const x=(s.roles||{})[r]||{};return (x.machine||r)+' · '+(x.role==='cjap'?'Panganiban':'Host');}
+function renderRoles(s){
+  for(const r of['alpha','beta']){const x=(s.roles||{})[r]||{};
+    $('w-'+r).textContent=(x.machine||r)+' · '+(x.role==='cjap'?'Panganiban':'Host');
+    $('rl-'+r).textContent=(x.role==='cjap'?'composes answers live from his writings':'intro line + pre-recorded exchange, then silent')+' · slot '+r;
+    const b=$('c-'+r);b.textContent=(x.machine||r)+(x.role==='cjap'?' — is Panganiban':' — make Panganiban');b.className=x.role==='cjap'?'sel':'';b.setAttribute('aria-pressed',x.role==='cjap');}
+}
 function setMode(m){post('/api/config',{mode:m});}
 function setProfile(p){post('/api/config',{profile:p});}
 function cutShort(){if(confirm('Cut the current answer short and apply the queued change now?'))post('/api/pending',{action:'cut'});}
@@ -195,10 +210,10 @@ function renderFloor(s){
   for(const r of['alpha','beta']){const o=s.observed[r]||{};const[c,t]=pillFor(o);const p=$('o-'+r);p.className='pill '+c;p.textContent=t;
     const rms=s.rms&&s.rms[r];$('r-'+r).textContent=rms!=null?'room '+Math.round(rms):'';}
   const tr=$('transition');
-  if(s.transition){const t=s.transition;tr.innerHTML='<div class="banner info"><b>Closing both microphones…</b> then opening '+(t.target==='alpha'?'Panganiban':'Host')+' (waits up to '+t.settle_s+' s for both to confirm; '+t.elapsed_s+' s so far)</div>';}
+  if(s.transition){const t=s.transition;tr.innerHTML='<div class="banner info"><b>Closing both microphones…</b> then opening '+esc(rname(s,t.target))+' (waits up to '+t.settle_s+' s for both to confirm; '+t.elapsed_s+' s so far)</div>';}
   else tr.innerHTML='';
   const pd=$('pending');
-  if(s.pending){const w=(s.pending.waiting_on||[]).map(r=>r==='alpha'?'Panganiban':'Host').join(' and ')||'the answer';
+  if(s.pending){const w=(s.pending.waiting_on||[]).map(r=>rname(s,r)).join(' and ')||'the answer';
     pd.innerHTML='<div class="banner warn"><b>Queued:</b> '+esc(s.pending.what)+' — waiting for '+esc(w)+' to finish the answer ('+s.pending.queued_s+' s). <button class="danger" onclick="cutShort()">Cut the answer short and apply now</button><button onclick="cancelPending()">Cancel</button></div>';}
   else pd.innerHTML='';
   const wl=$('warnings');wl.innerHTML=(s.warnings||[]).filter(w=>w.level!=='info').map(w=>'<div class="banner '+(w.level==='bad'?'bad':'warn')+'">'+esc(w.msg)+'</div>').join('');
@@ -206,6 +221,7 @@ function renderFloor(s){
 function renderMode(s){
   for(const m of['duet','direct']){const b=$('m-'+m);b.className=s.mode===m?'sel':'';b.setAttribute('aria-pressed',s.mode===m);}
   for(const p of['kiosk','event']){const b=$('p-'+p);b.className=s.profile===p?'sel':'';b.setAttribute('aria-pressed',s.profile===p);}
+  $('authline').textContent='Console on '+((s.authority||{}).host||'?')+' (this page holds the floor and the roles; both robots poll it — they never talk to each other).';
   $('modechip').textContent=(s.mode||'?')+' mode';$('profchip').textContent=(s.profile||'?')+' profile';
   $('introline').textContent=s.hostIntroText?'Host intro line: “'+s.hostIntroText+'”':'';
 }
@@ -229,7 +245,7 @@ function renderSettings(s){
     const thr=o.speech_threshold||Math.min(Math.max(Math.round((rms||0)*(eff.speech_threshold_mult||1)),eff.speech_threshold||0),eff.speech_threshold_cap||1e9);
     const max=Math.max(2000,thr*1.3,(rms||0)*1.3);m.querySelector('i').style.width=(rms!=null?Math.min(100,100*rms/max):0)+'%';m.querySelector('b').style.left=Math.min(100,100*thr/max)+'%';
     const gap=rms!=null?thr-rms:null;l.className='rmsline'+(gap!=null&&gap<400?' warn':'');
-    l.textContent=(r==='alpha'?'Panganiban':'Host')+': '+(rms!=null?'room '+Math.round(rms)+' · talking counts from '+thr+(gap<400?' — only '+gap+' apart, too close':''):'no room level reported');}
+    l.textContent=rname(S||{},r)+': '+(rms!=null?'room '+Math.round(rms)+' · talking counts from '+thr+(gap<400?' — only '+gap+' apart, too close':''):'no room level reported');}
 }
 function flip(k){const el=$('in-'+k);el.setAttribute('aria-checked',el.getAttribute('aria-checked')==='true'?'false':'true');EDITED[k]=1;}
 function applySettings(){const out={};for(const k of Object.keys(EDITED)){const el=$('in-'+k),sc=SCHEMA[k]||{};out[k]=sc.type==='bool'?el.getAttribute('aria-checked')==='true':Number(el.value);}
@@ -242,17 +258,18 @@ function hideUnlock(){unlockGate=null;$('unlockbox').className='';$('unlockreaso
 async function sendUnlock(){const r=$('unlockreason').value.trim();if(!unlockGate)return;const d=await post('/api/unlock-request',{gate:unlockGate,reason:r});if(d.ok)hideUnlock();}
 function renderRobots(s){for(const r of['alpha','beta']){const o=s.observed[r]||{};const box=$('rb-'+r);
   const rows=[['reports',o.fresh?'yes ('+o.age_s+' s ago)':'NO'+(o.age_s!=null?' — last '+Math.round(o.age_s)+' s ago':' — never')],
+    ['role',(o.role==='cjap'?'Panganiban':'Host')+(o.reported_persona&&o.reported_persona!==o.role?' (robot still says '+(o.reported_persona==='cjap'?'Panganiban':'Host')+')':'')],
     ['should be',o.intended],['mic is',o.mic==null?'unknown':(o.mic?'open':'closed')],['holds lease',o.has_floor==null?'?':(o.has_floor?'yes':'no')],
     ['answering',o.turn_active==null?'?':(o.turn_active?'yes':'no')],['speaking',o.speaking==null?'?':(o.speaking?'yes':'no')],
     ['room level',s.rms&&s.rms[r]!=null?Math.round(s.rms[r]):'—'],['boot',(o.boot_id||'').slice(-14)||'—']];
-  box.innerHTML='<b>'+(r==='alpha'?'Panganiban (cj-alpha)':'Host (cj-beta)')+'</b><div class="kv">'+rows.map(([k,v])=>'<span>'+k+'</span><span>'+esc(v)+'</span>').join('')+'</div>';}}
-async function loadJournal(){try{const r=await fetch('/api/journal?n=40&key='+encodeURIComponent(KEY));const d=await r.json();const rows=(d.rows||[]).filter(x=>['floor','mode','profile','settings','unlock-request','queued','drain','interrupt','intro','restore','config-warning'].includes(x.kind));
+  box.innerHTML='<b>'+esc(rname(s,r))+' <small style="color:var(--dim)">slot '+r+'</small></b><div class="kv">'+rows.map(([k,v])=>'<span>'+k+'</span><span>'+esc(v)+'</span>').join('')+'</div>';}}
+async function loadJournal(){try{const r=await fetch('/api/journal?n=40&key='+encodeURIComponent(KEY));const d=await r.json();const rows=(d.rows||[]).filter(x=>['floor','role','mode','profile','settings','unlock-request','queued','drain','interrupt','intro','restore','config-warning'].includes(x.kind));
   $('journal').innerHTML=rows.slice().reverse().map(x=>'<div class="'+x.kind+'"><span class="t">'+new Date(x.ts*1000).toLocaleTimeString()+'</span><span class="k">'+esc(x.kind)+'</span>'+esc(x.msg)+(x.who?' <span class="t">— '+esc(x.who)+'</span>':'')+'</div>').join('')||'<div class="t">nothing yet</div>';}catch(e){}}
 async function poll(){try{const r=await fetch('/api/state');const s=await r.json();failures=0;S=s;
   if(s.console_error){$('status').className='bad';$('status').textContent='console error: '+s.console_error;return;}
   $('status').className='';$('status').textContent='live · lease '+s.leaseTtl+' s · '+new Date().toLocaleTimeString();
-  renderFloor(s);renderMode(s);renderSettings(s);renderLocked(s);renderRobots(s);
-  const n=(s.seq&&(s.seq.config+s.seq.intro+(s.seq.interrupt.alpha||0)+(s.seq.interrupt.beta||0)))||0;if(n!==lastJournalN){lastJournalN=n;loadJournal();}
+  renderRoles(s);renderFloor(s);renderMode(s);renderSettings(s);renderLocked(s);renderRobots(s);
+  const n=((s.seq&&(s.seq.config+s.seq.intro+(s.seq.interrupt.alpha||0)+(s.seq.interrupt.beta||0)))||0)+(s.cjap_is==='beta'?1000:0)+(s.floor==='none'?0:s.floor==='alpha'?1:2);if(n!==lastJournalN){lastJournalN=n;loadJournal();}
  }catch(e){failures++;$('status').className='bad';$('status').textContent='NOT REACHABLE ('+failures+') — robots close their mics 3 s after they stop hearing this server';}}
 poll();setInterval(poll,1000);loadJournal();setInterval(loadJournal,5000);
 </script></body></html>
