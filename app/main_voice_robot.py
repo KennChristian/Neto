@@ -26,6 +26,50 @@ BAIL_WAV = os.path.expanduser("~/fillers_bail/please_be_specific.wav")
 NO_NET_WAV = os.path.expanduser("~/fillers_bail/not_connected.wav")
 RATE = 16000
 
+# ── Floor lease (2026-09-10, operator console — dashboard/console.py) ─────
+# Exactly one microphone open at a time across the two robots. This robot
+# opens its mic ONLY while it holds a fresh lease on the floor (app/
+# floor_lease.py). _floor_ok() is the one question every mic user asks.
+_FLOOR = {"client": None}          # floor_lease.LeaseClient, started in main()
+_TURN = {"active": False}          # a question/answer turn is running (console drains on this)
+_OPEN_INPUTS = set()               # input streams currently open on the mic (reported as "observed")
+_WAKE = {"detector": None}         # live wake detector so the console can retune its threshold
+
+
+def _floor_ok():
+    c = _FLOOR["client"]
+    return c is not None and c.has_floor()
+
+
+def _dry_run():
+    """Console "Rehearse silently": the whole pipeline runs, nothing plays."""
+    return os.environ.get("CJ_DRY_RUN", "0").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _wake_listen():
+    """Console "Answer to 'Hi Cee-Jap'": off = the wake phrase is scored (meter
+    keeps moving) but never fires; the console/event buttons still work."""
+    return os.environ.get("CJ_WAKE_LISTEN", "1").strip().lower() not in {"0", "false", "no", "off"}
+
+
+def _post_window_open():
+    """Console "Keep listening after an answer": 0 = straight back to sleep,
+    even when a voice lock formed (event profile)."""
+    try:
+        v = os.environ.get("CJ_LISTEN_IDLE_S", "").strip()
+        return not (v and float(v) <= 0)
+    except ValueError:
+        return True
+
+
+def _wav_seconds(path):
+    try:
+        import wave
+        with wave.open(path) as w:
+            return w.getnframes() / float(w.getframerate() or 1)
+    except Exception:
+        return 1.0
+
 
 # ════════════════════════════════════════════════════════════════════════════
 # 0. CONFIG, PATHS & SMALL HELPERS
@@ -1135,9 +1179,45 @@ class _MicTap:
         self.q = queue.Queue()
         self._rem = None
         self.rms_hist = deque(maxlen=60)   # ~4.8 s
-        self.stream = sd.InputStream(samplerate=RATE, channels=1, dtype="int16",
-                                     blocksize=self.FRAME, callback=self._cb)
-        self.stream.start()
+        self.stream = None   # opened by the floor lease (open()), never at construction
+        self._olock = threading.Lock()
+
+    # 2026-09-10 floor lease: the capture stream exists ONLY while this robot
+    # holds the floor. open()/close() are driven by floor_lease.LeaseClient
+    # (on_mic); readers see a closed tap as sd.PortAudioError and give up.
+    def open(self):
+        with self._olock:
+            if self.stream is not None and self.stream.active:
+                return
+            self._drop_stream()
+            st = sd.InputStream(samplerate=RATE, channels=1, dtype="int16",
+                                blocksize=self.FRAME, callback=self._cb)
+            st.start()
+            self.stream = st
+            _OPEN_INPUTS.add("tap")
+            print("[mic] OPEN — this robot holds the floor", flush=True)
+
+    def close(self):
+        with self._olock:
+            was = self.stream is not None
+            self._drop_stream()
+            self.flush()
+            if was:
+                print("[mic] CLOSED — floor released or lease expired", flush=True)
+
+    def _drop_stream(self):
+        st, self.stream = self.stream, None
+        _OPEN_INPUTS.discard("tap")
+        if st is not None:
+            try:
+                st.abort()
+                st.close()
+            except Exception:
+                pass
+
+    def is_open(self):
+        st = self.stream
+        return st is not None and st.active
 
     def _cb(self, indata, frames, t, status):
         if self.q.qsize() > self.MAXQ:
@@ -1153,14 +1233,18 @@ class _MicTap:
             parts.append(self._rem); have = len(self._rem)
         self._rem = None
         while have < n:
+            st = self.stream
+            if st is None:
+                raise sd.PortAudioError("mic closed — this robot does not hold the floor")
             try:
-                a = self.q.get(timeout=2.0)
+                a = self.q.get(timeout=0.25)
             except queue.Empty:
-                # No frames for 2 s: the USB mic went away / PortAudio stopped
-                # the callback. Raise (as the per-open stream.read() used to)
-                # so the caller's error path and systemd restart take over
-                # instead of hanging silently (2026-08-25 review).
-                if not self.stream.active:
+                # No frames: either the lease closed the tap (raise so the
+                # caller gives the turn up) or the USB mic went away /
+                # PortAudio stopped the callback (2026-08-25 review).
+                if self.stream is None:
+                    raise sd.PortAudioError("mic closed — this robot does not hold the floor")
+                if not st.active:
                     raise sd.PortAudioError("mic stream stopped")
                 continue
             parts.append(a); have += len(a)
@@ -1191,13 +1275,10 @@ _mic_tap_box = {}
 
 
 def _mic_tap():
+    """The process-wide tap. It is NOT opened here — only the floor lease
+    opens it (LeaseClient.on_mic -> tap.open()); everyone else just reads."""
     tap = _mic_tap_box.get("tap")
-    if tap is None or not tap.stream.active:
-        if tap is not None:
-            try:
-                tap.stream.close()
-            except Exception:
-                pass
+    if tap is None:
         tap = _MicTap()
         _mic_tap_box["tap"] = tap
     return tap
@@ -1619,6 +1700,8 @@ def _aplay_cmd(path):
     laptop) the clip goes through ~/bin/aplay-dual, which plays it on the
     primary route and on pcm audio_out_route2 at the same time; its exit code
     is the primary's, so a dropped second device never fails the clip."""
+    if _dry_run():   # console rehearsal: hold the clip's duration, play nothing
+        return ["sleep", f"{_wav_seconds(path):.2f}"]
     try:
         if _REF_FEED.sync():
             _REF_FEED.push_wav(path)
@@ -1711,7 +1794,19 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
         print("SPEAK NOW  (auto-stops after you pause)" +
               (f"  [+{kept:.2f}s pre-roll]" if kept else ""))
         for i in range(max_frames):
-            data, _ = stream.read(n)
+            if not _floor_ok():
+                print("\n[mic] floor lost — capture abandoned")
+                return None
+            if os.path.exists(MUTE_TRIGGER):   # console "cut short" / Interrupt while listening
+                with contextlib.suppress(FileNotFoundError):
+                    os.unlink(MUTE_TRIGGER)
+                print("\n[mic] interrupted from the console — capture abandoned")
+                return None
+            try:
+                data, _ = stream.read(n)
+            except sd.PortAudioError as e:
+                print(f"\n[mic] capture ended: {e}")
+                return None
             mono = data[:, 0]
             frames.append(mono.copy())
             if i < skip_detect:
@@ -1936,12 +2031,18 @@ def _play_wav_interruptible(wav_path, stop):
     fired = peak = 0.0
     trace = _StopTrace()
     try:
+        if not _floor_ok():
+            raise RuntimeError("no floor — barge-in listener stays closed")
         model = stop.detector._load()
         model.reset()
         frame_len = 1280  # 80 ms at 16 kHz, openWakeWord's expected frame
         with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
                             blocksize=frame_len) as stream:
+            _OPEN_INPUTS.add("stop")
             while proc.poll() is None:
+                if not _floor_ok():
+                    print("[stop] floor lost mid-answer — mic released, playback continues")
+                    break
                 if os.path.exists(MUTE_TRIGGER):   # Interrupt button (mic mute does NOT cut)
                     os.unlink(MUTE_TRIGGER)
                     print("[stop] interrupted from the maintenance dashboard — answer cut")
@@ -1958,12 +2059,14 @@ def _play_wav_interruptible(wav_path, stop):
                     fired = score
                     proc.terminate()
                     break
+        _OPEN_INPUTS.discard("stop")
         model.reset()   # don't leak playback audio into the next arming
         trace.dump()
         if not fired:   # tuning evidence: what did the mic actually score?
             print(f"[stop] answer played out — peak mid-answer score "
                   f"{peak:.3f} (threshold {stop.threshold})")
     except Exception as e:
+        _OPEN_INPUTS.discard("stop")
         print(f"[stop] barge-in listener failed ({type(e).__name__}: {e}) "
               "— playback continues uninterruptible")
     r = proc.wait()
@@ -1996,13 +2099,22 @@ class StopListener:
 
     def _run(self):
         try:
+            if not _floor_ok():
+                self.failed = True
+                print("[stop] this robot does not hold the floor — barge-in off for this answer")
+                return
             model = self._stop.detector._load()
             model.reset()
             try:
                 frame_len = 1280  # 80 ms at 16 kHz, openWakeWord's frame
                 with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
                                     blocksize=frame_len) as stream:
+                    _OPEN_INPUTS.add("stop")
                     while not self._closing.is_set():
+                        if not _floor_ok():
+                            print("[stop] floor lost mid-answer — mic released, playback continues")
+                            self.failed = True
+                            return
                         if os.path.exists(MUTE_TRIGGER):  # Interrupt button (mic mute does NOT cut)
                             os.unlink(MUTE_TRIGGER)
                             print("[stop] interrupted from the maintenance dashboard "
@@ -2021,8 +2133,10 @@ class StopListener:
                                   f"(score {score:.3f}) — answer cut")
                             return
             finally:
+                _OPEN_INPUTS.discard("stop")
                 model.reset()  # don't leak playback audio into the next arming
         except Exception as e:
+            _OPEN_INPUTS.discard("stop")
             self.failed = True
             print(f"[stop] barge-in listener failed ({type(e).__name__}: {e}) "
                   "— playback continues uninterruptible")
@@ -2345,6 +2459,13 @@ class _SentenceOut:
         rate, a = _load_wav_mono_int16(wav_path)
         if trim:
             a = _trim_edges(a, rate)
+        if _dry_run():   # console rehearsal: keep the timing, skip the speaker
+            end = time.monotonic() + len(a) / float(rate)
+            while time.monotonic() < end:
+                if listener.fired:
+                    return True
+                time.sleep(0.05)
+            return False
         st = self._open(rate)
         feed = _REF_FEED.sync()      # Bluetooth AEC reference copy (2026-09-01)
         n = int(rate * self.CHUNK_S)
@@ -2754,6 +2875,7 @@ def _safe_turn(*args, **kwargs):
     """handle_turn that cannot take the service down: any unexpected error is
     logged with its traceback, apologised for, and treated as a finished
     turn (True) so a locked conversation keeps going."""
+    _TURN["active"] = True          # console drains floor/mode changes until this clears
     try:
         return handle_turn(*args, **kwargs)
     except Exception as e:
@@ -2766,6 +2888,8 @@ def _safe_turn(*args, **kwargs):
             pass
         _say_apology(e)
         return True
+    finally:
+        _TURN["active"] = False
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -3072,9 +3196,22 @@ def _wake_stream(det):
                             _publish_wake(1.0, fired=True)
                         model.reset()
                         return ret
-            frame, _ = stream.read(frame_len)
+            if not _floor_ok() or tap.stream is None:
+                # No floor (console says none / other robot / lease expired):
+                # the tap is closed by the lease thread; keep serving the
+                # dashboard triggers above, never read the mic.
+                time.sleep(0.1)
+                continue
+            try:
+                frame, _ = stream.read(frame_len)
+            except sd.PortAudioError:
+                continue          # closed under us — loop back to the floor check
             tap.note_rms(frame[:, 0])
             score = float(max(model.predict(frame[:, 0]).values()))
+            if score >= det.threshold and not _wake_listen():
+                _publish_wake(score)      # meter moves; console has the wake word off
+                model.reset()
+                continue
             if score >= det.threshold and _muted():
                 if not muted_logged:
                     print(f"[mute] wake phrase ignored (score {score:.3f}) — "
@@ -3133,6 +3270,14 @@ def _ask_turn(gestures, history, ask, stop=None):
     deterministic even if STT would have misheard the emcee."""
     question, response = ask.get("q") or "(question button)", ask["a"]
     entry_id = ask.get("id", "?")
+    _TURN["active"] = True
+    try:
+        return _ask_turn_inner(gestures, history, ask, question, response, entry_id, stop)
+    finally:
+        _TURN["active"] = False
+
+
+def _ask_turn_inner(gestures, history, ask, question, response, entry_id, stop):
     print(f"[ask] speaking scripted answer: {entry_id}")
     _publish_transcript("user", question)
     _publish_transcript("note", f"(question button: {entry_id})")
@@ -3165,6 +3310,9 @@ def wake_loop(client, artifacts, gestures):
     import wake_word    # inserts the repo root on sys.path, where config lives
     import config
     detector = wake_word.make_detector()        # config.WAKE_BACKEND picks the backend
+    _WAKE["detector"] = detector                # console retunes its threshold live
+    if _FLOOR["client"] is not None and _FLOOR["client"].env.get("CJ_WAKE_OWW_THRESHOLD"):
+        detector.threshold = float(_FLOOR["client"].env["CJ_WAKE_OWW_THRESHOLD"])
     # Post-answer pause before re-arming. The answer has fully played by then,
     # so this only needs to cover speaker/room tail — near-zero re-arms instantly.
     grace = max(0.0, float(getattr(config, "WAKE_COOLDOWN_S", 1.0)))
@@ -3228,7 +3376,7 @@ def wake_loop(client, artifacts, gestures):
         # interrupted answer sent the robot back to sleep needing a fresh wake
         # word. Now a barge-in keeps the mic open too, and _always_listen()
         # covers the turns where no lock formed.
-        if (locked or _always_listen()) and r in (True, "interrupted"):
+        if _post_window_open() and (locked or _always_listen()) and r in (True, "interrupted"):
             # Voice-locked conversation (2026-08-24): keep the mic open for the
             # speaker who woke us. Other voices are ignored and cannot take
             # the lock (the wake detector is not even running in here). Ends
@@ -3277,11 +3425,135 @@ def wake_loop(client, artifacts, gestures):
         print(f"[wake] re-armed — say \"{phrase}\"")
 
 
+# ════════════════════════════════════════════════════════════════════════════
+# 10b. FLOOR LEASE GLUE (2026-09-10) — callbacks the LeaseClient drives
+# ════════════════════════════════════════════════════════════════════════════
+
+def _floor_mic(want):
+    """on_mic: the ONLY place the capture stream is opened or closed."""
+    tap = _mic_tap()
+    if want:
+        tap.open()
+    else:
+        tap.close()
+
+
+def _floor_observe():
+    """What this robot's mic is ACTUALLY doing — sent to the console every
+    second and shown there as "observed" (never echoed from the console)."""
+    tap = _mic_tap_box.get("tap")
+    noise = tap.noise_rms() if (tap is not None and tap.is_open()) else None
+    return {"mic_open": bool(_OPEN_INPUTS),
+            "rms": noise,
+            "speech_threshold": _speech_threshold(noise) if noise is not None else None,
+            "speaking": bool(_SENT_OUT.stream is not None or _SENT_OUT._busy),
+            "turn_active": bool(_TURN["active"]),
+            "muted": _muted()}
+
+
+def _floor_settings(settings, mode, profile, env):
+    """on_settings: the console's effective config (profile -> drop-in ->
+    .env -> override) lands in os.environ; per-call knobs pick it up on the
+    next read, the wake detector is retuned in place."""
+    for k, v in (env or {}).items():
+        os.environ[k] = str(v)
+    det = _WAKE.get("detector")
+    if det is not None and env.get("CJ_WAKE_OWW_THRESHOLD"):
+        try:
+            det.threshold = float(env["CJ_WAKE_OWW_THRESHOLD"])
+        except ValueError:
+            pass
+    print(f"[floor] effective config from console (mode {mode}, profile {profile}): "
+          + ", ".join(f"{k}={v}" for k, v in sorted((env or {}).items())), flush=True)
+
+
+def _floor_interrupt():
+    """on_interrupt: operator "cut the answer short" — same path as the
+    dashboard Interrupt button (stop listeners and the recorder honour it)."""
+    print("[floor] operator cut — answer/capture interrupted", flush=True)
+    try:
+        open(MUTE_TRIGGER, "w").close()
+    except OSError as e:
+        print(f"[floor] interrupt trigger failed: {e}")
+    _SENT_OUT.abort()
+
+
+def _floor_intro():
+    """on_intro (Host robot only): say the intro line once, then stay silent."""
+    c = _FLOOR["client"]
+    if c is None or c.role != "beta":
+        return
+    if os.environ.get("CJ_HOST_INTRO", "1").strip().lower() in {"0", "false", "no", "off"}:
+        print("[host] intro requested but 'Host says the intro line' is off")
+        return
+    text = (c.host_intro_text or "").strip()
+    if not text:
+        print("[host] intro requested but the profile has no host_intro_text")
+        return
+
+    def _say():
+        _TURN["active"] = True
+        try:
+            print(f"[host] intro: {text[:80]}", flush=True)
+            _say_curated_line(_gestures_inst, text, None)
+        except Exception as e:
+            print(f"[host] intro failed ({type(e).__name__}: {e})")
+        finally:
+            _TURN["active"] = False
+            if _gestures_inst is not None:
+                _gestures_inst.neutral()
+    threading.Thread(target=_say, daemon=True).start()
+
+
+def host_loop(gestures):
+    """cj-beta, the Host: never composes an answer. Follows the floor lease
+    for its microphone (so the console can meter its room and the one-mic
+    invariant holds), speaks the intro line when the console asks, and
+    honours the dashboard gesture triggers. Otherwise silent."""
+    gestures.scan()
+    print("[host] Host role — intro line on request, otherwise silent; mic follows the floor lease")
+    tap = _mic_tap()
+    gestures.start("sleep")
+    while True:
+        if os.path.exists(GESTURE_TRIGGER):   # /maintain mechanical action
+            try:
+                fresh = (time.time() - os.path.getmtime(GESTURE_TRIGGER)) < 10
+                gname = json.loads(open(GESTURE_TRIGGER).read() or "{}").get("g", "")
+                os.unlink(GESTURE_TRIGGER)
+            except (OSError, ValueError):
+                fresh, gname = False, ""
+            if fresh and gname:
+                print(f"[gesture] {gname}: {gestures.manual(gname)}", flush=True)
+        if _floor_ok() and tap.is_open():
+            try:
+                frame, _ = tap.read(1280)
+                tap.note_rms(frame[:, 0])   # room level for the console's threshold warning
+            except sd.PortAudioError:
+                time.sleep(0.1)
+        else:
+            time.sleep(0.1)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--wake", action="store_true",
                     help='hands-free behind the wake phrase (the only mode; flag kept for the systemd unit)')
     ap.parse_args()
+
+    # Floor lease first: from here on the mic can only open on a grant.
+    import floor_lease
+    role = floor_lease.robot_role()
+    url = floor_lease.console_url()
+    lease = floor_lease.LeaseClient(role, url, on_mic=_floor_mic, on_settings=_floor_settings,
+                                    on_interrupt=_floor_interrupt, on_intro=_floor_intro,
+                                    observe=_floor_observe)
+    _FLOOR["client"] = lease
+    lease.start()
+    print(f"[floor] role {role or 'UNKNOWN'} — console {url} — the mic opens only while the "
+          f"console grants the floor (lease {lease.ttl_s:.0f} s, fail closed)", flush=True)
+    if role is None:
+        print("[floor] UNKNOWN ROLE: set CJ_ROBOT_ROLE=alpha|beta or name the host cj-alpha / "
+              "cj-beta — this robot's microphone will NEVER open", flush=True)
 
     print("Loading artifacts...")
     artifacts = CorpusArtifacts()
@@ -3293,7 +3565,10 @@ def main():
     prewarm_boot()   # heavy imports + entity dictionary off the first turn
 
     try:
-        wake_loop(client, artifacts, gestures)
+        if role == "beta":
+            host_loop(gestures)
+        else:
+            wake_loop(client, artifacts, gestures)
     except KeyboardInterrupt:
         gestures.neutral()
         print("\n" + cache_savings_summary())

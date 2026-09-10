@@ -1283,7 +1283,10 @@ class Handler(BaseHTTPRequestHandler):
                 "/api/ctl", "/api/entities", "/api/avatar-session",
                 "/api/avatar-stop", "/api/avatar-lag", "/api/avatar-status",
                 "/api/avatar-conf",
-                "/api/ask", "/api/tuning", "/api/volume", "/api/mic"):
+                "/api/ask", "/api/tuning", "/api/volume", "/api/mic",
+                # operator console (2026-09-10): floor lease + mode/profile
+                "/api/lease", "/api/floor", "/api/config", "/api/pending",
+                "/api/unlock-request"):
             try:
                 n = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(n) or b"{}")

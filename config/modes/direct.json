@@ -1,0 +1,29 @@
+{
+  "_readme": "Mode profile for DIRECT mode: a visitor talks to Panganiban (cj-alpha); the Host (cj-beta) says its intro line, then stays silent. Values here are the base of the resolution order: mode profile -> systemd drop-in -> app/.env -> console override. Keep secrets out of this file. Keys under `profiles` override `defaults` for the selected profile (kiosk | event). Setting -> robot env mapping lives in dashboard/console.py (SETTING_ENV).",
+  "mode": "direct",
+  "floor_policy": "selectable",
+  "host_intro_text": "Good day. I am your host for today. Chief Justice Panganiban will take your questions — say 'Hi Cee-Jap' to begin.",
+  "defaults": {
+    "wake_word": true,
+    "wake_threshold": 0.003,
+    "speech_threshold": 200,
+    "speech_threshold_mult": 2.5,
+    "speech_threshold_cap": 1500,
+    "silence_timeout_s": 1.2,
+    "post_answer_window_s": 25,
+    "host_intro": true,
+    "dry_run": false
+  },
+  "profiles": {
+    "kiosk": {
+      "_note": "Museum floor, self-service. Same values as the 2026-09-02 drop-in so behaviour is unchanged on first deploy."
+    },
+    "event": {
+      "_note": "Emcee-driven hall. No wake word (questions come from the /event buttons or the console), higher speech level so a crowd does not hold the mic open, and no post-answer window.",
+      "wake_word": false,
+      "speech_threshold": 800,
+      "speech_threshold_cap": 2500,
+      "post_answer_window_s": 0
+    }
+  }
+}

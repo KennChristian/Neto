@@ -6,6 +6,7 @@ Sequence + line refs: [../docs/SYSTEM_TRACE.md](../docs/SYSTEM_TRACE.md). Old→
 | File | Role |
 |---|---|
 | `main_voice_robot.py` | boot, wake loop, turn capture/STT/dispatch, gestures + DoA, playback, barge-in, `[trace]` line |
+| `floor_lease.py` | `LeaseClient` — robot side of the one-open-mic invariant (2026-09-10): polls the operator console (`dashboard/console.py`) ~1 Hz, holds a 3 s lease on the floor, fails closed; role from `CJ_ROBOT_ROLE` / hostname; delivers the effective settings and the interrupt / intro counters. `main_voice_robot._floor_*` are its callbacks. |
 | `speech_streaming.py` | `SentenceSpeaker` — per-sentence TTS one ahead, gapless play, replay wav, caption feeds |
 | `speech_engines.py` | STT (`gpt-4o-mini-transcribe`) + TTS (ElevenLabs clone, OpenAI fallback), speed/farewell settings |
 | `speech_tempo.py` | tempo normaliser (WSOLA toward session average) |

@@ -1307,7 +1307,10 @@ def tuning_set(body):
         pat = re.compile(rf"^Environment={var}=([0-9.]+)\s*$", re.M)
         m = pat.search(text)
         if not m:
-            return False, f"{var} not found in wakeword.conf"
+            # 2026-09-10: the listening knobs moved to config/modes/*.json and
+            # the operator console; a value written back here would override
+            # the profile for every mode, so the card refuses instead.
+            return False, f"{lbl}: now set on /console (mode profile) — not in wakeword.conf"
         if abs(float(m.group(1)) - val) < 1e-9:
             continue
         text = pat.sub(f"Environment={var}={val:g}", text, count=1)

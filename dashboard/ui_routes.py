@@ -5,8 +5,9 @@ ui_page_* modules so ui_server.py, tests and tools can keep using one namespace
 (`import ui_routes as ui`).
 """
 import json, os, re, time  # noqa: F401
-import ui_common, ui_page_audience, ui_page_maintenance, ui_page_event, ui_page_face
-_MODULES = (ui_common, ui_page_audience, ui_page_maintenance, ui_page_event, ui_page_face)
+import ui_common, ui_page_audience, ui_page_maintenance, ui_page_event, ui_page_face, ui_page_console
+import console as _console   # operator console model (floor lease, mode/profile, journal) — 2026-09-10
+_MODULES = (ui_common, ui_page_audience, ui_page_maintenance, ui_page_event, ui_page_face, ui_page_console)
 for _m in _MODULES:
     globals().update({k: v for k, v in vars(_m).items()
                       if not k.startswith("__") and k not in ("_c", "_a", "_m")})
@@ -99,7 +100,28 @@ def handle_get(h, path, params):
     elif path == "/api/errors":
         h._send(200, json.dumps({"ts": time.time(), "rows": recent_errors()}))
     elif path == "/api/state":
-        h._send(200, json.dumps(state()))
+        doc = state()
+        # Operator console (2026-09-10): floor / mode / profile / observed /
+        # leaseTtl / rms / settings ride on the same document. `speaking`
+        # keeps the caption feed the older pages read and gains the per-robot
+        # flags {alpha, beta} the console needs.
+        try:
+            cdoc = _console.get_console().state()
+            cdoc["speaking"] = {**(doc.get("speaking") or {}), **cdoc["speaking"]}
+            doc.update(cdoc)
+        except Exception as e:
+            doc["console_error"] = f"{type(e).__name__}: {e}"
+        h._send(200, json.dumps(doc))
+    elif path == "/console":
+        if _authed(params):
+            h._send(200, CONSOLE_PAGE, "text/html; charset=utf-8")
+        else:
+            h._send(200, GATE_PAGE.replace("/maintain?key=", "/console?key="),
+                    "text/html; charset=utf-8")
+    elif path in _console.CONSOLE_PATHS_GET:
+        code, out = _console.api(_console.get_console(), "GET", path, params,
+                                 authed=_authed(params))
+        h._send(code, json.dumps(out))
     elif path == "/api/camera.jpg":
         frame = cam_frame()
         if frame:
@@ -151,7 +173,14 @@ def handle_get(h, path, params):
 
 
 def handle_post(h, path, body):
-    if path == "/api/tuning":
+    if path in _console.CONSOLE_PATHS_POST:
+        # /api/lease is the robots' 1 Hz poll — never logged. The operator
+        # calls are journaled by the console itself.
+        who = body.get("who") or f"console@{h.client_address[0]}"
+        code, out = _console.api(_console.get_console(), "POST", path, {}, body,
+                                 authed=_authed({}, body), who=who)
+        h._send(code, json.dumps(out))
+    elif path == "/api/tuning":
         if not _authed({}, body):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
         else:
