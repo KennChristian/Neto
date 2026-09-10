@@ -1,0 +1,18 @@
+# Written by ~/bin/audio-out - do not edit by hand.
+# Route: C41 (66:EA:C5:C3:E5:6B) via BlueALSA.
+# Primary: 66:EA:C5:C3:E5:6B
+# Secondary: none
+pcm.!audio_out_route {
+    type plug
+    slave {
+        pcm {
+            type bluealsa
+            device "66:EA:C5:C3:E5:6B"
+            profile "a2dp"
+        }
+        channels 2
+    }
+}
+pcm.!audio_out_route2 {
+    type null
+}

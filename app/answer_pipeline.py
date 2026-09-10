@@ -801,7 +801,12 @@ def input_gate(client: Anthropic, question: str,
             "scope": scope,
             "reasoning": str(parsed.get("reasoning", ""))[:200],
         }
-    except (json.JSONDecodeError, KeyError, AttributeError, IndexError):
+    except Exception as e:
+        # 2026-09-05 audit: this used to catch only the parse errors, so any
+        # SDK/API failure (a PydanticUserError from inside messages.create
+        # killed a turn on 2026-09-04) escaped, aborted stream_turn and cost
+        # the whole turn. The docstring always promised fail-open.
+        print(f"[gate] {type(e).__name__}: {str(e)[:200]} — failing open to in_corpus")
         return {"scope": "in_corpus", "reasoning": "gate fallback"}
 
 

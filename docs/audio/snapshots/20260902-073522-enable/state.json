@@ -1,0 +1,9 @@
+{
+  "taken":      "2026-09-02T07:35:24+01:00",
+  "tag":        "enable",
+  "feed_flag":  "absent",
+  "cj_volume":  "100",
+  "sink_mute":  "no",
+  "alsa_pcm":   " Front Left: Playback 60 [100%] [0.00dB] [on]",
+  "service":    "inactive"
+}

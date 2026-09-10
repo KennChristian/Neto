@@ -1,0 +1,8 @@
+{
+  "taken":      "2026-09-02T07:27:07+01:00",
+  "tag":        "baseline",
+  "feed_flag":  "present",
+  "cj_volume":  "100",
+  "alsa_pcm":   " Front Left: Playback 5 [8%] [-55.00dB] [off]",
+  "service":    "inactive"
+}

@@ -90,9 +90,13 @@ def _say_apology(err):
     auth error): say so in his voice and carry on — never crash the service
     (2026-08-24: a 400 'credit balance too low' killed the process on every
     follow-up, and systemd's 30 s restart read as 'slow')."""
+    import traceback
     msg = str(err)
     short = msg[:160]
     print(f"[compose] API error — apologising and continuing: {type(err).__name__}: {short}")
+    # 2026-09-05 audit: the one-line summary hid a PydanticUserError's origin
+    # for a day; the full stack is what makes the next one diagnosable.
+    print(traceback.format_exc().rstrip())
     _publish_transcript("note", f"(API error during compose — {type(err).__name__}: {short})")
     try:
         speak(APOLOGY_TEXT, None)
@@ -260,6 +264,33 @@ def _lock_enabled():
         return voice_identity.lock_enabled()
     except Exception:
         return False
+
+
+def _always_listen():
+    """Keep the mic open after an answer even when no voice lock formed
+    (2026-09-02, user: "make sure it continuously listens after the first
+    question is answered"). With a lock the follow-up window belongs to the
+    locked speaker; without one — lock disabled, or the embedding failed —
+    the same window is open to whoever speaks next. 0 restores the old
+    behaviour: back to sleep, fresh wake word for every question."""
+    return os.environ.get("CJ_ALWAYS_LISTEN", "1").strip().lower() not in {
+        "0", "false", "no", "off"}
+
+
+def _listen_idle_s():
+    """Silence that closes the conversation. CJ_LISTEN_IDLE_S overrides the
+    voice-lock idle for both the locked and the lock-less window."""
+    try:
+        v = os.environ.get("CJ_LISTEN_IDLE_S")
+        if v:
+            return max(2.0, float(v))
+    except ValueError:
+        pass
+    try:
+        import voice_identity
+        return voice_identity.lock_idle_s()
+    except Exception:
+        return 10.0
 
 
 def _voice_lock_obj():
@@ -1201,7 +1232,7 @@ def _min_speech_frames(frame_ms):
     return max(0, int(_env_num("CJ_MIC_MIN_SPEECH_MS", 240) // frame_ms))
 
 
-_bt_route_cache = {"mtime": None, "bt": False, "secondary": "none"}
+_bt_route_cache = {"mtime": None, "bt": False, "dac": False, "secondary": "none"}
 
 
 def _route_state():
@@ -1216,11 +1247,13 @@ def _route_state():
             with open(path) as f:
                 text = f.read()
             _bt_route_cache["bt"] = "bluealsa" in text
+            # 2026-09-05: USB DAC route (`audio-out dac`) — off the XMOS like BT
+            _bt_route_cache["dac"] = bool(re.search(r"^# (Primary|Secondary): dac\b", text, re.M))
             mm = re.search(r"^# Secondary: (\S+)", text, re.M)
             _bt_route_cache["secondary"] = (mm.group(1) if mm else "none")
             _bt_route_cache["mtime"] = m
     except OSError:
-        _bt_route_cache.update(bt=False, secondary="none")
+        _bt_route_cache.update(bt=False, dac=False, secondary="none")
     return _bt_route_cache
 
 
@@ -1228,6 +1261,23 @@ def _bt_route():
     """True when ~/bin/audio-out has playback on a Bluetooth speaker (route
     file says bluealsa)."""
     return _route_state()["bt"]
+
+
+def _dac_route():
+    """True when ~/bin/audio-out routes playback to a USB DAC (2026-09-05). The
+    XMOS speaker is silent then, so — exactly as on Bluetooth — the chip needs
+    the AEC reference feed to hear the robot's own voice as itself."""
+    return _route_state()["dac"]
+
+
+def _ref_delay_ms():
+    """Host-side delay of the AEC reference copy. Bluetooth (A2DP ~300 ms
+    behind) uses CJ_AEC_REF_DELAY_MS (calibrated 444); a USB DAC through
+    PipeWire is only ~100 ms behind, so it gets its own CJ_AEC_REF_DELAY_DAC_MS
+    (default 0 — calibrate with ~/tools/aec_ref_calib.py)."""
+    if _dac_route() and not _bt_route():
+        return _env_num("CJ_AEC_REF_DELAY_DAC_MS", 0)
+    return _env_num("CJ_AEC_REF_DELAY_MS", 0)
 
 
 def _dual_route():
@@ -1265,7 +1315,7 @@ class _RefFeed:
     @staticmethod
     def wanted():
         return os.environ.get("CJ_AEC_REF_FEED", "0").strip().lower() in {
-            "1", "true", "yes", "on"} and _bt_route()
+            "1", "true", "yes", "on"} and (_bt_route() or _dac_route())
 
     def sync(self):
         """Follow the route; returns True when the feed is on. Cheap (one stat)."""
@@ -1339,7 +1389,7 @@ class _RefFeed:
             print(f"[aec] reference feed {'ON' if on else 'off'} — XMOS mixer "
                   f"{'-55 dB' if on else 'restored'}, REF_GAIN {gain:g}"
                   f"{'' if ok else ' (chip write FAILED)'}, delay "
-                  f"{_env_num('CJ_AEC_REF_DELAY_MS', 120):g} ms", flush=True)
+                  f"{_ref_delay_ms():g} ms", flush=True)
         except Exception as e:
             print(f"[aec] chip setup failed ({type(e).__name__}: {e})", flush=True)
 
@@ -1394,7 +1444,7 @@ class _RefFeed:
             try:
                 st = self._open(rate)
                 zeros = np.zeros(int(rate * 0.05), dtype=np.int16)
-                pre = int(rate * (_env_num("CJ_AEC_REF_DELAY_MS", 0) + lead_ms) / 1000.0)
+                pre = int(rate * (_ref_delay_ms() + lead_ms) / 1000.0)
                 if pre > 0:
                     st.write(np.zeros(pre, dtype=np.int16))
                 st.write(pcm)
@@ -1539,7 +1589,7 @@ def _playback_failed(where="aplay"):
     moved audio back a minute later). `audio-out ensure` switches to the
     internal speaker at once when the BT PCM is gone; returns True when the
     caller should retry the clip on the new route."""
-    if not _bt_route():
+    if not (_bt_route() or _dac_route()):
         print(f"[audio] PLAYBACK FAILED ({where}) — speaker/route trouble")
         return False
     try:
@@ -1551,8 +1601,8 @@ def _playback_failed(where="aplay"):
     if r.returncode == 10:
         _alsa_config_refresh()
         _SENT_OUT.abort()
-        print("[audio] Bluetooth speaker gone — switched to the internal speaker, "
-              "retrying the clip", flush=True)
+        print("[audio] routed speaker gone (Bluetooth/DAC) — switched to the internal "
+              "speaker, retrying the clip", flush=True)
         return True
     print(f"[audio] PLAYBACK FAILED ({where}) — Bluetooth speaker connected? "
           f"({(r.stdout or r.stderr).strip()[-80:]})")
@@ -2023,13 +2073,66 @@ def _avatar_head_start(prefed_age=None):
     the full measured idle-start lag (fetch + upload + HeyGen start). One the
     page already queued `prefed_age` s ago (see SentenceSpeaker._prefeed)
     only needs the remainder of the much shorter queued-start latency."""
+    # CJ_AVATAR_SYNC_OFFSET_S (2026-09-05): operator nudge added to every
+    # hold. The page measures its lag against the moment we WRITE audio, not
+    # the moment it leaves the speaker (PortAudio buffer ~0.15 s, Bluetooth
+    # +0.2-0.4 s) and the LiveKit video has its own latency — the residual is
+    # only judgeable by ear. Negative = robot earlier, positive = robot later.
+    off = _env_num("CJ_AVATAR_SYNC_OFFSET_S", 0.0)
     if prefed_age is None:
-        return _avatar_lag()
+        return max(0.0, _avatar_lag() + off)
     try:
         q = float(os.environ.get("CJ_AVATAR_QUEUE_LAG_S", "0.4"))
     except ValueError:
         q = 0.4
-    return max(0.0, min(_avatar_lag(), q) - prefed_age)
+    return max(0.0, min(_avatar_lag(), q) - prefed_age + off)
+
+
+AVATAR_PAGE_STATUS = "/dev/shm/cj_avatar_page.json"   # written by the dashboard from the page's reports
+
+
+def _avatar_page_state():
+    """The /face-avatar page's last self-report ({ready, stopped, parked, ...})
+    or None when there is none fresh enough (page gone)."""
+    try:
+        st = json.load(open(AVATAR_PAGE_STATUS))
+        if time.time() - float(st.get("ts", 0)) > 15:
+            return None
+        return st
+    except (OSError, ValueError, TypeError):
+        return None
+
+
+def _avatar_wait_ready(listener=None, stop_evt=None):
+    """Hold (bounded by CJ_AVATAR_READY_WAIT_S, default 4 s) until the avatar
+    page reports its HeyGen session as ready, so the first sentence does not
+    leave the speaker while the avatar is still connecting (2026-09-05, user:
+    "make the face avatar and the voice sync smoothly"). The page pre-starts
+    its session when the question is being transcribed, but a cold start can
+    still outlast the composer: the avatar then began the answer seconds late
+    and stayed late for every sentence (its queue is back-to-back). Returns
+    the seconds waited. No-op when no page is live or it reports stopped."""
+    if not _avatar_mode():
+        return 0.0
+    st = _avatar_page_state()
+    if st is None or st.get("ready") or st.get("stopped"):
+        return 0.0
+    limit = max(0.0, _env_num("CJ_AVATAR_READY_WAIT_S", 4.0))
+    t0 = time.monotonic()
+    while time.monotonic() - t0 < limit:
+        if listener is not None and listener.fired:
+            break
+        if stop_evt is not None and stop_evt.is_set():
+            break
+        time.sleep(0.1)
+        st = _avatar_page_state()
+        if st is None or st.get("ready") or st.get("stopped"):
+            break
+    waited = time.monotonic() - t0
+    if waited > 0.2:
+        print(f"[avatar] held {waited:.1f}s for the page's session "
+              f"({'ready' if st and st.get('ready') else 'not ready — speaking anyway'})")
+    return waited
 
 
 def _mark_play_start():
@@ -2058,7 +2161,7 @@ def _play_aside(clip, stop=None):
         except Exception:
             mode = None
     if mode and _asides_enabled():
-        hold = _avatar_lag()
+        hold = _avatar_head_start()
         if mode == "solo":
             hold += wav_duration(clip) or 1.0
         end = time.monotonic() + hold
@@ -2144,6 +2247,7 @@ class _SentenceOut:
         self.lock = threading.Lock()
         self._alive = None
         self._last_write = 0.0
+        self._busy = False       # a sentence is being written right now (keep-alive stands down)
 
     @staticmethod
     def enabled():
@@ -2158,6 +2262,17 @@ class _SentenceOut:
                              dtype="int16", blocksize=int(rate * self.CHUNK_S),
                              latency=_env_num("CJ_SENT_OUT_LATENCY_S", 0.15))
         st.start()
+        # 2026-09-05: prime a fresh Bluetooth stream with a little silence. A2DP
+        # swallows the first ~100-300 ms after a PCM opens while the link ramps
+        # up, and _trim_edges has already cut the clip's own leading silence —
+        # the first syllable of an answer went missing. CJ_SENT_PRIME_S (default
+        # 0.25 on a Bluetooth route, 0 on the internal speaker; 0 disables).
+        prime = _env_num("CJ_SENT_PRIME_S", 0.25 if _bt_route() else 0.0)
+        if prime > 0:
+            try:
+                st.write(np.zeros(int(rate * prime), dtype=np.int16))
+            except Exception:
+                pass
         if _REF_FEED.sync():
             _REF_FEED.warm(rate)     # Bluetooth AEC reference stream opens alongside
         self.stream2 = None
@@ -2187,9 +2302,16 @@ class _SentenceOut:
 
     def _keepalive(self, st):
         zeros = np.zeros(int(self.rate * self.CHUNK_S), dtype=np.int16)
+        # 2026-09-05: stand down while a sentence is being written. The
+        # keep-alive used to fire whenever the writer was >50 ms late — under
+        # load (STT, synth, WSOLA, wake scoring all at once on the CM4) that
+        # happened mid-sentence and QUEUED 50 ms of zeros between two speech
+        # chunks: an audible stutter, heard as words being clipped. Only the
+        # gaps between sentences need feeding.
         while self.stream is st:
             with self.lock:
-                if self.stream is st and time.monotonic() - self._last_write > self.CHUNK_S:
+                if (self.stream is st and not self._busy
+                        and time.monotonic() - self._last_write > self.CHUNK_S):
                     try:
                         st.write(zeros)
                         self._last_write = time.monotonic()
@@ -2226,17 +2348,21 @@ class _SentenceOut:
         st = self._open(rate)
         feed = _REF_FEED.sync()      # Bluetooth AEC reference copy (2026-09-01)
         n = int(rate * self.CHUNK_S)
-        for k in range(0, len(a), n):
-            if listener.fired:
-                self.abort()
-                return True
-            with self.lock:
-                st.write(a[k:k + n])
-                self._last_write = time.monotonic()
-                self._write2(a[k:k + n])
-            if feed:
-                _REF_FEED.push(a[k:k + n], rate, self._last_write)
-        return False
+        self._busy = True
+        try:
+            for k in range(0, len(a), n):
+                if listener.fired:
+                    self.abort()
+                    return True
+                with self.lock:
+                    st.write(a[k:k + n])
+                    self._last_write = time.monotonic()
+                    self._write2(a[k:k + n])
+                if feed:
+                    _REF_FEED.push(a[k:k + n], rate, self._last_write)
+            return False
+        finally:
+            self._busy = False
 
     def _write2(self, chunk):
         """Mirror a chunk to the second output; drop that output on error
@@ -2376,8 +2502,10 @@ def speak(text, filler=None, stop=None, voice_settings=None):
                              wav=publish_sentence_wav(wav_path),
                              dur=wav_duration(wav_path))
         _amode = _avatar_mode()
+        if _amode:
+            _avatar_wait_ready()        # session still connecting: bounded hold
         if _amode in ("sync", "lips"):
-            time.sleep(_avatar_lag())   # let the avatar catch up, then BOTH speak
+            time.sleep(_avatar_head_start())   # let the avatar catch up, then BOTH speak
         _mark_play_start()
         if _amode == "solo":
             from speech_streaming import wav_duration
@@ -2436,6 +2564,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
     def _on_first():
         if stop is not None:    # arm BEFORE filler.stop(): the model's ~1-2 s
             listener_box["l"] = StopListener(stop)  # warm-up overlaps the tail
+        _avatar_wait_ready(listener_box.get("l"))   # avatar session still connecting? (filler keeps covering)
         filler.stop()          # waits for the current clip, then we speak
         gestures.start("talk")
         first_audio.set()
@@ -2733,7 +2862,8 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
         say_offline()
         return True
     finally:
-        os.unlink(path)
+        with contextlib.suppress(FileNotFoundError):   # never mask the in-flight exception
+            os.unlink(path)
     v, vmin = _gate_vad(gate), _vad_gate_min()
     if vmin > 0 and v is not None and v["speech_s"] < vmin:
         # VAD gate (armed 2026-08-30): not enough real speech in the capture —
@@ -2989,7 +3119,8 @@ def _run_enrollment(gestures):
         print(f"[speaker] enrollment error: {e}")
         _publish_transcript("note", f"(enrollment error: {e})")
     finally:
-        os.unlink(path)
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(path)
         gestures.neutral()
 
 
@@ -3090,16 +3221,24 @@ def wake_loop(client, artifacts, gestures):
             # the turn voiced the offline notice; a lock conversation would
             # just repeat it for every utterance (2026-08-25 review)
             r = "offline"
-        if lock is not None and lock.active() and r is True:
+        locked = lock is not None and lock.active()
+        # 2026-09-02 (user: "make sure it continuously listens after the first
+        # question is answered"): the conversation window used to need a live
+        # voice lock AND a cleanly finished answer, so a failed lock or an
+        # interrupted answer sent the robot back to sleep needing a fresh wake
+        # word. Now a barge-in keeps the mic open too, and _always_listen()
+        # covers the turns where no lock formed.
+        if (locked or _always_listen()) and r in (True, "interrupted"):
             # Voice-locked conversation (2026-08-24): keep the mic open for the
             # speaker who woke us. Other voices are ignored and cannot take
             # the lock (the wake detector is not even running in here). Ends
-            # on "bye", the stop word, or CJ_VOICE_LOCK_IDLE_S of silence
-            # from the locked voice after an answer.
+            # on "bye", the stop word, or CJ_LISTEN_IDLE_S of silence after an
+            # answer. Without a lock the same window listens to anyone.
             import voice_identity
-            idle_s = voice_identity.lock_idle_s()
+            idle_s = _listen_idle_s()
             print(f"[lock] in conversation — no wake word needed "
-                  f"(ends on 'bye' or {idle_s:.0f}s of silence)")
+                  f"({'locked voice' if locked else 'any voice — no lock'}; "
+                  f"ends on 'bye' or {idle_s:.0f}s of silence)")
             _publish_transcript("note", "(in conversation — no wake word needed; "
                                         "say goodbye or pause to end)")
             time.sleep(grace)
@@ -3124,7 +3263,8 @@ def wake_loop(client, artifacts, gestures):
                     break
                 # "ignored" (another voice), empty STT, mic timeout: keep
                 # listening until the deadline
-            lock.release()
+            if lock is not None:
+                lock.release()
             _speaker_doa.beam_auto()
             _publish_transcript("note", "(conversation closed — say the wake word to start again)")
         elif lock is not None:

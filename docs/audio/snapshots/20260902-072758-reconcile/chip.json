@@ -1,0 +1,208 @@
+{
+ "USB_BIT_DEPTH": [
+  16,
+  16
+ ],
+ "SHF_BYPASS": [
+  0
+ ],
+ "AEC_FIXEDBEAMSAZIMUTH_VALUES": [
+  3.9269907474517822,
+  5.497786998748779
+ ],
+ "AEC_FIXEDBEAMSELEVATION_VALUES": [
+  0.0,
+  0.0
+ ],
+ "AEC_FIXEDBEAMSGATING": [
+  0
+ ],
+ "AEC_HPFONOFF": [
+  2
+ ],
+ "AEC_AECSILENCELEVEL": [
+  9.999999717180685e-10,
+  9.999999974752427e-07
+ ],
+ "AEC_AECEMPHASISONOFF": [
+  1
+ ],
+ "AEC_FAR_EXTGAIN": [
+  -55.0
+ ],
+ "AEC_PCD_COUPLINGI": [
+  -1.0
+ ],
+ "AEC_PCD_MINTHR": [
+  0.004999999888241291
+ ],
+ "AEC_PCD_MAXTHR": [
+  0.10000000149011612
+ ],
+ "AEC_ASROUTONOFF": [
+  1
+ ],
+ "AEC_ASROUTGAIN": [
+  1.0
+ ],
+ "AEC_FIXEDBEAMSONOFF": [
+  1
+ ],
+ "AEC_FIXEDBEAMNOISETHR": [
+  0.4000000059604645,
+  0.4000000059604645
+ ],
+ "AUDIO_MGR_MIC_GAIN": [
+  90.0
+ ],
+ "AUDIO_MGR_REF_GAIN": [
+  8.0
+ ],
+ "I2S_INPUT_PACKED": [
+  0
+ ],
+ "AUDIO_MGR_SELECTED_CHANNELS": [
+  3,
+  3
+ ],
+ "AUDIO_MGR_OP_PACKED": [
+  0,
+  0
+ ],
+ "AUDIO_MGR_OP_UPSAMPLE": [
+  0,
+  0
+ ],
+ "AUDIO_MGR_OP_L": [
+  8,
+  0
+ ],
+ "AUDIO_MGR_OP_L_PK0": [
+  8,
+  0
+ ],
+ "AUDIO_MGR_OP_L_PK1": [
+  1,
+  0
+ ],
+ "AUDIO_MGR_OP_L_PK2": [
+  1,
+  2
+ ],
+ "AUDIO_MGR_OP_R": [
+  8,
+  0
+ ],
+ "AUDIO_MGR_OP_R_PK0": [
+  8,
+  0
+ ],
+ "AUDIO_MGR_OP_R_PK1": [
+  1,
+  1
+ ],
+ "AUDIO_MGR_OP_R_PK2": [
+  1,
+  3
+ ],
+ "AUDIO_MGR_OP_ALL": [
+  8,
+  0,
+  1,
+  0,
+  1,
+  2,
+  8,
+  0,
+  1,
+  1,
+  1,
+  3
+ ],
+ "AUDIO_MGR_FAR_END_DSP_ENABLE": [
+  0
+ ],
+ "AUDIO_MGR_SYS_DELAY": [
+  12
+ ],
+ "I2S_DAC_DSP_ENABLE": [
+  0
+ ],
+ "PP_AGCONOFF": [
+  1
+ ],
+ "PP_AGCMAXGAIN": [
+  64.0
+ ],
+ "PP_AGCDESIREDLEVEL": [
+  0.0044999998062849045
+ ],
+ "PP_AGCGAIN": [
+  4.435009956359863
+ ],
+ "PP_AGCTIME": [
+  0.8999987840652466
+ ],
+ "PP_AGCFASTTIME": [
+  0.10000001639127731
+ ],
+ "PP_AGCALPHAFASTGAIN": [
+  0.0
+ ],
+ "PP_AGCALPHASLOW": [
+  0.984000027179718
+ ],
+ "PP_AGCALPHAFAST": [
+  0.36000001430511475
+ ],
+ "PP_LIMITONOFF": [
+  1
+ ],
+ "PP_LIMITPLIMIT": [
+  0.4699999988079071
+ ],
+ "PP_MIN_NS": [
+  0.15000000596046448
+ ],
+ "PP_MIN_NN": [
+  0.5099999904632568
+ ],
+ "PP_ECHOONOFF": [
+  1
+ ],
+ "PP_GAMMA_E": [
+  1.0
+ ],
+ "PP_GAMMA_ETAIL": [
+  1.0
+ ],
+ "PP_GAMMA_ENL": [
+  1.100000023841858
+ ],
+ "PP_NLATTENONOFF": [
+  1
+ ],
+ "PP_NLAEC_MODE": [
+  0
+ ],
+ "PP_MGSCALE": [
+  1000.0,
+  1.0,
+  1.0
+ ],
+ "PP_FMIN_SPEINDEX": [
+  1300.0
+ ],
+ "PP_DTSENSITIVE": [
+  1
+ ],
+ "PP_ATTNS_MODE": [
+  0
+ ],
+ "PP_ATTNS_NOMINAL": [
+  1.0
+ ],
+ "PP_ATTNS_SLOPE": [
+  1.0
+ ]
+}

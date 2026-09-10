@@ -36,8 +36,10 @@ SPEAKING_LIVE = "/dev/shm/cj_speaking.json"
 
 def publish_sentence_wav(wav):
     """Copy this sentence's wav to a stable tmpfs name for the /face-avatar
-    page (it feeds the audio to the LiveAvatar session). Keeps the last 8
-    copies; returns the basename, or None (fails open)."""
+    page (it feeds the audio to the LiveAvatar session). Keeps the last 24
+    copies (8 until 2026-09-05: an ack + fillers + a few sentences evicted the
+    opener before a cold-starting avatar session fetched it — "clip gone");
+    returns the basename, or None (fails open)."""
     try:
         import glob as _glob
         name = f"cj_sent_{int(time.time()*1000)}.wav"
@@ -45,7 +47,7 @@ def publish_sentence_wav(wav):
         with open(wav, "rb") as src, open(tmp, "wb") as dst:
             dst.write(src.read())
         os.replace(tmp, "/dev/shm/" + name)
-        old = sorted(_glob.glob("/dev/shm/cj_sent_*.wav"))[:-8]
+        old = sorted(_glob.glob("/dev/shm/cj_sent_*.wav"))[:-24]
         for p in old:
             try:
                 os.unlink(p)

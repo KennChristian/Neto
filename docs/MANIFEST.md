@@ -21,6 +21,7 @@ persona-scoped guides.
 | S0003 | [implementation-plans/](implementation-plans/) | Phase-aligned implementation plans — see [implementation-plans/MANIFEST.md](implementation-plans/MANIFEST.md). 7 plans for runtime app, web UI, embedding audit, biography ingest, book corpus addition, voice/TTS integration, and topic-map evolution process. |
 | S0004 | [test-specs/](test-specs/) | Verification specifications for each layer — see [test-specs/MANIFEST.md](test-specs/MANIFEST.md). 5 specs for generator contract, topic-map matchers, topic_paths derivation, voice card protocol, and end-to-end smoke. |
 | S0005 | [guides/](guides/) | Persona-scoped guides — see [guides/MANIFEST.md](guides/MANIFEST.md). 4 guides for end users, reviewers, admins, and project managers. |
+| S0006 | [audio/](audio/) | XVF3800 DSP and audio-path analysis — see [audio/MANIFEST.md](audio/MANIFEST.md). Signal topology, chip configurability, ambient-noise reduction, and the plan to replace the ElevenLabs Voice Isolator with a local real-time denoiser. |
 
 ## Reading order by audience
 
