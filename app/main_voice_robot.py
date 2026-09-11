@@ -1315,13 +1315,41 @@ def _env_num(name, default):
         return float(default)
 
 
-def _speech_threshold(noise_rms):
-    """RMS above which a 30 ms frame counts as speech (CJ_MIC_RMS_* knobs;
-    lower floor/multiplier = more sensitive mic)."""
+_MIC_LAST = {"rms": None, "threshold": None, "binding": None, "ts": 0.0}   # last RESOLVED threshold
+
+
+def _speech_threshold_explain(noise_rms):
+    """(threshold, binding, parts): RMS above which a frame counts as speech
+    = min(max(room * mult, floor), cap), and WHICH of the three bound —
+    that is what has to be in the journal when it misbehaves on the day."""
     floor_ = int(_env_num("CJ_MIC_RMS_FLOOR", 350))
     mult = _env_num("CJ_MIC_RMS_MULT", 3.5)
     cap = int(_env_num("CJ_MIC_RMS_CAP", 2000))
-    return min(max(int(noise_rms * mult), floor_), cap)
+    scaled = int(noise_rms * mult)
+    if scaled >= cap:
+        thr, binding = cap, "cap"
+    elif scaled >= floor_:
+        thr, binding = scaled, "room x mult"
+    else:
+        thr, binding = floor_, "floor"
+    if thr > cap:
+        thr, binding = cap, "cap"
+    parts = {"room": int(noise_rms), "mult": mult, "scaled": scaled, "floor": floor_, "cap": cap}
+    _MIC_LAST.update(rms=int(noise_rms), threshold=int(thr), binding=binding, ts=time.monotonic())
+    return int(thr), binding, parts
+
+
+def _speech_threshold(noise_rms):
+    """RMS above which a 30 ms frame counts as speech (CJ_MIC_RMS_* knobs;
+    lower floor/multiplier = more sensitive mic)."""
+    return _speech_threshold_explain(noise_rms)[0]
+
+
+def _threshold_line(noise_rms):
+    """One journal line per turn with the RESOLVED threshold and its inputs."""
+    thr, binding, p = _speech_threshold_explain(noise_rms)
+    return (f"[mic] room rms={p['room']} x {p['mult']:g} = {p['scaled']}, floor {p['floor']}, "
+            f"cap {p['cap']} => speech threshold {thr} ({binding} binding)")
 
 
 def _min_speech_frames(frame_ms):
@@ -1792,7 +1820,7 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
         noise = stream.noise_rms()       # idle floor from BEFORE the wake phrase
         if noise is not None:
             threshold = _speech_threshold(noise)
-            print(f"[mic] noise floor rms={noise} -> speech threshold {threshold}")
+            print(_threshold_line(noise))
     else:
         stream.flush()                   # follow-up / enrollment: drop stale audio
         # Bluetooth speakers lag 200-400 ms behind aplay: right after an answer
@@ -1837,7 +1865,7 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
                 probe.append(rms)
                 if len(probe) >= 8:
                     threshold = _speech_threshold(int(np.median(probe)))
-                    print(f"[mic] noise floor rms={int(np.median(probe))} -> speech threshold {threshold}")
+                    print(_threshold_line(int(np.median(probe))))
                 continue
             bars = "#" * min(rms // 100, 40)
             tag = "SPEECH " if rms > threshold else "quiet  "
@@ -3258,6 +3286,7 @@ def _wake_stream(det):
                 onset = (onset + [rms]) if rms > thr else []
                 _publish_wake(min(1.0, rms / float(thr or 1)) * 0.5)   # meter: 0.5 = at threshold
                 if len(onset) >= need and not _muted():
+                    print(_threshold_line(noise if noise is not None else rms), flush=True)
                     print(f"[listen] speech on the open mic (rms {rms} > {thr}) — capturing", flush=True)
                     tap.unread(list(onset_frames))
                     _publish_wake(1.0, fired=True)
@@ -3529,9 +3558,16 @@ def _floor_observe():
     second and shown there as "observed" (never echoed from the console)."""
     tap = _mic_tap_box.get("tap")
     noise = tap.noise_rms() if (tap is not None and tap.is_open()) else None
+    recent = list(tap.rms_hist)[-13:] if (tap is not None and tap.is_open()) else []
+    rms_1s = ({"p50": int(np.median(recent)), "max": int(max(recent)), "min": int(min(recent))}
+              if len(recent) >= 4 else None)
+    thr = _speech_threshold_explain(noise) if noise is not None else (None, None, None)
     return {"mic_open": bool(_OPEN_INPUTS),
-            "rms": noise,
-            "speech_threshold": _speech_threshold(noise) if noise is not None else None,
+            "rms": noise,                      # idle floor (30th percentile, ~4.8 s)
+            "rms_1s": rms_1s,                  # last second: median / peak / min of 80 ms frames
+            "speech_threshold": thr[0],
+            "threshold_binding": thr[1],
+            "turn_threshold": dict(_MIC_LAST),  # what the LAST capture actually used
             "speaking": bool(_SENT_OUT.stream is not None or _SENT_OUT._busy),
             "turn_active": bool(_TURN["active"]),
             "persona": personas.active(),

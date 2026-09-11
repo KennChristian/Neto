@@ -61,6 +61,8 @@ SETTLE_MARGIN_S = 0.5   # extra wait after TTL before a new holder is named
 OBS_FRESH_S = 3.0       # a robot report older than this is "unknown"
 TURN_FRESH_S = 5.0      # turn_active older than this no longer blocks a change
 RMS_WARN_MARGIN = 400   # speech threshold this close to the room floor = warn
+CALIB_DEFAULT_S = 120   # room calibration sample length
+CALIB_HEADROOM = 400    # proposed floor = p95 of per-second peaks + this
 JOURNAL_KEEP = 400
 
 HOME = os.path.expanduser("~")
@@ -314,6 +316,7 @@ class Console:
         # … and the other one value (persona): the slot that is Panganiban
         self.cjap_is = "alpha"
         self._handoff_seq = 0      # intro_seq already handed from host to cjap
+        self.calib = None          # room calibration run (see calibrate())
         self.mode, self.profile = "direct", "kiosk"
         self.overrides: dict = {}
         self.transition = None     # {"target", "started", "deadline"}
@@ -705,6 +708,9 @@ class Console:
                "boot_id": str(obs.get("boot_id") or "")[:80],
                "has_floor": bool(obs.get("has_floor")),
                "machine": str(obs.get("machine") or "")[:64],
+               "rms_1s": obs.get("rms_1s") if isinstance(obs.get("rms_1s"), dict) else None,
+               "threshold_binding": obs.get("threshold_binding") if isinstance(obs.get("threshold_binding"), str) else None,
+               "turn_threshold": obs.get("turn_threshold") if isinstance(obs.get("turn_threshold"), dict) else None,
                "persona": obs.get("persona") if obs.get("persona") in ROLES else None,
                "intro_done": int(obs["intro_done"]) if isinstance(obs.get("intro_done"), int) else 0,
                "role_ok": obs.get("robot") == robot}
@@ -714,7 +720,14 @@ class Console:
                 self._journal("robot", f"{robot} reporting (boot {rec['boot_id'][-12:] or '?'})", who=robot)
             elif prev.get("mic_open") != rec["mic_open"]:
                 self._journal("observed", f"{robot} mic {'open' if rec['mic_open'] else 'closed'}", who=robot)
+            if rec["turn_active"] and not (prev or {}).get("turn_active"):
+                # one line per turn: the RESOLVED threshold and what bound it
+                t = rec["turn_threshold"] or {}
+                self._journal("turn", f"{self.name(robot)}: question capture — room rms {t.get('rms', '?')}, "
+                                      f"speech threshold {t.get('threshold', '?')} ({t.get('binding', '?')} binding)",
+                              who=robot, robot=robot, **{k: t.get(k) for k in ("rms", "threshold", "binding")})
             self.observed[robot] = rec
+            self._calib_sample(robot, rec, now)
             # intro handoff: the Host finished the intro -> floor to Panganiban
             if (self.mode == "direct" and self.floor_role == "host" and robot == self.slot_of("host")
                     and self.intro_seq > 0 and rec["intro_done"] >= self.intro_seq
@@ -739,6 +752,116 @@ class Console:
                     "intro_seq": self.intro_seq, "config_seq": self.config_seq,
                     "host_intro_text": self.sources.host_intro_text(self.mode),
                     "server_wall": self.wall()}
+
+    # ── room calibration (event profile: 800/2500 were placeholders) ──────
+    def calibrate(self, action, robot=None, seconds=None, who="console", now=None):
+        """start | cancel | accept | reject. Samples the room on the robot
+        that holds the floor for `seconds`, reports percentiles, proposes a
+        speech threshold with headroom; accept writes it as an override."""
+        now = self._now(now)
+        with self._lock:
+            self.tick(now)
+            c = self.calib
+            if action == "start":
+                if robot not in ROBOTS:
+                    return False, "robot must be alpha or beta", 400
+                if c and c["status"] == "running":
+                    return False, f"a calibration is already running on {self.name(c['robot'])}", 409
+                if self.floor != robot:
+                    return False, f"give the floor to {self.name(robot)} first — its mic must be open to hear the room", 409
+                try:
+                    secs = max(10, min(600, int(seconds or CALIB_DEFAULT_S)))
+                except (TypeError, ValueError):
+                    return False, "seconds must be a number", 400
+                self.calib = {"robot": robot, "status": "running", "started": now, "seconds": secs,
+                              "p50s": [], "maxs": [], "who": who, "result": None}
+                self._journal("calibrate", f"room calibration started on {self.name(robot)} for {secs} s "
+                                           "— keep the room as it will be during the event", who=who)
+                return True, f"sampling the room on {self.name(robot)} for {secs} s", 200
+            if c is None:
+                return False, "no calibration to act on", 409
+            if action == "cancel":
+                self.calib = None
+                self._journal("calibrate", "room calibration cancelled", who=who)
+                return True, "cancelled", 200
+            if c["status"] != "done":
+                return False, "calibration still running — wait for the proposal", 409
+            if action == "reject":
+                self._journal("calibrate", f"proposal rejected ({c['result']['proposal']['speech_threshold']}) — nothing changed", who=who)
+                self.calib = None
+                return True, "rejected — nothing changed", 200
+            if action == "accept":
+                prop = c["result"]["proposal"]
+                self.overrides["speech_threshold"] = int(prop["speech_threshold"])
+                self.overrides["speech_threshold_cap"] = int(prop["speech_threshold_cap"])
+                self._journal("calibrate", f"proposal ACCEPTED on {self.name(c['robot'])}: loudness {prop['speech_threshold']}, "
+                                           f"cap {prop['speech_threshold_cap']} (from p95 peak {c['result']['peaks']['p95']} + {CALIB_HEADROOM})",
+                              who=who, **prop)
+                self.calib = None
+                self._recompute(announce=True, who=who)
+                self._persist()
+                return True, f"applied: loudness {prop['speech_threshold']}, cap {prop['speech_threshold_cap']}", 200
+            return False, "action must be start, cancel, accept or reject", 400
+
+    def _calib_sample(self, robot, rec, now):
+        """lock held; called from report()."""
+        c = self.calib
+        if not c or c["status"] != "running" or c["robot"] != robot:
+            return
+        r1 = rec.get("rms_1s")
+        if rec.get("mic_open") and isinstance(r1, dict):
+            c["p50s"].append(int(r1.get("p50", 0)))
+            c["maxs"].append(int(r1.get("max", 0)))
+        if now - c["started"] >= c["seconds"]:
+            c["status"] = "done"
+            c["result"] = self._calib_result(c)
+            if c["result"] is None:
+                self._journal("calibrate", "calibration ended with no samples — was the mic open?", who=c["who"])
+                self.calib = None
+            else:
+                pk, pr = c["result"]["peaks"], c["result"]["proposal"]
+                self._journal("calibrate", f"room on {self.name(robot)}: per-second peaks p50 {pk['p50']} p90 {pk['p90']} "
+                                           f"p95 {pk['p95']} p99 {pk['p99']} max {pk['max']} ({c['result']['n']} s) — "
+                                           f"proposal loudness {pr['speech_threshold']}, cap {pr['speech_threshold_cap']} — accept or reject",
+                              who=c["who"])
+
+    @staticmethod
+    def _pct(sorted_vals, q):
+        if not sorted_vals:
+            return 0
+        k = min(len(sorted_vals) - 1, max(0, int(round(q / 100.0 * (len(sorted_vals) - 1)))))
+        return int(sorted_vals[k])
+
+    def _calib_result(self, c):
+        if not c["maxs"]:
+            return None
+        peaks, meds = sorted(c["maxs"]), sorted(c["p50s"])
+        pk = {q: self._pct(peaks, n) for q, n in (("p50", 50), ("p90", 90), ("p95", 95), ("p99", 99))}
+        pk["max"] = peaks[-1]
+        md = {q: self._pct(meds, n) for q, n in (("p50", 50), ("p90", 90), ("p95", 95), ("p99", 99))}
+        md["max"] = meds[-1]
+        eff = self.effective()["values"]
+        floor = int(-(-(pk["p95"] + CALIB_HEADROOM) // 10) * 10)           # round up to 10
+        cap = int(max(floor * 2, pk["max"] + CALIB_HEADROOM * 2, eff.get("speech_threshold_cap", 0)))
+        cap = int(-(-cap // 10) * 10)
+        return {"n": len(peaks), "peaks": pk, "medians": md,
+                "proposal": {"speech_threshold": floor, "speech_threshold_cap": cap},
+                "why": f"loudness = p95 of the per-second peaks ({pk['p95']}) + {CALIB_HEADROOM} headroom; "
+                       f"cap = at least twice that and above the loudest second ({pk['max']}) + {2 * CALIB_HEADROOM}",
+                "current": {"speech_threshold": eff.get("speech_threshold"),
+                            "speech_threshold_cap": eff.get("speech_threshold_cap")}}
+
+    def calib_view(self, now):
+        c = self.calib
+        if not c:
+            return None
+        v = {"robot": c["robot"], "label": self.name(c["robot"]), "status": c["status"],
+             "seconds": c["seconds"], "elapsed_s": round(now - c["started"], 1), "n": len(c["maxs"])}
+        if c["maxs"]:
+            v["live"] = {"peak_last": c["maxs"][-1], "p50_last": c["p50s"][-1], "peak_max": max(c["maxs"])}
+        if c["result"]:
+            v["result"] = c["result"]
+        return v
 
     def unlock_request(self, gate, reason, who="console"):
         if gate not in LOCKED_GATES:
@@ -772,6 +895,8 @@ class Console:
                         "turn_active": bool(o and o["turn_active"]) if fresh else None,
                         "speaking": bool(o and o["speaking"]) if fresh else None,
                         "speech_threshold": (o or {}).get("speech_threshold"),
+                        "threshold_binding": (o or {}).get("threshold_binding"),
+                        "rms_1s": (o or {}).get("rms_1s") if fresh else None,
                         "boot_id": (o or {}).get("boot_id"),
                         "has_floor": bool(o and o["has_floor"]) if fresh else None,
                         "diverges": False}
@@ -851,6 +976,7 @@ class Console:
                              "schema": {k: dict(s) for k, s in SETTINGS.items()}},
                 "locked": self.sources.locked_state(),
                 "hostIntroText": self.sources.host_intro_text(self.mode),
+                "calibration": self.calib_view(now),
                 "warnings": warnings,
                 "seq": {"interrupt": dict(self.interrupt_seq), "intro": self.intro_seq, "config": self.config_seq},
                 "consoleWall": self.wall(),
@@ -908,6 +1034,12 @@ def api(console: Console, method, path, params=None, body=None, authed=False, no
             return d
         ok, out, st = console.pending_action(body.get("action"), who=who, now=now)
         return st, {"ok": ok, "output": out}
+    if method == "POST" and path == "/api/calibrate":
+        d = need_auth()
+        if d:
+            return d
+        ok, out, st = console.calibrate(body.get("action"), body.get("robot"), body.get("seconds"), who=who, now=now)
+        return st, {"ok": ok, "output": out, "calibration": console.calib_view(console._now(now))}
     if method == "POST" and path == "/api/unlock-request":
         d = need_auth()
         if d:
@@ -918,7 +1050,8 @@ def api(console: Console, method, path, params=None, body=None, authed=False, no
 
 
 CONSOLE_PATHS_GET = ("/api/journal", "/api/lease")
-CONSOLE_PATHS_POST = ("/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending", "/api/unlock-request")
+CONSOLE_PATHS_POST = ("/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending",
+                      "/api/calibrate", "/api/unlock-request")
 
 
 def is_authority(sources: ConfigSources | None = None) -> bool:

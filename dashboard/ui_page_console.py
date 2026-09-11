@@ -153,6 +153,12 @@ button:focus-visible,input:focus-visible,[role=switch]:focus-visible,select:focu
  </div>
 
  <div class="card">
+  <h2>Calibrate the room</h2>
+  <p class="sub">Run this at the venue during setup with the crowd noise as it will be. It samples the room through the robot that has the floor and proposes a “loudness that counts as talking” with headroom. Nothing changes until you accept.</p>
+  <div id="calib"></div>
+ </div>
+
+ <div class="card">
   <h2>Locked — cannot be changed here</h2>
   <p class="sub">These keep him truthful. Their state is shown; a change can only be requested and the request is logged.</p>
   <div id="locked"></div>
@@ -251,6 +257,16 @@ function flip(k){const el=$('in-'+k);el.setAttribute('aria-checked',el.getAttrib
 function applySettings(){const out={};for(const k of Object.keys(EDITED)){const el=$('in-'+k),sc=SCHEMA[k]||{};out[k]=sc.type==='bool'?el.getAttribute('aria-checked')==='true':Number(el.value);}
   if(!Object.keys(out).length){toast('nothing changed');return;}EDITED={};post('/api/config',{settings:out});}
 function resetOverrides(){const out={};for(const k of Object.keys(SCHEMA||{}))if((SCHEMA[k]||{}).ui)out[k]=null;EDITED={};post('/api/config',{settings:out});}
+function calib(action,extra){post('/api/calibrate',Object.assign({action},extra||{}));}
+function renderCalib(s){
+  const c=s.calibration,box=$('calib');
+  if(!c){const opts=['alpha','beta'].map(r=>'<button onclick="calib(\'start\',{robot:\''+r+'\',seconds:Number($(\'calsecs\').value)||120})">'+esc(rname(s,r))+(s.floor===r?'':' (give it the floor first)')+'</button>').join('');
+    box.innerHTML='<div class="actions"><label>Seconds <input type="number" id="calsecs" value="120" min="10" max="600" style="width:90px;font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line);background:#0f141b;color:var(--text)"></label>'+opts+'</div>';return;}
+  if(c.status==='running'){const pct=Math.min(100,100*c.elapsed_s/c.seconds);const lv=c.live||{};
+    box.innerHTML='<div><b>Sampling '+esc(c.label)+'</b> — '+Math.round(c.elapsed_s)+' / '+c.seconds+' s, '+c.n+' samples</div><div class="meter"><i style="width:'+pct+'%"></i></div><div class="hint">last second: peak '+(lv.peak_last??'—')+', typical '+(lv.p50_last??'—')+' · loudest so far '+(lv.peak_max??'—')+'</div><div class="actions"><button onclick="calib(\'cancel\')">Cancel</button></div>';return;}
+  const r=c.result||{},pk=r.peaks||{},pr=r.proposal||{},cur=r.current||{};
+  box.innerHTML='<div><b>'+esc(c.label)+'</b>: '+r.n+' seconds sampled</div><table style="border-collapse:collapse;margin:8px 0;font-size:14px"><tr><td style="padding:2px 12px 2px 0;color:var(--dim)">per-second peaks</td><td>typical '+pk.p50+' · p90 '+pk.p90+' · p95 <b>'+pk.p95+'</b> · p99 '+pk.p99+' · loudest '+pk.max+'</td></tr><tr><td style="padding:2px 12px 2px 0;color:var(--dim)">now set</td><td>loudness '+cur.speech_threshold+', cap '+cur.speech_threshold_cap+'</td></tr><tr><td style="padding:2px 12px 2px 0;color:var(--dim)">proposal</td><td><b style="color:var(--amber)">loudness '+pr.speech_threshold+', cap '+pr.speech_threshold_cap+'</b></td></tr></table><div class="hint">'+esc(r.why||'')+'</div><div class="actions"><button class="primary" onclick="calib(\'accept\')">Accept</button><button onclick="calib(\'reject\')">Reject</button></div>';
+}
 let unlockGate=null;
 function renderLocked(s){const L=s.locked||{};$('locked').innerHTML=Object.keys(L).map(g=>{const x=L[g];return '<div class="lock"><span class="st '+(x.on?'on':'off')+'">'+(x.on?'ON':'OFF')+'</span><span>'+esc(x.label)+'<small>'+esc(x.how)+' · from '+esc(x.source)+'</small></span><button onclick="askUnlock(\''+g+'\',\''+esc(x.label).replace(/'/g,'')+'\')">Request unlock</button></div>';}).join('');}
 function askUnlock(g,label){unlockGate=g;$('unlockfor').textContent='Unlock “'+label+'”:';$('unlockbox').className='show';$('unlockreason').focus();}
@@ -261,14 +277,15 @@ function renderRobots(s){for(const r of['alpha','beta']){const o=s.observed[r]||
     ['role',(o.role==='cjap'?'Panganiban':'Host')+(o.reported_persona&&o.reported_persona!==o.role?' (robot still says '+(o.reported_persona==='cjap'?'Panganiban':'Host')+')':'')],
     ['should be',o.intended],['mic is',o.mic==null?'unknown':(o.mic?'open':'closed')],['holds lease',o.has_floor==null?'?':(o.has_floor?'yes':'no')],
     ['answering',o.turn_active==null?'?':(o.turn_active?'yes':'no')],['speaking',o.speaking==null?'?':(o.speaking?'yes':'no')],
-    ['room level',s.rms&&s.rms[r]!=null?Math.round(s.rms[r]):'—'],['boot',(o.boot_id||'').slice(-14)||'—']];
+    ['room level',s.rms&&s.rms[r]!=null?Math.round(s.rms[r])+(o.rms_1s?' · last second peak '+o.rms_1s.max:''):'—'],
+    ['talking counts from',o.speech_threshold!=null?o.speech_threshold+' ('+(o.threshold_binding||'?')+' binding)':'—'],['boot',(o.boot_id||'').slice(-14)||'—']];
   box.innerHTML='<b>'+esc(rname(s,r))+' <small style="color:var(--dim)">slot '+r+'</small></b><div class="kv">'+rows.map(([k,v])=>'<span>'+k+'</span><span>'+esc(v)+'</span>').join('')+'</div>';}}
-async function loadJournal(){try{const r=await fetch('/api/journal?n=40&key='+encodeURIComponent(KEY));const d=await r.json();const rows=(d.rows||[]).filter(x=>['floor','role','mode','profile','settings','unlock-request','queued','drain','interrupt','intro','restore','config-warning'].includes(x.kind));
+async function loadJournal(){try{const r=await fetch('/api/journal?n=40&key='+encodeURIComponent(KEY));const d=await r.json();const rows=(d.rows||[]).filter(x=>['floor','role','mode','profile','settings','unlock-request','queued','drain','interrupt','intro','restore','config-warning','turn','calibrate'].includes(x.kind));
   $('journal').innerHTML=rows.slice().reverse().map(x=>'<div class="'+x.kind+'"><span class="t">'+new Date(x.ts*1000).toLocaleTimeString()+'</span><span class="k">'+esc(x.kind)+'</span>'+esc(x.msg)+(x.who?' <span class="t">— '+esc(x.who)+'</span>':'')+'</div>').join('')||'<div class="t">nothing yet</div>';}catch(e){}}
 async function poll(){try{const r=await fetch('/api/state');const s=await r.json();failures=0;S=s;
   if(s.console_error){$('status').className='bad';$('status').textContent='console error: '+s.console_error;return;}
   $('status').className='';$('status').textContent='live · lease '+s.leaseTtl+' s · '+new Date().toLocaleTimeString();
-  renderRoles(s);renderFloor(s);renderMode(s);renderSettings(s);renderLocked(s);renderRobots(s);
+  renderRoles(s);renderFloor(s);renderMode(s);renderSettings(s);renderLocked(s);renderRobots(s);renderCalib(s);
   const n=((s.seq&&(s.seq.config+s.seq.intro+(s.seq.interrupt.alpha||0)+(s.seq.interrupt.beta||0)))||0)+(s.cjap_is==='beta'?1000:0)+(s.floor==='none'?0:s.floor==='alpha'?1:2);if(n!==lastJournalN){lastJournalN=n;loadJournal();}
  }catch(e){failures++;$('status').className='bad';$('status').textContent='NOT REACHABLE ('+failures+') — robots close their mics 3 s after they stop hearing this server';}}
 poll();setInterval(poll,1000);loadJournal();setInterval(loadJournal,5000);

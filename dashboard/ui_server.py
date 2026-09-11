@@ -1295,7 +1295,7 @@ class Handler(BaseHTTPRequestHandler):
                 "/api/ask", "/api/tuning", "/api/volume", "/api/mic",
                 # operator console (2026-09-10): floor lease + mode/profile
                 "/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending",
-                "/api/unlock-request"):
+                "/api/calibrate", "/api/unlock-request"):
             try:
                 n = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(n) or b"{}")

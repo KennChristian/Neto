@@ -643,3 +643,58 @@ def test_duet_never_grants_and_direct_event_env(tmp_path):
     cs.api(c, "POST", "/api/config", body={"profile": "kiosk"}, authed=True, now=clock())
     env = lease(c, c.cjap_is, clock())["env"]
     assert env["CJ_WAKE_LISTEN"] == "1" and float(env["CJ_LISTEN_IDLE_S"]) > 0
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# 6. room calibration + per-turn threshold journal
+# ────────────────────────────────────────────────────────────────────────────
+def test_room_calibration_proposes_and_applies_only_on_accept(tmp_path):
+    clock = Clock()
+    c = make_console(tmp_path, clock)
+    st, d = cs.api(c, "POST", "/api/calibrate", body={"action": "start", "robot": "alpha", "seconds": 20},
+                   authed=True, now=clock())
+    assert st == 409 and "floor" in d["output"]                    # mic must be open on that robot
+    cs.api(c, "POST", "/api/floor", body={"floor": "alpha"}, authed=True, now=clock())
+    clock.advance(4); c.tick()
+    st, d = cs.api(c, "POST", "/api/calibrate", body={"action": "start", "robot": "alpha", "seconds": 20},
+                   authed=True, now=clock())
+    assert st == 200 and d["calibration"]["status"] == "running"
+    rng = random.Random(7)
+    for i in range(21):                                            # 21 one-second reports
+        clock.advance(1.0)
+        peak = 900 + rng.randint(0, 300) + (2000 if i == 10 else 0)   # one loud second
+        lease(c, "alpha", clock(), mic_open=True, rms=850, rms_1s={"p50": 880, "max": peak, "min": 700})
+    view = c.state()["calibration"]
+    assert view["status"] == "done" and view["n"] >= 20
+    res = view["result"]
+    assert res["peaks"]["max"] >= 2900 and 900 <= res["peaks"]["p50"] <= 1200
+    prop = res["proposal"]
+    assert prop["speech_threshold"] == -(-(res["peaks"]["p95"] + cs.CALIB_HEADROOM) // 10) * 10
+    assert prop["speech_threshold_cap"] >= 2 * prop["speech_threshold"]
+    before = c.effective()["values"]["speech_threshold"]
+    st, d = cs.api(c, "POST", "/api/calibrate", body={"action": "reject"}, authed=True, now=clock())
+    assert st == 200 and c.effective()["values"]["speech_threshold"] == before and c.calib is None
+    # again, accept this time
+    cs.api(c, "POST", "/api/calibrate", body={"action": "start", "robot": "alpha", "seconds": 10}, authed=True, now=clock())
+    for _ in range(11):
+        clock.advance(1.0)
+        lease(c, "alpha", clock(), mic_open=True, rms=850, rms_1s={"p50": 880, "max": 1000, "min": 700})
+    st, d = cs.api(c, "POST", "/api/calibrate", body={"action": "accept"}, authed=True, now=clock())
+    assert st == 200
+    eff = c.effective()
+    assert eff["values"]["speech_threshold"] == 1400 and eff["sources"]["speech_threshold"] == "console override"
+    assert eff["values"]["speech_threshold_cap"] >= 2800
+    assert any(r["kind"] == "calibrate" and "ACCEPTED" in r["msg"] for r in c.journal(20))
+
+
+def test_turn_journals_resolved_threshold(tmp_path):
+    clock = Clock()
+    c = make_console(tmp_path, clock)
+    lease(c, "alpha", clock(), mic_open=True, turn_active=False)
+    lease(c, "alpha", clock(), mic_open=True, turn_active=True,
+          turn_threshold={"rms": 923, "threshold": 1500, "binding": "cap"})
+    rows = [r for r in c.journal(20) if r["kind"] == "turn"]
+    assert len(rows) == 1 and rows[0]["rms"] == 923 and rows[0]["threshold"] == 1500 and rows[0]["binding"] == "cap"
+    lease(c, "alpha", clock(), mic_open=True, turn_active=True,
+          turn_threshold={"rms": 923, "threshold": 1500, "binding": "cap"})
+    assert len([r for r in c.journal(20) if r["kind"] == "turn"]) == 1     # once per turn, not per poll
