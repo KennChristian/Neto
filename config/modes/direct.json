@@ -1,5 +1,5 @@
 {
-  "_readme": "Mode profile for DIRECT mode: a visitor talks to Panganiban (cj-alpha); the Host (cj-beta) says its intro line, then stays silent. Values here are the base of the resolution order: mode profile -> systemd drop-in -> app/.env -> console override. Keep secrets out of this file. Keys under `profiles` override `defaults` for the selected profile (kiosk | event). Setting -> robot env mapping lives in dashboard/console.py (SETTING_ENV).",
+  "_readme": "Mode profile for DIRECT mode: a visitor talks to Panganiban; the Host delivers one pre-rendered intro line, then stays silent with idle listening motion. Two variants, selected as the profile: `kiosk` (direct-kiosk: wake word ON, a question starts with 'Hi Cee-Jap', follow-up window open) and `event` (direct-event: wake word OFF — the open mic is the visitor's handheld transmitter, any sustained speech on it starts a question; louder room threshold; zero post-answer window). Values here are the base of the resolution order: mode profile -> systemd drop-in -> app/.env -> console override. Keep secrets out of this file. Keys under `profiles` override `defaults`. Setting -> robot env mapping lives in dashboard/console.py (SETTINGS).",
   "mode": "direct",
   "floor_policy": "selectable",
   "host_intro_text": "Good day. I am your host for today. Chief Justice Panganiban will take your questions — say 'Hi Cee-Jap' to begin.",
@@ -16,14 +16,18 @@
   },
   "profiles": {
     "kiosk": {
-      "_note": "Museum floor, self-service. Same values as the 2026-09-02 drop-in so behaviour is unchanged on first deploy."
+      "_note": "direct-kiosk: museum floor, self-service. Wake word on. Same values as the 2026-09-02 drop-in so behaviour is unchanged on first deploy."
     },
     "event": {
-      "_note": "Emcee-driven hall. No wake word (questions come from the /event buttons or the console), higher speech level so a crowd does not hold the mic open, and no post-answer window.",
+      "_note": "direct-event: emcee-driven hall. Wake word OFF => the open mic (the handheld transmitter) gates the question: sustained speech above the loudness setting starts a capture. Higher loudness so a crowd does not hold the mic open (today's journal: room 923-1087 RMS). Zero post-answer window: back to the armed state right after each answer.",
       "wake_word": false,
       "speech_threshold": 800,
       "speech_threshold_cap": 2500,
       "post_answer_window_s": 0
     }
+  },
+  "host_behaviour": {
+    "intro": "one pre-rendered intro line when direct mode starts (variants rotate; see data/prerendered/intro/)",
+    "then": "silent, idle listening motion, mic follows the floor lease"
   }
 }

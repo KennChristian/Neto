@@ -1,5 +1,5 @@
 {
-  "_readme": "Mode profile for DUET mode: a pre-rendered exchange between Host (cj-beta) and Panganiban (cj-alpha). No microphone is open anywhere: the console forces the floor to `none` and rejects any floor request while this mode is active. Values here are the base of the resolution order: mode profile -> systemd drop-in -> app/.env -> console override. Keep secrets out of this file.",
+  "_readme": "Mode profile for DUET mode: the two robots trade PRE-RENDERED lines (data/prerendered/duet/, rendered offline by scripts/render_duet.py from the two cards). No microphone is open anywhere — the console forces the floor to `none` and refuses any floor request; nothing is composed live on either robot (the voice app refuses turns in duet). Runs with zero network. Values here are the base of the resolution order: mode profile -> systemd drop-in -> app/.env -> console override.",
   "mode": "duet",
   "floor_policy": "none",
   "host_intro_text": "Good day. Please enjoy a short exchange between Chief Justice Panganiban and myself.",
@@ -23,5 +23,9 @@
       "speech_threshold": 800,
       "speech_threshold_cap": 2500
     }
+  },
+  "playback": {
+    "source": "data/prerendered/duet/",
+    "note": "exchanges alternate Host/Panganiban lines; the console cues them (step 5)"
   }
 }

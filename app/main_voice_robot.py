@@ -50,9 +50,18 @@ def _dry_run():
 
 
 def _wake_listen():
-    """Console "Answer to 'Hi Cee-Jap'": off = the wake phrase is scored (meter
-    keeps moving) but never fires; the console/event buttons still work."""
+    """Console "Answer to 'Hi Cee-Jap'": ON = the wake phrase starts a question
+    (direct-kiosk). OFF = direct-event: the open mic is the visitor's handheld
+    transmitter, so ANY sustained speech on it starts the question — no wake
+    phrase, no post-answer window (see _wake_stream's speech trigger)."""
     return os.environ.get("CJ_WAKE_LISTEN", "1").strip().lower() not in {"0", "false", "no", "off"}
+
+
+def _mode():
+    """duet | direct, as last told by the lease authority (None before the
+    first reply). duet = nothing composed live on either robot."""
+    c = _FLOOR["client"]
+    return getattr(c, "mode", None) if c is not None else None
 
 
 def _post_window_open():
@@ -1257,6 +1266,15 @@ class _MicTap:
 
     def note_rms(self, frame):
         self.rms_hist.append(float(np.sqrt(np.mean(frame.astype(np.float64) ** 2)) or 0.0))
+
+    def unread(self, frames):
+        """Hand frames back so the next read() returns them first — the
+        speech-onset trigger (direct-event) gives the recorder the syllables
+        it used to decide there was speech (2026-09-11)."""
+        if not frames:
+            return
+        buf = np.concatenate([f.reshape(-1) for f in frames])
+        self._rem = buf if self._rem is None or not len(self._rem) else np.concatenate([buf, self._rem])
 
     def noise_rms(self):
         return int(np.percentile(self.rms_hist, 30)) if len(self.rms_hist) >= 12 else None
@@ -2881,6 +2899,9 @@ def _safe_turn(*args, **kwargs):
     if not personas.is_cjap():
         print("[persona] host role — no STT, router or composer; turn refused", flush=True)
         return False
+    if _mode() == "duet":
+        print("[mode] duet — nothing is composed live; turn refused", flush=True)
+        return False
     _TURN["active"] = True          # console drains floor/mode/role changes until this clears
     try:
         return handle_turn(*args, **kwargs)
@@ -3150,6 +3171,8 @@ def _wake_stream(det):
     muted_logged = False
     tap = _mic_tap()
     tap.flush()   # audio that piled up while the robot was busy is not a wake
+    onset, onset_frames = [], deque(maxlen=8)   # speech-onset trigger state (direct-event)
+    speech_mode_logged = None
     with contextlib.nullcontext(tap) as stream:
         muted_seen, nframe = None, 0
         while True:
@@ -3205,9 +3228,9 @@ def _wake_stream(det):
                             _publish_wake(1.0, fired=True)
                         model.reset()
                         return ret
-            if not personas.is_cjap():
+            if not personas.is_cjap() or _mode() == "duet":
                 model.reset()
-                return ROLE_SWITCH   # role swapped to Host while idle — leave the wake loop body
+                return ROLE_SWITCH   # role swapped to Host / duet mode — leave the wake loop body
             if not _floor_ok() or tap.stream is None:
                 # No floor (console says none / other robot / lease expired):
                 # the tap is closed by the lease thread; keep serving the
@@ -3219,11 +3242,30 @@ def _wake_stream(det):
             except sd.PortAudioError:
                 continue          # closed under us — loop back to the floor check
             tap.note_rms(frame[:, 0])
-            score = float(max(model.predict(frame[:, 0]).values()))
-            if score >= det.threshold and not _wake_listen():
-                _publish_wake(score)      # meter moves; console has the wake word off
-                model.reset()
+            if not _wake_listen():
+                # direct-event: the open mic IS the visitor's handheld transmitter.
+                # Sustained speech above the room's speech threshold starts the
+                # question; the onset frames are handed back as pre-roll.
+                if speech_mode_logged is not True:
+                    speech_mode_logged = True
+                    print("[listen] wake word OFF — any speech on the open mic starts a question "
+                          "(handheld transmitter)", flush=True)
+                rms = int(np.sqrt(np.mean(frame[:, 0].astype(np.float64) ** 2)) or 0)
+                noise = tap.noise_rms()
+                thr = _speech_threshold(noise if noise is not None else rms)
+                onset_frames.append(frame[:, 0].copy())
+                need = max(1, int(_env_num("CJ_MIC_MIN_SPEECH_MS", 240) // 80))
+                onset = (onset + [rms]) if rms > thr else []
+                _publish_wake(min(1.0, rms / float(thr or 1)) * 0.5)   # meter: 0.5 = at threshold
+                if len(onset) >= need and not _muted():
+                    print(f"[listen] speech on the open mic (rms {rms} > {thr}) — capturing", flush=True)
+                    tap.unread(list(onset_frames))
+                    _publish_wake(1.0, fired=True)
+                    model.reset()
+                    return 1.0
                 continue
+            speech_mode_logged = False
+            score = float(max(model.predict(frame[:, 0]).values()))
             if score >= det.threshold and _muted():
                 if not muted_logged:
                     print(f"[mute] wake phrase ignored (score {score:.3f}) — "
@@ -3355,12 +3397,23 @@ def wake_loop(client, artifacts, gestures):
             if announced != personas.active():
                 announced = personas.active()
                 print(f"[persona] idle as {announced or 'no persona yet'} — wake word off, composer off", flush=True)
+                _HOST_MOTION["cur"] = None
+            _host_step(gestures)
+            continue
+        if _mode() == "duet":
+            # Panganiban in duet: nothing composed live, no mic — the
+            # pre-rendered exchange is driven by the lease (step 5).
+            if announced != "duet":
+                announced = "duet"
+                print("[mode] duet — Panganiban idle: no wake word, no composer; pre-rendered lines only", flush=True)
                 gestures.start("sleep")
             _host_step(gestures)
             continue
         if announced != "cjap":
             announced = "cjap"
-            print(f"[wake] armed as Panganiban — say \"{phrase}\"", flush=True)
+            _HOST_MOTION["cur"] = None
+            print(f"[wake] armed as Panganiban — " + (f"say \"{phrase}\"" if _wake_listen()
+                  else "speak into the handheld mic (wake word off)"), flush=True)
         gestures.start("sleep")
         score = _wake_stream(detector)
         if score == ROLE_SWITCH:
@@ -3563,6 +3616,12 @@ def _host_step(gestures):
             os.unlink(ASK_TRIGGER)
         print("[ask] question button ignored — this robot is the Host, not Panganiban")
     tap = _mic_tap()
+    # idle motion follows the mode: direct = the Host visibly "listens" beside
+    # the conversation; duet = resting sway between its lines
+    want = "listen" if _mode() == "direct" else "sleep"
+    if _HOST_MOTION.get("cur") != want:
+        _HOST_MOTION["cur"] = want
+        gestures.start(want)
     if _floor_ok() and tap.is_open():
         try:
             frame, _ = tap.read(1280)
@@ -3571,6 +3630,9 @@ def _host_step(gestures):
             time.sleep(0.1)
     else:
         time.sleep(0.1)
+
+
+_HOST_MOTION = {"cur": None}
 
 
 def _floor_persona(persona, cjap_is):

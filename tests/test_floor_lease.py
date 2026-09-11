@@ -606,3 +606,40 @@ def test_restart_retakes_floor_through_transition(tmp_path):
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# 5. modes and the shipped profiles (step 2)
+# ────────────────────────────────────────────────────────────────────────────
+def test_shipped_profiles_direct_kiosk_vs_event(tmp_path):
+    src = cs.ConfigSources(modes_dir=str(ROOT / "config" / "modes"),
+                           dropin_path=str(tmp_path / "absent.conf"), dotenv_path=str(tmp_path / "absent.env"),
+                           robots_path=str(ROOT / "config" / "robots.json"))
+    kiosk, _, e1 = src.resolve("direct", "kiosk", {})
+    event, _, e2 = src.resolve("direct", "event", {})
+    assert e1 == [] and e2 == []
+    assert kiosk["wake_word"] is True and kiosk["post_answer_window_s"] > 0
+    assert event["wake_word"] is False                      # mic gated by the handheld transmitter
+    assert event["post_answer_window_s"] == 0               # zero post-answer window
+    assert event["speech_threshold"] > kiosk["speech_threshold"]
+    duet, _, e3 = src.resolve("duet", "kiosk", {})
+    assert e3 == [] and duet["wake_word"] is False
+
+
+def test_duet_never_grants_and_direct_event_env(tmp_path):
+    clock = Clock()
+    c = make_console(tmp_path, clock)
+    cs.api(c, "POST", "/api/config", body={"mode": "duet", "profile": "event"}, authed=True, now=clock())
+    for _ in range(20):
+        clock.advance(1.0)
+        for r in ROBOTS:
+            reply = lease(c, r, clock(), mic_open=False, turn_active=False)
+            assert reply["granted"] is False and reply["mode"] == "duet"
+        assert c.floor == "none"
+    cs.api(c, "POST", "/api/config", body={"mode": "direct", "settings": {"host_intro": False}}, authed=True, now=clock())
+    clock.advance(4)
+    env = lease(c, c.cjap_is, clock())["env"]
+    assert env["CJ_WAKE_LISTEN"] == "0" and env["CJ_LISTEN_IDLE_S"] == "0" and env["CJ_ALWAYS_LISTEN"] == "0"
+    cs.api(c, "POST", "/api/config", body={"profile": "kiosk"}, authed=True, now=clock())
+    env = lease(c, c.cjap_is, clock())["env"]
+    assert env["CJ_WAKE_LISTEN"] == "1" and float(env["CJ_LISTEN_IDLE_S"]) > 0

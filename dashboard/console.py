@@ -78,7 +78,7 @@ JOURNAL_PATH = os.path.join(HOME, ".cj_console_journal.jsonl")
 SETTINGS = {
     "wake_word":            {"type": "bool",  "env": "CJ_WAKE_LISTEN", "ui": True,
                              "label": "Answer to “Hi Cee-Jap”",
-                             "help": "Off: the robot only answers the console or the event buttons."},
+                             "help": "On: a question starts with the wake phrase (kiosk). Off: any speech on the open mic starts a question — the visitor's handheld transmitter (event)."},
     "wake_threshold":       {"type": "float", "env": "CJ_WAKE_OWW_THRESHOLD", "ui": True,
                              "min": 0.0005, "max": 0.9, "step": 0.001,
                              "label": "How sure before it wakes",
