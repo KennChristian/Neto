@@ -76,22 +76,42 @@ else
 fi
 [ "$MODE" = check ] && exit 0
 
-say "copying the repo (no venv, no git, no media)"
+# The second robot is NOT a blank machine: as of 2026-09-12 it runs a
+# 2026-09-01 build of this same project — dashboard, supervaise, watchdogs, its
+# own Bluetooth speaker, its own tuning. That build predates the operator
+# console, so it has no floor lease and believes it is its own authority.
+# This is therefore an UPDATE, and the rules follow from that:
+#   * no --delete: it may hold files this tree does not
+#   * its app/.env is left alone — it has working keys already
+#   * its supervaise drop-in is left alone — that file carries per-MACHINE
+#     tuning (its speaker's AEC delay, its mic thresholds) which is not ours
+#     to overwrite; the diff is printed instead so a human can reconcile
+#   * everything replaced is backed up first, next to the original
+say "backing up what this will replace"
+STAMP=$(date +%Y%m%d-%H%M%S)
+run_remote "mkdir -p \$HOME/deploy-backups/$STAMP && \
+  [ -d $REMOTE ] && tar czf \$HOME/deploy-backups/$STAMP/repo-config.tgz \
+    -C \$HOME $NAME/config $NAME/app/.env 2>/dev/null; \
+  sudo -n cp -r /etc/systemd/system/supervaise.service.d \$HOME/deploy-backups/$STAMP/ 2>/dev/null; \
+  ls \$HOME/deploy-backups/$STAMP"
+
+say "copying the repo (no venv, no git, no media, NO --delete)"
 if [ "$MODE" = dry ]; then
-  echo "  rsync -> $TARGET:$REMOTE  (excluding .venv .git data/prerendered/*.wav)"
+  echo "  rsync -> $TARGET:$REMOTE  (excluding .venv .git data/prerendered/*.wav app/.env)"
 else
-  rsync -a --delete --info=stats1 \
+  rsync -a --info=stats1 \
     --exclude '.venv' --exclude '.git' --exclude '__pycache__' \
     --exclude 'dashboard/assets' --exclude 'dashboard/certs' \
     --exclude 'data/prerendered/duet/*.wav' --exclude 'app/wake/data' \
+    --exclude 'app/.env' \
     -e "ssh -o BatchMode=yes" "$HERE/" "$TARGET:$NAME/"
-  # app/.env carries the API keys. The Host plays pre-rendered audio and needs
-  # none of them — but a role swap makes this machine Panganiban, and then it
-  # needs all of them. Copied deliberately, not by accident.
-  scp -q -o BatchMode=yes "$HERE/app/.env" "$TARGET:$NAME/app/.env"
+  # app/.env is NOT copied: that machine already has working keys, and its own
+  # may differ. If it is ever made Panganiban and something is missing, the
+  # persona loader says so at boot.
+  echo "  app/.env left as it was on that machine"
 fi
 
-say "python environment"
+say "python environment (existing venv is reused, only new requirements install)"
 run_remote "cd $REMOTE && [ -d app/.venv ] || python3 -m venv app/.venv"
 run_remote "cd $REMOTE && app/.venv/bin/pip -q install --upgrade pip && app/.venv/bin/pip -q install -r app/requirements.txt"
 
@@ -102,17 +122,29 @@ for unit in pi-dashboard wifi-fallback; do
     "${SSH[@]}" "$TARGET" "sudo -n install -m 644 $REMOTE/dashboard/$unit.service /etc/systemd/system/$unit.service"
   fi
 done
-# supervaise.service and its drop-in are root-owned on THIS machine and not in
-# the repo, so they are shipped explicitly. The drop-in carries the tuning:
-# wake thresholds, the name pin, the voice lock.
+# The drop-in is NOT overwritten: it holds per-machine tuning (that robot's
+# speaker AEC delay, its mic thresholds) and it already exists there. What it
+# is missing are the settings added since its build — the name pin especially,
+# without which "Panganiban" would be said differently on the two robots. Those
+# are appended as a separate drop-in file, which systemd merges, so the
+# machine's own file is untouched and the change is one file to delete.
+say "settings added since that machine's build"
 if [ "$MODE" = dry ]; then
-  echo "  remote: install supervaise.service + wakeword.conf drop-in"
+  echo "  remote: append zz-from-alpha.conf (name pin, voice lock)"
 else
-  "${SSH[@]}" "$TARGET" "sudo -n mkdir -p /etc/systemd/system/supervaise.service.d"
-  sudo -n cat /etc/systemd/system/supervaise.service |
-    "${SSH[@]}" "$TARGET" "cat | sudo -n tee /etc/systemd/system/supervaise.service >/dev/null"
-  sudo -n cat /etc/systemd/system/supervaise.service.d/wakeword.conf |
-    "${SSH[@]}" "$TARGET" "cat | sudo -n tee /etc/systemd/system/supervaise.service.d/wakeword.conf >/dev/null"
+  PIN_SPEED=$(systemctl show supervaise.service -p Environment | tr ' ' '\n' | grep '^CJ_NAME_PIN_SPEED=' || true)
+  PIN_SYL=$(systemctl show supervaise.service -p Environment | tr ' ' '\n' | grep '^CJ_NAME_PIN_SYLLABLE=' || true)
+  LOCK=$(systemctl show supervaise.service -p Environment | tr ' ' '\n' | grep '^CJ_VOICE_LOCK_THRESHOLD=' || true)
+  "${SSH[@]}" "$TARGET" "sudo -n mkdir -p /etc/systemd/system/supervaise.service.d && \
+    printf '[Service]\n# Added by scripts/deploy_second_robot.sh from the authority machine.\n# Only settings this machine cannot have had at its build date. Its OWN\n# wakeword.conf is untouched: that file holds tuning specific to this\n# robot, its speaker and its room. Delete this file to undo.\n%s\n%s\n%s\n' \
+      '${PIN_SPEED}' '${PIN_SYL}' '${LOCK}' \
+      | sudo -n tee /etc/systemd/system/supervaise.service.d/zz-from-alpha.conf >/dev/null"
+  echo "  wrote zz-from-alpha.conf; its own wakeword.conf left alone"
+  echo "  differences between the two drop-ins (for a human to reconcile):"
+  sudo -n cat /etc/systemd/system/supervaise.service.d/wakeword.conf | grep '^Environment=' | sort > /tmp/alpha.env.$$
+  "${SSH[@]}" "$TARGET" "sudo -n cat /etc/systemd/system/supervaise.service.d/wakeword.conf 2>/dev/null | grep '^Environment=' | sort" > /tmp/beta.env.$$ || true
+  diff /tmp/alpha.env.$$ /tmp/beta.env.$$ | sed 's/^/    /' | head -30 || true
+  rm -f /tmp/alpha.env.$$ /tmp/beta.env.$$
 fi
 # Its own setup hotspot, named after the machine (2026-09-12, user: "change the
 # wifi to reachy2, password reachy2, in case it is not connected to any wifi
