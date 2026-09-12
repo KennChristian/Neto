@@ -285,6 +285,10 @@ details.help[open] summary{margin-bottom:4px}
         <button id="role-alpha" onclick="setRole('alpha')">reachy &hellip;</button>
         <button id="role-beta" onclick="setRole('beta')">reachy &hellip;</button></div>
       <span class="dim" id="role-hint">loading&hellip;</span>
+      <div class="btns" style="margin-top:12px"><span class="lbl">Duet</span>
+        <button id="duet-on" class="primary" onclick="setDuet(true)" title="The two robots introduce themselves and trade their scripted lines, looping — the attract loop. No microphone opens.">&#127917; Start intro &amp; interaction</button>
+        <button id="duet-off" onclick="setDuet(false)" title="Back to direct: a visitor talks to Panganiban">&#9632; Stop</button></div>
+      <span class="dim" id="duet-hint"></span>
     </div>
     <div class="kv">
       <b>mode</b><span id="g-mode">&hellip;</span>
@@ -704,6 +708,11 @@ setInterval(()=>{if(!document.hidden&&vis('mic-l-wave'))micTick()},250);
 // Who is Panganiban (2026-09-12): the same role swap the /console page
 // offers, from here. The lease authority (config/robots.json) decides; on
 // the other machine the buttons are disabled and link to the authority.
+async function setDuet(on){note(on?'starting the duet\u2026':'stopping the duet\u2026');
+  try{const r=await(await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({key:KEY,mode:on?'duet':'direct',who:'maintain'})})).json();
+    note(r.output||(r.ok?'done':'failed'));poll();}
+  catch(e){note('duet: '+e);}}
 async function setRole(slot){note('Panganiban \u2192 '+slot+'\u2026');
   try{const r=await(await fetch('/api/role',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({key:KEY,cjap_is:slot,who:'maintain'})})).json();
@@ -711,6 +720,13 @@ async function setRole(slot){note('Panganiban \u2192 '+slot+'\u2026');
   catch(e){note('role swap failed: '+e);}}
 function renderRoles(s){const rs=s.roles;
   try{const txt=(id,v)=>{const el=$(id);if(el)el.innerText=v;};
+    const duetOn=s.mode==='duet';
+    const db=$('duet-on'),dbo=$('duet-off');
+    if(db){db.style.borderColor=duetOn?'var(--gold)':'';db.disabled=duetOn;}
+    if(dbo){dbo.disabled=!duetOn;}
+    const du=s.duet||{};
+    $('duet-hint').innerHTML=duetOn?('playing line <b>'+esc(du.line||'?')+'</b> \u2014 '+esc(du.who==='cjap'?'Panganiban':'Host')+' speaking; loops until you stop')
+      :'the two robots introduce themselves and talk to each other; no visitor, no mic';
     txt('g-mode',s.mode?s.mode+(s.profile?' \u00b7 '+s.profile+' profile':''):'\u2014');
     txt('g-floor',s.floor?(s.floor==='none'?'no one (both mics closed)':s.floor+(s.floorRole?' \u00b7 '+(s.floorRole==='cjap'?'CJAP':'GUEST'):'')+(s.transition?' \u2014 moving to '+s.transition.target:'')):'\u2014');
     txt('g-intro',s.hostIntroText?'\u201c'+s.hostIntroText+'\u201d':'none in this mode profile');
