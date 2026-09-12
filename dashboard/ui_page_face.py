@@ -61,7 +61,8 @@ FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
 const KEY = new URLSearchParams(location.search).get("key") || localStorage.getItem("cjkey") || "";
 if (KEY) try { localStorage.setItem("cjkey", KEY); } catch (e) {}
 let room = null, ws = null, ready = false, sessTok = null, startP = null;
-let avatarMuted = true, lastStart = 0, keepTimer = null;
+let avatarMuted = true, lastStart = 0, keepTimer = null, lastMsgTs = 0;
+const DEAD_MS = 40000;   // no ws traffic for this long (keep_alive is 25 s) = dead
 let pendingLagT0 = null, lagEma = null, skew = 0;
 $("aud").muted = true;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -128,6 +129,7 @@ async function _start(){
     setTimeout(() => res(false), 15000);
   });
   sock.onmessage = ev => {
+    lastMsgTs = Date.now();          // any traffic proves the socket is alive
     let m = {};
     try{ m = JSON.parse(ev.data); }catch(e){ return; }
     if (m.type === "session.state_updated"){
@@ -157,17 +159,24 @@ async function _start(){
     if (ws !== sock) return;
     ready = false; listenPose = false; stopKeep(); sentOrder.length = 0;   // nothing queued survives the session
     if (parking){ parking = false; st("parked — portrait held, no credits while idle"); return; }
-    const busy = speakingNow || turnActive();
+    const wantLive = speakingNow || turnActive() || (wantIdleLoop && !idleUrl);
     st("session ended (sandbox caps at ~1 min)" +
-       (busy ? " — reconnecting…" : " — portrait held, restarts on next question"));
-    if (busy) setTimeout(start, 300);   // pick the answer back up
+       (wantLive ? " — reconnecting…" : " — portrait held, restarts on next question"));
+    if (wantLive) setTimeout(start, 300);   // pick the answer / live-idle back up
   };
   sock.onerror = () => { ready = false; };
+  lastMsgTs = Date.now();
   keepTimer = setInterval(() => {
     if (ws && ws.readyState === 1)
       ws.send(JSON.stringify({type:"session.keep_alive",
                               event_id:String(Date.now())}));
-  }, 25000);
+    // half-dead socket: open, keep_alive still sending, but nothing coming
+    // back for > DEAD_MS. Close it; onclose reconnects if we want to be live.
+    if (ready && Date.now() - lastMsgTs > DEAD_MS){
+      st("control socket silent " + Math.round((Date.now()-lastMsgTs)/1000) + "s — reconnecting");
+      try{ if (ws) ws.close(); }catch(e){}
+    }
+  }, 8000);
   await connected;
   if (stopped){ await park(); await post("/api/ctl", {action: "avatar-voice-off"}); }
 }
