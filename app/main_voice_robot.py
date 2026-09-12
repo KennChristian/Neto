@@ -840,6 +840,12 @@ _speaker_doa = _SpeakerDoA()
 
 
 
+try:   # set_target sustained 38 Hz on this robot; _env_num is defined further down
+    BREATH_HZ = max(5.0, min(60.0, float(os.environ.get("CJ_BREATH_HZ", "30"))))
+except ValueError:
+    BREATH_HZ = 30.0
+
+
 class Gestures:
     """Background head/antenna motion. Safe no-op if the SDK/daemon is absent."""
 
@@ -866,6 +872,19 @@ class Gestures:
         self.talk_style = "neutral"
         global _gestures_inst
         _gestures_inst = self
+        # Continuous motion (2026-09-12). Every gesture until now was a
+        # goto_target: a blocking, interpolated move with dead air after it, so
+        # between gestures the head was perfectly still — the thing that reads
+        # as "switched off" rather than "listening". set_target is the SDK's
+        # non-blocking path (measured on this robot: 38 Hz sustained), so a
+        # breath layer can ride UNDER the existing choreography: gestures still
+        # set where the head is going, this keeps it alive while it is there.
+        self._cmd_lock = threading.Lock()        # goto and set_target must not interleave
+        self._base = (0.0, 0.0, 0.0)             # where the last gesture left the head
+        self._breath_t0 = time.monotonic()
+        self._breath_stop = threading.Event()
+        self._breath_thread = None
+        self.breath_scale = 1.0                  # per-mode amplitude, 0 = hold still
         try:
             from reachy_mini import ReachyMini
             from reachy_mini.utils import create_head_pose
@@ -876,6 +895,11 @@ class Gestures:
             print(f"[gestures] disabled ({e})")
         if self.mini:
             _speaker_doa.start()
+            if _env_flag("CJ_BREATH", True):
+                self._breath_thread = threading.Thread(target=self._breath_run, daemon=True,
+                                                       name="breath")
+                self._breath_thread.start()
+                print(f"[gestures] breathing at {BREATH_HZ:.0f} Hz — the head is never fully still")
 
     def face_speaker(self, max_age=1.5, min_change=8.0):
         """Point gaze_yaw at the latest speech direction; True if it moved."""
@@ -883,6 +907,7 @@ class Gestures:
         if y is None or abs(y - self.gaze_yaw) < min_change:
             return False
         self.gaze_yaw = y
+        self._body_follow(y)
         return True
 
     @property
@@ -893,6 +918,62 @@ class Gestures:
     def talk_style(self, value):
         self._talk_style = value
         self._style_new.set()   # new sentence style → one accent gesture allowed
+
+    def breath_offset(self, t):
+        """Head offset in degrees at time `t`, as (yaw, pitch, roll).
+
+        Three slow sines per axis at incommensurable periods, so the pattern
+        never visibly repeats, plus a faster low-amplitude term that reads as
+        breathing. Amplitudes are deliberately below what a viewer can name:
+        the effect should be that the robot is alive, not that it is moving.
+        """
+        k = self.breath_scale
+        if k <= 0:
+            return (0.0, 0.0, 0.0)
+        s = math.sin
+        yaw = 1.9 * s(0.21 * t) + 0.8 * s(0.53 * t + 1.3) + 0.35 * s(1.27 * t + 0.4)
+        pitch = 1.5 * s(0.17 * t + 0.9) + 0.9 * s(0.61 * t + 2.1) + 0.55 * s(0.97 * t)
+        roll = 1.1 * s(0.13 * t + 2.7) + 0.5 * s(0.47 * t + 0.8)
+        return (k * yaw, k * pitch, k * roll)
+
+    def _breath_run(self):
+        """Hold the head alive around whatever pose the last gesture chose.
+
+        Skipped while a goto is in flight (they would fight for the same
+        joints) and while the idle-motion flag is off or the motors are down.
+        """
+        period = 1.0 / BREATH_HZ
+        while not self._breath_stop.is_set():
+            try:
+                if (self.mini and self.breath_scale > 0
+                        and time.monotonic() >= self._busy_until
+                        and not os.path.exists(GESTURES_OFF_FLAG)):
+                    dy, dp, dr = self.breath_offset(time.monotonic() - self._breath_t0)
+                    by, bp, br = self._base
+                    with self._cmd_lock:
+                        self.mini.set_target(head=self._pose(yaw=by + dy, pitch=bp + dp,
+                                                             roll=br + dr))
+            except Exception:
+                pass          # a dropped frame is invisible; never take the thread down
+            self._breath_stop.wait(period)
+
+    def _body_follow(self, yaw_deg):
+        """Turn the BODY toward a large gaze change so the robot turns to face
+        someone instead of cranking its head over (2026-09-12; the body motor
+        has always been there and was never driven). Off by default until it
+        has been watched in the room."""
+        if not (self.mini and _env_flag("CJ_BODY_YAW", False)):
+            return
+        limit = _env_num("CJ_BODY_YAW_MAX_DEG", 14.0)
+        if abs(yaw_deg) < _env_num("CJ_BODY_YAW_MIN_DEG", 18.0):
+            target = 0.0
+        else:
+            target = math.radians(max(-limit, min(limit, yaw_deg)))
+        try:
+            with self._cmd_lock:
+                self.mini.set_target_body_yaw(target)
+        except Exception as e:
+            print(f"[gestures] body yaw unavailable ({type(e).__name__}) — head only")
 
     def _move(self, yaw=0.0, pitch=0.0, roll=0.0, duration=0.6, antennas=None,
               wait=True, defer=False):
@@ -914,14 +995,16 @@ class Gestures:
             threading.Thread(target=_go, daemon=True).start()
             return
         self._busy_until = time.monotonic() + duration
+        self._base = (yaw, pitch, roll)   # the breath rides around here afterwards
         try:
             kw = {"head": self._pose(yaw=yaw, pitch=pitch, roll=roll)}
             if antennas is not None:
                 kw["antennas"] = antennas
-            try:
-                self.mini.goto_target(duration=duration, **kw)
-            except TypeError:
-                self.mini.goto_target(**kw)
+            with self._cmd_lock:
+                try:
+                    self.mini.goto_target(duration=duration, **kw)
+                except TypeError:
+                    self.mini.goto_target(**kw)
         except Exception:
             pass
 
@@ -1039,8 +1122,13 @@ class Gestures:
                                               random.uniform(-0.2, 0.2)])
                     self._stop.wait(random.uniform(0.35, 0.8))
 
+    #: breath amplitude per mode — speaking already moves plenty, sleeping
+    #: should be the calmest thing in the room, listening sits between.
+    BREATH_SCALE = {"listen": 1.0, "think": 0.85, "sleep": 0.7, "talk": 0.45}
+
     def start(self, mode):
         self.stop()
+        self.breath_scale = self.BREATH_SCALE.get(mode, 0.8)
         if mode == "talk":
             self.talk_style = "neutral"   # style is per-sentence; reset per answer
         elif mode == "sleep":
@@ -1051,7 +1139,9 @@ class Gestures:
             return
         if mode == "sleep" and _muted():
             # Mic muted (2026-08-29): the robot has no LEDs, so the body shows
-            # it — antennas drooped, head slightly bowed, no idle sway.
+            # it — antennas drooped, head slightly bowed, no idle sway. The
+            # breath stops too: "muted" has to read as switched off.
+            self.breath_scale = 0.0
             self._move(0, 8, 0, 0.9, antennas=[-0.6, 0.6], wait=False)
             return
         self._stop.clear()
@@ -1068,6 +1158,8 @@ class Gestures:
     def neutral(self):
         self.stop()
         self.gaze_yaw = 0.0
+        self.breath_scale = self.BREATH_SCALE["sleep"]
+        self._body_follow(0.0)
         self._move(0, 0, 0, 1.0, antennas=[0.15, -0.15])
 
     def perk(self):
@@ -1309,6 +1401,13 @@ def _mic_tap():
         tap = _MicTap()
         _mic_tap_box["tap"] = tap
     return tap
+
+
+def _env_flag(name, default=False):
+    v = os.environ.get(name)
+    if v is None or not v.strip():
+        return bool(default)
+    return v.strip().lower() not in {"0", "false", "no", "off"}
 
 
 def _env_num(name, default):
