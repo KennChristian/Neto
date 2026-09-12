@@ -470,6 +470,7 @@ details.help[open] summary{margin-bottom:4px}
 <div class="card" data-tab="conv"><h2>Current turn</h2><div id="turn" class="dim">no turn yet</div>
   <h2 style="margin-top:12px">Stage latency</h2><div id="lat" class="dim">&mdash;</div></div>
 <div class="card c8" data-tab="conv"><h2>Grounding documents <span class="dim">(composer context, last turn)</span></h2>
+  <p class="hint">What Sonnet actually had in front of it. <b>full text</b> = the published column or speech; <b>summary only</b> = its sidecar, so nothing of his own wording reached the composer.</p>
   <div id="docs" class="dim" style="max-height:280px;overflow:auto">no turn yet</div></div>
 <div class="card c8" data-tab="conv"><h2>Conversation <span class="dim">(raw vs corrected)</span></h2>
   <table id="conv"><tr><th>who</th><th>text</th></tr></table></div>
@@ -1000,7 +1001,9 @@ function render(s){try{LAST_S=s;LAST_AT=Date.now();
     $('docs').innerHTML=(m.docs&&m.docs.length)?m.docs.map(d=>
       '<div style="margin-bottom:8px'+(d.dropped_for_budget?';opacity:.45':'')+'">'+
       '<b>'+esc(d.title||d.doc_id)+'</b>'+
-      (d.dropped_for_budget?' <span class="raw">dropped (token budget)</span>':'')+
+      (d.dropped_for_budget?' <span class="raw">dropped (token budget)</span>'
+        :d.body?' <span class="chip ok">full text</span>'
+        :' <span class="chip" style="color:var(--warn)">summary only</span>')+
       '<br><span class="mono dim">'+esc(d.doc_id)+(d.date?' &middot; '+esc(d.date):'')+
       (d.theme_label?' &middot; '+esc(d.theme_label):'')+'</span>'+
       (d.summary?'<br><span class="dim">'+esc(d.summary)+'</span>':'')+'</div>').join('')

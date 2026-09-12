@@ -867,21 +867,82 @@ def _select_source_doc_ids(
     return [did for did, _ in ranked[:max_docs]]
 
 
-def _trim_doc(raw: dict) -> dict:
-    """Reduce a doc record to the fields the composer actually uses."""
+# How many of the selected source documents carry their actual TEXT (the .md
+# body) rather than the sidecar's description of it. 0 restores the pre-
+# 2026-09-12 behaviour: metadata only.
+#
+# Why this exists: the voice card has always said the caller "loaded the whole
+# .md + .json for 1-3 source documents", and the composer is told to quote him
+# verbatim — but build_context only ever loaded the .json, so 80k words of
+# columns and speeches never reached Sonnet. Every answer was improvised from
+# stances and summaries plus the model's own knowledge of a real person, and
+# the fact gate graded it against those same summaries, so it could not catch
+# an invented quote.
+#
+# It is also cheaper. Measured over three rule-of-law columns (2026-09-12):
+#
+#     stances               539 tok      the column itself   1,286 tok
+#     one_paragraph_summary 495 tok
+#     signature_phrases     371 tok
+#     notable_anecdotes     320 tok
+#     primary_topics        228 tok
+#     ------------------------------
+#     paraphrase total    1,953 tok
+#
+# The sidecar was LARGER than the source it described. So a document that
+# carries its text drops those five fields: they are extracted FROM the body,
+# and his own words in context beat a summary of them.
+CONTEXT_BODY_DOCS = int(os.environ.get("CJ_CONTEXT_BODY_DOCS", "2"))
+
+# A topic node is built for the ROUTER. By the time the composer sees it the
+# routing has already happened, so the scaffolding that got us here is dead
+# weight: `doc_ids` is 30 ids the composer cannot open, `matchers` are the
+# regexes that matched, and the counts/ranges/distributions are corpus
+# statistics. Measured 2026-09-12: a node costs ~731 tokens, ~225 of it
+# scaffolding, and a realistic routing carries THREE nodes — 2,550 tokens of a
+# 3,500 budget, which left nothing for source documents at all.
+_TOPIC_SCAFFOLDING = ("doc_ids", "matchers", "doc_count", "date_range",
+                      "year_range", "type_distribution", "theme_distribution")
+# Secondary topics are adjacency, not the subject. Their name and definition
+# tell the composer what they are; the voice cues come from the primary node
+# and, now, from the documents themselves.
+_SECONDARY_KEEP = ("id", "display_name", "definition", "tier", "theme_anchor")
+
+
+def _trim_topic_node(node: dict, primary: bool) -> dict:
+    if not isinstance(node, dict):
+        return node
+    if not primary:
+        return {k: node[k] for k in _SECONDARY_KEEP if k in node}
+    return {k: v for k, v in node.items() if k not in _TOPIC_SCAFFOLDING}
+
+
+def _trim_doc(raw: dict, body: str | None = None) -> dict:
+    """Reduce a doc record to the fields the composer actually uses.
+
+    With `body`, the document goes in as the published text with only its
+    identifying header. Without it, as the sidecar's description of itself
+    (the fallback when the .md is missing or the budget cannot fit it).
+    """
     # Per ADR-0011, the canonical key is `id` (not `doc_id`).
-    return {
+    head = {
         "doc_id": raw.get("id") or raw.get("doc_id"),
         "title": raw.get("title"),
         "date": raw.get("date"),
         "theme": raw.get("theme"),
         "theme_label": raw.get("theme_label"),
+    }
+    if body:
+        head["text"] = body
+        return head
+    head.update({
         "primary_topics": raw.get("primary_topics"),
         "stances": raw.get("stances", [])[:4],
         "signature_phrases": raw.get("signature_phrases", [])[:8],
         "notable_anecdotes": raw.get("notable_anecdotes", [])[:3],
         "one_paragraph_summary": raw.get("one_paragraph_summary"),
-    }
+    })
+    return head
 
 
 # What the composer last saw: the source docs that survived the budget trim
@@ -908,15 +969,21 @@ def build_context(
     all_topic_ids = [primary] + secondary
 
     # 1. Topic data block — keep all routed topics' nodes
-    topic_data = {tid: artifacts.topics[tid] for tid in all_topic_ids if tid in artifacts.topics}
+    topic_data = {tid: _trim_topic_node(artifacts.topics[tid], tid == primary)
+                  for tid in all_topic_ids if tid in artifacts.topics}
 
     # 2. Pick + load source docs in priority order
     doc_ids = _select_source_doc_ids(routing, artifacts, max_docs=3)
     source_docs: list[dict] = []
+    raws: list[dict] = []
     for did in doc_ids:
         raw = artifacts.load_raw_doc(did)
-        if raw:
-            source_docs.append(_trim_doc(raw))
+        if not raw:
+            continue
+        # highest-priority documents carry their text; the rest describe themselves
+        body = artifacts.load_doc_body(did) if len(raws) < CONTEXT_BODY_DOCS else None
+        raws.append(raw)
+        source_docs.append(_trim_doc(raw, body))
 
     # 3. Build the preface (always included)
     preface_lines: list[str] = ["<routed_topics>"]
@@ -944,16 +1011,34 @@ def build_context(
         )
 
     picked = list(source_docs)
-    while source_docs and _approx_tokens(_assemble(source_docs)) > token_budget:
+    # Over budget: take the lowest-priority document's text away if that
+    # actually shrinks the block, else drop the document. The check is not
+    # academic — for a column the sidecar is LARGER than the text it
+    # describes, so demoting one would grow the context, not trim it. For a
+    # long speech it is the other way round.
+    def _size(docs):
+        return _approx_tokens(_assemble(docs))
+
+    while source_docs and _size(source_docs) > token_budget:
+        i = max((i for i, d in enumerate(source_docs) if "text" in d), default=None)
+        if i is not None:
+            demoted = list(source_docs)
+            demoted[i] = _trim_doc(raws[i])
+            if _size(demoted) < _size(source_docs):
+                source_docs = demoted
+                continue
         source_docs.pop()  # drop the lowest-priority remaining doc
 
-    kept = {d["doc_id"] for d in source_docs}
+    kept = {d["doc_id"]: d for d in source_docs}
     LAST_CONTEXT_DOCS[:] = [
         {"doc_id": d["doc_id"], "title": d.get("title"), "date": d.get("date"),
          "theme_label": d.get("theme_label"),
-         "summary": (d.get("one_paragraph_summary") or "")[:300],
+         # the dashboard's grounding card reads the summary even when the
+         # composer got the full text instead
+         "summary": (raw.get("one_paragraph_summary") or "")[:300],
+         "body": "text" in kept.get(d["doc_id"], {}),
          "dropped_for_budget": d["doc_id"] not in kept}
-        for d in picked
+        for d, raw in zip(picked, raws)
     ]
 
     ctx = _assemble(source_docs)
