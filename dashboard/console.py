@@ -71,6 +71,8 @@ MODES_DIR = os.path.join(MAIN, "config", "modes")
 DROPIN_PATH = "/etc/systemd/system/supervaise.service.d/wakeword.conf"
 DOTENV_PATH = os.path.join(MAIN, "app", ".env")
 ROBOTS_PATH = os.path.join(MAIN, "config", "robots.json")
+DUET_SCRIPT_PATH = os.path.join(MAIN, "corpus", "voice", "duet_script.json")
+DUET_LOOP_GAP_S = 6.0      # silence between the end of the exchange and its restart
 STATE_PATH = os.path.join(HOME, ".cj_console_state.json")
 JOURNAL_PATH = os.path.join(HOME, ".cj_console_journal.jsonl")
 
@@ -209,6 +211,17 @@ class ConfigSources:
     def profile_doc(self, mode):
         return self._cached(os.path.join(self.modes_dir, f"{mode}.json"), json.loads) or {}
 
+    def duet_lines(self, path=DUET_SCRIPT_PATH):
+        """[(id, who, pause_after_s), ...] for the duet exchange, in order.
+        The order and the speaker of each line are all the console needs to
+        sequence it; the audio and text live with the robots. [] if absent."""
+        doc = self._cached(path, json.loads) or {}
+        out = []
+        for ln in doc.get("lines", []):
+            if ln.get("who") in ROLES and ln.get("id"):
+                out.append((str(ln["id"]), ln["who"], float(ln.get("pause_after_s", 0.6))))
+        return out
+
     @staticmethod
     def _parse_env_lines(text):
         """KEY=VALUE lines (with optional `Environment=` prefix and quotes)."""
@@ -339,6 +352,15 @@ class Console:
         # and composes it live. `stage` is which hop is outstanding.
         self.ask = {"seq": 0, "text": "", "clip": "", "stage": "", "at": 0.0}
         self.question = {"seq": 0, "text": "", "by": ""}
+        # Duet (2026-09-12): the attract loop. In duet mode the console walks
+        # the duet script line by line — it tells the robot whose ROLE owns the
+        # current line to play its clip, waits for that robot to report it
+        # finished, then advances. `seq` bumps per line so the robot fires once
+        # per line; `idx` is the position in the script; `who` the role playing;
+        # `until` is when the current line + its pause is expected to end, after
+        # which tick() advances even without a report (a robot that cannot play
+        # must not stall the loop). It loops with a gap. No mic, nothing live.
+        self.duet = {"on": False, "seq": 0, "idx": -1, "who": "", "line": "", "until": 0.0}
         self.config_seq = 0
         self.journal_mem: deque = deque(maxlen=JOURNAL_KEEP)
         self._effective_cache = None
@@ -372,6 +394,7 @@ class Console:
         # seqs survive a restart so a robot that never went away is not re-asked
         self.ask["seq"] = int((saved.get("ask") or {}).get("seq", 0))
         self.question["seq"] = int((saved.get("question") or {}).get("seq", 0))
+        self.duet["seq"] = int((saved.get("duet") or {}).get("seq", 0))
         want = saved.get("floor")
         # A restart never hands a mic straight back: the saved floor is re-taken
         # through the normal close-both-then-open transition. The floor stays
@@ -393,6 +416,7 @@ class Console:
                "interrupt_seq": self.interrupt_seq, "intro_seq": self.intro_seq,
                "config_seq": self.config_seq,
                "ask": {"seq": self.ask["seq"]}, "question": {"seq": self.question["seq"]},
+               "duet": {"seq": self.duet["seq"]},
                "saved": self.wall()}
         if not self.state_path:
             return
@@ -554,6 +578,51 @@ class Console:
                 return False
         return True
 
+    def _duet_start(self, now, who="console"):
+        """Begin (or restart) the exchange at line 0 (lock held)."""
+        lines = self.sources.duet_lines()
+        if not lines:
+            self.duet.update(on=False, idx=-1, who="", line="", until=0.0)
+            self._journal("duet", "duet mode but no duet_script.json — nothing to play", who=who)
+            return
+        lid, lwho, pause = lines[0]
+        self.duet.update(on=True, seq=self.duet["seq"] + 1, idx=0, who=lwho, line=lid,
+                         until=now + 30.0)   # 30 s cap until the robot reports the real end
+        self._journal("duet", f"duet start — line {lid} ({self.name(self.slot_of(lwho))})",
+                      who=who, seq=self.duet["seq"], line=lid)
+
+    def _duet_advance(self, now, who="console"):
+        """Move to the next line, looping with a gap (lock held)."""
+        lines = self.sources.duet_lines()
+        if not lines:
+            self.duet["on"] = False
+            return
+        nxt = self.duet["idx"] + 1
+        if nxt >= len(lines):
+            nxt = 0     # loop
+        lid, lwho, pause = lines[nxt]
+        self.duet.update(seq=self.duet["seq"] + 1, idx=nxt, who=lwho, line=lid, until=now + 30.0)
+        self._journal("duet", f"duet line {lid} ({self.name(self.slot_of(lwho))})"
+                              + (" — loop" if nxt == 0 else ""),
+                      who=who, seq=self.duet["seq"], line=lid)
+
+    def _duet_tick(self, now):
+        """Drive the exchange (lock held). Starts it when duet mode is entered,
+        stops it when it leaves, and advances on the deadline as a fallback —
+        the real advance is the robot's duet_done report in report()."""
+        if self.mode != "duet":
+            if self.duet["on"]:
+                self.duet.update(on=False, idx=-1, who="", line="", until=0.0)
+            return
+        if not self.duet["on"]:
+            self._duet_start(now)
+            return
+        # deadline fallback: a robot that never reports (cannot play, or gone)
+        # must not freeze the loop
+        if self.duet["until"] and now >= self.duet["until"]:
+            self._journal("duet", f"line {self.duet['line']} timed out — advancing", who="console")
+            self._duet_advance(now)
+
     def tick(self, now=None):
         """Advance transitions and queued changes. Cheap; called on every
         request so the model never depends on a background thread."""
@@ -576,6 +645,8 @@ class Console:
                 p, self.pending = self.pending, None
                 self._journal("drain", "turn finished — applying the queued change", who=p.get("who", "console"))
                 self._apply_change(p, now=now, who=p.get("who", "console"))
+
+            self._duet_tick(now)
 
     # ── floor ─────────────────────────────────────────────────────────────
     def _begin_transition(self, target, who="console", now=None):
@@ -778,6 +849,7 @@ class Console:
                "persona": obs.get("persona") if obs.get("persona") in ROLES else None,
                "intro_done": int(obs["intro_done"]) if isinstance(obs.get("intro_done"), int) else 0,
                "ask_done": int(obs["ask_done"]) if isinstance(obs.get("ask_done"), int) else 0,
+               "duet_done": int(obs["duet_done"]) if isinstance(obs.get("duet_done"), int) else 0,
                "role_ok": obs.get("robot") == robot}
         with self._lock:
             prev = self.observed.get(robot)
@@ -808,6 +880,10 @@ class Console:
                 self._release_question(now, who=robot,
                                        note=f"{self.name(robot)} finished the question — "
                                             f"{self.name(self.slot_of('cjap'))} answering")
+            # duet: the robot that owns the current line reported it finished -> next line
+            if (self.mode == "duet" and self.duet["on"] and rec["duet_done"] >= self.duet["seq"]
+                    and self.duet["seq"] > 0 and robot == self.slot_of(self.duet["who"])):
+                self._duet_advance(now, who=robot)
             self.tick(now)
             return True, self.lease_for(robot, now), 200
 
@@ -829,6 +905,11 @@ class Console:
                     "ask_clip": self.ask["clip"] if self.role_of(robot) == "host" else "",
                     "question_seq": self.question["seq"] if self.role_of(robot) == "cjap" else 0,
                     "question_text": self.question["text"] if self.role_of(robot) == "cjap" else "",
+                    # duet: only the robot whose ROLE owns the current line is told to play it
+                    "duet_seq": self.duet["seq"] if (self.mode == "duet" and self.duet["on"]
+                                                     and self.role_of(robot) == self.duet["who"]) else 0,
+                    "duet_line": self.duet["line"] if (self.mode == "duet" and self.duet["on"]
+                                                       and self.role_of(robot) == self.duet["who"]) else "",
                     "server_wall": self.wall()}
 
     # ── room calibration (event profile: 800/2500 were placeholders) ──────
@@ -1056,6 +1137,8 @@ class Console:
                 "ask": {"seq": self.ask["seq"], "text": self.ask["text"], "clip": self.ask["clip"],
                         "stage": self.ask["stage"], "age_s": round(now - self.ask["at"], 1)
                         if self.ask["at"] else None},
+                "duet": {"on": self.duet["on"], "line": self.duet["line"], "who": self.duet["who"],
+                         "seq": self.duet["seq"]},
                 "calibration": self.calib_view(now),
                 "warnings": warnings,
                 "seq": {"interrupt": dict(self.interrupt_seq), "intro": self.intro_seq, "config": self.config_seq},

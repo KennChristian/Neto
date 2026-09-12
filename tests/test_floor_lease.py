@@ -863,3 +863,95 @@ def test_client_fires_the_first_question_and_not_a_role_swap():
     assert seen["ask"] == []                                  # adopted, not replayed
     poll(cjap_is="beta", ask_seq=5, ask_text="new one", ask_clip="q.wav")
     assert seen["ask"] == [("new one", "q.wav")]
+
+
+# ── duet sequencing (2026-09-12) ────────────────────────────────────────────
+# The attract loop: in duet mode the console walks the duet script line by
+# line, telling the robot whose ROLE owns the current line to play its clip,
+# waiting for that robot to report it finished, then advancing. No mic opens.
+
+def test_duet_walks_the_script_line_by_line(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    lines = con.sources.duet_lines()
+    assert lines and lines[0][1] == "host", "the Host opens the duet"
+    con.set_config(mode="duet", profile="kiosk", now=clock())
+    for r in ROBOTS:
+        _reporting(con, r, clock)
+    con.tick(clock())                                   # entering duet starts line 0
+    assert con.duet["on"] and con.duet["idx"] == 0
+    first = con.duet["line"]; first_who = con.duet["who"]
+    # only the robot whose role owns the line is told to play it
+    owner = con.slot_of(first_who)
+    other = "beta" if owner == "alpha" else "alpha"
+    assert con.lease_for(owner, clock())["duet_seq"] == con.duet["seq"]
+    assert con.lease_for(owner, clock())["duet_line"] == first
+    assert con.lease_for(other, clock())["duet_seq"] == 0
+    # it plays and reports done -> the next line, to the other role
+    seq = con.duet["seq"]
+    _reporting(con, owner, clock, duet_done=seq)
+    assert con.duet["idx"] == 1 and con.duet["seq"] == seq + 1
+    assert con.duet["line"] != first
+
+
+def test_duet_loops_at_the_end(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    n = len(con.sources.duet_lines())
+    con.set_config(mode="duet", profile="kiosk", now=clock())
+    for r in ROBOTS:
+        _reporting(con, r, clock)
+    con.tick(clock())
+    seen = []
+    for _ in range(n):
+        seen.append(con.duet["idx"])
+        owner = con.slot_of(con.duet["who"])
+        clock.advance(1)
+        _reporting(con, owner, clock, duet_done=con.duet["seq"])
+    assert seen == list(range(n))
+    assert con.duet["idx"] == 0, "after the last line it loops to the first"
+
+
+def test_duet_advances_on_deadline_if_a_robot_never_reports(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="duet", profile="kiosk", now=clock())
+    for r in ROBOTS:
+        _reporting(con, r, clock)
+    con.tick(clock())
+    line0 = con.duet["line"]
+    con.tick(clock())                                   # nothing reported: no move yet
+    assert con.duet["line"] == line0
+    clock.advance(31)                                   # past the 30 s cap
+    con.tick(clock())
+    assert con.duet["line"] != line0, "a stalled line must not freeze the loop"
+
+
+def test_leaving_duet_stops_it(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="duet", profile="kiosk", now=clock())
+    con.tick(clock())
+    assert con.duet["on"]
+    con.set_config(mode="direct", profile="kiosk", now=clock())
+    con.tick(clock())
+    assert not con.duet["on"]
+    # and no robot is told to play once it is off
+    for r in ROBOTS:
+        assert con.lease_for(r, clock())["duet_seq"] == 0
+
+
+def test_duet_line_only_goes_to_the_role_that_owns_it_after_a_swap(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="duet", profile="kiosk", now=clock())
+    for r in ROBOTS:
+        _reporting(con, r, clock)
+    con.tick(clock())
+    who = con.duet["who"]
+    con.set_role(con.slot_of(who), force=True, now=clock())   # the player becomes cjap
+    # the line follows the ROLE, so it is now on whichever machine holds that role
+    owner = con.slot_of(con.duet["who"])
+    assert con.lease_for(owner, clock())["duet_seq"] == con.duet["seq"]
+    other = "beta" if owner == "alpha" else "alpha"
+    assert con.lease_for(other, clock())["duet_seq"] == 0

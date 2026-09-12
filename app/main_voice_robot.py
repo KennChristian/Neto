@@ -37,6 +37,9 @@ _OPEN_INPUTS = set()               # input streams currently open on the mic (re
 _WAKE = {"detector": None}         # live wake detector so the console can retune its threshold
 _INTRO = {"done": 0}               # intro_seq the host finished speaking (reported to the console)
 _ASK = {"done": 0}                 # ask_seq the host finished ASKING (2026-09-12)
+_DUET = {"done": 0}               # duet line seq this robot finished PLAYING (2026-09-12)
+DUET_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "data", "prerendered", "duet")
 # Pre-recorded Host questions. The Host's voice is cloned/recorded by hand, so
 # the room hears a real take rather than a synthesis: drop <id>.wav here and
 # name it in the console. Falls back to the Host persona's own voice.
@@ -3727,6 +3730,7 @@ def _floor_observe():
             "persona": personas.active(),
             "intro_done": int(_INTRO["done"]),
             "ask_done": int(_ASK["done"]),
+            "duet_done": int(_DUET["done"]),
             "muted": _muted()}
 
 
@@ -3827,6 +3831,41 @@ def _floor_ask(text, clip):
     threading.Thread(target=_say, daemon=True).start()
 
 
+def _floor_duet(line_id):
+    """on_duet: play one pre-rendered duet line, then report it finished so the
+    authority hands the next line to the other robot. Either persona may play,
+    because the authority only hands a line to whoever currently holds its
+    role. The clip and the line id come straight from the manifest the render
+    step wrote; a missing clip still reports done, so one gap never freezes the
+    loop."""
+    c = _FLOOR["client"]
+    if c is None:
+        return
+    seq = c.duet_seq
+    line_id = (line_id or "").strip()
+    wav = os.path.join(DUET_DIR, f"{line_id}.wav") if line_id else ""
+
+    def _play():
+        _TURN["active"] = True
+        try:
+            if wav and os.path.isfile(wav):
+                print(f"[duet] playing {line_id} as {personas.active()}", flush=True)
+                if _gestures_inst is not None:
+                    _gestures_inst.start("talk")
+                subprocess.run(_aplay_cmd(wav), timeout=60)
+            else:
+                print(f"[duet] clip {line_id!r} not in {DUET_DIR} — skipping (loop continues)", flush=True)
+                time.sleep(0.3)
+        except Exception as e:
+            print(f"[duet] play failed ({type(e).__name__}: {e}) — reporting done anyway")
+        finally:
+            _TURN["active"] = False
+            _DUET["done"] = seq if isinstance(seq, int) else _DUET["done"]
+            if _gestures_inst is not None:
+                _gestures_inst.neutral()
+    threading.Thread(target=_play, daemon=True).start()
+
+
 def _floor_question(text):
     """on_question (Panganiban role only): the Host has finished asking; answer
     it live. Reuses the dashboard's queue file, so the wake loop picks it up on
@@ -3905,7 +3944,8 @@ def main():
     lease = floor_lease.LeaseClient(slot, url, on_mic=_floor_mic, on_settings=_floor_settings,
                                     on_persona=_floor_persona, on_interrupt=_floor_interrupt,
                                     on_intro=_floor_intro, on_ask=_floor_ask,
-                                    on_question=_floor_question, observe=_floor_observe)
+                                    on_question=_floor_question, on_duet=_floor_duet,
+                                    observe=_floor_observe)
     _FLOOR["client"] = lease
     lease.start()
     print(f"[floor] machine {lease.machine} = slot {slot or 'UNKNOWN'} — authority {url} — the mic "

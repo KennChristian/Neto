@@ -159,6 +159,9 @@ class LeaseClient:
     on_question(text)                 — cjap: answer this question live; it was
                                         typed by the operator and asked aloud by
                                         the Host, so no microphone was involved
+    on_duet(line_id)                  — play this pre-rendered duet line now
+                                        (2026-09-12; the attract loop, driven
+                                        line by line by the authority)
     observe() -> dict                 — what the mic is actually doing
     """
 
@@ -167,7 +170,7 @@ class LeaseClient:
                  clock=time.monotonic, transport=None,
                  on_mic=None, on_settings=None, on_persona=None,
                  on_interrupt=None, on_intro=None, on_ask=None, on_question=None,
-                 observe=None, log=print):
+                 on_duet=None, observe=None, log=print):
         self.slot = slot if slot in SLOTS else None
         self.url = url
         self.ttl_s = min(float(ttl_s), TTL_CAP_S)
@@ -177,6 +180,7 @@ class LeaseClient:
         self.on_mic, self.on_settings, self.on_persona = on_mic, on_settings, on_persona
         self.on_interrupt, self.on_intro = on_interrupt, on_intro
         self.on_ask, self.on_question = on_ask, on_question
+        self.on_duet = on_duet
         self.observe, self.log = observe, log
         # lease state — fresh boot = nothing held, no persona known
         self.granted = False
@@ -193,6 +197,8 @@ class LeaseClient:
         self.ask_seq = None          # last ask handed to this robot (host role)
         self.ask_done = 0            # highest ask this robot finished saying
         self.question_seq = None     # last question handed to this robot (cjap role)
+        self.duet_seq = None         # last duet line handed to this robot
+        self.duet_done = 0           # highest duet line this robot finished playing
         self.last_ok = None       # clock() of the last good reply
         self.last_error = None
         self.polls = self.failures = 0
@@ -335,6 +341,11 @@ class LeaseClient:
             if qseq and self.question_seq is not None and qseq != self.question_seq and not persona_changed:
                 self._call(self.on_question, str(reply.get("question_text") or ""))
             self.question_seq = qseq
+        dseq = reply.get("duet_seq")
+        if isinstance(dseq, int):
+            if dseq and self.duet_seq is not None and dseq != self.duet_seq and not persona_changed:
+                self._call(self.on_duet, str(reply.get("duet_line") or ""))
+            self.duet_seq = dseq
 
     def enforce(self) -> bool:
         """Push the current answer of has_floor() to on_mic (only on change).
