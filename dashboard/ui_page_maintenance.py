@@ -394,6 +394,7 @@ details.help[open] summary{margin-bottom:4px}
 </div>
 
 <!-- ═══ ROBOT ═══ -->
+<div class="sec" data-tab="avatar">Avatar &mdash; the digital face and its sync</div>
 <div class="sec" data-tab="robot">Robot &mdash; body, face, clips</div>
 <div class="card c12" data-tab="robot"><h2>Mechanical actions <span class="dim">(head, antennas, motors &mdash; runs via the voice app when idle)</span></h2>
   <div class="btns"><span class="lbl">Head</span>
@@ -422,11 +423,11 @@ details.help[open] summary{margin-bottom:4px}
     <span class="dim">motors off = servos unpowered (safe to reposition by hand); motors on re-centers and resumes idle motion</span></div>
   <span id="msg3" class="dim"></span>
 </div>
-<div class="card c6" data-tab="robot"><h2>Life-like motion <span class="dim">(applies live, no restart)</span></h2>
+<div class="card c6" data-tab="robot avatar"><h2>Life-like motion <span class="dim">(applies live, no restart)</span></h2>
   <p class="hint">The robot head's idle motion, and the avatar lip-sync offset. Drag a slider; it takes effect at once on this robot.</p>
   <div id="motion-sliders"></div>
   <span id="motion-msg" class="dim"></span></div>
-<div class="card c6" data-tab="robot"><h2>LiveAvatar page <span class="dim" id="avstate"></span></h2>
+<div class="card c6" data-tab="avatar"><h2>LiveAvatar page <span class="dim" id="avstate"></span></h2>
   <p class="hint">The face shown on the laptop&rsquo;s /face-avatar page.</p>
   <div id="avstatus" class="dim" style="margin-bottom:10px">no /face-avatar page open</div>
   <div class="btns"><span class="lbl">Page</span>
@@ -1201,8 +1202,9 @@ const ICON={live:'<path d="M6 4l14 8-14 8z"/>',guest:'<circle cx="12" cy="8" r="
   conv:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/>',
   system:'<path d="M4 6h8M16 6h4M4 12h2M10 12h10M4 18h10M18 18h2"/><circle cx="14" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="18" r="2"/>',
   logs:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h8"/>',
+  avatar:'<circle cx="12" cy="11" r="7"/><path d="M9 10h.01M15 10h.01M9 14c.8 .8 2 1.2 3 1.2s2.2-.4 3-1.2"/>',
   all:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'};
-const TABS=[['live','Live','Live'],['guest','Guest','Guest'],['audio','Audio','Audio'],['robot','Robot','Robot'],['conv','Conversation','Chat'],['system','System','System'],['logs','Logs','Logs'],['all','All','All']];
+const TABS=[['live','Live','Live'],['guest','Guest','Guest'],['audio','Audio','Audio'],['robot','Robot','Robot'],['avatar','Avatar','Avatar'],['conv','Conversation','Chat'],['system','System','System'],['logs','Logs','Logs'],['all','All','All']];
 function showTab(t){try{localStorage.setItem('cjtab',t)}catch(e){}
   document.querySelectorAll('#tabs button').forEach(b=>{b.classList.toggle('on',b.dataset.t===t);b.setAttribute('aria-selected',b.dataset.t===t)});
   document.querySelectorAll('.grid > [data-tab]').forEach(el=>{el.hidden=(t!=='all'&&!el.dataset.tab.split(' ').includes(t))});
