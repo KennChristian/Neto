@@ -951,18 +951,22 @@ class Gestures:
         breathing. Amplitudes are deliberately below what a viewer can name:
         the effect should be that the robot is alive, not that it is moving.
         """
-        k = self.breath_scale * BREATH_GAIN
-        if k <= 0:
+        gain = _motion_val("breath_gain", BREATH_GAIN)
+        pitch_k = _motion_val("breath_pitch", BREATH_PITCH)
+        sway_deg = _motion_val("sway_deg", HEAD_SWAY_DEG)
+        sway_hz = _motion_val("sway_hz", HEAD_SWAY_HZ)
+        k = self.breath_scale * gain
+        if k <= 0 and sway_deg <= 0:
             return (0.0, 0.0, 0.0)
         s = math.sin
         yaw = 1.9 * s(0.21 * t) + 0.8 * s(0.53 * t + 1.3) + 0.35 * s(1.27 * t + 0.4)
-        pitch = BREATH_PITCH * (1.5 * s(0.17 * t + 0.9) + 0.9 * s(0.61 * t + 2.1) + 0.55 * s(0.97 * t))
+        pitch = pitch_k * (1.5 * s(0.17 * t + 0.9) + 0.9 * s(0.61 * t + 2.1) + 0.55 * s(0.97 * t))
         roll = 1.1 * s(0.13 * t + 2.7) + 0.5 * s(0.47 * t + 0.8)
         # a slow side-to-side look, scaled by the mode (calmer while speaking)
-        # but NOT by BREATH_GAIN, so the two are tuned independently. Two
+        # but NOT by the breath gain, so the two are tuned independently. Two
         # incommensurable sines so the swing itself never lands in a metronome.
-        sway = HEAD_SWAY_DEG * (0.82 * s(2 * math.pi * HEAD_SWAY_HZ * t)
-                                + 0.18 * s(2 * math.pi * HEAD_SWAY_HZ * 0.37 * t + 1.1))
+        sway = sway_deg * (0.82 * s(2 * math.pi * sway_hz * t)
+                           + 0.18 * s(2 * math.pi * sway_hz * 0.37 * t + 1.1))
         return (k * yaw + self.breath_scale * sway, k * pitch, k * roll)
 
     def _breath_run(self):
@@ -1430,6 +1434,39 @@ def _mic_tap():
         tap = _MicTap()
         _mic_tap_box["tap"] = tap
     return tap
+
+
+# Live motion config (2026-09-12, user: sliders on /maintain). A tiny JSON the
+# dashboard writes; the breath loop and the avatar head-start read it every
+# cycle so a slider applies immediately. Missing/absent keys fall back to the
+# CJ_* env defaults, so nothing here is required.
+MOTION_FILE = "/dev/shm/cj_motion.json"
+_motion_cache = {"mtime": -1.0, "data": {}}
+
+
+def _motion():
+    try:
+        m = os.path.getmtime(MOTION_FILE)
+    except OSError:
+        _motion_cache["data"] = {}
+        return _motion_cache["data"]
+    if m != _motion_cache["mtime"]:
+        try:
+            with open(MOTION_FILE) as f:
+                d = json.load(f)
+            _motion_cache["data"] = d if isinstance(d, dict) else {}
+        except (OSError, ValueError):
+            _motion_cache["data"] = {}
+        _motion_cache["mtime"] = m
+    return _motion_cache["data"]
+
+
+def _motion_val(key, default):
+    v = _motion().get(key)
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return default
 
 
 def _env_flag(name, default=False):
@@ -2375,7 +2412,7 @@ def _avatar_head_start(prefed_age=None):
     # the moment it leaves the speaker (PortAudio buffer ~0.15 s, Bluetooth
     # +0.2-0.4 s) and the LiveKit video has its own latency — the residual is
     # only judgeable by ear. Negative = robot earlier, positive = robot later.
-    off = _env_num("CJ_AVATAR_SYNC_OFFSET_S", 0.0)
+    off = _motion_val("avatar_offset", _env_num("CJ_AVATAR_SYNC_OFFSET_S", 0.0))
     if prefed_age is None:
         return max(0.0, _avatar_lag() + off)
     try:

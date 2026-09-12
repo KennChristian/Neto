@@ -648,6 +648,51 @@ ERROR_SKIP_RE = re.compile(r"fails? open|failed open|Pending kernel|Consumed .* 
 APP_ENV = os.path.join(MAIN, "app", ".env")   # the app's secrets + voice ids (loaded at app start)
 
 
+MOTION_FILE = "/dev/shm/cj_motion.json"   # live head-motion + avatar-sync knobs (2026-09-12)
+MOTION_KNOBS = {  # key: (min, max, default, label)
+    "sway_deg":      (0.0, 20.0, 4.0,  "head sway (deg side to side)"),
+    "sway_hz":       (0.02, 0.3, 0.07, "sway speed (Hz)"),
+    "breath_gain":   (0.3, 3.0,  1.3,  "breathing size"),
+    "breath_pitch":  (0.0, 1.0,  0.75, "breathing nod amount"),
+    "avatar_offset": (-1.0, 2.0, 0.0,  "avatar sync offset (s; +later, -earlier)"),
+}
+
+
+def motion_get():
+    cur = {}
+    try:
+        with open(MOTION_FILE) as f:
+            cur = json.load(f)
+    except (OSError, ValueError):
+        cur = {}
+    return {k: (cur.get(k) if isinstance(cur.get(k), (int, float)) else d)
+            for k, (lo, hi, d, lbl) in MOTION_KNOBS.items()}
+
+
+def motion_set(body):
+    cur = motion_get()
+    changed = []
+    for k, (lo, hi, d, lbl) in MOTION_KNOBS.items():
+        if k in body and body[k] is not None:
+            try:
+                v = max(lo, min(hi, float(body[k])))
+            except (TypeError, ValueError):
+                return False, f"{lbl}: not a number"
+            if abs(cur.get(k, d) - v) > 1e-9:
+                cur[k] = round(v, 3)
+                changed.append(f"{k}={cur[k]:g}")
+    if not changed:
+        return True, "no change"
+    try:
+        tmp = MOTION_FILE + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(cur, f)
+        os.replace(tmp, MOTION_FILE)   # the robot reads it live (mtime-cached), no restart
+    except OSError as e:
+        return False, f"cannot write motion config: {e}"
+    return True, "applied: " + ", ".join(changed)
+
+
 def _env_value(name):
     """Read one key from the app's .env (server-side only, never sent out)."""
     try:

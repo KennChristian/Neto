@@ -144,6 +144,12 @@ def handle_get(h, path, params):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
         else:
             h._send(200, json.dumps({"questions": [{"id": e["id"], "q": e["q"]} for e in _event_entries()]}))
+    elif path == "/api/motion":    # live head-motion + avatar-sync sliders
+        if not _authed(params):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            h._send(200, json.dumps({"motion": motion_get(),
+                                     "knobs": {k: list(v[:3]) for k, v in MOTION_KNOBS.items()}}))
     elif path == "/api/voices":     # Guest voice card (2026-09-12): key hint + voice list, never the key
         if not _authed(params):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
@@ -262,6 +268,12 @@ def handle_post(h, path, body):
         else:
             ok, out = avatar_session()
             h._send(200, json.dumps({"ok": ok, "output": out}))
+    elif path == "/api/motion":
+        if not _authed({}, body):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            ok, out = motion_set(body)
+            h._send(200, json.dumps({"ok": ok, "output": out, "motion": motion_get()}))
     elif path == "/api/voices":
         # Guest voice card: store the ElevenLabs key / pick a voice for a role.
         # Never logged in full - the body can carry the key.

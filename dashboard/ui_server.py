@@ -1558,7 +1558,7 @@ class Handler(BaseHTTPRequestHandler):
         if ui and self.path.partition("?")[0] in (
                 "/api/ctl", "/api/entities", "/api/avatar-session",
                 "/api/avatar-stop", "/api/avatar-lag", "/api/avatar-status",
-                "/api/avatar-conf", "/api/voices",
+                "/api/avatar-conf", "/api/voices", "/api/motion",
                 "/api/ask", "/api/tuning", "/api/volume", "/api/mic",
                 # operator console (2026-09-10): floor lease + mode/profile
                 "/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending",

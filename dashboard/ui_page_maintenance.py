@@ -422,6 +422,10 @@ details.help[open] summary{margin-bottom:4px}
     <span class="dim">motors off = servos unpowered (safe to reposition by hand); motors on re-centers and resumes idle motion</span></div>
   <span id="msg3" class="dim"></span>
 </div>
+<div class="card c6" data-tab="robot"><h2>Life-like motion <span class="dim">(applies live, no restart)</span></h2>
+  <p class="hint">The robot head's idle motion, and the avatar lip-sync offset. Drag a slider; it takes effect at once on this robot.</p>
+  <div id="motion-sliders"></div>
+  <span id="motion-msg" class="dim"></span></div>
 <div class="card c6" data-tab="robot"><h2>LiveAvatar page <span class="dim" id="avstate"></span></h2>
   <p class="hint">The face shown on the laptop&rsquo;s /face-avatar page.</p>
   <div id="avstatus" class="dim" style="margin-bottom:10px">no /face-avatar page open</div>
@@ -749,6 +753,25 @@ async function haPresets(){try{const r=await(await fetch('/api/event-questions?k
     [].forEach.call($('ha-presets').getElementsByTagName('button'),function(b){b.onclick=function(){const q=HA_PRESETS[+b.dataset.i];if(!q)return;$('ha-text').value=q.q;hostAsk();};});
   }catch(e){$('ha-presets').textContent='presets: '+e;}}
 let HA_PRESETS=[];
+// Life-like motion sliders (2026-09-12): head sway/breath + avatar sync offset,
+// applied live via /api/motion (the robot reads the config each cycle).
+let MOTION_T=null;
+async function motionLoad(){try{const r=await(await fetch('/api/motion?key='+encodeURIComponent(KEY))).json();
+    const m=r.motion||{},kn=r.knobs||{},box=$('motion-sliders');if(!box)return;
+    box.innerHTML='';
+    Object.keys(kn).forEach(function(k){
+      const lo=kn[k][0],hi=kn[k][1],v=(m[k]!=null?m[k]:kn[k][2]);
+      const row=document.createElement('div');row.className='btns';
+      const lbl=document.createElement('span');lbl.className='lbl';lbl.style.minWidth='150px';lbl.textContent=k.replace(/_/g,' ');
+      const inp=document.createElement('input');inp.type='range';inp.min=lo;inp.max=hi;inp.step=(hi-lo)/100;inp.value=v;inp.style.width='200px';inp.style.verticalAlign='middle';
+      const out=document.createElement('b');out.style.minWidth='48px';out.style.display='inline-block';out.textContent=(+v).toFixed(2);
+      inp.addEventListener('input',function(){out.textContent=(+inp.value).toFixed(2);motionSet(k,inp.value);});
+      row.appendChild(lbl);row.appendChild(inp);row.appendChild(out);box.appendChild(row);
+    });
+  }catch(e){$('motion-msg').textContent='motion: '+e;}}
+function motionSet(k,v){clearTimeout(MOTION_T);MOTION_T=setTimeout(async function(){
+  try{const b={key:KEY};b[k]=+v;const r=await(await fetch('/api/motion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})).json();
+    $('motion-msg').textContent=r.output||'';}catch(e){$('motion-msg').textContent='motion: '+e;}},250);}
 async function haClips(force){try{const r=await(await fetch('/api/host-clips?key='+encodeURIComponent(KEY)+(force?'&_='+Date.now():''),{cache:force?'no-store':'default'})).json();
     const cl=r.clips||[];$('ha-clips').innerHTML=cl.map(c=>'<option value="'+esc(c.name)+'">').join('');
     $('ha-clipinfo').textContent=cl.length?cl.length+' recording'+(cl.length>1?'s':'')+' on disk':'no recordings yet in data/host_questions/';
@@ -765,7 +788,7 @@ function renderAsk(s){const a=s.ask,el=$('ha-state');if(!el)return;
   el.innerHTML=(a.stage==='host'?'<b style="color:var(--gold)">the Host is asking it</b>'
     :a.stage==='cjap'?'<b style="color:var(--ok)">handed to Panganiban</b>':'sent')
     +' \u2014 \u201c'+esc(a.text)+'\u201d'+(a.clip?' <span class="mono">['+esc(a.clip)+']</span>':'')+age;}
-haClips(false);haPresets();
+haClips(false);haPresets();motionLoad();
 // Guest voice card (2026-09-12): ElevenLabs key + voice list + role switch.
 let EV={voices:[],cjap_voice_id:'',host_voice_id:''},EV_AUDIO=null;
 async function evLoad(refresh){try{const r=await(await fetch('/api/voices?key='+encodeURIComponent(KEY)+(refresh?'&refresh=1&_='+Date.now():''),{cache:'no-store'})).json();
