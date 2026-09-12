@@ -65,6 +65,11 @@ html,body{height:100%;color:var(--ink);overflow:hidden;
 #a::-webkit-scrollbar{display:none}
 #a span{color:var(--ink2);transition:color .5s}
 #a .cur{color:var(--maroon);animation:rise .45s ease-out}
+/* word-by-word reveal (2026-09-12): each word is hidden until the audio
+   reaches it, then fades in — the plaque keeps pace with his voice */
+#a .w{opacity:0;transition:opacity .16s ease-out}
+#a .w.on{opacity:1}
+#a .w.now{color:var(--maroon)}
 #a.idle-text,#qidle{display:flex;flex-wrap:wrap;align-items:center;row-gap:.6vh;font-style:italic;
   color:var(--faint);font-size:2.6vh;line-height:1.5}
 #a.idle-text em,#qidle em{color:var(--maroon);font-style:normal;padding:0 .4vw;white-space:nowrap}
@@ -194,6 +199,29 @@ function render(html,idle,showQ){
   if(cur)cur.scrollIntoView({block:'center',behavior:'smooth'});
   else a.scrollTop=a.scrollHeight;
 }
+// word-by-word reveal state + ticker (2026-09-12)
+let wwKey='', wwWords=null, wwPlay=0, wwPerf=0, wwRobot=0;
+function wordTick(){
+  if(!wwKey||!wwWords)return;
+  const a=document.getElementById('a');
+  const spans=a.getElementsByClassName('w');
+  if(!spans.length)return;
+  // elapsed since this sentence's audio started, in the robot's clock,
+  // carried forward locally between polls with the browser clock
+  const elapsed=(performance.now()-wwPerf)/1000+(wwRobot-wwPlay);
+  let last=-1;
+  for(let i=0;i<spans.length;i++){
+    const st=wwWords[i]?wwWords[i][1]:0;
+    const on=elapsed>=st;
+    spans[i].classList.toggle('on',on);
+    spans[i].classList.remove('now');
+    if(on)last=i;
+  }
+  if(last>=0){spans[last].classList.add('now');
+    if(!wwLastScroll||last!==wwLastScroll){wwLastScroll=last;
+      try{spans[last].scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}}}
+}
+let wwLastScroll=null;
 function renderExhibit(s){
     const turns=s.turns||[];
     const lastU=turns.filter(t=>t.role==='user').slice(-1)[0];
@@ -211,10 +239,25 @@ function renderExhibit(s){
     // the plaque reads exactly what he is saying, not what he has already said.
     if(sp&&!sp.done&&((sp.current&&sp.current.length)||(sp.spoken||[]).length)){
       setState('speaking');
-      const now=(sp.current&&sp.current.length)?sp.current:sp.spoken[sp.spoken.length-1];
-      render('<span class="cur">'+esc(now)+'</span>',false,true);
+      const line=(sp.current&&sp.current.length)?sp.current:sp.spoken[sp.spoken.length-1];
+      // word-by-word when the sentence carries ElevenLabs word timings; the
+      // plaque reveals each word as the audio reaches it (see wordTick). No
+      // timings (openai fallback, or an old clip) -> show the whole sentence.
+      if(sp.words&&sp.words.length&&sp.current&&sp.current.length){
+        const key=(sp.play_ts||sp.ts)+'|'+sp.current;
+        if(key!==wwKey){
+          wwKey=key; wwWords=sp.words; wwPlay=sp.play_ts||sp.ts;
+          wwPerf=performance.now(); wwRobot=s.ts;
+          render(sp.words.map((w,i)=>'<span class="w" data-i="'+i+'">'+esc(w[0])+'</span>').join(' '),false,true);
+        } else { wwRobot=s.ts; wwPerf=performance.now(); }  // re-anchor the clock each poll
+        wordTick();
+        return;
+      }
+      wwKey='';
+      render('<span class="cur">'+esc(line)+'</span>',false,true);
       return;
     }
+    wwKey='';
     // 2. mic open / transcribing
     if(listening&&!qNow){setState('listening');
       render('<span class="think">Listening</span>',true,true);return;}
@@ -368,5 +411,6 @@ async function poll(){
   }catch(e){/* audience view never shows errors */}
 }
 setInterval(poll,300);poll();
+setInterval(function(){try{wordTick();}catch(e){}},80);   // smooth word reveal between polls
 setInterval(camTick,2000);camTick();
 </script></body></html>"""
