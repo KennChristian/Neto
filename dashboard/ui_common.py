@@ -632,10 +632,13 @@ ERROR_SKIP_RE = re.compile(r"fails? open|failed open|Pending kernel|Consumed .* 
                            r"D: bluealsa-pcm\.c", re.I)   # BlueALSA plugin debug chatter ("Getting BlueALSA PCM: PLAYBACK ...")
 
 
+APP_ENV = os.path.join(MAIN, "app", ".env")   # the app's secrets + voice ids (loaded at app start)
+
+
 def _env_value(name):
     """Read one key from the app's .env (server-side only, never sent out)."""
     try:
-        with open(os.path.join(MAIN, "app", ".env"), encoding="utf-8") as f:
+        with open(APP_ENV, encoding="utf-8") as f:
             for line in f:
                 if line.startswith(name + "="):
                     return line.split("=", 1)[1].strip().strip('"').strip("'")
@@ -1677,3 +1680,194 @@ def ask_event(entry_id):
             except OSError as err:
                 return False, str(err)
     return False, f"unknown question id: {entry_id!r}"
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# Guest voice card (2026-09-12, user: "another UI for guest for easy putting
+# the API key or accessing the elevenlabs voices for easy voice switching").
+# The ElevenLabs key and the two voice ids live in app/.env: ELEVEN_API_KEY,
+# ELEVEN_VOICE_ID (CJAP — Panganiban's cloned voice, read by voice/config.py
+# at app start) and ELEVEN_HOST_VOICE_ID (GUEST — the Host robot; only the
+# render scripts synthesise with it, app/personas.py). The key never reaches
+# the browser: the card sees a 4-char hint. Writes are atomic rewrites of
+# .env that keep comments and order.
+# ────────────────────────────────────────────────────────────────────────────
+ELEVEN_API = "https://api.elevenlabs.io"
+VOICE_ID_RE = re.compile(r"^[A-Za-z0-9]{10,40}$")
+ELEVEN_KEY_RE = re.compile(r"^[A-Za-z0-9_\-]{16,128}$")
+_voices_cache = {"ts": 0.0, "key": None, "data": None}
+
+
+def _env_set(pairs):
+    """Rewrite KEY=value lines in app/.env (comments/order kept, missing keys
+    appended, atomic replace). Returns the keys whose value changed."""
+    try:
+        with open(APP_ENV, encoding="utf-8") as f:
+            lines = f.read().splitlines()
+    except FileNotFoundError:
+        lines = []
+    todo, changed = dict(pairs), []
+    for i, line in enumerate(lines):
+        if "=" not in line or line.lstrip().startswith("#"):
+            continue
+        k = line.split("=", 1)[0].strip()
+        if k in todo:
+            new = f"{k}={todo.pop(k)}"
+            if new != line:
+                lines[i] = new
+                changed.append(k)
+    for k, v in todo.items():
+        lines.append(f"{k}={v}")
+        changed.append(k)
+    if not changed:
+        return []
+    tmp = APP_ENV + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    try:
+        os.chmod(tmp, os.stat(APP_ENV).st_mode & 0o777)
+    except OSError:
+        pass
+    os.replace(tmp, APP_ENV)
+    return changed
+
+
+def _eleven_get(path, key, timeout=10):
+    """GET on the ElevenLabs API -> (ok, json_or_error_text)."""
+    import urllib.request, urllib.error
+    req = urllib.request.Request(ELEVEN_API + path, headers={"xi-api-key": key})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return True, json.load(r)
+    except urllib.error.HTTPError as e:
+        msg = ""
+        try:
+            d = json.load(e).get("detail")
+            msg = d.get("message") if isinstance(d, dict) else str(d or "")
+        except Exception:
+            pass
+        return False, f"HTTP {e.code}" + (f": {msg[:120]}" if msg else "")
+    except Exception as e:
+        return False, f"{type(e).__name__}: {e}"[:160]
+
+
+def _fetch_bytes(url, timeout=15, limit=8_000_000):
+    import urllib.request
+    with urllib.request.urlopen(url, timeout=timeout) as r:
+        return r.read(limit)
+
+
+def _voice_row(v):
+    labels = v.get("labels") or {}
+    return {"voice_id": v.get("voice_id"), "name": v.get("name") or v.get("voice_id"),
+            "category": v.get("category") or "",
+            "labels": ", ".join(str(labels[k]) for k in ("gender", "age", "accent", "description", "use_case")
+                                if labels.get(k)),
+            "preview_url": v.get("preview_url"),
+            "description": (v.get("description") or "")[:160]}
+
+
+def eleven_voices(refresh=False):
+    """What the card shows: key hint, both voice ids, the account's voices
+    (cached 5 min per key; cloned/professional voices first)."""
+    key = _env_value("ELEVEN_API_KEY") or ""
+    out = {"has_key": bool(key), "key_hint": ("\u2026" + key[-4:]) if key else "",
+           "cjap_voice_id": _env_value("ELEVEN_VOICE_ID") or "",
+           "host_voice_id": _env_value("ELEVEN_HOST_VOICE_ID") or "",
+           "voices": [], "error": None}
+    if not key:
+        out["error"] = "no ELEVEN_API_KEY in app/.env \u2014 paste one below"
+        return out
+    c = _voices_cache
+    if not refresh and c["data"] is not None and c["key"] == key and time.time() - c["ts"] < 300:
+        out["voices"] = c["data"]
+        return out
+    ok, d = _eleven_get("/v1/voices?show_legacy=true", key)
+    if not ok:
+        out["error"] = f"ElevenLabs voices: {d}"
+        out["voices"] = c["data"] if c["key"] == key and c["data"] else []
+        return out
+    rows = [_voice_row(v) for v in (d.get("voices") or []) if v.get("voice_id")]
+    order = {"cloned": 0, "professional": 0, "generated": 1, "premade": 2}
+    rows.sort(key=lambda r: (order.get(r["category"], 3), r["name"].lower()))
+    c.update(ts=time.time(), key=key, data=rows)
+    out["voices"] = rows
+    return out
+
+
+def _restart_app():
+    threading.Thread(target=lambda: subprocess.run(
+        ["sudo", "-n", "systemctl", "restart", "supervaise.service"], timeout=60),
+        daemon=True).start()
+
+
+def eleven_conf_set(body):
+    """Operator pasted a key and/or picked a voice for a role on /maintain.
+    Both are checked against ElevenLabs before app/.env is touched. A new key
+    or a new CJAP voice restarts the voice app (it reads them at start); the
+    GUEST voice is only read by the render scripts, so no restart."""
+    api_key = str(body.get("api_key") or "").strip()
+    role = str(body.get("role") or "").strip()
+    voice_id = str(body.get("voice_id") or "").strip()
+    pairs, notes = {}, []
+    if api_key:
+        if not ELEVEN_KEY_RE.match(api_key):
+            return False, "that does not look like an ElevenLabs API key"
+        ok, d = _eleven_get("/v1/user/subscription", api_key)
+        if not ok:
+            return False, f"key refused by ElevenLabs ({d})"
+        pairs["ELEVEN_API_KEY"] = api_key
+        notes.append(f"API key stored (tier {d.get('tier')}, "
+                     f"{d.get('character_count')}/{d.get('character_limit')} characters used)")
+    if role:
+        if role not in ("host", "cjap"):
+            return False, "role must be host (GUEST) or cjap"
+        var = "ELEVEN_HOST_VOICE_ID" if role == "host" else "ELEVEN_VOICE_ID"
+        label = "GUEST" if role == "host" else "CJAP"
+        if not voice_id:
+            if role == "cjap":
+                return False, "CJAP always needs a voice \u2014 pick another one instead of clearing"
+            pairs[var] = ""
+            notes.append("GUEST voice cleared")
+        else:
+            if not VOICE_ID_RE.match(voice_id):
+                return False, "that does not look like a voice id"
+            key = pairs.get("ELEVEN_API_KEY") or _env_value("ELEVEN_API_KEY") or ""
+            if not key:
+                return False, "no API key stored \u2014 paste one first"
+            ok, v = _eleven_get(f"/v1/voices/{voice_id}", key)
+            if not ok:
+                return False, f"voice {voice_id} is not on this account ({v})"
+            pairs[var] = voice_id
+            notes.append(f"{label} voice \u2192 {v.get('name') or voice_id} ({voice_id})")
+    if not pairs:
+        return False, "nothing to change"
+    try:
+        changed = _env_set(pairs)
+    except OSError as e:
+        return False, f"cannot write app/.env: {e}"
+    if not changed:
+        return True, "no change \u2014 already set"
+    for c in (_eleven_cache, _prov_cache, _voices_cache):
+        c["ts"] = 0.0
+    if "ELEVEN_VOICE_ID" in changed or "ELEVEN_API_KEY" in changed:
+        _restart_app()
+        notes.append("voice app restarting (~25 s) so it picks up the change")
+    return True, "; ".join(notes)
+
+
+def eleven_voice_sample(voice_id):
+    """The voice's ElevenLabs preview clip (free, no credits) -> (ok, mp3 bytes | error)."""
+    voice_id = str(voice_id or "").strip()
+    if not VOICE_ID_RE.match(voice_id):
+        return False, "bad voice id"
+    d = eleven_voices()
+    v = next((x for x in d["voices"] if x["voice_id"] == voice_id), None)
+    if v is None:
+        return False, d.get("error") or "voice not in this account's list"
+    if not v.get("preview_url"):
+        return False, f"{v['name']} has no preview clip"
+    try:
+        return True, _fetch_bytes(v["preview_url"])
+    except Exception as e:
+        return False, f"preview download failed: {type(e).__name__}: {e}"[:160]

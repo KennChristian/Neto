@@ -26,6 +26,26 @@ class _Facade(__import__("types").ModuleType):
 __import__("sys").modules[__name__].__class__ = _Facade
 
 
+def state_doc():
+    """The /api/state document: app state plus the operator console's view.
+    Operator console (2026-09-10): floor / mode / profile / observed /
+    leaseTtl / rms / settings ride on the same document. `speaking` keeps
+    the caption feed the older pages read and gains the per-robot flags
+    {alpha, beta} the console needs. Also what the /api/events push stream
+    sends (2026-09-12)."""
+    doc = state()
+    try:
+        if _console.is_authority():
+            cdoc = _console.get_console().state()
+            cdoc["speaking"] = {**(doc.get("speaking") or {}), **cdoc["speaking"]}
+            doc.update(cdoc)
+        else:
+            doc["console_authority"] = _console.authority_url()
+    except Exception as e:
+        doc["console_error"] = f"{type(e).__name__}: {e}"
+    return doc
+
+
 def handle_get(h, path, params):
     """Returns True if this module handled the request."""
     if path == "/audience":
@@ -100,21 +120,7 @@ def handle_get(h, path, params):
     elif path == "/api/errors":
         h._send(200, json.dumps({"ts": time.time(), "rows": recent_errors()}))
     elif path == "/api/state":
-        doc = state()
-        # Operator console (2026-09-10): floor / mode / profile / observed /
-        # leaseTtl / rms / settings ride on the same document. `speaking`
-        # keeps the caption feed the older pages read and gains the per-robot
-        # flags {alpha, beta} the console needs.
-        try:
-            if _console.is_authority():
-                cdoc = _console.get_console().state()
-                cdoc["speaking"] = {**(doc.get("speaking") or {}), **cdoc["speaking"]}
-                doc.update(cdoc)
-            else:
-                doc["console_authority"] = _console.authority_url()
-        except Exception as e:
-            doc["console_error"] = f"{type(e).__name__}: {e}"
-        h._send(200, json.dumps(doc))
+        h._send(200, json.dumps(state_doc()))
     elif path == "/console":
         if not _console.is_authority():
             # this machine is not the lease authority: send the operator to
@@ -128,6 +134,11 @@ def handle_get(h, path, params):
         else:
             h._send(200, GATE_PAGE.replace("/maintain?key=", "/console?key="),
                     "text/html; charset=utf-8")
+    elif path == "/api/voices":     # Guest voice card (2026-09-12): key hint + voice list, never the key
+        if not _authed(params):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            h._send(200, json.dumps(eleven_voices(refresh=params.get("refresh") in ("1", "true"))))
     elif path in _console.CONSOLE_PATHS_GET:
         code, out = _console.api(_console.get_console(), "GET", path, params,
                                  authed=_authed(params))
@@ -240,6 +251,17 @@ def handle_post(h, path, body):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
         else:
             ok, out = avatar_session()
+            h._send(200, json.dumps({"ok": ok, "output": out}))
+    elif path == "/api/voices":
+        # Guest voice card: store the ElevenLabs key / pick a voice for a role.
+        # Never logged in full - the body can carry the key.
+        if not _authed({}, body):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            ok, out = eleven_conf_set(body)
+            print(f"[ctl] {h.client_address[0]} voices "
+                  f"{'key' if body.get('api_key') else ''} {body.get('role', '')} {body.get('voice_id', '')} -> "
+                  f"{out if ok else 'REFUSED: ' + str(out)}", flush=True)
             h._send(200, json.dumps({"ok": ok, "output": out}))
     elif path == "/api/avatar-conf":
         # /maintain "Avatar" row: switch the LiveAvatar avatar (and, if the new

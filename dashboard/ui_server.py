@@ -22,6 +22,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import queue
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 
@@ -119,30 +120,99 @@ HTTPS_PORT = 8443
 _play_lock = threading.Lock()   # serialize phone-mic playback
 
 
-def wifi_status():
-    saved, current = [], None
-    _, out = run(["nmcli", "-t", "-f", "NAME,TYPE,DEVICE", "connection", "show"])
+# ── WiFi (rewritten 2026-09-12, user: "double check the wifi part so that it would
+# really connect") ────────────────────────────────────────────────────────────
+# The dashboard runs as a systemd service: no login session. polkit's implicit
+# policy for a session-less subject is auth_admin for wifi.scan and
+# network-control and auth_admin_keep for settings.modify.system, and the
+# netdev rule only helps local+active sessions. Plain nmcli therefore returned
+# the STALE scan cache (only the network we were already on — verified: 11 in
+# range, 1 listed) and could not activate or create a profile. Every control
+# call now goes through sudo -n (pollen: NOPASSWD), like systemctl elsewhere.
+NMCLI = ["sudo", "-n", "nmcli"]
+
+
+def _nm(args, timeout=10):
+    return run(NMCLI + list(args), timeout=timeout)
+
+
+def _nm_split(line):
+    """Split one `nmcli -t` line on unescaped colons (values escape ':' and '\\')."""
+    out, cur, i = [], [], 0
+    while i < len(line):
+        c = line[i]
+        if c == "\\" and i + 1 < len(line):
+            cur.append(line[i + 1])
+            i += 2
+            continue
+        if c == ":":
+            out.append("".join(cur))
+            cur = []
+        else:
+            cur.append(c)
+        i += 1
+    out.append("".join(cur))
+    return out
+
+
+_wifi_profiles_cache = {"ts": 0.0, "data": None}
+
+
+def wifi_profiles(refresh=False):
+    """Saved wireless profiles -> {profile name: ssid}. Profile names are not
+    always the SSID (ReachySetup / Hotspot both carry "CJAP Reachy"), and the
+    scan list speaks SSIDs, so the mapping is what "saved" and "join" key on.
+    One nmcli call per profile, cached 60 s."""
+    c = _wifi_profiles_cache
+    if not refresh and c["data"] is not None and time.time() - c["ts"] < 60:
+        return c["data"]
+    names = []
+    _, out = _nm(["-t", "-f", "NAME,TYPE", "connection", "show"])
     for line in out.splitlines():
-        parts = line.split(":")
-        if len(parts) >= 3 and "wireless" in parts[1]:
-            saved.append(parts[0])
-            if parts[2]:
-                current = parts[0]
-    return saved, current
+        parts = _nm_split(line)
+        if len(parts) >= 2 and "wireless" in parts[1]:
+            names.append(parts[0])
+    data = {}
+    for n in names:
+        _, ssid = _nm(["-g", "802-11-wireless.ssid", "connection", "show", n], timeout=5)
+        ssid = re.sub(r"\\(.)", r"\1", ssid.strip())     # -g escapes ':' and '\' like -t does
+        data[n] = ssid or n
+    c.update(ts=time.time(), data=data)
+    return data
+
+
+def wifi_active():
+    """Name of the active wireless profile (None when the radio is idle)."""
+    _, out = _nm(["-t", "-f", "NAME,TYPE,DEVICE", "connection", "show", "--active"])
+    for line in out.splitlines():
+        parts = _nm_split(line)
+        if len(parts) >= 3 and "wireless" in parts[1] and parts[2]:
+            return parts[0]
+    return None
+
+
+def wifi_status():
+    """-> (saved SSIDs, active profile name)."""
+    profiles = wifi_profiles()
+    return sorted(set(profiles.values())), wifi_active()
 
 
 def wifi_scan(rescan=False):
-    cmd = ["nmcli", "-t", "-f", "SSID,SIGNAL,SECURITY,IN-USE", "dev", "wifi", "list"]
+    cmd = ["-t", "-f", "SSID,SIGNAL,SECURITY,IN-USE", "dev", "wifi", "list"]
     if rescan:
         cmd += ["--rescan", "yes"]
-    _, out = run(cmd, timeout=25)
+    _, out = _nm(cmd, timeout=40)
     nets, seen = [], set()
     for line in out.splitlines():
-        parts = line.split(":")
+        parts = _nm_split(line)
         if len(parts) < 4 or not parts[0] or parts[0] in seen:
             continue
         seen.add(parts[0])
-        nets.append({"ssid": parts[0], "signal": int(parts[1] or 0),
+        try:
+            signal = int(parts[1] or 0)
+        except ValueError:
+            signal = 0
+        nets.append({"ssid": parts[0], "signal": signal,
                      "security": parts[2] or "open",
                      "in_use": parts[3] == "*"})
     nets.sort(key=lambda n: -n["signal"])
@@ -153,42 +223,81 @@ SETUP_CON = "ReachySetup"   # wifi_fallback.sh setup-hotspot profile name
 
 
 def hotspot_active():
-    _, out = run(["nmcli", "-t", "-f", "NAME", "connection", "show", "--active"])
-    return SETUP_CON in out.splitlines()
+    return wifi_active() == SETUP_CON
 
 
-def _wifi_join(ssid, password=None):
-    saved, _ = wifi_status()
-    if password:
-        code, out = run(["nmcli", "dev", "wifi", "connect", ssid,
-                         "password", password], timeout=45)
-    elif ssid in saved:
-        code, out = run(["nmcli", "connection", "up", "id", ssid], timeout=45)
+def _profile_for(ssid):
+    """Saved profile name for an SSID (never the setup hotspot)."""
+    for name, s in wifi_profiles(refresh=True).items():
+        if s == ssid and name != SETUP_CON:
+            return name
+    return None
+
+
+def _wifi_join(ssid, password=None, hidden=False):
+    name = _profile_for(ssid)
+    had_profile = name is not None
+    if name and password:
+        # `nmcli dev wifi connect` reuses an existing profile and would keep
+        # its OLD password — write the new one into the profile first, then
+        # activate that profile (this is how a changed router password is fixed).
+        code, out = _nm(["connection", "modify", name, "wifi-sec.psk", password], timeout=15)
+        if code != 0:
+            return False, f"could not store the password in profile {name!r}: {out[-200:]}"
+    if name:
+        code, out = _nm(["connection", "up", "id", name], timeout=60)
     else:
-        code, out = run(["nmcli", "dev", "wifi", "connect", ssid], timeout=45)
+        cmd = ["dev", "wifi", "connect", ssid]
+        if password:
+            cmd += ["password", password]
+        if hidden:
+            cmd += ["hidden", "yes"]
+        code, out = _nm(cmd, timeout=60)
+    _wifi_profiles_cache["ts"] = 0.0
+    if code != 0 and not had_profile and _profile_for(ssid):
+        # a failed first join leaves a half-made profile behind (it would even
+        # autoconnect later) — drop it so the list stays honest
+        _nm(["connection", "delete", "id", _profile_for(ssid)], timeout=10)
+        _wifi_profiles_cache["ts"] = 0.0
     return code == 0, out[-300:]
 
 
-def wifi_connect(ssid, password=None):
+def wifi_connect(ssid, password=None, hidden=False):
     """Bring up a saved connection, or join a new network. NOTE: on success
-    the phone loses the dashboard until it re-joins the same network."""
-    if not ssid or len(ssid) > 32:
+    the phone loses the dashboard until it re-joins the same network. On
+    failure the robot is put back on the network it came from. `hidden` is
+    the operator's word that the SSID does not broadcast: without it a name
+    that is not in the last scan is refused instead of costing a 60 s outage
+    on a typo."""
+    ssid = (ssid or "").strip()
+    if not ssid or len(ssid.encode("utf-8")) > 32:
         return False, "invalid ssid"
+    hidden = bool(hidden)
+    if not hidden and not hotspot_active() and ssid not in {n["ssid"] for n in wifi_scan()}:
+        return False, (f'"{ssid}" was not in the last scan — tap Scan networks again, '
+                       "or tick \u201chidden network\u201d if it does not broadcast its name")
     if hotspot_active():
         # The phone is on the setup hotspot: joining a network takes the AP
         # (and this HTTP connection) down, so reply first and switch in the
         # background; on failure the hotspot comes straight back.
         def _switch():
-            run(["nmcli", "connection", "down", SETUP_CON], timeout=15)
-            ok, out = _wifi_join(ssid, password)
+            _nm(["connection", "down", SETUP_CON], timeout=15)
+            ok, out = _wifi_join(ssid, password, hidden)
             if not ok:
-                print(f"[wifi-fallback] join {ssid!r} failed ({out}) — hotspot back up")
-                run(["nmcli", "connection", "up", SETUP_CON], timeout=20)
+                print(f"[wifi-fallback] join {ssid!r} failed ({out}) — hotspot back up", flush=True)
+                _nm(["connection", "up", SETUP_CON], timeout=20)
         threading.Thread(target=_switch, daemon=True).start()
         return True, (f'trying to join "{ssid}" — reconnect your phone to that '
                       "network and reopen the dashboard; if joining fails, the "
                       "CJAP Reachy hotspot returns within a minute")
-    return _wifi_join(ssid, password)
+    prev = wifi_active()
+    ok, out = _wifi_join(ssid, password, hidden)
+    if ok:
+        return True, f'now on "{ssid}"'
+    if prev and wifi_active() is None:
+        back_code, _ = _nm(["connection", "up", "id", prev], timeout=45)
+        out += f" — back on {prev!r}" if back_code == 0 else f" — and {prev!r} did not come back"
+    return False, out
 
 
 MAC_RE = re.compile(r"^[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}$")
@@ -370,6 +479,18 @@ def _avatar_lag():
         return max(0.0, min(4.0, float(open("/dev/shm/cj_avatar_lag").read())))
     except (OSError, ValueError):
         return 0.8
+
+
+def voice_audition(voice_id):
+    """Preview clip of an ElevenLabs voice through the robot's current audio route."""
+    busy = _robot_busy()
+    if busy:
+        return False, f"robot is {busy} \u2014 try again when it is idle"
+    ok, data = ui.eleven_voice_sample(voice_id)
+    if not ok:
+        return False, data
+    ok, out = play_phone_audio(data)
+    return ok, ("played" if ok else out)
 
 
 def play_phone_audio(blob):
@@ -1206,6 +1327,115 @@ setInterval(() => { if (!document.hidden) wakePoll(); }, 300);
 """
 
 
+# ── Live push (2026-09-12, user: "implement the push version") ──────────────
+# /api/events is a Server-Sent Events stream. ONE background publisher samples
+# the state document every 250 ms, the meters every 300 ms and the system
+# status every 5 s, and sends a frame only when the document changed (the
+# state frame is also resent every 2 s so the page's clocks stay honest). N
+# open pages share that work; each holds one server thread and a small queue.
+# The page falls back to polling if the stream cannot connect.
+def _stable(doc):
+    """The document minus the fields that change on every sample (clocks and
+    ages) — what the publisher compares to decide whether anything happened."""
+    if isinstance(doc, dict):
+        return {k: _stable(v) for k, v in doc.items() if k not in ("ts", "age", "age_s", "uptime_s", "score", "consoleWall", "elapsed_s")}
+    if isinstance(doc, list):
+        return [_stable(v) for v in doc]
+    return doc
+
+
+class _Push:
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.subs = set()
+        self.thread = None
+        self.last = {}          # event -> last frame bytes (new subscribers get a snapshot)
+        self._status_busy = False
+
+    def subscribe(self):
+        q = queue.Queue(maxsize=60)
+        with self.lock:
+            self.subs.add(q)
+            for ev in ("state", "meters", "status"):
+                if ev in self.last:
+                    q.put_nowait(self.last[ev])
+            if self.thread is None or not self.thread.is_alive():
+                self.thread = threading.Thread(target=self._loop, daemon=True, name="push")
+                self.thread.start()
+        return q
+
+    def unsubscribe(self, q):
+        with self.lock:
+            self.subs.discard(q)
+
+    def _emit(self, event, data):
+        frame = f"event: {event}\ndata: {data}\n\n".encode("utf-8")
+        with self.lock:
+            self.last[event] = frame
+            subs = list(self.subs)
+        for q in subs:
+            try:
+                q.put_nowait(frame)
+            except queue.Full:
+                pass    # a stalled page drops a frame; the next one carries the whole document anyway
+
+    def _status_async(self):
+        def go():
+            try:
+                d = json.dumps(status())
+                if d != self._last_status:
+                    self._last_status = d
+                    self._emit("status", d)
+            except Exception:
+                pass
+            finally:
+                self._status_busy = False
+        if not self._status_busy:
+            self._status_busy = True
+            threading.Thread(target=go, daemon=True).start()
+
+    def _loop(self):
+        key_state = last_meters = None
+        self._last_status = None
+        t_state = t_meters = t_status = 0.0
+        sent_state = time.time()
+        while True:
+            with self.lock:
+                if not self.subs:
+                    self.thread = None
+                    return
+            now = time.time()
+            if now - t_meters >= 0.3:
+                t_meters = now
+                try:
+                    md = {"wake": wake_live(), "stop": stop_live()}
+                    mk = json.dumps(_stable(md), sort_keys=True, default=str)
+                    if mk != last_meters:      # a live meter's score changes every sample: that IS the feed
+                        last_meters = mk
+                        self._emit("meters", json.dumps(md))
+                except Exception:
+                    pass
+            if now - t_state >= 0.25 and ui is not None:
+                t_state = now
+                try:
+                    doc = ui.state_doc()
+                    key = json.dumps(_stable(doc), sort_keys=True, default=str)
+                    # resend every 2 s even when nothing changed: the page's "wake listener
+                    # armed" check compares clocks that ride on this document
+                    if key != key_state or now - sent_state >= 2:
+                        key_state, sent_state = key, now
+                        self._emit("state", json.dumps(doc))
+                except Exception:
+                    pass
+            if now - t_status >= 5:
+                t_status = now
+                self._status_async()      # status() probes take ~0.6 s — never in this loop
+            time.sleep(0.05)
+
+
+PUSH = _Push()
+
+
 class Handler(BaseHTTPRequestHandler):
     # HTTP/1.1 keep-alive (2026-08-29, user: "make the maintenance UI faster"):
     # the /maintain page polls ~10 req/s (wake meter 300 ms, state 500 ms,
@@ -1245,6 +1475,29 @@ class Handler(BaseHTTPRequestHandler):
                 j = None
             self._send(200 if j else 404, json.dumps(j or {"error": "no such job"}))
             return
+        if path == "/api/events":
+            q = PUSH.subscribe()
+            try:
+                self.send_response(200)
+                self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+                self.send_header("Cache-Control", "no-cache")
+                self.send_header("X-Accel-Buffering", "no")
+                self.end_headers()
+                self.wfile.write(b"retry: 2000\n\n")
+                self.wfile.flush()
+                while True:
+                    try:
+                        frame = q.get(timeout=15)
+                    except queue.Empty:
+                        frame = b": ping\n\n"     # keeps phones and proxies from closing an idle stream
+                    self.wfile.write(frame)
+                    self.wfile.flush()
+            except (BrokenPipeError, ConnectionResetError, OSError, ValueError):
+                pass
+            finally:
+                PUSH.unsubscribe(q)
+                self.close_connection = True
+            return
         if ui and ui.handle_get(self, path, params):
             return
         if path == "/":
@@ -1255,6 +1508,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, json.dumps(wake_live()))
         elif path == "/api/stop":
             self._send(200, json.dumps(stop_live()))
+        elif path == "/api/meters":   # 2026-09-12: /maintain polls both meters in ONE request (was two at 300 ms)
+            self._send(200, json.dumps({"wake": wake_live(), "stop": stop_live()}))
         elif path == "/api/wifi":
             saved, current = wifi_status()
             nets = wifi_scan(rescan=params.get("rescan") == "1")
@@ -1291,7 +1546,7 @@ class Handler(BaseHTTPRequestHandler):
         if ui and self.path.partition("?")[0] in (
                 "/api/ctl", "/api/entities", "/api/avatar-session",
                 "/api/avatar-stop", "/api/avatar-lag", "/api/avatar-status",
-                "/api/avatar-conf",
+                "/api/avatar-conf", "/api/voices",
                 "/api/ask", "/api/tuning", "/api/volume", "/api/mic",
                 # operator console (2026-09-10): floor lease + mode/profile
                 "/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending",
@@ -1308,7 +1563,8 @@ class Handler(BaseHTTPRequestHandler):
                 n = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(n) or b"{}")
                 ok, out = wifi_connect(body.get("ssid", ""),
-                                       body.get("password") or None)
+                                       body.get("password") or None,
+                                       hidden=bool(body.get("hidden")))
             except Exception as e:
                 ok, out = False, str(e)
             self._send(200, json.dumps({"ok": ok, "output": out}))
@@ -1338,6 +1594,23 @@ class Handler(BaseHTTPRequestHandler):
                 print(f"[say] {self.client_address[0]} {body.get('text', '')[:80]!r}",
                       flush=True)
                 ok, out = say_text(body.get("text", ""))
+            except Exception as e:
+                ok, out = False, str(e)
+            self._send(200, json.dumps({"ok": ok, "output": out}))
+            return
+        if self.path.partition("?")[0] == "/api/voice-audition":
+            # Guest voice card (2026-09-12): play an ElevenLabs voice's preview
+            # clip on the robot's speaker (free) so the operator can compare
+            # voices in the room, not just on the phone.
+            try:
+                n = int(self.headers.get("Content-Length", 0))
+                body = json.loads(self.rfile.read(n) or b"{}")
+                if not ui._authed({}, body):
+                    self._send(403, json.dumps({"ok": False, "output": "bad key"}))
+                    return
+                ok, out = voice_audition(body.get("voice_id"))
+                print(f"[say] {self.client_address[0]} audition {body.get('voice_id', '')} -> "
+                      f"{'ok' if ok else out}", flush=True)
             except Exception as e:
                 ok, out = False, str(e)
             self._send(200, json.dumps({"ok": ok, "output": out}))
