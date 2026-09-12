@@ -861,6 +861,13 @@ try:
     HEAD_SWAY_HZ = max(0.01, min(0.5, float(os.environ.get("CJ_HEAD_SWAY_HZ", "0.07"))))
 except ValueError:
     HEAD_SWAY_HZ = 0.07
+# 2026-09-12 (user: "the head movement is like nodding ... make it move
+# sideways"): damp the pitch (nod) so the side-to-side yaw leads. 1.0 = the
+# old balance, 0 = no nod at all.
+try:
+    BREATH_PITCH = max(0.0, min(1.0, float(os.environ.get("CJ_BREATH_PITCH", "0.35"))))
+except ValueError:
+    BREATH_PITCH = 0.35
 
 
 class Gestures:
@@ -949,7 +956,7 @@ class Gestures:
             return (0.0, 0.0, 0.0)
         s = math.sin
         yaw = 1.9 * s(0.21 * t) + 0.8 * s(0.53 * t + 1.3) + 0.35 * s(1.27 * t + 0.4)
-        pitch = 1.5 * s(0.17 * t + 0.9) + 0.9 * s(0.61 * t + 2.1) + 0.55 * s(0.97 * t)
+        pitch = BREATH_PITCH * (1.5 * s(0.17 * t + 0.9) + 0.9 * s(0.61 * t + 2.1) + 0.55 * s(0.97 * t))
         roll = 1.1 * s(0.13 * t + 2.7) + 0.5 * s(0.47 * t + 0.8)
         # a slow side-to-side look, scaled by the mode (calmer while speaking)
         # but NOT by BREATH_GAIN, so the two are tuned independently. Two
