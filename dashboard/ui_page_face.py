@@ -423,6 +423,9 @@ function recordIdle(){
         if (idleUrl) URL.revokeObjectURL(idleUrl);
         idleUrl = url;
         st("idle loop captured (" + (blob.size / 1024 | 0) + " kB) — the portrait breathes now");
+        // captured while idle and the flag is on: end the session so it stops
+        // costing credits; the loop keeps the face alive on its own
+        if (wantIdleLoop && !speakingNow && !turnActive()){ liveUntil = 0; park(); }
       }catch(e){ idleFails++; }
     };
     try{ idleRec.start(); setTimeout(() => { try{ idleRec && idleRec.stop(); }catch(e){} }, IDLE_RECORD_MS); }
@@ -572,6 +575,15 @@ async function poll(){
     renderExhibit(stt);                              // same plaques as /audience
     updateIndicator(stt);                            // same state pill as /audience
     applyView(stt.avatar_view);                      // /maintain View buttons
+    wantIdleLoop = !!stt.avatar_idle_loop;           // 2026-09-12: was never wired — the loop was dormant
+    // Alive whenever the page is open (flag on): with no loop captured yet,
+    // open a session and record a few seconds of the avatar silent, then it
+    // parks and loops that — blinking, breathing, its own micro-motion — with
+    // no ongoing credits. Once captured, nothing re-opens until a question.
+    if (wantIdleLoop && !idleUrl && !idleBusy && !stopped){
+      if (ready){ if (!speakingNow) recordIdle(); }
+      else { start(); }
+    }
     const sp = stt.speaking || {}, as = stt.aside || {};
     // ack / filler clips ("Hmm.", "let me think…") — mouth them, no caption
     if (as.wav && as.ts && as.ts !== lastAsideTs && (Date.now()/1000 - (as.ts + skew)) < 6){
