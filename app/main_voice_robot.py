@@ -3272,7 +3272,7 @@ def _wake_stream(det):
                 if ask and not (ask.get("a") or ask.get("live")):
                     ask = None
                 if ask and not personas.is_cjap():
-                    print(f"[ask] question ignored — this robot is the Host, not Panganiban")
+                    print("[ask] question ignored — this robot is the Host, not Panganiban")
                     ask = None
                 if ask:
                     _pending_ask["ask"] = ask
