@@ -431,6 +431,10 @@ details.help[open] summary{margin-bottom:4px}
       title="16:9 window — the whole avatar frame, nothing cropped">wide</button>
     <button class="sm" id="avv-full" onclick="ctl('avatar-view-full')"
       title="edge to edge — the avatar fills the page, plaques float over it">full screen</button></div>
+  <div class="btns"><span class="lbl">Idle</span>
+    <button class="sm" id="av-loop-on" onclick="ctl('avatar-idle-loop-on')" title="Record a few seconds of the avatar connected but silent after the next answer, then loop it while parked — it blinks and breathes instead of being a photograph. Costs a few extra seconds of session ONCE.">&#9654; Loop live idle</button>
+    <button class="sm" id="av-loop-off" onclick="ctl('avatar-idle-loop-off')" title="Back to the single captured frame">&#9632; Still frame</button>
+    <span class="dim" id="av-loop-state"></span></div>
   <div class="btns"><span class="lbl">Avatar</span>
     <img id="av-thumb" alt="" style="display:none;height:46px;width:42px;object-fit:cover;
       border-radius:4px;border:1px solid var(--btnline)">
@@ -981,6 +985,11 @@ function render(s){try{LAST_S=s;LAST_AT=Date.now();
     th.style.display='';}else th.style.display='none';
   if(!avSbTouched)$('av-sandbox').checked=ac.sandbox!==false;
   for(const m of ['robot','avatar','sync'])$('av-'+m).style.borderColor=(avOn&&av.mode===m)?'var(--gold)':'';
+  try{const lp=!!s.avatar_idle_loop;
+    $('av-loop-on').style.borderColor=lp?'var(--gold)':'';
+    $('av-loop-off').style.borderColor=lp?'':'var(--gold)';
+    $('av-loop-state').textContent=lp?'on — captures after the next answer, then loops'
+                                     :'off — parked shows one still frame (never blinks)';}catch(e){}
   for(const v of ['framed','wide','full'])$('avv-'+v).style.borderColor=((s.avatar_view||'framed')===v)?'var(--gold)':'';
   $('av-stop').style.display=avOn&&av.stopped?'none':'';
   $('av-resume').style.display=avOn&&!av.stopped?'none':'';

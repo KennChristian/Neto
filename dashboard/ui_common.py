@@ -66,6 +66,14 @@ AVATAR_ID_DEFAULT = "dd73ea75-1218-4ef3-92ce-606d5f7fbc0a"   # "Wayne", the stoc
 # full ... or make a button for flexibility"). Persistent so a page reload and
 # a reboot keep the operator's choice.
 AVATAR_VIEW_FILE = os.path.join(HOME, ".cj_avatar_view")
+# Idle loop (2026-09-12, user: "how about closing of the eye randomly"). The
+# parked portrait is ONE captured frame, so the avatar never blinks and the
+# exhibit shows a photograph most of the time. With this on, /face-avatar
+# records a few seconds of the avatar connected-but-silent and loops that
+# instead: real blinking, real micro-motion, no synthesis. It costs a few
+# extra seconds of session ONCE, to get the footage. Off by default — it has
+# not been watched on a real session yet.
+AVATAR_IDLE_LOOP_FILE = os.path.join(HOME, ".cj_avatar_idle_loop")
 AVATAR_VIEWS = ("framed", "wide", "full")
 os.makedirs(ASSETS, exist_ok=True)
 
@@ -459,6 +467,10 @@ def _read_json(path):
         return None
 
 
+def avatar_idle_loop() -> bool:
+    return os.path.exists(AVATAR_IDLE_LOOP_FILE)
+
+
 def avatar_view():
     """framed (9:10 portrait, the original exhibit look), wide (16:9 window,
     whole frame) or full (edge to edge)."""
@@ -576,6 +588,7 @@ def state():
         "avatar_page": _read_json(AVATAR_PAGE_STATUS),
         "avatar_conf": avatar_conf_view(),   # which avatar the next session opens with
         "avatar_view": avatar_view(),        # how big it sits on /face-avatar
+        "avatar_idle_loop": avatar_idle_loop(),   # loop live footage instead of a still frame
         "avatar_cmd": _read_json(AVATAR_PAGE_CMD),
         "video_cmd": _read_json(VIDEO_PAGE_CMD),   # /maintain → page: play/stop a clip
         "wake_events": _tail_jsonl(WAKE_EVENTS, 12),
@@ -1451,6 +1464,18 @@ def control(action):
     r = _manual_action(action)
     if r is not None:
         return r
+    if action in ("avatar-idle-loop-on", "avatar-idle-loop-off"):
+        on = action.endswith("-on")
+        try:
+            if on:
+                open(AVATAR_IDLE_LOOP_FILE, "w").close()
+            elif os.path.exists(AVATAR_IDLE_LOOP_FILE):
+                os.unlink(AVATAR_IDLE_LOOP_FILE)
+        except OSError as e:
+            return False, f"idle loop flag: {e}"
+        return True, ("idle loop ON — the page records a few seconds of the avatar "
+                      "silent after the next answer, then loops it while parked"
+                      if on else "idle loop off — the parked portrait is a still frame again")
     if action.startswith("avatar-view-"):
         v = action[len("avatar-view-"):]
         if v not in AVATAR_VIEWS:

@@ -26,6 +26,9 @@ FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
    over the live video whenever it is not speaking — and stays up after the
    sandbox session expires, so the portrait never goes black */
 #cam canvas#still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:2}
+/* idle loop (2026-09-12): a few seconds of the avatar connected-but-silent,
+   looped while parked so it blinks and breathes instead of being a photo */
+#cam video#idle{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:2}
 #cam .idle{z-index:1}
 /* avatar view (2026-09-04, user: "make the avatar full" → "or make a button for
    flexibility"): picked on /maintain, persisted in ~/.cj_avatar_view, applied
@@ -35,10 +38,10 @@ FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
      wide   = 16:9 window, contain — the whole frame, nothing cropped
      full   = edge to edge, cover — the avatar IS the page                    */
 #cam.v-wide{width:min(74vw,calc(58vh * 16 / 9));aspect-ratio:16/9;top:4vh}
-#cam.v-wide video,#cam.v-wide canvas#still{object-fit:contain;background:#000}
+#cam.v-wide video,#cam.v-wide canvas#still,#cam.v-wide video#idle{object-fit:contain;background:#000}
 #cam.v-full{top:0;left:0;transform:none;width:100vw;height:100vh;max-width:none;
   aspect-ratio:auto;border-radius:0}
-#cam.v-full video,#cam.v-full canvas#still{object-fit:cover}
+#cam.v-full video,#cam.v-full canvas#still,#cam.v-full video#idle{object-fit:cover}
 /* no on-page operator strip (2026-08-25, user): Stop/Resume, voice mode and
    the status line live on /maintain ("LiveAvatar page" card) and reach this
    page through /api/state (avatar_cmd) — status goes back via /api/avatar-status.
@@ -46,7 +49,7 @@ FACE_AVATAR_PAGE = """<!DOCTYPE html><html><head><meta charset="utf-8">
    audience-facing Idle/Listening/Thinking/Speaking indicator /audience shows,
    so both screens read the same. ?pill=off hides it. */
 </style></head><body>
-<div id="cam"><video id="vid" autoplay playsinline muted></video><canvas id="still"></canvas><audio id="aud" autoplay></audio>
+<div id="cam"><video id="vid" autoplay playsinline muted></video><canvas id="still"></canvas><video id="idle" loop muted playsinline></video><audio id="aud" autoplay></audio>
   <div class="idle" id="camidle"><b>CJAP</b>
     <span>Chief Justice Artemio V. Panganiban</span></div>
 </div>
@@ -360,10 +363,87 @@ function snap(){
   $("camidle").style.display = "none";
   return true;
 }
+// ---- idle loop (2026-09-12, user: "how about closing of the eye randomly") -
+// The parked portrait is ONE captured frame, so the avatar never blinks: for
+// most of the exhibit the audience is looking at a photograph. Painting a fake
+// blink onto a photo-real face looks worse than stillness, so instead we keep
+// a few seconds of the avatar's own footage — connected, silent, blinking on
+// its own — and loop that. The footage only exists while a session is up, and
+// a session is only up while it speaks, so the ONE place to get it is the
+// moment after an answer ends: we hold the session a little longer, once, and
+// record there. After that the loop is reused and nothing is extended again.
+const IDLE_SETTLE_MS = 1200;   // let the last word's mouth movement finish first
+const IDLE_RECORD_MS = 5000;
+let wantIdleLoop = false, idleUrl = null, idleRec = null, idleBusy = false, idleFails = 0;
+
+function idleLoopReady(){ return !!(wantIdleLoop && idleUrl); }
+
+function idleStream(){
+  const v = $("vid");
+  let ms = null;
+  try{ ms = (v.srcObject instanceof MediaStream) ? v.srcObject
+            : (v.captureStream ? v.captureStream() : null); }catch(e){ return null; }
+  if (!ms) return null;
+  const vids = ms.getVideoTracks();
+  if (!vids.length) return null;
+  try{ return new MediaStream([vids[0]]); }catch(e){ return ms; }   // video only: the loop is silent
+}
+
+function idleMime(){
+  for (const m of ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", "video/mp4"])
+    if (window.MediaRecorder && MediaRecorder.isTypeSupported(m)) return m;
+  return null;
+}
+
+function recordIdle(){
+  if (idleBusy || !wantIdleLoop || idleUrl || idleFails >= 3) return;
+  const mime = idleMime();
+  if (!window.MediaRecorder || !mime){ idleFails = 99; st("idle loop: this browser cannot record"); return; }
+  idleBusy = true;
+  // hold the session up long enough to capture the silent tail
+  liveUntil = Math.max(liveUntil, Date.now() + IDLE_SETTLE_MS + IDLE_RECORD_MS + 700);
+  touch();
+  setTimeout(() => {
+    const ms = idleStream();
+    if (!ms || !videoLive() || speakingNow){ idleBusy = false; idleFails++; return; }
+    let chunks = [];
+    try{ idleRec = new MediaRecorder(ms, {mimeType: mime, videoBitsPerSecond: 1200000}); }
+    catch(e){ idleBusy = false; idleFails++; st("idle loop: recorder refused (" + e.message + ")"); return; }
+    idleRec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    idleRec.onerror = () => { idleBusy = false; idleFails++; };
+    idleRec.onstop = () => {
+      idleRec = null; idleBusy = false;
+      const blob = new Blob(chunks, {type: mime}); chunks = [];
+      if (blob.size < 20000){ idleFails++; st("idle loop: clip too short, keeping the still"); return; }
+      try{
+        const url = URL.createObjectURL(blob);
+        const el = $("idle");
+        el.src = url; el.loop = true; el.muted = true;
+        el.play().catch(() => {});
+        if (idleUrl) URL.revokeObjectURL(idleUrl);
+        idleUrl = url;
+        st("idle loop captured (" + (blob.size / 1024 | 0) + " kB) — the portrait breathes now");
+      }catch(e){ idleFails++; }
+    };
+    try{ idleRec.start(); setTimeout(() => { try{ idleRec && idleRec.stop(); }catch(e){} }, IDLE_RECORD_MS); }
+    catch(e){ idleBusy = false; idleFails++; }
+  }, IDLE_SETTLE_MS);
+}
+
+function dropIdleLoop(){
+  try{ if (idleRec) idleRec.stop(); }catch(e){}
+  idleRec = null; idleBusy = false;
+  const el = $("idle");
+  try{ el.pause(); el.removeAttribute("src"); el.load(); }catch(e){}
+  el.style.display = "none";
+  if (idleUrl){ URL.revokeObjectURL(idleUrl); idleUrl = null; }
+}
+
 function frameTick(){
   const live = wantLive || Date.now() < liveUntil || Date.now() < busyUntil;
   if (live){
     if (frozen && videoLive()){ $("still").style.display = "none"; frozen = false; }
+    $("idle").style.display = "none";
   } else if (Date.now() >= freezeAt){
     if (!frozen){
       if (snap()){ $("still").style.display = "block"; frozen = true; snaps = 1; lastSnap = Date.now();
@@ -373,6 +453,10 @@ function frameTick(){
       if (snaps === 4) try{ localStorage.setItem("cjap_still",
         $("still").toDataURL("image/jpeg", 0.85)); }catch(e){}
     }
+    // the loop sits OVER the still, so a failed capture always falls back to it
+    const useLoop = idleLoopReady();
+    $("idle").style.display = useLoop ? "block" : "none";
+    if (useLoop && $("idle").paused) $("idle").play().catch(() => {});
   }
   setTimeout(frameTick, 150);
 }
@@ -523,6 +607,7 @@ async function poll(){
         speakingNow = false; curKey = ""; wantLive = false; touch();
         turnUntil = 0;                        // answer done: the turn is over
         freezeAt = Date.now() + Math.round(((lagEma || 0.8) + 0.7) * 1000);
+        if (!sp.interrupted) recordIdle();   // the one moment the avatar is live and silent
         if (sp.interrupted) busyUntil = 0;    // cut short: freeze with the robot
         sentOrder.length = 0;
         if (sent.size > 64) sent.clear();
