@@ -90,6 +90,8 @@ def _work(client, question, filler, note):
                 # sentence" — config speed 1.0 vs CJ_SPEED_BASE 0.91 was a
                 # ~9% pace drop at the seam)
                 spd = speech_engines.emotion_speed("neutral")
+                if speech_engines.pinned_name_in(text):     # 2026-09-12 name pin
+                    spd = speech_engines.name_pin_settings()[0]
                 wav = speech_engines.tts_elevenlabs_wav(text, speed=spd)
             except Exception as e:
                 print(f"[dynfiller] elevenlabs failed ({type(e).__name__}) "

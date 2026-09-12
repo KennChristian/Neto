@@ -2625,8 +2625,13 @@ def speak(text, filler=None, stop=None, voice_settings=None):
     mp3_path = wav_from_eleven = None
     if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
         try:  # cloned voice: wav straight from the clip cache (no ffmpeg, 2026-08-29)
+            _seed = None
+            if voice_settings is None and speech_engines.pinned_name_in(text):
+                # 2026-09-12 name pin: canned lines say the name exactly like composed ones
+                voice_settings, _seed = speech_engines.name_pin_voice_settings(), speech_engines.name_pin_seed()
+                print(f"[namepin] curated line: speed {voice_settings.get('speed')} stability {voice_settings.get('stability')} seed {_seed}")
             wav_from_eleven = speech_engines.tts_elevenlabs_wav(
-                text, voice_settings=voice_settings)
+                text, voice_settings=voice_settings, seed=_seed)
         except Exception as e:
             print(f"[tts] elevenlabs failed ({type(e).__name__}) — openai fallback")
             wav_from_eleven = None
@@ -2643,7 +2648,8 @@ def speak(text, filler=None, stop=None, voice_settings=None):
             subprocess.run(["ffmpeg", "-y", "-loglevel", "quiet", "-i", mp3_path, wav_path], check=True)
         try:  # speed ceiling for curated clips too (2026-08-30, "speaking is a bit fast")
             import speech_tempo
-            _cap = speech_tempo.cap_clip(wav_path)
+            # 2026-09-12 name pin: a clip that speaks the name keeps its rendered pace
+            _cap = None if speech_engines.pinned_name_in(text) else speech_tempo.cap_clip(wav_path)
             if _cap:
                 print(f"[tempo] curated clip {_cap[1]:.1f} -> {_cap[2]:.1f} chars/s (x{_cap[0]:.3f})")
         except Exception as _e:

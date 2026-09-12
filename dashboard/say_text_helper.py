@@ -24,7 +24,10 @@ from speech_engines import tts_concatenate_parallel  # noqa: E402
 text, out = sys.argv[1], sys.argv[2]
 if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
     try:
-        src = speech_engines.tts_elevenlabs_wav(text)
+        kw = {}
+        if speech_engines.pinned_name_in(text):     # 2026-09-12 name pin: same rendering as the robot's answers
+            kw = {"voice_settings": speech_engines.name_pin_voice_settings(), "seed": speech_engines.name_pin_seed()}
+        src = speech_engines.tts_elevenlabs_wav(text, **kw)
         shutil.move(src, out)
         try:   # alignment sidecar rides along (deleted with the wav)
             shutil.move(src + ".align.json", out + ".align.json")
