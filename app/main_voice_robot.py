@@ -848,13 +848,13 @@ try:   # set_target sustained 38 Hz on this robot; _env_num is defined further d
 except ValueError:
     BREATH_HZ = 30.0
 try:   # 2026-09-12 (user: "exaggerate the breathing a bit"): amplitude multiplier
-    BREATH_GAIN = max(0.3, min(3.0, float(os.environ.get("CJ_BREATH_GAIN", "1.7"))))
+    BREATH_GAIN = max(0.3, min(3.0, float(os.environ.get("CJ_BREATH_GAIN", "1.3"))))
 except ValueError:
     BREATH_GAIN = 1.7
 # 2026-09-12 (user: "movement of the head side to side"): a slow, deliberate
 # left-right yaw sway laid over the breath — degrees of swing and how often.
 try:
-    HEAD_SWAY_DEG = max(0.0, min(25.0, float(os.environ.get("CJ_HEAD_SWAY_DEG", "10"))))
+    HEAD_SWAY_DEG = max(0.0, min(25.0, float(os.environ.get("CJ_HEAD_SWAY_DEG", "4"))))
 except ValueError:
     HEAD_SWAY_DEG = 10.0
 try:
@@ -865,7 +865,7 @@ except ValueError:
 # sideways"): damp the pitch (nod) so the side-to-side yaw leads. 1.0 = the
 # old balance, 0 = no nod at all.
 try:
-    BREATH_PITCH = max(0.0, min(1.0, float(os.environ.get("CJ_BREATH_PITCH", "0.35"))))
+    BREATH_PITCH = max(0.0, min(1.0, float(os.environ.get("CJ_BREATH_PITCH", "0.75"))))
 except ValueError:
     BREATH_PITCH = 0.35
 

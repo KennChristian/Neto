@@ -146,7 +146,7 @@ async function _start(){
         const lag = Date.now()/1000 - pendingLagT0;
         pendingLagT0 = null;
         if (lag > 0 && lag < 5){
-          lagEma = lagEma === null ? lag : lagEma*.6 + lag*.4;
+          lagEma = lagEma === null ? lag : lagEma*.35 + lag*.65;   // 2026-09-12: adapt faster to network jitter (was .6/.4)
           post("/api/avatar-lag", {lag: +lagEma.toFixed(2)});
           st("speaking — avatar start lag " + lagEma.toFixed(2) + "s (auto-sync)");
         }
