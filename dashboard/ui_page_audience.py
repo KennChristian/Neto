@@ -206,9 +206,14 @@ function wordTick(){
   const a=document.getElementById('a');
   const spans=a.getElementsByClassName('w');
   if(!spans.length)return;
+  // The audio for this sentence has not started yet (the feed carries no
+  // play_ts until the robot actually begins speaking it): keep every word
+  // hidden. Revealing off the publish time was the bug that ran the words
+  // ahead of the voice.
+  if(!wwPlay)return;
   // elapsed since this sentence's audio started, in the robot's clock,
   // carried forward locally between polls with the browser clock
-  const elapsed=(performance.now()-wwPerf)/1000+(wwRobot-wwPlay);
+  const elapsed=Math.max(0,(performance.now()-wwPerf)/1000+(wwRobot-wwPlay));
   let last=-1;
   for(let i=0;i<spans.length;i++){
     const st=wwWords[i]?wwWords[i][1]:0;
@@ -218,7 +223,7 @@ function wordTick(){
     if(on)last=i;
   }
   if(last>=0){spans[last].classList.add('now');
-    if(!wwLastScroll||last!==wwLastScroll){wwLastScroll=last;
+    if(wwLastScroll!==last){wwLastScroll=last;
       try{spans[last].scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}}}
 }
 let wwLastScroll=null;
@@ -244,12 +249,17 @@ function renderExhibit(s){
       // plaque reveals each word as the audio reaches it (see wordTick). No
       // timings (openai fallback, or an old clip) -> show the whole sentence.
       if(sp.words&&sp.words.length&&sp.current&&sp.current.length){
-        const key=(sp.play_ts||sp.ts)+'|'+sp.current;
-        if(key!==wwKey){
-          wwKey=key; wwWords=sp.words; wwPlay=sp.play_ts||sp.ts;
-          wwPerf=performance.now(); wwRobot=s.ts;
+        // identity is the clip, not the time: play_ts arrives a beat AFTER the
+        // sentence text, so keying on it would rebuild the moment audio starts
+        const key=(sp.wav||sp.current);
+        if(key!==wwKey){                       // new sentence: lay out hidden words, wait for audio
+          wwKey=key; wwWords=sp.words; wwPlay=0; wwLastScroll=-1;
           render(sp.words.map((w,i)=>'<span class="w" data-i="'+i+'">'+esc(w[0])+'</span>').join(' '),false,true);
-        } else { wwRobot=s.ts; wwPerf=performance.now(); }  // re-anchor the clock each poll
+        }
+        if(sp.play_ts){                        // audio truly started -> anchor to it (robot clock)
+          if(!wwPlay)wwPlay=sp.play_ts;
+          wwRobot=s.ts; wwPerf=performance.now();
+        }
         wordTick();
         return;
       }
