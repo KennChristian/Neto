@@ -322,9 +322,10 @@ class LeaseClient:
                 self._call(self.on_interrupt)
             self.interrupt_seq = iseq
         if isinstance(nseq, int):
-            if self.intro_seq is not None and nseq != self.intro_seq:
+            fire_intro = self.intro_seq is not None and nseq != self.intro_seq
+            self.intro_seq = nseq          # set BEFORE the callback: it reads c.intro_seq
+            if fire_intro:
                 self._call(self.on_intro)
-            self.intro_seq = nseq
         # Host-asked question (2026-09-12). Each robot only ever sees the half
         # that belongs to its role — the authority zeroes the other. Record the
         # seq even when it is 0, or the FIRST non-zero value looks like "no
@@ -333,19 +334,24 @@ class LeaseClient:
         # what the other robot already handled.
         aseq, qseq = reply.get("ask_seq"), reply.get("question_seq")
         if isinstance(aseq, int):
-            if aseq and self.ask_seq is not None and aseq != self.ask_seq and not persona_changed:
-                self._call(self.on_ask, str(reply.get("ask_text") or ""),
-                           str(reply.get("ask_clip") or ""))
+            fire = aseq and self.ask_seq is not None and aseq != self.ask_seq and not persona_changed
+            atext, aclip = str(reply.get("ask_text") or ""), str(reply.get("ask_clip") or "")
             self.ask_seq = aseq
+            if fire:
+                self._call(self.on_ask, atext, aclip)
         if isinstance(qseq, int):
-            if qseq and self.question_seq is not None and qseq != self.question_seq and not persona_changed:
-                self._call(self.on_question, str(reply.get("question_text") or ""))
+            fire = qseq and self.question_seq is not None and qseq != self.question_seq and not persona_changed
+            qtext = str(reply.get("question_text") or "")
             self.question_seq = qseq
+            if fire:
+                self._call(self.on_question, qtext)
         dseq = reply.get("duet_seq")
         if isinstance(dseq, int):
-            if dseq and self.duet_seq is not None and dseq != self.duet_seq and not persona_changed:
-                self._call(self.on_duet, str(reply.get("duet_line") or ""))
-            self.duet_seq = dseq
+            fire = dseq and self.duet_seq is not None and dseq != self.duet_seq and not persona_changed
+            dline = str(reply.get("duet_line") or "")
+            self.duet_seq = dseq           # set BEFORE the callback: _floor_duet reads c.duet_seq
+            if fire:
+                self._call(self.on_duet, dline)
 
     def enforce(self) -> bool:
         """Push the current answer of has_floor() to on_mic (only on change).
