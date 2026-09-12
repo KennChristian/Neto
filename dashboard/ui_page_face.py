@@ -155,7 +155,7 @@ async function _start(){
   };
   sock.onclose = () => {
     if (ws !== sock) return;
-    ready = false; stopKeep(); sentOrder.length = 0;   // nothing queued survives the session
+    ready = false; listenPose = false; stopKeep(); sentOrder.length = 0;   // nothing queued survives the session
     if (parking){ parking = false; st("parked — portrait held, no credits while idle"); return; }
     const busy = speakingNow || turnActive();
     st("session ended (sandbox caps at ~1 min)" +
@@ -378,6 +378,19 @@ let wantIdleLoop = false, idleUrl = null, idleRec = null, idleBusy = false, idle
 
 function idleLoopReady(){ return !!(wantIdleLoop && idleUrl); }
 
+// LITE mode has no emotion or gesture command — verified against the
+// LiveAvatar docs (2026-09-12). Its ONE "not static" lever is the
+// listening pose: agent.start_listening holds an attentive, moving pose,
+// agent.stop_listening returns to idle. We keep a live session in the
+// listening pose whenever it is up and not speaking, so it does not sit
+// frozen between sentences or during the follow-up window.
+let listenPose = false;
+function setListening(on){
+  if (!ws || ws.readyState !== 1 || on === listenPose) return;
+  try{ ws.send(JSON.stringify({type: on ? "agent.start_listening" : "agent.stop_listening"})); listenPose = on; }
+  catch(e){}
+}
+
 function idleStream(){
   const v = $("vid");
   let ms = null;
@@ -576,6 +589,9 @@ async function poll(){
     updateIndicator(stt);                            // same state pill as /audience
     applyView(stt.avatar_view);                      // /maintain View buttons
     wantIdleLoop = !!stt.avatar_idle_loop;           // 2026-09-12: was never wired — the loop was dormant
+    // a live session sitting silent looks frozen; hold the attentive listening
+    // pose (the only motion lever LITE mode gives) until it speaks
+    if (ready) setListening(!speakingNow);
     // Alive whenever the page is open (flag on): with no loop captured yet,
     // open a session and record a few seconds of the avatar silent, then it
     // parks and loops that — blinking, breathing, its own micro-motion — with
