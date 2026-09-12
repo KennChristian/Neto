@@ -698,3 +698,53 @@ def test_turn_journals_resolved_threshold(tmp_path):
     lease(c, "alpha", clock(), mic_open=True, turn_active=True,
           turn_threshold={"rms": 923, "threshold": 1500, "binding": "cap"})
     assert len([r for r in c.journal(20) if r["kind"] == "turn"]) == 1     # once per turn, not per poll
+
+
+# ── authority address (2026-09-12 venue kit) ────────────────────────────────
+# mDNS is the one venue-dependent piece of the robot-to-robot link: guest
+# networks and some travel routers do not forward .local between clients, and
+# the lease fails closed, so an unresolvable name takes the mic down. An
+# optional `authority.ip` replaces the name everywhere.
+
+def _robots_doc(**authority):
+    return {"slots": {"alpha": "reachy-cjap", "beta": "cj-beta"},
+            "authority": {"host": "reachy-cjap", "port": 8080, **authority}}
+
+
+def _robots_file(tmp_path, name="robots.json", **authority):
+    p = tmp_path / name
+    p.write_text(json.dumps(_robots_doc(**authority)))
+    return p
+
+
+def test_authority_ip_replaces_mdns_for_the_lease_client(monkeypatch):
+    monkeypatch.setattr(fl, "robots_config", lambda *a, **k: _robots_doc(ip="192.168.8.2"))
+    monkeypatch.delenv("CJ_CONSOLE_URL", raising=False)
+    monkeypatch.setattr(fl, "hostname", lambda: "cj-beta")          # the OTHER machine
+    assert fl.authority()["ip"] == "192.168.8.2"
+    assert fl.console_url() == "http://192.168.8.2:8080"
+    monkeypatch.setattr(fl, "hostname", lambda: "reachy-cjap")      # the authority itself
+    assert fl.console_url() == "http://127.0.0.1:8080"              # still loopback: survives any outage
+    monkeypatch.setenv("CJ_CONSOLE_URL", "http://10.0.0.5:8080")    # explicit override still wins
+    assert fl.console_url() == "http://10.0.0.5:8080"
+
+
+def test_authority_without_ip_keeps_the_mdns_name(monkeypatch):
+    monkeypatch.setattr(fl, "robots_config", lambda *a, **k: _robots_doc())
+    monkeypatch.setattr(fl, "hostname", lambda: "cj-beta")
+    monkeypatch.delenv("CJ_CONSOLE_URL", raising=False)
+    assert fl.authority()["ip"] == "" and fl.console_url() == "http://reachy-cjap.local:8080"
+
+
+def test_console_authority_url_prefers_the_ip(tmp_path):
+    src = cs.ConfigSources(modes_dir=str(ROOT / "config" / "modes"),
+                           dropin_path=str(tmp_path / "absent.conf"),
+                           dotenv_path=str(tmp_path / "absent.env"),
+                           robots_path=str(_robots_file(tmp_path, ip="192.168.8.2")))
+    assert src.authority()["url"] == "http://192.168.8.2:8080"
+    assert cs.authority_url(src) == "http://192.168.8.2:8080"
+    src2 = cs.ConfigSources(modes_dir=str(ROOT / "config" / "modes"),
+                            dropin_path=str(tmp_path / "absent.conf"),
+                            dotenv_path=str(tmp_path / "absent.env"),
+                            robots_path=str(_robots_file(tmp_path, "robots-noip.json")))
+    assert src2.authority()["url"] == "http://reachy-cjap.local:8080"

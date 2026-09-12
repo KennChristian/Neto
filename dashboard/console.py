@@ -178,10 +178,16 @@ class ConfigSources:
         return str((self.robots().get("labels") or {}).get(role) or role)
 
     def authority(self):
+        """Where the lease/console server runs. `url` is what every caller
+        should use: the optional `ip` (2026-09-12 venue kit — an address skips
+        mDNS, which guest networks often block) else the {host}.local template."""
         a = self.robots().get("authority") or {}
-        return {"host": str(a.get("host") or ""), "port": int(a.get("port") or 8080),
-                "bind": str(a.get("bind") or "0.0.0.0"),
-                "url_template": str(a.get("url_template") or "http://{host}.local:{port}")}
+        host, port = str(a.get("host") or ""), int(a.get("port") or 8080)
+        ip = str(a.get("ip") or "").strip()
+        tmpl = str(a.get("url_template") or "http://{host}.local:{port}")
+        url = f"http://{ip}:{port}" if ip else (tmpl.format(host=host, port=port) if host else "")
+        return {"host": host, "port": port, "bind": str(a.get("bind") or "0.0.0.0"),
+                "ip": ip, "url_template": tmpl, "url": url}
 
     def _cached(self, path, parser):
         try:
@@ -960,8 +966,7 @@ class Console:
                 "cjap_is": self.cjap_is,
                 "roles": {r: {"machine": self.sources.machine_of(r), "role": self.role_of(r),
                               "label": self.name(r)} for r in ROBOTS},
-                "authority": {"host": auth["host"], "port": auth["port"],
-                              "url": auth["url_template"].format(host=auth["host"], port=auth["port"])},
+                "authority": {"host": auth["host"], "port": auth["port"], "url": auth["url"]},
                 "floorTarget": self.transition["target"] if self.transition else self.floor,
                 "transition": transition,
                 "pending": pending,
@@ -1063,8 +1068,7 @@ def is_authority(sources: ConfigSources | None = None) -> bool:
 
 
 def authority_url(sources: ConfigSources | None = None) -> str:
-    a = (sources or ConfigSources()).authority()
-    return a["url_template"].format(host=a["host"], port=a["port"]) if a["host"] else ""
+    return (sources or ConfigSources()).authority()["url"]
 
 _singleton = {}
 

@@ -98,6 +98,7 @@ def authority() -> dict:
     return {"host": str(a.get("host") or "").strip().lower(),
             "port": int(a.get("port") or 8080),
             "bind": str(a.get("bind") or "0.0.0.0"),
+            "ip": str(a.get("ip") or "").strip(),
             "url_template": str(a.get("url_template") or "http://{host}.local:{port}")}
 
 
@@ -116,6 +117,10 @@ def console_url() -> str:
         return DEFAULT_URL
     if a["host"] == hostname():
         return f"http://127.0.0.1:{a['port']}"
+    if a["ip"]:
+        # 2026-09-12 venue kit: an address skips mDNS, which guest networks
+        # and some travel routers do not forward between clients.
+        return f"http://{a['ip']}:{a['port']}"
     return a["url_template"].format(host=a["host"], port=a["port"]).rstrip("/")
 
 

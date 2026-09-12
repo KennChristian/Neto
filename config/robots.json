@@ -1,5 +1,5 @@
 {
-  "_readme": "Machine identity and the lease authority for the two-robot installation. `slots` maps the two logical slots (alpha, beta — the values the floor and cjap_is use) to real hostnames; a machine finds its own slot by hostname (override: CJ_ROBOT_SLOT). Hostnames identify MACHINES only — the persona (Panganiban vs Host) is `cjap_is`, held by the authority and assignable from the console. `authority` is where the console/lease server runs (one machine); the other machine's dashboard proxies /console there and its robot polls it. Relocating the authority = change `authority.host`, sync, restart pi-dashboard on both. Robots never talk to each other.",
+  "_readme": "Machine identity and the lease authority for the two-robot installation. `slots` maps the two logical slots (alpha, beta — the values the floor and cjap_is use) to real hostnames; a machine finds its own slot by hostname (override: CJ_ROBOT_SLOT). Hostnames identify MACHINES only — the persona (Panganiban vs Host) is `cjap_is`, held by the authority and assignable from the console. `authority` is where the console/lease server runs (one machine); the other machine's dashboard proxies /console there and its robot polls it. Relocating the authority = change `authority.host`, sync, restart pi-dashboard on both. Robots never talk to each other. `authority.ip` (2026-09-12) is optional and, when set, replaces the `{host}.local` URL everywhere: mDNS is the fragile part of the link (guest networks block it), so on the venue kit give the authority a DHCP reservation on the travel router and put that address here. `host` still names the MACHINE — it is what each robot compares its hostname against to know whether it IS the authority, so never put an address in it.",
   "slots": {
     "alpha": "reachy-cjap",
     "beta": "cj-beta"
@@ -12,6 +12,7 @@
     "host": "reachy-cjap",
     "port": 8080,
     "bind": "0.0.0.0",
+    "ip": "",
     "url_template": "http://{host}.local:{port}"
   },
   "sync_remote": {

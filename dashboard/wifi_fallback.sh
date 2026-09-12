@@ -19,10 +19,15 @@
 SSID="${CJ_SETUP_SSID:-CJAP Reachy}"
 PW="${CJ_SETUP_PW:-reachymini}"
 CON="ReachySetup"
-CHECK_S=20
-MISSES_BEFORE_AP=3      # 3 x 20s = 60s without WiFi -> hotspot
-RECOVER_EVERY=15        # every 15 AP loops (~5 min) probe for known WiFi
-RECOVER_WAIT=45
+CHECK_S="${CJ_SETUP_CHECK_S:-20}"
+# 3 x 20s = 60s without WiFi -> hotspot. On the SECOND robot of a two-robot
+# kit raise this (CJ_SETUP_MISSES=30 = 10 min): when the venue router dies both
+# machines start counting, and whoever raises an AP first stops the other from
+# joining it. The authority should always win that race, because its hotspot is
+# the fallback LAN the other robot needs to reach the lease. (2026-09-12)
+MISSES_BEFORE_AP="${CJ_SETUP_MISSES:-3}"
+RECOVER_EVERY="${CJ_SETUP_RECOVER_EVERY:-15}"   # every 15 AP loops (~5 min) probe for known WiFi
+RECOVER_WAIT="${CJ_SETUP_RECOVER_WAIT:-45}"
 
 active_wifi() {
     nmcli -t -f NAME,TYPE connection show --active 2>/dev/null |
