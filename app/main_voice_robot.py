@@ -36,6 +36,12 @@ _TURN = {"active": False}          # a question/answer turn is running (console 
 _OPEN_INPUTS = set()               # input streams currently open on the mic (reported as "observed")
 _WAKE = {"detector": None}         # live wake detector so the console can retune its threshold
 _INTRO = {"done": 0}               # intro_seq the host finished speaking (reported to the console)
+_ASK = {"done": 0}                 # ask_seq the host finished ASKING (2026-09-12)
+# Pre-recorded Host questions. The Host's voice is cloned/recorded by hand, so
+# the room hears a real take rather than a synthesis: drop <id>.wav here and
+# name it in the console. Falls back to the Host persona's own voice.
+HOST_Q_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                          "data", "host_questions")
 ROLE_SWITCH = -2.0                 # _wake_stream sentinel: persona changed while idle-listening
 
 
@@ -2951,6 +2957,100 @@ def _safe_turn(*args, **kwargs):
         return True
     finally:
         _TURN["active"] = False
+def _answer_question(client, artifacts, gestures, history, question, stt_s,
+                     stop=None, lock=None):
+    """Question text -> answer, from the entity pass to the spoken reply.
+
+    Split out of handle_turn 2026-09-12 so a question that did NOT come
+    from this robot's microphone can take exactly the same path: the P0
+    entity correction, the farewell check, the canned fast path, then the
+    streaming composer. handle_turn passes what it heard; _typed_turn
+    passes what the operator typed for the Host to ask.
+    """
+    raw_asr = question
+    try:  # P0 entity correction on the transcript (fails open; DARK unless enabled)
+        from text_entities import process_transcript
+        corrected = process_transcript(question)
+        if corrected != question:
+            print(f"[postproc] corrected: \"{corrected}\"")
+            _publish_transcript("note", f"(raw ASR: {question})")
+            question = corrected
+    except Exception as e:
+        print(f"[postproc] transcript pass skipped: {e}")
+    _publish_transcript("user", question)
+    if lock is not None and lock.active() and _is_farewell(question):
+        print("[lock] farewell heard — closing the conversation")
+        _stage("route", "done", "farewell — closing the conversation",
+               extra={"scope": "farewell", "topic": "goodbye", "confidence": "curated",
+                      "scope_reason": "the speaker said goodbye"})
+        _stage("compose", "done", "curated farewell")
+        _stage("fidelity", "done", "curated — pre-verified")
+        # Warm, varied goodbye from the curated pool (2026-08-25, "improve
+        # the emotion in the farewells"); the flat one-liner is the fallback.
+        farewell = None
+        try:
+            import answer_canned
+            farewell = answer_canned.get("thanks_goodbye")
+        except Exception as e:
+            print(f"[canned] farewell pool unavailable ({e})")
+        _say_curated_line(gestures, farewell or FAREWELL_TEXT, stop)
+        return "bye"
+    try:  # canned fast path: curated answers for common questions (fails open)
+        import answer_canned
+        hit = answer_canned.match(question)
+    except Exception as e:
+        print(f"[canned] unavailable ({e})")
+        hit = None
+    if hit:
+        # No router, no composer, zero tokens — the clip cache makes repeats
+        # play near-instantly. speak() still runs the entity TTS pass,
+        # captions, and stop-word interruptible playback.
+        print(f"[canned] fast path hit: {hit['id']}")
+        if hit["id"].startswith("event_") and hit.get("ask"):
+            # Scripted event question: the plaques/feed must show the exact
+            # scripted wording (e.g. "State Properties Corporation"), not
+            # whatever STT made of it. raw_asr keeps the real transcript.
+            if hit["ask"] != question:
+                print(f"[canned] event script — display question: \"{hit['ask']}\"")
+                _replace_last_transcript("user", hit["ask"])
+                question = hit["ask"]
+        _publish_transcript("note", f"(canned answer: {hit['id']})")
+        _stage("route", "done", "matched a curated answer",
+               extra={"scope": "canned", "topic": hit["id"], "confidence": "curated",
+                      "scope_reason": "a question he has answered before — curated reply"})
+        _stage("compose", "done", "curated text — no composer")
+        _stage("fidelity", "done", "curated — pre-verified")
+        response = hit["answer"]
+        # goodbyes get the expressive delivery (see speech_engines.farewell_settings)
+        vs = speech_engines.farewell_settings() if hit["id"] == "thanks_goodbye" else None
+        return _speak_curated(gestures, history, question, response, hit["id"], stop,
+                              path="canned", confidence="canned", raw_asr=raw_asr,
+                              stt_s=stt_s, voice_settings=vs)
+    # Streaming is the only answer path (2026-08-29: the classic whole-answer
+    # composer path was removed; CJ_STREAM_SPEECH no longer needs to be set).
+    return _handle_turn_streaming(client, artifacts, gestures, history, stop,
+                                  question, raw_asr, stt_s)
+
+
+def _typed_turn(client, artifacts, gestures, history, question, stop=None, asked_by="operator"):
+    """Answer a question the operator typed instead of one this robot heard.
+
+    The Host robot speaks the question in the room (console -> lease -> its
+    pre-rendered clip); this robot is handed the same text and answers it
+    live — router, composer, corpus, voice. No microphone is involved, so a
+    noisy hall cannot mishear the question, and the exchange still costs a
+    real answer rather than a scripted one."""
+    question = (question or "").strip()
+    if not question:
+        return False
+    print(f"[ask] live question from {asked_by}: {question!r}", flush=True)
+    _stage(reset=True)
+    _stage("transcribe", "done", f"typed question ({asked_by})")
+    _publish_transcript("note", f"(question typed by the {asked_by})")
+    gestures.start("listen")
+    return _answer_question(client, artifacts, gestures, history, question, 0.0, stop=stop)
+
+
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -3122,69 +3222,8 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
     _gate_report(gate, sim=lock_box.get("res", (None, None))[1], outcome="heard")
     print(f"[stt] heard: \"{question}\"  ({stt_s:.1f}s)")
     _stage("transcribe", "done", f"heard in {stt_s:.1f}s")
-    raw_asr = question
-    try:  # P0 entity correction on the transcript (fails open; DARK unless enabled)
-        from text_entities import process_transcript
-        corrected = process_transcript(question)
-        if corrected != question:
-            print(f"[postproc] corrected: \"{corrected}\"")
-            _publish_transcript("note", f"(raw ASR: {question})")
-            question = corrected
-    except Exception as e:
-        print(f"[postproc] transcript pass skipped: {e}")
-    _publish_transcript("user", question)
-    if lock is not None and lock.active() and _is_farewell(question):
-        print("[lock] farewell heard — closing the conversation")
-        _stage("route", "done", "farewell — closing the conversation",
-               extra={"scope": "farewell", "topic": "goodbye", "confidence": "curated",
-                      "scope_reason": "the speaker said goodbye"})
-        _stage("compose", "done", "curated farewell")
-        _stage("fidelity", "done", "curated — pre-verified")
-        # Warm, varied goodbye from the curated pool (2026-08-25, "improve
-        # the emotion in the farewells"); the flat one-liner is the fallback.
-        farewell = None
-        try:
-            import answer_canned
-            farewell = answer_canned.get("thanks_goodbye")
-        except Exception as e:
-            print(f"[canned] farewell pool unavailable ({e})")
-        _say_curated_line(gestures, farewell or FAREWELL_TEXT, stop)
-        return "bye"
-    try:  # canned fast path: curated answers for common questions (fails open)
-        import answer_canned
-        hit = answer_canned.match(question)
-    except Exception as e:
-        print(f"[canned] unavailable ({e})")
-        hit = None
-    if hit:
-        # No router, no composer, zero tokens — the clip cache makes repeats
-        # play near-instantly. speak() still runs the entity TTS pass,
-        # captions, and stop-word interruptible playback.
-        print(f"[canned] fast path hit: {hit['id']}")
-        if hit["id"].startswith("event_") and hit.get("ask"):
-            # Scripted event question: the plaques/feed must show the exact
-            # scripted wording (e.g. "State Properties Corporation"), not
-            # whatever STT made of it. raw_asr keeps the real transcript.
-            if hit["ask"] != question:
-                print(f"[canned] event script — display question: \"{hit['ask']}\"")
-                _replace_last_transcript("user", hit["ask"])
-                question = hit["ask"]
-        _publish_transcript("note", f"(canned answer: {hit['id']})")
-        _stage("route", "done", "matched a curated answer",
-               extra={"scope": "canned", "topic": hit["id"], "confidence": "curated",
-                      "scope_reason": "a question he has answered before — curated reply"})
-        _stage("compose", "done", "curated text — no composer")
-        _stage("fidelity", "done", "curated — pre-verified")
-        response = hit["answer"]
-        # goodbyes get the expressive delivery (see speech_engines.farewell_settings)
-        vs = speech_engines.farewell_settings() if hit["id"] == "thanks_goodbye" else None
-        return _speak_curated(gestures, history, question, response, hit["id"], stop,
-                              path="canned", confidence="canned", raw_asr=raw_asr,
-                              stt_s=stt_s, voice_settings=vs)
-    # Streaming is the only answer path (2026-08-29: the classic whole-answer
-    # composer path was removed; CJ_STREAM_SPEECH no longer needs to be set).
-    return _handle_turn_streaming(client, artifacts, gestures, history, stop,
-                                  question, raw_asr, stt_s)
+    return _answer_question(client, artifacts, gestures, history, question, stt_s,
+                            stop=stop, lock=lock)
 
 # ════════════════════════════════════════════════════════════════════════════
 # 9. IDLE — WAKE WORD
@@ -3228,12 +3267,17 @@ def _wake_stream(det):
                 except (OSError, ValueError) as e:
                     print(f"[ask] bad trigger ignored: {e}")
                 # (mic mute does not block the event buttons — they are not the mic)
-                if ask and ask.get("a") and not personas.is_cjap():
-                    print(f"[ask] question button ignored — this robot is the Host, not Panganiban")
+                # "a" = a scripted answer (event button); "live" = a question
+                # typed for the Host to ask, answered live here (2026-09-12).
+                if ask and not (ask.get("a") or ask.get("live")):
                     ask = None
-                if ask and ask.get("a"):
+                if ask and not personas.is_cjap():
+                    print(f"[ask] question ignored — this robot is the Host, not Panganiban")
+                    ask = None
+                if ask:
                     _pending_ask["ask"] = ask
-                    print(f"[ask] question button: {ask.get('id')}")
+                    print("[ask] " + (f"live question: {ask.get('q','')!r}" if ask.get("live")
+                                      else f"question button: {ask.get('id')}"))
                     _publish_wake(1.0, fired=True)
                     model.reset()
                     return 1.0
@@ -3458,9 +3502,14 @@ def wake_loop(client, artifacts, gestures):
             continue
         print(f"[wake] FIRED (streaming, score {score:.3f})")
         ask, _pending_ask["ask"] = _pending_ask["ask"], None
-        if ask:   # /event question button: cached clip, works even offline
+        if ask:   # /event question button (cached clip) or a typed live question
             gestures.perk()
-            r = _ask_turn(gestures, history, ask, stop=stop)
+            if ask.get("live"):
+                prewarm_connections(client)
+                r = _typed_turn(client, artifacts, gestures, history, ask.get("q"),
+                                stop=stop, asked_by=ask.get("by") or "operator")
+            else:
+                r = _ask_turn(gestures, history, ask, stop=stop)
             gestures.neutral()
             time.sleep(grace)
             print(f"[wake] re-armed — say \"{phrase}\"")
@@ -3578,6 +3627,7 @@ def _floor_observe():
             "turn_active": bool(_TURN["active"]),
             "persona": personas.active(),
             "intro_done": int(_INTRO["done"]),
+            "ask_done": int(_ASK["done"]),
             "muted": _muted()}
 
 
@@ -3637,6 +3687,61 @@ def _floor_intro():
             if _gestures_inst is not None:
                 _gestures_inst.neutral()
     threading.Thread(target=_say, daemon=True).start()
+
+
+def _floor_ask(text, clip):
+    """on_ask (Host role only): ask the operator's question out loud, then
+    report ask_done so the console releases it to Panganiban.
+
+    A pre-recorded clip is preferred — the Host's voice is cloned by hand, so
+    a real take beats a synthesis and costs nothing per ask. Without one the
+    Host persona's own voice says it. If neither works we still report done:
+    a Host that cannot speak must not strand the question."""
+    c = _FLOOR["client"]
+    if c is None or not personas.is_host():
+        return
+    seq = c.ask_seq
+    wav = os.path.join(HOST_Q_DIR, clip) if clip else ""
+    if wav and not os.path.isfile(wav):
+        print(f"[host] asked for clip {clip!r} — not in {HOST_Q_DIR}, using the Host voice")
+        wav = ""
+
+    def _say():
+        _TURN["active"] = True
+        try:
+            print(f"[host] asking: {text[:100]!r}" + (f" (clip {clip})" if wav else ""), flush=True)
+            _publish_transcript("note", "(the Host is asking a question)")
+            _publish_transcript("user", text)
+            if _gestures_inst is not None:
+                _gestures_inst.start("talk")
+            if wav:
+                subprocess.run(_aplay_cmd(wav), timeout=120)
+            elif text:
+                _say_curated_line(_gestures_inst, text, None)
+        except Exception as e:
+            print(f"[host] asking failed ({type(e).__name__}: {e}) — releasing anyway")
+        finally:
+            _TURN["active"] = False
+            _ASK["done"] = seq if isinstance(seq, int) else _ASK["done"]
+            if _gestures_inst is not None:
+                _gestures_inst.neutral()
+    threading.Thread(target=_say, daemon=True).start()
+
+
+def _floor_question(text):
+    """on_question (Panganiban role only): the Host has finished asking; answer
+    it live. Reuses the dashboard's queue file, so the wake loop picks it up on
+    its next frame exactly like an /event button — no microphone, no STT."""
+    if not personas.is_cjap() or not (text or "").strip():
+        return
+    try:
+        tmp = ASK_TRIGGER + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump({"q": text, "live": True, "by": "Host"}, f)
+        os.replace(tmp, ASK_TRIGGER)
+        print(f"[ask] question from the Host queued: {text[:100]!r}", flush=True)
+    except OSError as e:
+        print(f"[ask] could not queue the Host's question: {e}")
 
 
 def _host_step(gestures):
@@ -3700,7 +3805,8 @@ def main():
     url = floor_lease.console_url()
     lease = floor_lease.LeaseClient(slot, url, on_mic=_floor_mic, on_settings=_floor_settings,
                                     on_persona=_floor_persona, on_interrupt=_floor_interrupt,
-                                    on_intro=_floor_intro, observe=_floor_observe)
+                                    on_intro=_floor_intro, on_ask=_floor_ask,
+                                    on_question=_floor_question, observe=_floor_observe)
     _FLOOR["client"] = lease
     lease.start()
     print(f"[floor] machine {lease.machine} = slot {slot or 'UNKNOWN'} — authority {url} — the mic "

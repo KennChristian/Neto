@@ -1682,6 +1682,29 @@ def ask_event(entry_id):
     return False, f"unknown question id: {entry_id!r}"
 
 
+HOST_Q_DIR = os.path.join(MAIN, "data", "host_questions")
+_host_clips_cache = {"ts": 0.0, "data": []}
+
+
+def host_question_clips():
+    """Audio the Host can play when it asks a question (cached 10 s)."""
+    c = _host_clips_cache
+    if time.time() - c["ts"] < 10:
+        return c["data"]
+    out = []
+    try:
+        for n in sorted(os.listdir(HOST_Q_DIR)):
+            if n.lower().endswith((".wav", ".mp3")) and not n.startswith("."):
+                try:
+                    out.append({"name": n, "bytes": os.path.getsize(os.path.join(HOST_Q_DIR, n))})
+                except OSError:
+                    pass
+    except OSError:
+        pass
+    c.update(ts=time.time(), data=out)
+    return out
+
+
 # ────────────────────────────────────────────────────────────────────────────
 # Guest voice card (2026-09-12, user: "another UI for guest for easy putting
 # the API key or accessing the elevenlabs voices for easy voice switching").

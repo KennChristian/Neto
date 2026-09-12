@@ -1550,6 +1550,7 @@ class Handler(BaseHTTPRequestHandler):
                 "/api/ask", "/api/tuning", "/api/volume", "/api/mic",
                 # operator console (2026-09-10): floor lease + mode/profile
                 "/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending",
+                "/api/host-ask",
                 "/api/calibrate", "/api/unlock-request"):
             try:
                 n = int(self.headers.get("Content-Length", 0))

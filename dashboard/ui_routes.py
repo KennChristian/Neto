@@ -134,6 +134,11 @@ def handle_get(h, path, params):
         else:
             h._send(200, GATE_PAGE.replace("/maintain?key=", "/console?key="),
                     "text/html; charset=utf-8")
+    elif path == "/api/host-clips":   # Host asks card (2026-09-12): recordings on disk
+        if not _authed(params):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            h._send(200, json.dumps({"clips": host_question_clips(), "dir": HOST_Q_DIR}))
     elif path == "/api/voices":     # Guest voice card (2026-09-12): key hint + voice list, never the key
         if not _authed(params):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))

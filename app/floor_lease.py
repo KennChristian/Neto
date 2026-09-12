@@ -153,6 +153,12 @@ class LeaseClient:
                                         (including the first reply)
     on_interrupt()                    — operator "cut short"
     on_intro()                        — host: say the intro line now
+    on_ask(text, clip)                — host: ask this question in the room now
+                                        (2026-09-12; `clip` is a pre-recorded
+                                        file name, "" = say it in its own voice)
+    on_question(text)                 — cjap: answer this question live; it was
+                                        typed by the operator and asked aloud by
+                                        the Host, so no microphone was involved
     observe() -> dict                 — what the mic is actually doing
     """
 
@@ -160,7 +166,8 @@ class LeaseClient:
                  ttl_s: float = TTL_CAP_S, poll_s: float = POLL_S,
                  clock=time.monotonic, transport=None,
                  on_mic=None, on_settings=None, on_persona=None,
-                 on_interrupt=None, on_intro=None, observe=None, log=print):
+                 on_interrupt=None, on_intro=None, on_ask=None, on_question=None,
+                 observe=None, log=print):
         self.slot = slot if slot in SLOTS else None
         self.url = url
         self.ttl_s = min(float(ttl_s), TTL_CAP_S)
@@ -169,6 +176,7 @@ class LeaseClient:
         self.transport = transport or http_transport(url)
         self.on_mic, self.on_settings, self.on_persona = on_mic, on_settings, on_persona
         self.on_interrupt, self.on_intro = on_interrupt, on_intro
+        self.on_ask, self.on_question = on_ask, on_question
         self.observe, self.log = observe, log
         # lease state — fresh boot = nothing held, no persona known
         self.granted = False
@@ -182,6 +190,9 @@ class LeaseClient:
         self.mode = self.profile = None
         self.interrupt_seq = None
         self.intro_seq = None
+        self.ask_seq = None          # last ask handed to this robot (host role)
+        self.ask_done = 0            # highest ask this robot finished saying
+        self.question_seq = None     # last question handed to this robot (cjap role)
         self.last_ok = None       # clock() of the last good reply
         self.last_error = None
         self.polls = self.failures = 0
@@ -308,6 +319,22 @@ class LeaseClient:
             if self.intro_seq is not None and nseq != self.intro_seq:
                 self._call(self.on_intro)
             self.intro_seq = nseq
+        # Host-asked question (2026-09-12). Each robot only ever sees the half
+        # that belongs to its role — the authority zeroes the other. Record the
+        # seq even when it is 0, or the FIRST non-zero value looks like "no
+        # previous value" and is swallowed. A role swap re-points both halves at
+        # this machine, so adopt the new numbers silently rather than re-asking
+        # what the other robot already handled.
+        aseq, qseq = reply.get("ask_seq"), reply.get("question_seq")
+        if isinstance(aseq, int):
+            if aseq and self.ask_seq is not None and aseq != self.ask_seq and not persona_changed:
+                self._call(self.on_ask, str(reply.get("ask_text") or ""),
+                           str(reply.get("ask_clip") or ""))
+            self.ask_seq = aseq
+        if isinstance(qseq, int):
+            if qseq and self.question_seq is not None and qseq != self.question_seq and not persona_changed:
+                self._call(self.on_question, str(reply.get("question_text") or ""))
+            self.question_seq = qseq
 
     def enforce(self) -> bool:
         """Push the current answer of has_floor() to on_mic (only on change).

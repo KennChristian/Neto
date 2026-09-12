@@ -330,6 +330,15 @@ class Console:
         self.observed = {r: None for r in ROBOTS}
         self.interrupt_seq = {r: 0 for r in ROBOTS}
         self.intro_seq = 0
+        # Host-asked question (2026-09-12, user: "manually input the question
+        # from the host ... the host will say it while the CJAP robot will
+        # process it"). Two hops, sequenced here so the answer never starts
+        # before the room has heard the question: bump `ask` -> the Host robot
+        # plays it (its own pre-recorded clip, or its voice) -> the Host
+        # reports ask_done -> `question` is released to Panganiban, who routes
+        # and composes it live. `stage` is which hop is outstanding.
+        self.ask = {"seq": 0, "text": "", "clip": "", "stage": "", "at": 0.0}
+        self.question = {"seq": 0, "text": "", "by": ""}
         self.config_seq = 0
         self.journal_mem: deque = deque(maxlen=JOURNAL_KEEP)
         self._effective_cache = None
@@ -360,6 +369,9 @@ class Console:
             self.interrupt_seq[r] = int((saved.get("interrupt_seq") or {}).get(r, 0))
         self.intro_seq = int(saved.get("intro_seq", 0))
         self.config_seq = int(saved.get("config_seq", 0))
+        # seqs survive a restart so a robot that never went away is not re-asked
+        self.ask["seq"] = int((saved.get("ask") or {}).get("seq", 0))
+        self.question["seq"] = int((saved.get("question") or {}).get("seq", 0))
         want = saved.get("floor")
         # A restart never hands a mic straight back: the saved floor is re-taken
         # through the normal close-both-then-open transition. The floor stays
@@ -379,7 +391,9 @@ class Console:
                "floor_role": self.floor_role, "cjap_is": self.cjap_is, "handoff_seq": self._handoff_seq,
                "mode": self.mode, "profile": self.profile, "overrides": self.overrides,
                "interrupt_seq": self.interrupt_seq, "intro_seq": self.intro_seq,
-               "config_seq": self.config_seq, "saved": self.wall()}
+               "config_seq": self.config_seq,
+               "ask": {"seq": self.ask["seq"]}, "question": {"seq": self.question["seq"]},
+               "saved": self.wall()}
         if not self.state_path:
             return
         try:
@@ -422,6 +436,50 @@ class Console:
     def name(self, slot):
         """'machine · Role' — never identify a robot by its hostname alone."""
         return f"{self.sources.machine_of(slot)} · {self.sources.label_of(self.role_of(slot))}"
+
+    def host_ask(self, text, clip="", who="console", now=None):
+        """Operator typed a question for the Host to ask. Returns (ok, msg, status).
+
+        The Host speaks it first and Panganiban answers only once the Host has
+        finished, so the two robots never talk over each other. With no Host
+        reporting — one machine on the network, or the other one down — the
+        question goes straight to Panganiban rather than stalling."""
+        text = " ".join(str(text or "").split())
+        clip = str(clip or "").strip()
+        now = self._now(now)
+        if not text:
+            return False, "type a question first", 400
+        if len(text) > 400:
+            return False, "question longer than 400 characters", 400
+        if "/" in clip or clip.startswith("."):
+            return False, "bad clip name", 400
+        with self._lock:
+            self.tick(now)
+            if self.mode == "duet":
+                return False, "duet mode composes nothing — switch to direct first", 409
+            host, cjap = self.slot_of("host"), self.slot_of("cjap")
+            self.ask.update(seq=self.ask["seq"] + 1, text=text, clip=clip, at=now)
+            if self._obs_fresh(host, now):
+                self.ask["stage"] = "host"
+                self._journal("ask", f"{self.name(host)} asks: \u201c{text}\u201d"
+                                     + (f" [{clip}]" if clip else " [its own voice]"), who=who,
+                              robot=host, seq=self.ask["seq"])
+                out = f"{self.name(host)} is asking it — {self.name(cjap)} answers when it finishes"
+            else:
+                self.ask["stage"] = ""
+                self._release_question(now, who=who,
+                                       note=f"no report from {self.name(host)} — asked {self.name(cjap)} directly")
+                out = f"no Host reporting — asked {self.name(cjap)} directly"
+            self._persist()
+            return True, out, 200
+
+    def _release_question(self, now, who="console", note=""):
+        """Hand the pending question to Panganiban (caller holds the lock)."""
+        self.question.update(seq=self.ask["seq"], text=self.ask["text"], by="host")
+        self.ask["stage"] = "cjap"
+        cjap = self.slot_of("cjap")
+        self._journal("ask", note or f"question released to {self.name(cjap)}",
+                      who=who, robot=cjap, seq=self.question["seq"])
 
     def set_role(self, cjap_is, force=False, who="console", now=None):
         """-> (ok, message, http_status). Two Panganibans are unrepresentable:
@@ -719,6 +777,7 @@ class Console:
                "turn_threshold": obs.get("turn_threshold") if isinstance(obs.get("turn_threshold"), dict) else None,
                "persona": obs.get("persona") if obs.get("persona") in ROLES else None,
                "intro_done": int(obs["intro_done"]) if isinstance(obs.get("intro_done"), int) else 0,
+               "ask_done": int(obs["ask_done"]) if isinstance(obs.get("ask_done"), int) else 0,
                "role_ok": obs.get("robot") == robot}
         with self._lock:
             prev = self.observed.get(robot)
@@ -743,6 +802,12 @@ class Console:
                 target = self.slot_of("cjap")
                 self._journal("floor", f"intro done — floor to Panganiban ({self.name(target)})", who=robot, target=target)
                 self._begin_transition(target, who=robot, now=now)
+            # host-asked question: the Host has finished saying it -> Panganiban answers
+            if (self.ask["stage"] == "host" and robot == self.slot_of("host")
+                    and rec["ask_done"] >= self.ask["seq"]):
+                self._release_question(now, who=robot,
+                                       note=f"{self.name(robot)} finished the question — "
+                                            f"{self.name(self.slot_of('cjap'))} answering")
             self.tick(now)
             return True, self.lease_for(robot, now), 200
 
@@ -757,6 +822,13 @@ class Console:
                     "interrupt_seq": self.interrupt_seq.get(robot, 0),
                     "intro_seq": self.intro_seq, "config_seq": self.config_seq,
                     "host_intro_text": self.sources.host_intro_text(self.mode),
+                    # exactly one of these is ever non-zero for a given robot,
+                    # so a role swap mid-flight cannot make both of them speak
+                    "ask_seq": self.ask["seq"] if self.role_of(robot) == "host" else 0,
+                    "ask_text": self.ask["text"] if self.role_of(robot) == "host" else "",
+                    "ask_clip": self.ask["clip"] if self.role_of(robot) == "host" else "",
+                    "question_seq": self.question["seq"] if self.role_of(robot) == "cjap" else 0,
+                    "question_text": self.question["text"] if self.role_of(robot) == "cjap" else "",
                     "server_wall": self.wall()}
 
     # ── room calibration (event profile: 800/2500 were placeholders) ──────
@@ -981,6 +1053,9 @@ class Console:
                              "schema": {k: dict(s) for k, s in SETTINGS.items()}},
                 "locked": self.sources.locked_state(),
                 "hostIntroText": self.sources.host_intro_text(self.mode),
+                "ask": {"seq": self.ask["seq"], "text": self.ask["text"], "clip": self.ask["clip"],
+                        "stage": self.ask["stage"], "age_s": round(now - self.ask["at"], 1)
+                        if self.ask["at"] else None},
                 "calibration": self.calib_view(now),
                 "warnings": warnings,
                 "seq": {"interrupt": dict(self.interrupt_seq), "intro": self.intro_seq, "config": self.config_seq},
@@ -1026,6 +1101,12 @@ def api(console: Console, method, path, params=None, body=None, authed=False, no
             return d
         ok, out, st = console.set_role(body.get("cjap_is"), force=bool(body.get("force")), who=who, now=now)
         return st, {"ok": ok, "output": out, "cjap_is": console.cjap_is}
+    if method == "POST" and path == "/api/host-ask":
+        d = need_auth()
+        if d:
+            return d
+        ok, out, st = console.host_ask(body.get("text"), body.get("clip"), who=who, now=now)
+        return st, {"ok": ok, "output": out, "ask": dict(console.ask)}
     if method == "POST" and path == "/api/config":
         d = need_auth()
         if d:
@@ -1056,6 +1137,7 @@ def api(console: Console, method, path, params=None, body=None, authed=False, no
 
 CONSOLE_PATHS_GET = ("/api/journal", "/api/lease")
 CONSOLE_PATHS_POST = ("/api/lease", "/api/floor", "/api/role", "/api/config", "/api/pending",
+                      "/api/host-ask",
                       "/api/calibrate", "/api/unlock-request")
 
 

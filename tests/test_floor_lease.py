@@ -748,3 +748,118 @@ def test_console_authority_url_prefers_the_ip(tmp_path):
                             dotenv_path=str(tmp_path / "absent.env"),
                             robots_path=str(_robots_file(tmp_path, "robots-noip.json")))
     assert src2.authority()["url"] == "http://reachy-cjap.local:8080"
+
+
+# ── Host asks (2026-09-12) ──────────────────────────────────────────────────
+# The operator types a question, the HOST robot says it in the room, and only
+# when the Host has finished does Panganiban get the text to answer live. The
+# console owns that sequencing so the two robots never talk over each other.
+
+def _reporting(con, robot, clock, **obs):
+    ok, reply, st = con.report(robot, {"robot": robot, "boot_id": f"boot-{robot}", **obs}, clock())
+    assert ok and st == 200
+    return reply
+
+
+def test_host_ask_waits_for_the_host_then_releases_to_panganiban(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="direct", profile="kiosk")
+    host, cjap = con.slot_of("host"), con.slot_of("cjap")
+    _reporting(con, host, clock)
+    _reporting(con, cjap, clock)
+
+    ok, out, st = con.host_ask("What did the rule of law cost you?", clip="q1.wav", now=clock())
+    assert ok and st == 200 and con.name(host) in out
+    assert con.ask["stage"] == "host" and con.ask["seq"] == 1
+
+    # only the Host is told to ask; Panganiban is told nothing yet
+    lh, lc = con.lease_for(host, clock()), con.lease_for(cjap, clock())
+    assert lh["ask_seq"] == 1 and lh["ask_text"].startswith("What did") and lh["ask_clip"] == "q1.wav"
+    assert lc["ask_seq"] == 0 and lc["ask_text"] == "" and lc["question_seq"] == 0
+
+    # the Host is still speaking: nothing is released
+    clock.advance(1)
+    _reporting(con, host, clock, ask_done=0, speaking=True)
+    assert con.lease_for(cjap, clock())["question_seq"] == 0 and con.ask["stage"] == "host"
+
+    # the Host finishes -> the question reaches Panganiban, and only Panganiban
+    clock.advance(1)
+    _reporting(con, host, clock, ask_done=1)
+    assert con.ask["stage"] == "cjap"
+    lc = con.lease_for(cjap, clock())
+    assert lc["question_seq"] == 1 and lc["question_text"] == "What did the rule of law cost you?"
+    assert con.lease_for(host, clock())["question_seq"] == 0
+    assert [r for r in con.journal(50) if r["kind"] == "ask"]
+
+
+def test_host_ask_goes_straight_to_panganiban_when_no_host_reports(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="direct", profile="kiosk")
+    cjap = con.slot_of("cjap")
+    _reporting(con, cjap, clock)                      # only one machine on the network
+    ok, out, st = con.host_ask("Who are you?", now=clock())
+    assert ok and "directly" in out
+    assert con.ask["stage"] == "cjap"
+    assert con.lease_for(cjap, clock())["question_text"] == "Who are you?"
+
+
+def test_host_ask_validation_and_duet(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="direct", profile="kiosk")
+    assert con.host_ask("   ", now=clock())[0] is False
+    assert con.host_ask("x" * 401, now=clock())[0] is False
+    assert con.host_ask("ok?", clip="../etc/passwd", now=clock())[0] is False
+    con.set_config(mode="duet", profile="kiosk")
+    ok, out, st = con.host_ask("anything?", now=clock())
+    assert not ok and st == 409 and "duet" in out
+
+
+def test_role_swap_moves_who_asks_and_who_answers(tmp_path):
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="direct", profile="kiosk")
+    for r in ROBOTS:
+        _reporting(con, r, clock)
+    con.host_ask("A question", now=clock())
+    host_before = con.slot_of("host")
+    clock.advance(1)
+    _reporting(con, host_before, clock, ask_done=1)
+    con.set_role(con.slot_of("host"), force=True, now=clock())   # the Host becomes Panganiban
+    # the text follows the ROLE, not the machine: the new Panganiban answers it
+    assert con.lease_for(host_before, clock())["question_text"] == "A question"
+    assert con.lease_for(con.slot_of("host"), clock())["question_seq"] == 0
+
+
+def test_client_fires_the_first_question_and_not_a_role_swap():
+    """The robot side of Host-asks. Two traps: the first non-zero seq must not
+    be swallowed as "no previous value", and a role swap re-points both halves
+    at this machine — it must adopt the numbers silently, never re-ask what the
+    other robot already handled."""
+    seen = {"ask": [], "q": []}
+    box = {"reply": {}}
+    c = fl.LeaseClient("alpha", "http://x", transport=lambda payload: box["reply"],
+                       on_ask=lambda t, clip: seen["ask"].append((t, clip)),
+                       on_question=lambda t: seen["q"].append(t),
+                       log=lambda *a, **k: None)
+    base = {"granted": True, "floor": "alpha", "cjap_is": "alpha", "slot": "alpha",
+            "ask_seq": 0, "ask_text": "", "ask_clip": "",
+            "question_seq": 0, "question_text": ""}
+
+    def poll(**over):
+        box["reply"] = {**base, **over}
+        assert c.poll_once()
+
+    poll()                                                    # boot: nothing pending
+    assert seen == {"ask": [], "q": []}
+    poll(question_seq=1, question_text="first one")
+    assert seen["q"] == ["first one"] and seen["ask"] == []   # the FIRST one is not swallowed
+    poll(question_seq=1, question_text="first one")
+    assert seen["q"] == ["first one"]                         # same seq: no repeat
+    # role swap: this machine becomes the Host and inherits ask_seq 4
+    poll(cjap_is="beta", ask_seq=4, ask_text="already asked")
+    assert seen["ask"] == []                                  # adopted, not replayed
+    poll(cjap_is="beta", ask_seq=5, ask_text="new one", ask_clip="q.wav")
+    assert seen["ask"] == [("new one", "q.wav")]

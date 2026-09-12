@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 app/.venv/
+
+# Host question recordings (media, venue-specific) — see data/host_questions/README.md
+data/host_questions/*.wav
+data/host_questions/*.mp3

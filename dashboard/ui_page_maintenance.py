@@ -297,6 +297,25 @@ details.help[open] summary{margin-bottom:4px}
     The role is held by the lease authority (config/robots.json), never by this page. A swap is queued until the current answer finishes and journaled on the console.
     In direct mode the mic floor moves with the role, so the visitor keeps talking to Panganiban. The Host robot never composes: it plays its intro line and pre-rendered duet audio only.</details>
 </div>
+<div class="card c12" id="hostask-card" data-tab="guest"><h2>Host asks <span class="dim">(you type it, the Host says it, Panganiban answers live)</span></h2>
+  <p class="hint">The Host puts the question to the room and Panganiban answers it for real &mdash; router, corpus, his voice. No microphone is involved, so a noisy hall cannot mishear it.</p>
+  <div class="btns"><span class="lbl">Question</span>
+    <input id="ha-text" maxlength="400" placeholder="What should the Host ask him?" autocomplete="off"
+      style="flex:1;min-width:260px" onkeydown="if(event.key==='Enter')hostAsk()">
+    <button id="ha-go" class="primary" onclick="hostAsk()">&#127908; Ask</button></div>
+  <div class="btns"><span class="lbl">Recording</span>
+    <input id="ha-clip" list="ha-clips" placeholder="optional &mdash; a file the Host plays instead of speaking" autocomplete="off" style="flex:1;min-width:240px">
+    <datalist id="ha-clips"></datalist>
+    <button class="sm" onclick="haClips(true)" title="re-read data/host_questions/">&#8635;</button>
+    <span class="dim" id="ha-clipinfo"></span></div>
+  <div class="btns"><span class="lbl">Status</span><span class="dim" id="ha-state">&hellip;</span></div>
+  <details class="help"><summary>How it is sequenced, and what the recording is for</summary>
+    The console bumps the question to the Host, waits for the Host to report that it has finished speaking, and only then releases the text to Panganiban. The two never talk over each other.
+    With no Host reporting &mdash; one machine on the network, or the other one down &mdash; the question goes straight to Panganiban instead of stalling.
+    A <b>recording</b> is preferred over synthesis: the Host&rsquo;s voice is cloned by hand, so a real take sounds better and costs nothing per ask. Drop <span class="mono">.wav</span> files in <span class="mono">data/host_questions/</span>.
+    The audio and the text are deliberately separate: the recording can be a warm, conversational reading while the text stays the precise question you want routed.</details>
+  <span id="msg6"></span>
+</div>
 <div class="card c12" id="voices-card" data-tab="guest"><h2>Guest voice <span class="dim">(ElevenLabs &mdash; API key, voices, switching)</span></h2>
   <p class="hint">Store the ElevenLabs key once, then pick a voice for the Guest (or swap CJAP&rsquo;s). Listen before you choose.</p>
   <div class="btns"><span class="lbl">API key</span>
@@ -524,7 +543,7 @@ const $=id=>document.getElementById(id);
     const el=$(id);if(!el)continue;let lh,lt;
     Object.defineProperty(el,'innerHTML',{configurable:true,get(){return dH.get.call(el)},set(v){if(v===lh)return;lh=v;lt=undefined;dH.set.call(el,v)}});
     Object.defineProperty(el,'innerText',{configurable:true,get(){return dT.get.call(el)},set(v){if(v===lt)return;lt=v;lh=undefined;dT.set.call(el,v)}});}})();
-function note(t){$('msg').innerText=t;for(const k of ['msg2','msg3','msg4','msg5'])if($(k))$(k).innerText=t;}
+function note(t){$('msg').innerText=t;for(const k of ['msg2','msg3','msg4','msg5','msg6'])if($(k))$(k).innerText=t;}
 document.addEventListener('change',e=>{if(e.target&&e.target.id==='av-sandbox')avSbTouched=true;});
 async function ctl(a){note(a+'\\u2026');const r=await(await fetch('/api/ctl',{method:'POST',
   body:JSON.stringify({action:a,key:KEY})})).json();
@@ -697,6 +716,24 @@ function renderRoles(s){const rs=s.roles;
   else{for(const r of ['alpha','beta'])$('role-'+r).disabled=true;
     $('role-hint').innerHTML=s.console_authority?'set on the lease authority: <a href="'+esc(s.console_authority)+'/maintain?key='+encodeURIComponent(KEY)+'">'+esc(s.console_authority)+'</a>':
       (s.console_error?'console unavailable: '+esc(s.console_error):'no console state');}}
+// Host asks (2026-09-12): type a question, the Host says it, Panganiban answers live.
+async function haClips(force){try{const r=await(await fetch('/api/host-clips?key='+encodeURIComponent(KEY)+(force?'&_='+Date.now():''),{cache:force?'no-store':'default'})).json();
+    const cl=r.clips||[];$('ha-clips').innerHTML=cl.map(c=>'<option value="'+esc(c.name)+'">').join('');
+    $('ha-clipinfo').textContent=cl.length?cl.length+' recording'+(cl.length>1?'s':'')+' on disk':'no recordings yet in data/host_questions/';
+  }catch(e){$('ha-clipinfo').textContent='clip list: '+e;}}
+async function hostAsk(){const t=$('ha-text').value.trim();if(!t){note('type a question first');return;}
+  $('ha-go').disabled=true;note('handing it to the Host\u2026');
+  try{const r=await(await fetch('/api/host-ask',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key:KEY,text:t,clip:$('ha-clip').value.trim(),who:'maintain'})})).json();
+    note(r.output||(r.ok?'asked':'refused'));if(r.ok)$('ha-text').value='';poll();}
+  catch(e){note('ask failed: '+e);}finally{$('ha-go').disabled=false;}}
+function renderAsk(s){const a=s.ask,el=$('ha-state');if(!el)return;
+  if(!a||!a.seq){el.textContent='nothing asked yet this session';return;}
+  const age=a.age_s!=null?' \u00b7 '+fmtAge(a.age_s)+' ago':'';
+  el.innerHTML=(a.stage==='host'?'<b style="color:var(--gold)">the Host is asking it</b>'
+    :a.stage==='cjap'?'<b style="color:var(--ok)">handed to Panganiban</b>':'sent')
+    +' \u2014 \u201c'+esc(a.text)+'\u201d'+(a.clip?' <span class="mono">['+esc(a.clip)+']</span>':'')+age;}
+haClips(false);
 // Guest voice card (2026-09-12): ElevenLabs key + voice list + role switch.
 let EV={voices:[],cjap_voice_id:'',host_voice_id:''},EV_AUDIO=null;
 async function evLoad(refresh){try{const r=await(await fetch('/api/voices?key='+encodeURIComponent(KEY)+(refresh?'&refresh=1&_='+Date.now():''),{cache:'no-store'})).json();
@@ -917,6 +954,7 @@ function render(s){try{LAST_S=s;LAST_AT=Date.now();
   $('btn-ev-off').style.display=s.event_mode?'':'none';
   $('ev-hint').innerText=s.event_mode?'ON \u2014 spoken event questions (and paraphrases) get the scripted answers':'off \u2014 normal conversation; the /event buttons still work';
   try{renderRoles(s);}catch(e){}
+  try{renderAsk(s);}catch(e){}
   const av=s.avatar_page||{},avAge=av.ts?(s.ts-av.ts):1e9,avOn=avAge<10;
   // Idle / Listening / Thinking / Speaking / Muted — the same call robotMode()
   // makes for the banner, so this card, /audience and /face-avatar agree.
