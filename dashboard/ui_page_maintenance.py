@@ -299,8 +299,9 @@ details.help[open] summary{margin-bottom:4px}
 </div>
 <div class="card c12" id="hostask-card" data-tab="guest"><h2>Host asks <span class="dim">(you type it, the Host says it, Panganiban answers live)</span></h2>
   <p class="hint">The Host puts the question to the room and Panganiban answers it for real &mdash; router, corpus, his voice. No microphone is involved, so a noisy hall cannot mishear it.</p>
+  <div class="btns"><span class="lbl">Presets</span><span id="ha-presets" class="dim">loading&hellip;</span></div>
   <div class="btns"><span class="lbl">Question</span>
-    <input id="ha-text" maxlength="400" placeholder="What should the Host ask him?" autocomplete="off"
+    <input id="ha-text" maxlength="400" placeholder="What should the Host ask him? (or tap a preset above)" autocomplete="off"
       style="flex:1;min-width:260px" onkeydown="if(event.key==='Enter')hostAsk()">
     <button id="ha-go" class="primary" onclick="hostAsk()">&#127908; Ask</button></div>
   <div class="btns"><span class="lbl">Recording</span>
@@ -725,6 +726,13 @@ function renderRoles(s){const rs=s.roles;
     $('role-hint').innerHTML=s.console_authority?'set on the lease authority: <a href="'+esc(s.console_authority)+'/maintain?key='+encodeURIComponent(KEY)+'">'+esc(s.console_authority)+'</a>':
       (s.console_error?'console unavailable: '+esc(s.console_error):'no console state');}}
 // Host asks (2026-09-12): type a question, the Host says it, Panganiban answers live.
+async function haPresets(){try{const r=await(await fetch('/api/event-questions?key='+encodeURIComponent(KEY))).json();
+    const qs=r.questions||[];
+    $('ha-presets').innerHTML=qs.length?qs.map((q,i)=>'<button class="sm" data-i="'+i+'" title="'+esc(q.q)+'">'+esc(q.q.length>34?q.q.slice(0,32)+'\u2026':q.q)+'</button>').join(' '):'no event questions in canned_answers.json';
+    HA_PRESETS=qs;
+    [].forEach.call($('ha-presets').getElementsByTagName('button'),function(b){b.onclick=function(){const q=HA_PRESETS[+b.dataset.i];if(!q)return;$('ha-text').value=q.q;hostAsk();};});
+  }catch(e){$('ha-presets').textContent='presets: '+e;}}
+let HA_PRESETS=[];
 async function haClips(force){try{const r=await(await fetch('/api/host-clips?key='+encodeURIComponent(KEY)+(force?'&_='+Date.now():''),{cache:force?'no-store':'default'})).json();
     const cl=r.clips||[];$('ha-clips').innerHTML=cl.map(c=>'<option value="'+esc(c.name)+'">').join('');
     $('ha-clipinfo').textContent=cl.length?cl.length+' recording'+(cl.length>1?'s':'')+' on disk':'no recordings yet in data/host_questions/';
@@ -741,7 +749,7 @@ function renderAsk(s){const a=s.ask,el=$('ha-state');if(!el)return;
   el.innerHTML=(a.stage==='host'?'<b style="color:var(--gold)">the Host is asking it</b>'
     :a.stage==='cjap'?'<b style="color:var(--ok)">handed to Panganiban</b>':'sent')
     +' \u2014 \u201c'+esc(a.text)+'\u201d'+(a.clip?' <span class="mono">['+esc(a.clip)+']</span>':'')+age;}
-haClips(false);
+haClips(false);haPresets();
 // Guest voice card (2026-09-12): ElevenLabs key + voice list + role switch.
 let EV={voices:[],cjap_voice_id:'',host_voice_id:''},EV_AUDIO=null;
 async function evLoad(refresh){try{const r=await(await fetch('/api/voices?key='+encodeURIComponent(KEY)+(refresh?'&refresh=1&_='+Date.now():''),{cache:'no-store'})).json();

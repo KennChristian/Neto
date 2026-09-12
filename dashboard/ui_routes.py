@@ -139,6 +139,11 @@ def handle_get(h, path, params):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
         else:
             h._send(200, json.dumps({"clips": host_question_clips(), "dir": HOST_Q_DIR}))
+    elif path == "/api/event-questions":   # the scripted event_* questions, as quick buttons
+        if not _authed(params):
+            h._send(403, json.dumps({"ok": False, "output": "bad key"}))
+        else:
+            h._send(200, json.dumps({"questions": [{"id": e["id"], "q": e["q"]} for e in _event_entries()]}))
     elif path == "/api/voices":     # Guest voice card (2026-09-12): key hint + voice list, never the key
         if not _authed(params):
             h._send(403, json.dumps({"ok": False, "output": "bad key"}))
