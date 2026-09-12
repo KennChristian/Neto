@@ -16,16 +16,22 @@ for line in open(os.path.join(APP, ".env")):
         k, _, v = line.partition("=")
         os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
+# Optional 3rd arg: an ElevenLabs voice id to synthesize WITH, instead of the
+# default cloned voice — used by the Guest voice test box (2026-09-12), which
+# speaks in ELEVEN_HOST_VOICE_ID so you can hear the Host without a duet.
+text, out = sys.argv[1], sys.argv[2]
+_voice_override = sys.argv[3] if len(sys.argv) > 3 else ""
+if _voice_override:
+    os.environ["ELEVEN_VOICE_ID"] = _voice_override   # voice/config reads this at import
+
 import shutil  # noqa: E402
 
 import speech_engines  # noqa: E402
 from speech_engines import tts_concatenate_parallel  # noqa: E402
-
-text, out = sys.argv[1], sys.argv[2]
 if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
     try:
         kw = {}
-        if speech_engines.pinned_name_in(text):     # 2026-09-12 name pin: same rendering as the robot's answers
+        if not _voice_override and speech_engines.pinned_name_in(text):   # name pin is CJAP-only
             kw = {"voice_settings": speech_engines.name_pin_voice_settings(), "seed": speech_engines.name_pin_seed()}
         src = speech_engines.tts_elevenlabs_wav(text, **kw)
         shutil.move(src, out)

@@ -325,6 +325,9 @@ details.help[open] summary{margin-bottom:4px}
     <button id="ev-keysave" class="primary" onclick="evSaveKey()">Save key</button></div>
   <div class="btns"><span class="lbl">Now</span><span id="ev-now" class="dim">&hellip;</span>
     <button class="sm" onclick="evLoad(true)" title="re-ask ElevenLabs for the voice list">&#8635;</button></div>
+  <div class="btns saybox"><span class="lbl">Test</span>
+    <input type="text" id="ev-say" maxlength="500" placeholder="Type words for the Guest to say, then Enter or Speak" autocomplete="off">
+    <button id="ev-saybtn" class="primary" onclick="guestSay()">&#128483; Speak as Guest</button></div>
   <div class="btns"><span class="lbl">Find</span>
     <input id="ev-filter" placeholder="filter by name, label or category" oninput="evRender()" style="flex:1;min-width:160px" autocomplete="off">
     <span class="dim" id="ev-count"></span></div>
@@ -773,6 +776,13 @@ async function evPost(b){b.key=KEY;try{const r=await(await fetch('/api/voices',{
 async function evUse(i,role){const v=EV.voices[i];if(!v)return;
   if(role==='cjap'&&!confirm('Make \u201c'+v.name+'\u201d the CJAP (Panganiban) voice? The voice app restarts (~25 s) and the mic is off meanwhile.'))return;
   note((role==='host'?'GUEST':'CJAP')+' voice \u2192 '+v.name+'\u2026');await evPost({role:role,voice_id:v.voice_id});}
+async function guestSay(){const t=$('ev-say').value.trim();if(!t){note('type something for the Guest to say');return;}
+  $('ev-saybtn').disabled=true;note('Guest speaking\u2026');
+  try{const r=await(await fetch('/api/say-text?key='+encodeURIComponent(KEY),{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key:KEY,text:t,voice:'host'})})).json();
+    note(r.output||(r.ok?'spoke as Guest':'failed'));if(r.ok)$('ev-say').value='';}
+  catch(e){note('Guest say failed: '+e);}finally{$('ev-saybtn').disabled=false;}}
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement&&document.activeElement.id==='ev-say')guestSay();});
 async function evSaveKey(){const k=$('ev-key').value.trim();if(!k){note('paste a key first');return;}
   if(!confirm('Store this ElevenLabs key in app/.env? The voice app restarts (~25 s).'))return;
   note('checking the key with ElevenLabs\u2026');const r=await evPost({api_key:k});if(r&&r.ok)$('ev-key').value='';}

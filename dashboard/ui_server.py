@@ -373,17 +373,29 @@ def _robot_busy():
     return None
 
 
-def say_text(text):
-    """Speak typed text in the CJ voice (cloud TTS via the app venv)."""
+def _host_voice_id():
+    v = ui._env_value("ELEVEN_HOST_VOICE_ID")
+    return (v or "").strip()
+
+
+def say_text(text, voice=None):
+    """Speak typed text (cloud TTS via the app venv). voice='host' uses the
+    Guest voice (ELEVEN_HOST_VOICE_ID) instead of the cloned CJ voice, so the
+    Host can be voice-tested from a textbox (2026-09-12)."""
     text = (text or "").strip()
     if not text or len(text) > 500:
         return False, "text empty or over 500 characters"
+    voice_id = ""
+    if voice == "host":
+        voice_id = _host_voice_id()
+        if not voice_id:
+            return False, "no Guest voice set — pick one on the Guest voice card first"
     busy = _robot_busy()
     if busy:
         return False, f"robot is {busy} — try again when it is idle"
     wav = tempfile.mktemp(dir="/dev/shm", suffix=".wav")
     try:
-        code, out = run([APP_VENV_PY, SAY_HELPER, text, wav], timeout=60)
+        code, out = run([APP_VENV_PY, SAY_HELPER, text, wav] + ([voice_id] if voice_id else []), timeout=60)
         if code != 0:
             return False, out[-250:]
         with _play_lock:
@@ -1594,7 +1606,7 @@ class Handler(BaseHTTPRequestHandler):
                     return
                 print(f"[say] {self.client_address[0]} {body.get('text', '')[:80]!r}",
                       flush=True)
-                ok, out = say_text(body.get("text", ""))
+                ok, out = say_text(body.get("text", ""), voice=body.get("voice"))
             except Exception as e:
                 ok, out = False, str(e)
             self._send(200, json.dumps({"ok": ok, "output": out}))
