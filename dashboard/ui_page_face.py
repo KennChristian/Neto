@@ -553,11 +553,26 @@ async function sendWav(name, until, aside){
     if (!r.ok){ st("clip gone: " + name); return; }
     const pcm = wavPcm(await r.arrayBuffer());
     if (!pcm){ st("bad wav"); return; }
-    for (let i = 0; i < pcm.length; i += 48000)     // 1s @ 24kHz 16-bit
-      ws.send(JSON.stringify({type:"agent.speak",
-                              audio: b64(pcm.subarray(i, i + 48000))}));
-    ws.send(JSON.stringify({type:"agent.speak_end",
-                            event_id:String(Date.now())}));
+    // Stream the audio in chunks (2026-09-12). Two changes over the old
+    // "blast every 1 s chunk in a tight loop":
+    //  1. a small FIRST chunk (0.2 s) so the avatar can begin moving sooner,
+    //     then 0.5 s chunks — the whole sentence is 'appended' either way, so
+    //     chunk size is free to tune (per the LITE-mode spec).
+    //  2. backpressure: pause while the socket's send buffer is full, so a
+    //     slow venue uplink cannot bloat it into seconds of latency or push
+    //     the connection over. bufferedAmount is bytes still unsent.
+    const B = 48;                 // bytes per ms at 24 kHz 16-bit
+    let i = 0, first = true;
+    while (i < pcm.length && ws && ws.readyState === 1 && !stopped){
+      const step = first ? 200 * B : 500 * B; first = false;
+      // wait for the buffer to drain if it is backing up (cap the wait)
+      for (let w = 0; w < 200 && ws.bufferedAmount > 262144; w++) await sleep(15);
+      ws.send(JSON.stringify({type: "agent.speak",
+                              audio: b64(pcm.subarray(i, i + step))}));
+      i += step;
+    }
+    if (ws && ws.readyState === 1)
+      ws.send(JSON.stringify({type:"agent.speak_end", event_id:String(Date.now())}));
     sentOrder.push(name);
     // the avatar mouths this clip from ~lag after now for its full length —
     // keep the live video up (and the session unparked) until then
