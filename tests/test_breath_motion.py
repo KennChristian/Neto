@@ -26,7 +26,7 @@ def _g(scale=1.0):
 def test_motion_is_small_enough_not_to_be_named():
     g = _g()
     peak = max(max(abs(v) for v in g.breath_offset(t / 20)) for t in range(4000))
-    assert 1.0 < peak < 7.0, f"peak {peak:.2f} deg — alive and visible, not fidgeting (CJ_BREATH_GAIN)"
+    assert 1.0 < peak < 18.0, f"peak {peak:.2f} deg — alive/visible incl. side-to-side sway (CJ_BREATH_GAIN + CJ_HEAD_SWAY_DEG)"
 
 
 def test_it_never_jumps():
@@ -40,7 +40,7 @@ def test_it_never_jumps():
         cur = g.breath_offset(i * dt)
         worst = max(worst, max(abs(a - b) for a, b in zip(cur, prev)))
         prev = cur
-    assert worst < 0.1, f"{worst:.3f} deg per frame is a visible step"
+    assert worst < 0.3, f"{worst:.3f} deg per frame is a visible step"   # slow sway raises it, still <6 deg/s
 
 
 def test_the_pattern_does_not_visibly_repeat():

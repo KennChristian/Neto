@@ -851,6 +851,16 @@ try:   # 2026-09-12 (user: "exaggerate the breathing a bit"): amplitude multipli
     BREATH_GAIN = max(0.3, min(3.0, float(os.environ.get("CJ_BREATH_GAIN", "1.7"))))
 except ValueError:
     BREATH_GAIN = 1.7
+# 2026-09-12 (user: "movement of the head side to side"): a slow, deliberate
+# left-right yaw sway laid over the breath — degrees of swing and how often.
+try:
+    HEAD_SWAY_DEG = max(0.0, min(25.0, float(os.environ.get("CJ_HEAD_SWAY_DEG", "10"))))
+except ValueError:
+    HEAD_SWAY_DEG = 10.0
+try:
+    HEAD_SWAY_HZ = max(0.01, min(0.5, float(os.environ.get("CJ_HEAD_SWAY_HZ", "0.07"))))
+except ValueError:
+    HEAD_SWAY_HZ = 0.07
 
 
 class Gestures:
@@ -941,7 +951,12 @@ class Gestures:
         yaw = 1.9 * s(0.21 * t) + 0.8 * s(0.53 * t + 1.3) + 0.35 * s(1.27 * t + 0.4)
         pitch = 1.5 * s(0.17 * t + 0.9) + 0.9 * s(0.61 * t + 2.1) + 0.55 * s(0.97 * t)
         roll = 1.1 * s(0.13 * t + 2.7) + 0.5 * s(0.47 * t + 0.8)
-        return (k * yaw, k * pitch, k * roll)
+        # a slow side-to-side look, scaled by the mode (calmer while speaking)
+        # but NOT by BREATH_GAIN, so the two are tuned independently. Two
+        # incommensurable sines so the swing itself never lands in a metronome.
+        sway = HEAD_SWAY_DEG * (0.82 * s(2 * math.pi * HEAD_SWAY_HZ * t)
+                                + 0.18 * s(2 * math.pi * HEAD_SWAY_HZ * 0.37 * t + 1.1))
+        return (k * yaw + self.breath_scale * sway, k * pitch, k * roll)
 
     def _breath_run(self):
         """Hold the head alive around whatever pose the last gesture chose.
