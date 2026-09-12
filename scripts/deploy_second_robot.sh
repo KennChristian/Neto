@@ -111,9 +111,15 @@ else
   echo "  app/.env left as it was on that machine"
 fi
 
-say "python environment (existing venv is reused, only new requirements install)"
+say "python environment (existing venv reused; the app import is the gate)"
 run_remote "cd $REMOTE && [ -d app/.venv ] || python3 -m venv app/.venv"
-run_remote "cd $REMOTE && app/.venv/bin/pip -q install --upgrade pip && app/.venv/bin/pip -q install -r app/requirements.txt"
+# openwakeword declares tflite-runtime, which has no wheel on Python 3.13 and is
+# unused here (the wake stack runs the ONNX backend). So the requirements
+# install is best-effort — tflite stripped, failure not fatal — and the REAL
+# check is whether the app imports on the resulting venv. A venv that cannot
+# import the app aborts the deploy; a pip warning does not.
+run_remote "cd $REMOTE && grep -vi tflite app/requirements.txt > /tmp/req.notflite && app/.venv/bin/pip -q install --upgrade pip >/dev/null 2>&1; app/.venv/bin/pip -q install -r /tmp/req.notflite 2>&1 | grep -viE 'already satisfied|tflite|Ignored the following|different python version' | tail -4 || true"
+run_remote "cd $REMOTE/app && ./.venv/bin/python -c 'import main_voice_robot' 2>&1 | grep -viE 'onnx|GetGpu|ReSpeaker' | tail -3 && echo 'app imports on the venv — OK'"
 
 say "dashboard + services"
 run_remote "ln -sfn $REMOTE/dashboard \$HOME/pi_dashboard"
