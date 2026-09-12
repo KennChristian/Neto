@@ -204,11 +204,15 @@ function renderExhibit(s){
     const listening=stg&&stg.steps&&stg.steps.transcribe&&
       stg.steps.transcribe.state==='active'&&(s.ts-stg.ts)<60;
     renderRows(stg,qNow||(lastU?lastU.text:''));
-    // 1. speaking right now: sentence-by-sentence, current in gold
-    if(sp&&!sp.done&&(sp.spoken||[]).length){
+    // 1. speaking right now: show ONLY the sentence being voiced at this
+    // moment (2026-09-12, user: "the displayed text ... what the TTS is
+    // reading at that moment"). `current` is the sentence whose audio just
+    // started; the accumulated `spoken` list is no longer shown mid-answer, so
+    // the plaque reads exactly what he is saying, not what he has already said.
+    if(sp&&!sp.done&&((sp.current&&sp.current.length)||(sp.spoken||[]).length)){
       setState('speaking');
-      render(sp.spoken.map((t,i)=>'<span'+(i===sp.spoken.length-1?' class="cur"':'')+
-          '>'+esc(t)+'</span>').join(' '),false,true);
+      const now=(sp.current&&sp.current.length)?sp.current:sp.spoken[sp.spoken.length-1];
+      render('<span class="cur">'+esc(now)+'</span>',false,true);
       return;
     }
     // 2. mic open / transcribing
