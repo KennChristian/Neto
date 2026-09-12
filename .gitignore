@@ -6,3 +6,8 @@ app/.venv/
 # Host question recordings (media, venue-specific) — see data/host_questions/README.md
 data/host_questions/*.wav
 data/host_questions/*.mp3
+
+# Duet audio: re-renderable from corpus/voice/duet_script.json (scripts/render_duet.py).
+# The manifest IS tracked, so a machine with no API key still knows what the audio should be.
+data/prerendered/duet/*.wav
+data/prerendered/duet/*.mp3

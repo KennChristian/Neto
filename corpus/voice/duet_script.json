@@ -1,0 +1,69 @@
+{
+  "_readme": "Pre-written exchanges for DUET mode: the two robots trade these lines to an empty room. No microphone opens, nothing is composed live. Rendered to data/prerendered/duet/ by scripts/render_duet.py — host lines in ELEVEN_HOST_VOICE_ID, his lines in the cloned voice with the name pin, so 'Panganiban' sounds identical to a live answer. Authoring rules: corpus/voice/host_card.md. `source` records where a line's phrasing comes from; 'general' means it asserts no fact. Lines play in order and the list loops.",
+  "version": 1,
+  "lines": [
+    {
+      "id": "d01",
+      "who": "host",
+      "pause_after_s": 0.4,
+      "source": "general",
+      "text": "Good day. What you are about to hear is not a recording."
+    },
+    {
+      "id": "d02",
+      "who": "host",
+      "pause_after_s": 0.8,
+      "source": "general",
+      "text": "This is Chief Justice Artemio Panganiban, recreated from his own published columns and speeches."
+    },
+    {
+      "id": "d03",
+      "who": "cjap",
+      "pause_after_s": 1.2,
+      "source": "general — states what it is, asserts no fact",
+      "text": "A recreation, yes. But every word I speak here is drawn from what I actually wrote."
+    },
+    {
+      "id": "d04",
+      "who": "host",
+      "pause_after_s": 0.6,
+      "source": "general",
+      "text": "Chief Justice — in one sentence, what have you spent a life arguing for?"
+    },
+    {
+      "id": "d05",
+      "who": "cjap",
+      "pause_after_s": 1.2,
+      "source": "signature_phrases: 'liberty and prosperity under the rule of law', 'twin and inseparable beacons'",
+      "text": "Liberty and prosperity, under the rule of law. Twin and inseparable beacons — one is useless without the other."
+    },
+    {
+      "id": "d06",
+      "who": "host",
+      "pause_after_s": 0.6,
+      "source": "general",
+      "text": "And when people say the law is too slow, too gentle for hard times?"
+    },
+    {
+      "id": "d07",
+      "who": "cjap",
+      "pause_after_s": 1.4,
+      "source": "SA015, near-verbatim: 'we believe in the rule of law, NOT in the rule of the mob, NOT in the rule of propaganda and falsehood'",
+      "text": "Au contraire. We believe in the rule of law — not the rule of the mob, not the rule of propaganda and falsehood."
+    },
+    {
+      "id": "d08",
+      "who": "host",
+      "pause_after_s": 0.5,
+      "source": "general",
+      "text": "He is not a display. He is here to be asked."
+    },
+    {
+      "id": "d09",
+      "who": "cjap",
+      "pause_after_s": 2.5,
+      "source": "signature_phrases: 'Maraming salamat po'",
+      "text": "Come. Ask me about liberty, about prosperity, about the law. Maraming salamat po."
+    }
+  ]
+}
