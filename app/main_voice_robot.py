@@ -847,6 +847,10 @@ try:   # set_target sustained 38 Hz on this robot; _env_num is defined further d
     BREATH_HZ = max(5.0, min(60.0, float(os.environ.get("CJ_BREATH_HZ", "30"))))
 except ValueError:
     BREATH_HZ = 30.0
+try:   # 2026-09-12 (user: "exaggerate the breathing a bit"): amplitude multiplier
+    BREATH_GAIN = max(0.3, min(3.0, float(os.environ.get("CJ_BREATH_GAIN", "1.7"))))
+except ValueError:
+    BREATH_GAIN = 1.7
 
 
 class Gestures:
@@ -930,7 +934,7 @@ class Gestures:
         breathing. Amplitudes are deliberately below what a viewer can name:
         the effect should be that the robot is alive, not that it is moving.
         """
-        k = self.breath_scale
+        k = self.breath_scale * BREATH_GAIN
         if k <= 0:
             return (0.0, 0.0, 0.0)
         s = math.sin

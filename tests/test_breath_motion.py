@@ -26,7 +26,7 @@ def _g(scale=1.0):
 def test_motion_is_small_enough_not_to_be_named():
     g = _g()
     peak = max(max(abs(v) for v in g.breath_offset(t / 20)) for t in range(4000))
-    assert 1.0 < peak < 4.0, f"peak {peak:.2f} deg — alive, not fidgeting"
+    assert 1.0 < peak < 7.0, f"peak {peak:.2f} deg — alive and visible, not fidgeting (CJ_BREATH_GAIN)"
 
 
 def test_it_never_jumps():
