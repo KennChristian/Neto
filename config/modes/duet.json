@@ -1,0 +1,31 @@
+{
+  "_readme": "Mode profile for DUET mode: the two robots trade PRE-RENDERED lines (data/prerendered/duet/, rendered offline by scripts/render_duet.py from the two cards). No microphone is open anywhere — the console forces the floor to `none` and refuses any floor request; nothing is composed live on either robot (the voice app refuses turns in duet). Runs with zero network. Values here are the base of the resolution order: mode profile -> systemd drop-in -> app/.env -> console override.",
+  "mode": "duet",
+  "floor_policy": "none",
+  "host_intro_text": "Good day. Please enjoy a short exchange between Chief Justice Panganiban and myself.",
+  "defaults": {
+    "wake_word": false,
+    "wake_threshold": 0.003,
+    "speech_threshold": 200,
+    "speech_threshold_mult": 2.5,
+    "speech_threshold_cap": 1500,
+    "silence_timeout_s": 1.2,
+    "post_answer_window_s": 0,
+    "host_intro": true,
+    "dry_run": false
+  },
+  "profiles": {
+    "kiosk": {
+      "_note": "Looping exhibit playback."
+    },
+    "event": {
+      "_note": "Same as kiosk; the speech settings are inert in duet because no mic opens, but they are kept so switching to direct carries the event thresholds.",
+      "speech_threshold": 800,
+      "speech_threshold_cap": 2500
+    }
+  },
+  "playback": {
+    "source": "data/prerendered/duet/",
+    "note": "exchanges alternate Host/Panganiban lines; the console cues them (step 5)"
+  }
+}

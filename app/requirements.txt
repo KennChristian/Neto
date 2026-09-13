@@ -36,3 +36,4 @@ streamlit-autorefresh>=1.0.1
 # need them. Safe to drop if you're not exercising those code paths.
 numpy>=1.24.0
 scipy>=1.10.0
+pytest>=8

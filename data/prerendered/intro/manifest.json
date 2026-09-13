@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "rendered_at": 1789282824.8104765,
+  "variants": 6,
+  "clips": [
+    {
+      "id": "i1_kiosk",
+      "variant": "i1",
+      "mode": "kiosk",
+      "text": "Good day. What you are about to hear is a recreation of Chief Justice Artemio Panganiban, built from his own published columns and speeches. It is not a recording of him. Say, Hi Cee-Jap, to begin.",
+      "wav": "i1_kiosk.wav",
+      "seconds": 12.26,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i1_event",
+      "variant": "i1",
+      "mode": "event",
+      "text": "Good day. What you are about to hear is a recreation of Chief Justice Artemio Panganiban, built from his own published columns and speeches. It is not a recording of him. Speak into the handheld microphone when you are ready.",
+      "wav": "i1_event.wav",
+      "seconds": 11.98,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i2_kiosk",
+      "variant": "i2",
+      "mode": "kiosk",
+      "text": "Welcome. I am your guide for this exhibit. The voice beside me is a recreation of Chief Justice Panganiban, assembled from the columns and speeches he published himself. Not a recording. Say, Hi Cee-Jap, to begin.",
+      "wav": "i2_kiosk.wav",
+      "seconds": 13.28,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i2_event",
+      "variant": "i2",
+      "mode": "event",
+      "text": "Welcome. I am your guide for this exhibit. The voice beside me is a recreation of Chief Justice Panganiban, assembled from the columns and speeches he published himself. Not a recording. Speak into the handheld microphone when you are ready.",
+      "wav": "i2_event.wav",
+      "seconds": 14.02,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i3_kiosk",
+      "variant": "i3",
+      "mode": "kiosk",
+      "text": "Hello, and welcome. Retired Chief Justice Artemio Panganiban is not here in person. What answers you is a recreation, drawn from his published writing and from nothing else. Say, Hi Cee-Jap, to begin.",
+      "wav": "i3_kiosk.wav",
+      "seconds": 12.17,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i3_event",
+      "variant": "i3",
+      "mode": "event",
+      "text": "Hello, and welcome. Retired Chief Justice Artemio Panganiban is not here in person. What answers you is a recreation, drawn from his published writing and from nothing else. Speak into the handheld microphone when you are ready.",
+      "wav": "i3_event.wav",
+      "seconds": 15.05,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i4_kiosk",
+      "variant": "i4",
+      "mode": "kiosk",
+      "text": "Good day, and thank you for stopping. This is a recreation of retired Chief Justice Artemio Panganiban: his published columns and speeches, given a voice. It is not a recording. Say, Hi Cee-Jap, to begin.",
+      "wav": "i4_kiosk.wav",
+      "seconds": 12.07,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i4_event",
+      "variant": "i4",
+      "mode": "event",
+      "text": "Good day, and thank you for stopping. This is a recreation of retired Chief Justice Artemio Panganiban: his published columns and speeches, given a voice. It is not a recording. Speak into the handheld microphone when you are ready.",
+      "wav": "i4_event.wav",
+      "seconds": 13.42,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i5_kiosk",
+      "variant": "i5",
+      "mode": "kiosk",
+      "text": "Welcome to the exhibit. The Chief Justice himself is not here. What speaks beside me is a recreation, and everything it offers you is drawn from the work he published. Say, Hi Cee-Jap, to begin.",
+      "wav": "i5_kiosk.wav",
+      "seconds": 9.89,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i5_event",
+      "variant": "i5",
+      "mode": "event",
+      "text": "Welcome to the exhibit. The Chief Justice himself is not here. What speaks beside me is a recreation, and everything it offers you is drawn from the work he published. Speak into the handheld microphone when you are ready.",
+      "wav": "i5_event.wav",
+      "seconds": 11.1,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i6_kiosk",
+      "variant": "i6",
+      "mode": "kiosk",
+      "text": "Good day. Before you ask anything, know this. Chief Justice Panganiban has been recreated here from his own published columns and speeches. No recording, and nothing he did not write. Say, Hi Cee-Jap, to begin.",
+      "wav": "i6_kiosk.wav",
+      "seconds": 11.42,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    },
+    {
+      "id": "i6_event",
+      "variant": "i6",
+      "mode": "event",
+      "text": "Good day. Before you ask anything, know this. Chief Justice Panganiban has been recreated here from his own published columns and speeches. No recording, and nothing he did not write. Speak into the handheld microphone when you are ready.",
+      "wav": "i6_event.wav",
+      "seconds": 12.4,
+      "voice": "Jputl7ydOkTQsdni8D3F"
+    }
+  ]
+}

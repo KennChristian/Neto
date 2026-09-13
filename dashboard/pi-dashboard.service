@@ -1,0 +1,15 @@
+[Unit]
+Description=Reachy Mini troubleshooting web dashboard (port 8080)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pollen
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+ExecStart=/usr/bin/python3 /home/pollen/Supervaise-Reachy-Mini-Project-main/dashboard/ui_server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

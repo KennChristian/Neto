@@ -1,0 +1,12 @@
+# Runtime state and secrets live beside the code but never in git:
+# assets/ holds liveavatar.json (API key, mode 0600) and the cached avatar
+# info; certs/ holds the self-signed TLS cert + private key for :8443.
+assets/
+certs/
+camera.focus
+camera.off
+camera.opts
+_backups/
+*.bak-*
+__pycache__/
+*.pyc

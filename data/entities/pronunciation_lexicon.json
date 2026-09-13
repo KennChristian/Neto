@@ -1,6 +1,6 @@
 {
  "_readme": "Filipino pronunciation lexicon for the TTS voice (P2 lexicon override map). Keys are words/names as they appear in text (ñ-folded spellings match too); values are phonetic respellings fed to gpt-4o-mini-tts as per-sentence instructions. Hand-editable; hot-reloaded on save, no restart. Keep values short: 'pang-ga-NEE-ban' style, capitals = stressed syllable. STUBBORN WORDS: keys listed in _force get their respelling substituted directly into the TTS input text (captions keep the real spelling) — use for words the model anglicizes even when hinted. Write hard g as gh (kah-mee-GHEEN) since gee reads like jean.",
- "Panganiban": "pah-ngah-NEE-bahn",
+ "Panganiban": "pahng-ngah-NEE-bahn",
  "Artemio": "ar-TEHM-yoh",
  "Leni": "LEH-nee",
  "Elenita": "eh-leh-NEE-tah",

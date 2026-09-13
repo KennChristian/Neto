@@ -2,3 +2,19 @@
 __pycache__/
 *.pyc
 app/.venv/
+
+# Host question recordings (media, venue-specific) — see data/host_questions/README.md
+data/host_questions/*.wav
+data/host_questions/*.mp3
+
+# Duet audio: re-renderable from corpus/voice/duet_script.json (scripts/render_duet.py).
+# The manifest IS tracked, so a machine with no API key still knows what the audio should be.
+data/prerendered/duet/*.wav
+data/prerendered/intro/*.wav
+data/prerendered/duet/*.mp3
+
+# Appended by the RUNNING robot on every turn (text_entities corrections), so
+# tracking it meant the working tree went dirty during an event and the
+# "clean tree on both machines" pre-event check could never pass. The other
+# reports/ files are pipeline outputs and stay tracked. 2026-09-13.
+reports/postproc_corrections.jsonl

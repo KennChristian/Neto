@@ -229,6 +229,193 @@ def pronunciation_hints(text: str, cap: int = 6) -> str:
     return " Pronounce " + "; ".join(hits) + "."
 
 
+# Name pin (2026-09-12, user: "consistent speed whenever Panganiban is
+# pronounced because this is a factor of how it speaks Panganiban"). A
+# sentence that carries a pinned name is synthesized at ONE fixed speed and
+# delivery — the config voice settings, i.e. exactly what the canned clips and
+# the pronunciation A/B were rendered with — instead of the emotion-slewed
+# values, and it is exempt from the post-synthesis tempo stretch. Neighbouring
+# sentences slew from the pinned values, so the seam stays smooth.
+#   CJ_NAME_PIN=0                 disable
+#   CJ_NAME_PIN_WORDS=a,b         names to pin (default Panganiban)
+#   CJ_NAME_PIN_SPEED=0.95        ElevenLabs speed (default: CJ_SPEED_BASE, else config speed;
+#                                 user picked 0.95 from a 0.90/0.95/1.00/1.05 A/B, 2026-09-12)
+#   CJ_NAME_PIN_DELIVERY=0.5:0.0  stability:style (default: config values)
+#   CJ_NAME_PIN_SYLLABLE=ngah:0.30 syllable of the respelled name to time-compress, and to what
+#                                 length (WSOLA on that span only; alignment times follow). off = none
+#   CJ_NAME_PIN_SEED=4242         fixed ElevenLabs seed for pinned sentences (0 = off). Takes of
+#                                 the same text vary more than a 5 % speed step does, so the
+#                                 seed is what makes the name come out the same each time.
+_name_pin_cache = {"key": None, "pats": []}
+
+
+def name_pin_enabled() -> bool:
+    return os.environ.get("CJ_NAME_PIN", "1").strip().lower() not in {"0", "false", "no", "off"}
+
+
+def pinned_name_in(text: str) -> bool:
+    """True when `text` contains one of the pinned names (any case, possessive too)."""
+    if not name_pin_enabled() or not text:
+        return False
+    words = os.environ.get("CJ_NAME_PIN_WORDS", "Panganiban")
+    if _name_pin_cache["key"] != words:
+        pats = []
+        for w in (x.strip() for x in words.split(",")):
+            if w:
+                pats.append(re.compile(r"(?<![A-Za-z0-9])" + re.escape(w).replace("ñ", "[ñn]")
+                                       + r"(['’]?s)?(?![A-Za-z0-9])", re.IGNORECASE))
+        _name_pin_cache.update(key=words, pats=pats)
+    return any(p.search(text) for p in _name_pin_cache["pats"])
+
+
+def name_pin_settings() -> tuple[float, tuple[float, float]]:
+    """(speed, (stability, style)) every pinned sentence is rendered with."""
+    speed, stab, style = 1.0, 0.5, 0.0
+    try:
+        import sys as _sys
+        root = str(Path(__file__).resolve().parent.parent)
+        if root not in _sys.path:
+            _sys.path.insert(0, root)
+        from voice import config as v_config
+        speed = float(v_config.VOICE_SETTINGS.get("speed", speed))
+        stab = float(v_config.VOICE_SETTINGS.get("stability", stab))
+        style = float(v_config.VOICE_SETTINGS.get("style", style))
+    except Exception:
+        pass
+    for var in ("CJ_SPEED_BASE", "CJ_NAME_PIN_SPEED"):   # later wins
+        try:
+            speed = float(os.environ.get(var, speed))
+        except ValueError:
+            pass
+    raw = os.environ.get("CJ_NAME_PIN_DELIVERY", "").strip()
+    if raw:
+        try:
+            a, b = raw.split(":")
+            stab, style = float(a), float(b)
+        except ValueError:
+            pass
+    speed = round(min(1.2, max(0.7, speed)), 3)
+    return speed, (round(min(1.0, max(0.0, stab)), 3), round(min(1.0, max(0.0, style)), 3))
+
+
+def name_pin_syllable() -> tuple[str, float] | None:
+    """CJ_NAME_PIN_SYLLABLE="ngah:0.80" -> ("ngah", 0.8): the syllable of the
+    respelled name to time-compress, and the length factor. 2026-09-12 A/B
+    (user, T2): "pahng-ngah-NEE-bahn" at 0.90 with the "ngah" at 30 % of its length."""
+    raw = os.environ.get("CJ_NAME_PIN_SYLLABLE", "ngah:0.30").strip()
+    if not raw or raw.lower() in {"0", "off", "none"}:
+        return None
+    try:
+        syl, f = raw.split(":")
+        f = float(f)
+    except ValueError:
+        return None
+    if not syl or not 0.3 <= f < 1.0:
+        return None
+    return syl, f
+
+
+def name_pin_shape(pcm, sr: int, align: dict) -> tuple:
+    """Shorten the pinned syllable inside every pinned name of a rendered
+    clip. `align` is the ElevenLabs character alignment for the text that was
+    synthesized (already respelled); its times are rewritten to match. Returns
+    (pcm, align, n_changed). Any failure returns the input untouched."""
+    spec = name_pin_syllable()
+    try:
+        chars = align["characters"]
+        st = list(align["character_start_times_seconds"])
+        en = list(align["character_end_times_seconds"])
+    except (KeyError, TypeError):
+        return pcm, align, 0
+    if spec is None or not chars:
+        return pcm, align, 0
+    syl, factor = spec
+    joined = "".join(chars)
+    # the respelled forms of the pinned words, as they appear in the synthesized text
+    forms = []
+    for w in (x.strip() for x in os.environ.get("CJ_NAME_PIN_WORDS", "Panganiban").split(",")):
+        r = apply_forced_respellings(w) if w else ""
+        if r and r != w and syl in r:
+            forms.append(r)
+    if not forms:
+        return pcm, align, 0
+    import numpy as _np
+    spans = []
+    for form in forms:
+        off = form.find(syl)
+        pos = joined.find(form)
+        while pos >= 0:
+            i = pos + off
+            spans.append((i, i + len(syl) - 1))
+            pos = joined.find(form, pos + 1)
+    if not spans:
+        return pcm, align, 0
+    try:
+        from audiotsm import wsola
+        from audiotsm.io.array import ArrayReader, ArrayWriter
+    except Exception:
+        return pcm, align, 0
+    pcm = _np.asarray(pcm, dtype=_np.float32)
+    xf = int(0.012 * sr)
+    n = 0
+    for i0, i1 in sorted(spans, reverse=True):     # right to left: earlier sample indices stay valid
+        a, b = int(st[i0] * sr), int(en[i1] * sr)
+        if b - a < 4 * xf or a < xf or b + xf > len(pcm):
+            continue
+        seg = pcm[a:b]
+        # target length includes the two crossfade margins, so the syllable
+        # itself ends up at exactly `factor` of its rendered length
+        target = int(factor * (b - a)) + 2 * xf
+        pad = int(0.3 * sr)
+        padded = _np.concatenate([seg, _np.zeros(pad, _np.float32)])
+        reader = ArrayReader(padded[None, :].copy())
+        writer = ArrayWriter(channels=1)
+        wsola(channels=1, speed=len(seg) / target).run(reader, writer)
+        o = writer.data[0].astype(_np.float32)
+        if len(o) < target:                      # WSOLA under-delivers by up to a frame
+            o = _np.concatenate([o, _np.zeros(target - len(o), _np.float32)])
+        o = o[:target]
+        ramp = _np.linspace(0, 1, xf, dtype=_np.float32)
+        head, tail = pcm[:a], pcm[b:]
+        o[:xf] = o[:xf] * ramp + head[-xf:] * (1 - ramp)
+        o[-xf:] = o[-xf:] * (1 - ramp) + tail[:xf] * ramp
+        pcm = _np.concatenate([head[:-xf], o, tail[xf:]])
+        removed = (b - a) - len(o) + 2 * xf          # samples taken out of the timeline
+        dt = removed / sr
+        t_a, t_b = st[i0], en[i1]
+        for k in range(len(st)):
+            for arr in (st, en):
+                t = arr[k]
+                if t <= t_a:
+                    continue
+                arr[k] = (t_a + (t - t_a) * (1 - dt / (t_b - t_a))) if t <= t_b else t - dt
+        n += 1
+    align = dict(align)
+    align["character_start_times_seconds"], align["character_end_times_seconds"] = st, en
+    return pcm, align, n
+
+
+def name_pin_seed() -> int | None:
+    try:
+        v = int(os.environ.get("CJ_NAME_PIN_SEED", "4242"))
+    except ValueError:
+        v = 4242
+    return v if v > 0 else None
+
+
+def name_pin_voice_settings() -> dict:
+    """The full voice_settings dict a pinned sentence is rendered with."""
+    import sys as _sys
+    root = str(Path(__file__).resolve().parent.parent)
+    if root not in _sys.path:
+        _sys.path.insert(0, root)
+    from voice.speak import effective_settings
+    spd, (stab, style) = name_pin_settings()
+    vs = effective_settings(spd)
+    vs["stability"], vs["style"] = stab, style
+    return vs
+
+
 def tts_create_kwargs(model: str, voice: str, speed: float, text: str) -> dict:
     """Kwargs for audio.speech.create across both engines (tts-1 vs gpt-4o*)."""
     text = apply_forced_respellings(text)   # stubborn words: respell in-text
@@ -428,7 +615,8 @@ def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
                        previous_text: str | None = None,
                        voice_settings: dict | None = None,
                        previous_request_ids: list | None = None,
-                       meta_out: dict | None = None) -> str:
+                       meta_out: dict | None = None,
+                       seed: int | None = None) -> str:
     """Synthesize with the cloned voice (repo-root voice/ package) and return
     the path of a 24 kHz mono PCM_16 wav. Uses the local clip cache, so
     repeat lines are instant. Raises on any failure — callers keep the
@@ -454,7 +642,8 @@ def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
         text = apply_forced_respellings(text)
     norm = v_cache.normalize_text(text)
     settings = voice_settings or effective_settings(speed)  # full override (farewells)
-    key = v_cache.cache_key(norm, settings)
+    key = v_cache.cache_key(norm, settings if seed is None else
+                            {**settings, "_seed": int(seed), "_shape": os.environ.get("CJ_NAME_PIN_SYLLABLE", "ngah:0.30")})
     align_path = v_cache.cache_dir() / f"{key}.align.json"
     words = None
     hit = v_cache.get(key)
@@ -474,12 +663,20 @@ def tts_elevenlabs_wav(text: str, out_dir: str = "/dev/shm",
         pcm = v_audio.process(v_synthesize(norm, speed=speed, align_out=align,
                                            previous_text=previous_text,
                                            settings=settings,
-                                           previous_request_ids=previous_request_ids),
+                                           previous_request_ids=previous_request_ids,
+                                           seed=seed),
                               v_audio.SYNTH_SAMPLE_RATE)
         if meta_out is not None:   # request stitching id for the next sentence
             meta_out["request_id"] = align.get("_request_id")
             meta_out["cached"] = False
         sr = v_audio.SYNTH_SAMPLE_RATE
+        if seed is not None:       # pinned name: shape its syllable before the clip is cached
+            try:
+                pcm, align, _n = name_pin_shape(pcm, sr, align)
+                if _n:
+                    print(f"[namepin] syllable shaped in {_n} name(s)")
+            except Exception as _e:
+                print(f"[namepin] shaping skipped ({type(_e).__name__}: {_e})")
         v_cache.put(key, pcm, sr)
         try:  # usage tally: billed chars, counted only after synthesis succeeded
             import usage_meter

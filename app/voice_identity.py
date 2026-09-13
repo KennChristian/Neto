@@ -57,6 +57,16 @@ def read_wav(path):
 
 def embed_samples(sr, data):
     ex = _load()
+    # 2026-09-13 memory: ERes2Net's activations scale with the clip length and
+    # onnxruntime's CPU arena never gives back what it grew to. Measured on this
+    # Pi: embedding repeated 30 s captures (the recorder's cap, which noise wakes
+    # do hit) drives RSS to ~546 MB and keeps it there; capped at 10 s it settles
+    # at ~290 MB. The embedding is length-robust (see the 2026-08-24 note above),
+    # so lock/verify decisions do not change. CJ_EMBED_MAX_S=0 restores the old
+    # behaviour.
+    cap = int(float(os.environ.get("CJ_EMBED_MAX_S", "10")) * (sr or 16000))
+    if cap > 0 and len(data) > cap:
+        data = data[:cap]
     st = ex.create_stream()
     st.accept_waveform(sr, data.astype(np.float32) / 32768.0)
     st.input_finished()

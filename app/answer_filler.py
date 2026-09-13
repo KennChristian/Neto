@@ -17,16 +17,25 @@ import tempfile
 import threading
 import time
 
+# Filler length is LATENCY (2026-09-12, user: "can we make things real time").
+# The answer cannot start until the filler stops speaking, so every filler word
+# is a word the visitor waits. Measured that day: fillers came back 11-20 words
+# = 4-7 s of speech, while the answer itself was often ready in 3-4 s. The cap
+# was 14 words; 7 costs ~2-3 s less per turn and still covers the gap.
+# CJ_FILLER_MAX_WORDS raises it again if the robot starts sounding clipped.
+FILLER_MAX_WORDS = max(3, min(20, int(os.environ.get("CJ_FILLER_MAX_WORDS", "7"))))
+
 _SYSTEM = (
     "You are Chief Justice Artemio V. Panganiban (ret.), thinking aloud for a "
     "brief moment before answering a visitor's question. Reply with EXACTLY "
-    "ONE short sentence (at most 14 words) that acknowledges the TOPIC of the "
-    "question without answering it. No facts, no dates, no case holdings, no "
+    f"ONE short phrase (at most {FILLER_MAX_WORDS} words) that names the TOPIC of "
+    "the question without answering it. Shorter is better: the visitor is "
+    "waiting for the answer behind it. No facts, no dates, no case holdings, no "
     "opinions, no questions back, no quotation marks. Warm, dignified, first "
     "person, as if gathering your thoughts. Examples: "
-    "Ah, the West Philippine Sea — a subject close to my heart. / "
-    "Impeachment — let me look back through my years on the bench. / "
-    "A question about my family; allow me a fond moment. "
+    "Ah, the West Philippine Sea. / "
+    "Impeachment — let me think back. / "
+    "My family; a fond moment. "
     "GLOSSARY — the visitor's words may use these; read them THIS way, never "
     "the everyday meaning (this is for understanding only, still state no facts): "
     "ACID = the four ills of the justice system, Access, Corruption, Incompetence, "
@@ -78,7 +87,7 @@ def _work(client, question, filler, note):
             model=ROUTER_MODEL, max_tokens=60, system=_SYSTEM,
             messages=[{"role": "user", "content": question[:500]}])
         text = msg.content[0].text.strip().strip('"').strip()
-        if not text or "\n" in text or len(text.split()) > 20:
+        if not text or "\n" in text or len(text.split()) > FILLER_MAX_WORDS + 3:
             print(f"[dynfiller] rejected generation: {text!r}")
             return
         import speech_engines
@@ -90,6 +99,8 @@ def _work(client, question, filler, note):
                 # sentence" — config speed 1.0 vs CJ_SPEED_BASE 0.91 was a
                 # ~9% pace drop at the seam)
                 spd = speech_engines.emotion_speed("neutral")
+                if speech_engines.pinned_name_in(text):     # 2026-09-12 name pin
+                    spd = speech_engines.name_pin_settings()[0]
                 wav = speech_engines.tts_elevenlabs_wav(text, speed=spd)
             except Exception as e:
                 print(f"[dynfiller] elevenlabs failed ({type(e).__name__}) "

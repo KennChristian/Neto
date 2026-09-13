@@ -1,0 +1,237 @@
+{
+  "_readme": "Pre-written exchanges for DUET mode: the two robots trade these lines to an empty room. No microphone opens, nothing is composed live. Rendered to data/prerendered/duet/ by scripts/render_duet.py — host lines in ELEVEN_HOST_VOICE_ID, his lines in the cloned voice with the name pin, so 'Panganiban' sounds identical to a live answer. Authoring rules: corpus/voice/host_card.md. `source` records where a line's phrasing comes from; 'general' means it asserts no fact. Lines play in order and the list loops.",
+  "version": 2,
+  "lines": [
+    {
+      "id": "d01",
+      "who": "host",
+      "pause_after_s": 0.4,
+      "source": "general",
+      "text": "Good day. What you are about to hear is not a recording."
+    },
+    {
+      "id": "d02",
+      "who": "host",
+      "pause_after_s": 0.8,
+      "source": "general",
+      "text": "This is Chief Justice Artemio Panganiban, recreated from his own published columns and speeches."
+    },
+    {
+      "id": "d03",
+      "who": "cjap",
+      "pause_after_s": 1.2,
+      "source": "general — states what it is, asserts no fact",
+      "text": "A recreation, yes. But every word I speak here is drawn from what I actually wrote."
+    },
+    {
+      "id": "d04",
+      "who": "host",
+      "pause_after_s": 0.6,
+      "source": "general",
+      "text": "Chief Justice — in one sentence, what have you spent a life arguing for?"
+    },
+    {
+      "id": "d05",
+      "who": "cjap",
+      "pause_after_s": 1.2,
+      "source": "signature_phrases: 'liberty and prosperity under the rule of law', 'twin and inseparable beacons'",
+      "text": "Liberty and prosperity, under the rule of law. Twin and inseparable beacons — one is useless without the other."
+    },
+    {
+      "id": "d06",
+      "who": "host",
+      "pause_after_s": 0.6,
+      "source": "general",
+      "text": "And when people say the law is too slow, too gentle for hard times?"
+    },
+    {
+      "id": "d07",
+      "who": "cjap",
+      "pause_after_s": 1.4,
+      "source": "SA015, near-verbatim: 'we believe in the rule of law, NOT in the rule of the mob, NOT in the rule of propaganda and falsehood'",
+      "text": "Au contraire. We believe in the rule of law — not the rule of the mob, not the rule of propaganda and falsehood."
+    },
+    {
+      "id": "d08",
+      "who": "host",
+      "pause_after_s": 0.5,
+      "source": "general",
+      "text": "He is not a display. He is here to be asked."
+    },
+    {
+      "id": "d09",
+      "who": "cjap",
+      "pause_after_s": 2.5,
+      "source": "signature_phrases: 'Maraming salamat po'",
+      "text": "Come. Ask me about liberty, about prosperity, about the law. Maraming salamat po."
+    },
+    {
+      "id": "d10",
+      "who": "host",
+      "text": "A question we hear a great deal: why build a thing like this at all?",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d11",
+      "who": "cjap",
+      "text": "Because a museum should not be a room of relics behind glass. The visitor ought to step inside what he is looking at, ask his question, and hear an answer.",
+      "pause_after_s": 1.0,
+      "source": "CD002"
+    },
+    {
+      "id": "d12",
+      "who": "host",
+      "text": "Some visitors ask whether a machine could ever stand in for a person.",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d13",
+      "who": "cjap",
+      "text": "Let them ask. A machine may do the repetitive work, but it cannot replace human touch, empathy, instinct, or the capacity to navigate the emotions of a crisis.",
+      "pause_after_s": 1.1,
+      "source": "CB001"
+    },
+    {
+      "id": "d14",
+      "who": "host",
+      "text": "Chief Justice, the old saying is that might makes right.",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d15",
+      "who": "cjap",
+      "text": "That is the rule of force. I prefer the newer and better adage: right is might. Which is only another name for the rule of law.",
+      "pause_after_s": 1.2,
+      "source": "CA012"
+    },
+    {
+      "id": "d16",
+      "who": "host",
+      "text": "And prosperity. How does a country share it?",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d17",
+      "who": "cjap",
+      "text": "The best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people by granting them the freedom and the tools to help themselves and society.",
+      "pause_after_s": 1.2,
+      "source": "CB006"
+    },
+    {
+      "id": "d18",
+      "who": "host",
+      "text": "How far may a court go in checking the other branches?",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d19",
+      "who": "cjap",
+      "text": "Where there is grave abuse of discretion, our Constitution does not merely permit judges to intervene; it obliges them. A power can be relinquished, but a duty cannot be evaded.",
+      "pause_after_s": 1.2,
+      "source": "CA006"
+    },
+    {
+      "id": "d20",
+      "who": "host",
+      "text": "What did you ask of the judges who served with you?",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d21",
+      "who": "cjap",
+      "text": "The four Ins: independence, integrity, industry and intelligence. And a bench impervious to what I call the plague of ships, kinship, relationship, friendship and fellowship.",
+      "pause_after_s": 1.1,
+      "source": "SA136"
+    },
+    {
+      "id": "d22",
+      "who": "host",
+      "text": "You have written a newspaper column for many years.",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d23",
+      "who": "cjap",
+      "text": "With Due Respect, it is called. The joy of it is the freedom. I write as I once wrote my opinions, guided only by prayer, the Constitution, the law, and what is fair.",
+      "pause_after_s": 1.1,
+      "source": "CC001"
+    },
+    {
+      "id": "d24",
+      "who": "host",
+      "text": "You did not begin in comfortable circumstances.",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d25",
+      "who": "cjap",
+      "text": "I was born poor. I hawked newspapers, sold cigarettes and shined shoes on the streets of Sampaloc. Being poor taught me the value of hard work, and I never unlearned it.",
+      "pause_after_s": 1.2,
+      "source": "SC130"
+    },
+    {
+      "id": "d26",
+      "who": "host",
+      "text": "Were there doors that did not open for you?",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d27",
+      "who": "cjap",
+      "text": "Several. A scholarship I could not reach, a visa refused. But at the school I could afford I found my lifelong mentor. When a door closes, a much larger and better window opens.",
+      "pause_after_s": 1.2,
+      "source": "CD002"
+    },
+    {
+      "id": "d28",
+      "who": "host",
+      "text": "And when the outcome was out of your hands?",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d29",
+      "who": "cjap",
+      "text": "A farmer in a story I am fond of answers every turn of fortune the same way. Good news, bad news, who knows? I will just keep on doing my best and God will do the rest.",
+      "pause_after_s": 1.2,
+      "source": "SC130"
+    },
+    {
+      "id": "d30",
+      "who": "host",
+      "text": "Has your prayer changed with the years?",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d31",
+      "who": "cjap",
+      "text": "It has. I once prayed for the serenity to accept what I cannot change. Now I pray for the senility to forget the people I never liked, and the eyesight to tell the difference.",
+      "pause_after_s": 1.2,
+      "source": "SC059"
+    },
+    {
+      "id": "d32",
+      "who": "host",
+      "text": "A closing word, Chief Justice.",
+      "pause_after_s": 0.6,
+      "source": "general"
+    },
+    {
+      "id": "d33",
+      "who": "cjap",
+      "text": "Give back what you have. Your time, your talent, your treasure. No one is so poor he cannot share something, and no one is so rich he does not need anything.",
+      "pause_after_s": 1.2,
+      "source": "CC006"
+    }
+  ]
+}

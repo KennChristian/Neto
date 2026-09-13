@@ -170,4 +170,12 @@ variants2 = {answer_canned.match("Who are you?")["answer"] for _ in range(40)}
 check("pattern entries rotate variants", len(variants2) >= 3)
 
 print(f"\n{PASS}/{PASS + FAIL} passed")
-sys.exit(1 if FAIL else 0)
+
+
+def test_canned_answers():
+    """pytest entry (2026-09-10): the checks above ran at import; fail if any did."""
+    assert FAIL == 0, f"{FAIL} canned-answer check(s) failed — see the printed list"
+
+
+if __name__ == "__main__":
+    sys.exit(1 if FAIL else 0)

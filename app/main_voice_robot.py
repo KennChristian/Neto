@@ -15,6 +15,7 @@ import numpy as np
 import sounddevice as sd
 from scipy.io import wavfile
 from answer_pipeline import CorpusArtifacts, cache_savings_summary, make_client
+import personas          # both characters loaded at boot, one active (2026-09-10)
 import speech_engines
 from speech_engines import transcribe_openai, tts_concatenate_parallel
 
@@ -25,6 +26,72 @@ BAIL_WAV = os.path.expanduser("~/fillers_bail/please_be_specific.wav")
 # when the wake word triggers or an API call fails while offline.
 NO_NET_WAV = os.path.expanduser("~/fillers_bail/not_connected.wav")
 RATE = 16000
+
+# ── Floor lease (2026-09-10, operator console — dashboard/console.py) ─────
+# Exactly one microphone open at a time across the two robots. This robot
+# opens its mic ONLY while it holds a fresh lease on the floor (app/
+# floor_lease.py). _floor_ok() is the one question every mic user asks.
+_FLOOR = {"client": None}          # floor_lease.LeaseClient, started in main()
+_TURN = {"active": False}          # a question/answer turn is running (console drains on this)
+_OPEN_INPUTS = set()               # input streams currently open on the mic (reported as "observed")
+_WAKE = {"detector": None}         # live wake detector so the console can retune its threshold
+_INTRO = {"done": 0}               # intro_seq the host finished speaking (reported to the console)
+_ASK = {"done": 0}                 # ask_seq the host finished ASKING (2026-09-12)
+_DUET = {"done": 0}               # duet line seq this robot finished PLAYING (2026-09-12)
+DUET_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "data", "prerendered", "duet")
+# Pre-recorded Host questions. The Host's voice is cloned/recorded by hand, so
+# the room hears a real take rather than a synthesis: drop <id>.wav here and
+# name it in the console. Falls back to the Host persona's own voice.
+INTRO_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "data", "prerendered", "intro")
+HOST_Q_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                          "data", "host_questions")
+ROLE_SWITCH = -2.0                 # _wake_stream sentinel: persona changed while idle-listening
+
+
+def _floor_ok():
+    c = _FLOOR["client"]
+    return c is not None and c.has_floor()
+
+
+def _dry_run():
+    """Console "Rehearse silently": the whole pipeline runs, nothing plays."""
+    return os.environ.get("CJ_DRY_RUN", "0").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _wake_listen():
+    """Console "Answer to 'Hi Cee-Jap'": ON = the wake phrase starts a question
+    (direct-kiosk). OFF = direct-event: the open mic is the visitor's handheld
+    transmitter, so ANY sustained speech on it starts the question — no wake
+    phrase, no post-answer window (see _wake_stream's speech trigger)."""
+    return os.environ.get("CJ_WAKE_LISTEN", "1").strip().lower() not in {"0", "false", "no", "off"}
+
+
+def _mode():
+    """duet | direct, as last told by the lease authority (None before the
+    first reply). duet = nothing composed live on either robot."""
+    c = _FLOOR["client"]
+    return getattr(c, "mode", None) if c is not None else None
+
+
+def _post_window_open():
+    """Console "Keep listening after an answer": 0 = straight back to sleep,
+    even when a voice lock formed (event profile)."""
+    try:
+        v = os.environ.get("CJ_LISTEN_IDLE_S", "").strip()
+        return not (v and float(v) <= 0)
+    except ValueError:
+        return True
+
+
+def _wav_seconds(path):
+    try:
+        import wave
+        with wave.open(path) as w:
+            return w.getnframes() / float(w.getframerate() or 1)
+    except Exception:
+        return 1.0
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -778,6 +845,37 @@ _speaker_doa = _SpeakerDoA()
 
 
 
+try:   # set_target sustained 38 Hz on this robot; _env_num is defined further down
+    BREATH_HZ = max(5.0, min(60.0, float(os.environ.get("CJ_BREATH_HZ", "30"))))
+except ValueError:
+    BREATH_HZ = 30.0
+try:   # 2026-09-12 (user: "exaggerate the breathing a bit"): amplitude multiplier
+    BREATH_GAIN = max(0.3, min(3.0, float(os.environ.get("CJ_BREATH_GAIN", "1.3"))))
+except ValueError:
+    BREATH_GAIN = 1.7
+# 2026-09-12 (user: "movement of the head side to side"): a slow, deliberate
+# left-right yaw sway laid over the breath — degrees of swing and how often.
+try:
+    HEAD_SWAY_DEG = max(0.0, min(25.0, float(os.environ.get("CJ_HEAD_SWAY_DEG", "4"))))
+    # Envelope-driven emphasis (2026-09-13): degrees of extra nod at FULL
+    # loudness. The head tracks the voice instead of breathing at a fixed rate
+    # straight through it. 0 disables and restores the pre-2026-09-13 motion.
+    ENV_DEG = max(0.0, min(12.0, float(os.environ.get("CJ_ENV_DEG", "2.2"))))
+except ValueError:
+    HEAD_SWAY_DEG = 10.0
+try:
+    HEAD_SWAY_HZ = max(0.01, min(0.5, float(os.environ.get("CJ_HEAD_SWAY_HZ", "0.07"))))
+except ValueError:
+    HEAD_SWAY_HZ = 0.07
+# 2026-09-12 (user: "the head movement is like nodding ... make it move
+# sideways"): damp the pitch (nod) so the side-to-side yaw leads. 1.0 = the
+# old balance, 0 = no nod at all.
+try:
+    BREATH_PITCH = max(0.0, min(1.0, float(os.environ.get("CJ_BREATH_PITCH", "0.75"))))
+except ValueError:
+    BREATH_PITCH = 0.35
+
+
 class Gestures:
     """Background head/antenna motion. Safe no-op if the SDK/daemon is absent."""
 
@@ -802,8 +900,26 @@ class Gestures:
         self.idle_gesture_s = float(os.environ.get("CJ_IDLE_GESTURE_S", "10"))
         self._last_idle = 0.0
         self.talk_style = "neutral"
+        # Audio envelope of the clip currently playing (2026-09-13), so the
+        # head moves WITH the voice. {amp: [0..1 per frame], hz, t0}; amp None
+        # when nothing is speaking. Written by speak_envelope(), read every
+        # breath cycle by _env_level(). Cheap: one list index per cycle.
+        self._env = {"amp": None, "hz": 50.0, "t0": 0.0}
         global _gestures_inst
         _gestures_inst = self
+        # Continuous motion (2026-09-12). Every gesture until now was a
+        # goto_target: a blocking, interpolated move with dead air after it, so
+        # between gestures the head was perfectly still — the thing that reads
+        # as "switched off" rather than "listening". set_target is the SDK's
+        # non-blocking path (measured on this robot: 38 Hz sustained), so a
+        # breath layer can ride UNDER the existing choreography: gestures still
+        # set where the head is going, this keeps it alive while it is there.
+        self._cmd_lock = threading.Lock()        # goto and set_target must not interleave
+        self._base = (0.0, 0.0, 0.0)             # where the last gesture left the head
+        self._breath_t0 = time.monotonic()
+        self._breath_stop = threading.Event()
+        self._breath_thread = None
+        self.breath_scale = 1.0                  # per-mode amplitude, 0 = hold still
         try:
             from reachy_mini import ReachyMini
             from reachy_mini.utils import create_head_pose
@@ -814,6 +930,11 @@ class Gestures:
             print(f"[gestures] disabled ({e})")
         if self.mini:
             _speaker_doa.start()
+            if _env_flag("CJ_BREATH", True):
+                self._breath_thread = threading.Thread(target=self._breath_run, daemon=True,
+                                                       name="breath")
+                self._breath_thread.start()
+                print(f"[gestures] breathing at {BREATH_HZ:.0f} Hz — the head is never fully still")
 
     def face_speaker(self, max_age=1.5, min_change=8.0):
         """Point gaze_yaw at the latest speech direction; True if it moved."""
@@ -821,6 +942,7 @@ class Gestures:
         if y is None or abs(y - self.gaze_yaw) < min_change:
             return False
         self.gaze_yaw = y
+        self._body_follow(y)
         return True
 
     @property
@@ -831,6 +953,139 @@ class Gestures:
     def talk_style(self, value):
         self._talk_style = value
         self._style_new.set()   # new sentence style → one accent gesture allowed
+
+    def speak_envelope(self, wav_path, hz=50.0, lead_s=0.0):
+        """Load the loudness envelope of `wav_path` and start tracking it now.
+
+        Called just before a clip is played. Failure is silent and simply
+        leaves the head on its normal breathing — this must never be able to
+        break playback.
+        """
+        if ENV_DEG <= 0:
+            return
+        try:
+            import wave
+            with wave.open(wav_path) as w:
+                sr = w.getframerate() or 16000
+                ch = w.getnchannels() or 1
+                raw = w.readframes(w.getnframes())
+            x = np.frombuffer(raw, dtype=np.int16)
+            if ch > 1:
+                x = x[::ch]
+            if x.size == 0:
+                return
+            block = max(1, int(sr / float(hz)))
+            n = x.size // block
+            if n < 1:
+                return
+            blocks = x[:n * block].astype(np.float32).reshape(n, block)
+            amp = np.sqrt((blocks * blocks).mean(axis=1))
+            peak = float(amp.max())
+            if peak <= 1.0:
+                return
+            amp = np.clip(amp / peak, 0.0, 1.0) ** 0.6   # perceptual-ish curve
+            self._env = {"amp": amp.tolist(), "hz": float(hz),
+                         "t0": time.monotonic() + lead_s}
+        except Exception:
+            self._env = {"amp": None, "hz": 50.0, "t0": 0.0}
+
+    def clear_envelope(self):
+        self._env = {"amp": None, "hz": 50.0, "t0": 0.0}
+
+    def _env_level(self):
+        """Loudness 0..1 at this instant, 0 when nothing is playing.
+
+        getattr, not self._env: the motion tests build a bare Gestures without
+        running __init__, and a missing envelope must read as silence rather
+        than raise inside the 30 Hz breath loop.
+        """
+        env = getattr(self, "_env", None) or {}
+        amp = env.get("amp")
+        if not amp:
+            return 0.0
+        i = int((time.monotonic() - env["t0"]) * env["hz"])
+        if i < 0:
+            return 0.0
+        if i >= len(amp):
+            self._env = {"amp": None, "hz": 50.0, "t0": 0.0}   # clip finished
+            return 0.0
+        return float(amp[i])
+
+    def breath_offset(self, t):
+        """Head offset in degrees at time `t`, as (yaw, pitch, roll).
+
+        Three slow sines per axis at incommensurable periods, so the pattern
+        never visibly repeats, plus a faster low-amplitude term that reads as
+        breathing. Amplitudes are deliberately below what a viewer can name:
+        the effect should be that the robot is alive, not that it is moving.
+        """
+        gain = _motion_val("breath_gain", BREATH_GAIN)
+        pitch_k = _motion_val("breath_pitch", BREATH_PITCH)
+        sway_deg = _motion_val("sway_deg", HEAD_SWAY_DEG)
+        sway_hz = _motion_val("sway_hz", HEAD_SWAY_HZ)
+        k = self.breath_scale * gain
+        if k <= 0 and sway_deg <= 0:
+            return (0.0, 0.0, 0.0)
+        s = math.sin
+        yaw = 1.9 * s(0.21 * t) + 0.8 * s(0.53 * t + 1.3) + 0.35 * s(1.27 * t + 0.4)
+        pitch = pitch_k * (1.5 * s(0.17 * t + 0.9) + 0.9 * s(0.61 * t + 2.1) + 0.55 * s(0.97 * t))
+        roll = 1.1 * s(0.13 * t + 2.7) + 0.5 * s(0.47 * t + 0.8)
+        # a slow side-to-side look, scaled by the mode (calmer while speaking)
+        # but NOT by the breath gain, so the two are tuned independently. Two
+        # incommensurable sines so the swing itself never lands in a metronome.
+        sway = sway_deg * (0.82 * s(2 * math.pi * sway_hz * t)
+                           + 0.18 * s(2 * math.pi * sway_hz * 0.37 * t + 1.1))
+        # Envelope emphasis: a ~2.3 Hz nod and a slower yaw whose AMPLITUDE is
+        # the loudness of the audio playing right now. Silent passages fall to
+        # zero, so between sentences the head returns to plain breathing.
+        env_deg = _motion_val("env_deg", ENV_DEG)
+        e = self._env_level() if env_deg > 0 else 0.0
+        if e > 0:
+            emph_p = env_deg * e * s(2 * math.pi * 2.3 * t)
+            emph_y = 0.45 * env_deg * e * s(2 * math.pi * 1.7 * t + 0.7)
+        else:
+            emph_p = emph_y = 0.0
+        return (k * yaw + self.breath_scale * sway + emph_y,
+                k * pitch + emph_p, k * roll)
+
+    def _breath_run(self):
+        """Hold the head alive around whatever pose the last gesture chose.
+
+        Skipped while a goto is in flight (they would fight for the same
+        joints) and while the idle-motion flag is off or the motors are down.
+        """
+        period = 1.0 / BREATH_HZ
+        while not self._breath_stop.is_set():
+            try:
+                if (self.mini and self.breath_scale > 0
+                        and time.monotonic() >= self._busy_until
+                        and not os.path.exists(GESTURES_OFF_FLAG)):
+                    dy, dp, dr = self.breath_offset(time.monotonic() - self._breath_t0)
+                    by, bp, br = self._base
+                    with self._cmd_lock:
+                        self.mini.set_target(head=self._pose(yaw=by + dy, pitch=bp + dp,
+                                                             roll=br + dr))
+            except Exception:
+                pass          # a dropped frame is invisible; never take the thread down
+            self._breath_stop.wait(period)
+
+    def _body_follow(self, yaw_deg):
+        """Turn the BODY toward a large gaze change so the robot turns to face
+        someone instead of cranking its head over (2026-09-12; the body motor
+        has always been there and was never driven). Off by default until it
+        has been watched in the room."""
+        if not (self.mini and _env_flag("CJ_BODY_YAW", False)):
+            return
+        limit = _env_num("CJ_BODY_YAW_MAX_DEG", 14.0)
+        if abs(yaw_deg) < _env_num("CJ_BODY_YAW_MIN_DEG", 18.0):
+            target = 0.0
+        else:
+            target = math.radians(max(-limit, min(limit, yaw_deg)))
+        try:
+            with self._cmd_lock:
+                self.mini.set_target_body_yaw(target)
+        except Exception as e:
+            print(f"[gestures] body yaw unavailable ({type(e).__name__}) — head only")
 
     def _move(self, yaw=0.0, pitch=0.0, roll=0.0, duration=0.6, antennas=None,
               wait=True, defer=False):
@@ -852,14 +1107,16 @@ class Gestures:
             threading.Thread(target=_go, daemon=True).start()
             return
         self._busy_until = time.monotonic() + duration
+        self._base = (yaw, pitch, roll)   # the breath rides around here afterwards
         try:
             kw = {"head": self._pose(yaw=yaw, pitch=pitch, roll=roll)}
             if antennas is not None:
                 kw["antennas"] = antennas
-            try:
-                self.mini.goto_target(duration=duration, **kw)
-            except TypeError:
-                self.mini.goto_target(**kw)
+            with self._cmd_lock:
+                try:
+                    self.mini.goto_target(duration=duration, **kw)
+                except TypeError:
+                    self.mini.goto_target(**kw)
         except Exception:
             pass
 
@@ -977,8 +1234,13 @@ class Gestures:
                                               random.uniform(-0.2, 0.2)])
                     self._stop.wait(random.uniform(0.35, 0.8))
 
+    #: breath amplitude per mode — speaking already moves plenty, sleeping
+    #: should be the calmest thing in the room, listening sits between.
+    BREATH_SCALE = {"listen": 1.0, "think": 0.85, "sleep": 0.7, "talk": 0.45}
+
     def start(self, mode):
         self.stop()
+        self.breath_scale = self.BREATH_SCALE.get(mode, 0.8)
         if mode == "talk":
             self.talk_style = "neutral"   # style is per-sentence; reset per answer
         elif mode == "sleep":
@@ -989,7 +1251,9 @@ class Gestures:
             return
         if mode == "sleep" and _muted():
             # Mic muted (2026-08-29): the robot has no LEDs, so the body shows
-            # it — antennas drooped, head slightly bowed, no idle sway.
+            # it — antennas drooped, head slightly bowed, no idle sway. The
+            # breath stops too: "muted" has to read as switched off.
+            self.breath_scale = 0.0
             self._move(0, 8, 0, 0.9, antennas=[-0.6, 0.6], wait=False)
             return
         self._stop.clear()
@@ -1006,6 +1270,8 @@ class Gestures:
     def neutral(self):
         self.stop()
         self.gaze_yaw = 0.0
+        self.breath_scale = self.BREATH_SCALE["sleep"]
+        self._body_follow(0.0)
         self._move(0, 0, 0, 1.0, antennas=[0.15, -0.15])
 
     def perk(self):
@@ -1135,9 +1401,45 @@ class _MicTap:
         self.q = queue.Queue()
         self._rem = None
         self.rms_hist = deque(maxlen=60)   # ~4.8 s
-        self.stream = sd.InputStream(samplerate=RATE, channels=1, dtype="int16",
-                                     blocksize=self.FRAME, callback=self._cb)
-        self.stream.start()
+        self.stream = None   # opened by the floor lease (open()), never at construction
+        self._olock = threading.Lock()
+
+    # 2026-09-10 floor lease: the capture stream exists ONLY while this robot
+    # holds the floor. open()/close() are driven by floor_lease.LeaseClient
+    # (on_mic); readers see a closed tap as sd.PortAudioError and give up.
+    def open(self):
+        with self._olock:
+            if self.stream is not None and self.stream.active:
+                return
+            self._drop_stream()
+            st = sd.InputStream(samplerate=RATE, channels=1, dtype="int16",
+                                blocksize=self.FRAME, callback=self._cb)
+            st.start()
+            self.stream = st
+            _OPEN_INPUTS.add("tap")
+            print("[mic] OPEN — this robot holds the floor", flush=True)
+
+    def close(self):
+        with self._olock:
+            was = self.stream is not None
+            self._drop_stream()
+            self.flush()
+            if was:
+                print("[mic] CLOSED — floor released or lease expired", flush=True)
+
+    def _drop_stream(self):
+        st, self.stream = self.stream, None
+        _OPEN_INPUTS.discard("tap")
+        if st is not None:
+            try:
+                st.abort()
+                st.close()
+            except Exception:
+                pass
+
+    def is_open(self):
+        st = self.stream
+        return st is not None and st.active
 
     def _cb(self, indata, frames, t, status):
         if self.q.qsize() > self.MAXQ:
@@ -1153,14 +1455,18 @@ class _MicTap:
             parts.append(self._rem); have = len(self._rem)
         self._rem = None
         while have < n:
+            st = self.stream
+            if st is None:
+                raise sd.PortAudioError("mic closed — this robot does not hold the floor")
             try:
-                a = self.q.get(timeout=2.0)
+                a = self.q.get(timeout=0.25)
             except queue.Empty:
-                # No frames for 2 s: the USB mic went away / PortAudio stopped
-                # the callback. Raise (as the per-open stream.read() used to)
-                # so the caller's error path and systemd restart take over
-                # instead of hanging silently (2026-08-25 review).
-                if not self.stream.active:
+                # No frames: either the lease closed the tap (raise so the
+                # caller gives the turn up) or the USB mic went away /
+                # PortAudio stopped the callback (2026-08-25 review).
+                if self.stream is None:
+                    raise sd.PortAudioError("mic closed — this robot does not hold the floor")
+                if not st.active:
                     raise sd.PortAudioError("mic stream stopped")
                 continue
             parts.append(a); have += len(a)
@@ -1170,6 +1476,15 @@ class _MicTap:
 
     def note_rms(self, frame):
         self.rms_hist.append(float(np.sqrt(np.mean(frame.astype(np.float64) ** 2)) or 0.0))
+
+    def unread(self, frames):
+        """Hand frames back so the next read() returns them first — the
+        speech-onset trigger (direct-event) gives the recorder the syllables
+        it used to decide there was speech (2026-09-11)."""
+        if not frames:
+            return
+        buf = np.concatenate([f.reshape(-1) for f in frames])
+        self._rem = buf if self._rem is None or not len(self._rem) else np.concatenate([buf, self._rem])
 
     def noise_rms(self):
         return int(np.percentile(self.rms_hist, 30)) if len(self.rms_hist) >= 12 else None
@@ -1191,16 +1506,53 @@ _mic_tap_box = {}
 
 
 def _mic_tap():
+    """The process-wide tap. It is NOT opened here — only the floor lease
+    opens it (LeaseClient.on_mic -> tap.open()); everyone else just reads."""
     tap = _mic_tap_box.get("tap")
-    if tap is None or not tap.stream.active:
-        if tap is not None:
-            try:
-                tap.stream.close()
-            except Exception:
-                pass
+    if tap is None:
         tap = _MicTap()
         _mic_tap_box["tap"] = tap
     return tap
+
+
+# Live motion config (2026-09-12, user: sliders on /maintain). A tiny JSON the
+# dashboard writes; the breath loop and the avatar head-start read it every
+# cycle so a slider applies immediately. Missing/absent keys fall back to the
+# CJ_* env defaults, so nothing here is required.
+MOTION_FILE = "/dev/shm/cj_motion.json"
+_motion_cache = {"mtime": -1.0, "data": {}}
+
+
+def _motion():
+    try:
+        m = os.path.getmtime(MOTION_FILE)
+    except OSError:
+        _motion_cache["data"] = {}
+        return _motion_cache["data"]
+    if m != _motion_cache["mtime"]:
+        try:
+            with open(MOTION_FILE) as f:
+                d = json.load(f)
+            _motion_cache["data"] = d if isinstance(d, dict) else {}
+        except (OSError, ValueError):
+            _motion_cache["data"] = {}
+        _motion_cache["mtime"] = m
+    return _motion_cache["data"]
+
+
+def _motion_val(key, default):
+    v = _motion().get(key)
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return default
+
+
+def _env_flag(name, default=False):
+    v = os.environ.get(name)
+    if v is None or not v.strip():
+        return bool(default)
+    return v.strip().lower() not in {"0", "false", "no", "off"}
 
 
 def _env_num(name, default):
@@ -1213,13 +1565,41 @@ def _env_num(name, default):
         return float(default)
 
 
-def _speech_threshold(noise_rms):
-    """RMS above which a 30 ms frame counts as speech (CJ_MIC_RMS_* knobs;
-    lower floor/multiplier = more sensitive mic)."""
+_MIC_LAST = {"rms": None, "threshold": None, "binding": None, "ts": 0.0}   # last RESOLVED threshold
+
+
+def _speech_threshold_explain(noise_rms):
+    """(threshold, binding, parts): RMS above which a frame counts as speech
+    = min(max(room * mult, floor), cap), and WHICH of the three bound —
+    that is what has to be in the journal when it misbehaves on the day."""
     floor_ = int(_env_num("CJ_MIC_RMS_FLOOR", 350))
     mult = _env_num("CJ_MIC_RMS_MULT", 3.5)
     cap = int(_env_num("CJ_MIC_RMS_CAP", 2000))
-    return min(max(int(noise_rms * mult), floor_), cap)
+    scaled = int(noise_rms * mult)
+    if scaled >= cap:
+        thr, binding = cap, "cap"
+    elif scaled >= floor_:
+        thr, binding = scaled, "room x mult"
+    else:
+        thr, binding = floor_, "floor"
+    if thr > cap:
+        thr, binding = cap, "cap"
+    parts = {"room": int(noise_rms), "mult": mult, "scaled": scaled, "floor": floor_, "cap": cap}
+    _MIC_LAST.update(rms=int(noise_rms), threshold=int(thr), binding=binding, ts=time.monotonic())
+    return int(thr), binding, parts
+
+
+def _speech_threshold(noise_rms):
+    """RMS above which a 30 ms frame counts as speech (CJ_MIC_RMS_* knobs;
+    lower floor/multiplier = more sensitive mic)."""
+    return _speech_threshold_explain(noise_rms)[0]
+
+
+def _threshold_line(noise_rms):
+    """One journal line per turn with the RESOLVED threshold and its inputs."""
+    thr, binding, p = _speech_threshold_explain(noise_rms)
+    return (f"[mic] room rms={p['room']} x {p['mult']:g} = {p['scaled']}, floor {p['floor']}, "
+            f"cap {p['cap']} => speech threshold {thr} ({binding} binding)")
 
 
 def _min_speech_frames(frame_ms):
@@ -1314,8 +1694,18 @@ class _RefFeed:
 
     @staticmethod
     def wanted():
-        return os.environ.get("CJ_AEC_REF_FEED", "0").strip().lower() in {
-            "1", "true", "yes", "on"} and (_bt_route() or _dac_route())
+        if os.environ.get("CJ_AEC_REF_FEED", "0").strip().lower() not in {
+                "1", "true", "yes", "on"}:
+            return False
+        if _bt_route():
+            return True      # CJ_AEC_REF_DELAY_MS=444, measured on the Sony
+        # 2026-09-13 external-PA prep: a DAC route must NOT arm the feed on the
+        # default 0 ms. The 444 ms above was measured on Bluetooth; the DAC path
+        # has never been calibrated, and an uncalibrated reference at REF_GAIN
+        # 1000 makes the XVF3800 subtract the wrong thing — worse than no AEC.
+        # Measure with ~/tools/aec_ref_calib.py while the DAC is the live route,
+        # then set CJ_AEC_REF_DELAY_DAC_MS in the drop-in to arm the feed.
+        return _dac_route() and _env_num("CJ_AEC_REF_DELAY_DAC_MS", 0) > 0
 
     def sync(self):
         """Follow the route; returns True when the feed is on. Cheap (one stat)."""
@@ -1619,6 +2009,8 @@ def _aplay_cmd(path):
     laptop) the clip goes through ~/bin/aplay-dual, which plays it on the
     primary route and on pcm audio_out_route2 at the same time; its exit code
     is the primary's, so a dropped second device never fails the clip."""
+    if _dry_run():   # console rehearsal: hold the clip's duration, play nothing
+        return ["sleep", f"{_wav_seconds(path):.2f}"]
     try:
         if _REF_FEED.sync():
             _REF_FEED.push_wav(path)
@@ -1688,7 +2080,7 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
         noise = stream.noise_rms()       # idle floor from BEFORE the wake phrase
         if noise is not None:
             threshold = _speech_threshold(noise)
-            print(f"[mic] noise floor rms={noise} -> speech threshold {threshold}")
+            print(_threshold_line(noise))
     else:
         stream.flush()                   # follow-up / enrollment: drop stale audio
         # Bluetooth speakers lag 200-400 ms behind aplay: right after an answer
@@ -1711,7 +2103,19 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
         print("SPEAK NOW  (auto-stops after you pause)" +
               (f"  [+{kept:.2f}s pre-roll]" if kept else ""))
         for i in range(max_frames):
-            data, _ = stream.read(n)
+            if not _floor_ok():
+                print("\n[mic] floor lost — capture abandoned")
+                return None
+            if os.path.exists(MUTE_TRIGGER):   # console "cut short" / Interrupt while listening
+                with contextlib.suppress(FileNotFoundError):
+                    os.unlink(MUTE_TRIGGER)
+                print("\n[mic] interrupted from the console — capture abandoned")
+                return None
+            try:
+                data, _ = stream.read(n)
+            except sd.PortAudioError as e:
+                print(f"\n[mic] capture ended: {e}")
+                return None
             mono = data[:, 0]
             frames.append(mono.copy())
             if i < skip_detect:
@@ -1721,7 +2125,7 @@ def record_with_meter(max_s=30, trailing_silence_ms=None, no_speech_timeout_s=12
                 probe.append(rms)
                 if len(probe) >= 8:
                     threshold = _speech_threshold(int(np.median(probe)))
-                    print(f"[mic] noise floor rms={int(np.median(probe))} -> speech threshold {threshold}")
+                    print(_threshold_line(int(np.median(probe))))
                 continue
             bars = "#" * min(rms // 100, 40)
             tag = "SPEECH " if rms > threshold else "quiet  "
@@ -1932,16 +2336,27 @@ def _play_wav_interruptible(wav_path, stop):
     model and kill playback if the phrase clears stop.threshold. Returns True
     if playback was cut short by the stop word, False if it played out.
     Any listener failure degrades to normal (uninterruptible) playback."""
+    try:                                   # head tracks this clip's loudness
+        if _gestures_inst is not None:
+            _gestures_inst.speak_envelope(wav_path)
+    except Exception:
+        pass
     proc = subprocess.Popen(_aplay_cmd(wav_path))
     fired = peak = 0.0
     trace = _StopTrace()
     try:
+        if not _floor_ok():
+            raise RuntimeError("no floor — barge-in listener stays closed")
         model = stop.detector._load()
         model.reset()
         frame_len = 1280  # 80 ms at 16 kHz, openWakeWord's expected frame
         with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
                             blocksize=frame_len) as stream:
+            _OPEN_INPUTS.add("stop")
             while proc.poll() is None:
+                if not _floor_ok():
+                    print("[stop] floor lost mid-answer — mic released, playback continues")
+                    break
                 if os.path.exists(MUTE_TRIGGER):   # Interrupt button (mic mute does NOT cut)
                     os.unlink(MUTE_TRIGGER)
                     print("[stop] interrupted from the maintenance dashboard — answer cut")
@@ -1958,12 +2373,14 @@ def _play_wav_interruptible(wav_path, stop):
                     fired = score
                     proc.terminate()
                     break
+        _OPEN_INPUTS.discard("stop")
         model.reset()   # don't leak playback audio into the next arming
         trace.dump()
         if not fired:   # tuning evidence: what did the mic actually score?
             print(f"[stop] answer played out — peak mid-answer score "
                   f"{peak:.3f} (threshold {stop.threshold})")
     except Exception as e:
+        _OPEN_INPUTS.discard("stop")
         print(f"[stop] barge-in listener failed ({type(e).__name__}: {e}) "
               "— playback continues uninterruptible")
     r = proc.wait()
@@ -1996,13 +2413,22 @@ class StopListener:
 
     def _run(self):
         try:
+            if not _floor_ok():
+                self.failed = True
+                print("[stop] this robot does not hold the floor — barge-in off for this answer")
+                return
             model = self._stop.detector._load()
             model.reset()
             try:
                 frame_len = 1280  # 80 ms at 16 kHz, openWakeWord's frame
                 with sd.InputStream(samplerate=16000, channels=1, dtype="int16",
                                     blocksize=frame_len) as stream:
+                    _OPEN_INPUTS.add("stop")
                     while not self._closing.is_set():
+                        if not _floor_ok():
+                            print("[stop] floor lost mid-answer — mic released, playback continues")
+                            self.failed = True
+                            return
                         if os.path.exists(MUTE_TRIGGER):  # Interrupt button (mic mute does NOT cut)
                             os.unlink(MUTE_TRIGGER)
                             print("[stop] interrupted from the maintenance dashboard "
@@ -2021,8 +2447,10 @@ class StopListener:
                                   f"(score {score:.3f}) — answer cut")
                             return
             finally:
+                _OPEN_INPUTS.discard("stop")
                 model.reset()  # don't leak playback audio into the next arming
         except Exception as e:
+            _OPEN_INPUTS.discard("stop")
             self.failed = True
             print(f"[stop] barge-in listener failed ({type(e).__name__}: {e}) "
                   "— playback continues uninterruptible")
@@ -2078,7 +2506,7 @@ def _avatar_head_start(prefed_age=None):
     # the moment it leaves the speaker (PortAudio buffer ~0.15 s, Bluetooth
     # +0.2-0.4 s) and the LiveKit video has its own latency — the residual is
     # only judgeable by ear. Negative = robot earlier, positive = robot later.
-    off = _env_num("CJ_AVATAR_SYNC_OFFSET_S", 0.0)
+    off = _motion_val("avatar_offset", _env_num("CJ_AVATAR_SYNC_OFFSET_S", 0.0))
     if prefed_age is None:
         return max(0.0, _avatar_lag() + off)
     try:
@@ -2345,6 +2773,13 @@ class _SentenceOut:
         rate, a = _load_wav_mono_int16(wav_path)
         if trim:
             a = _trim_edges(a, rate)
+        if _dry_run():   # console rehearsal: keep the timing, skip the speaker
+            end = time.monotonic() + len(a) / float(rate)
+            while time.monotonic() < end:
+                if listener.fired:
+                    return True
+                time.sleep(0.05)
+            return False
         st = self._open(rate)
         feed = _REF_FEED.sync()      # Bluetooth AEC reference copy (2026-09-01)
         n = int(rate * self.CHUNK_S)
@@ -2455,8 +2890,13 @@ def speak(text, filler=None, stop=None, voice_settings=None):
     mp3_path = wav_from_eleven = None
     if getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs":
         try:  # cloned voice: wav straight from the clip cache (no ffmpeg, 2026-08-29)
+            _seed = None
+            if voice_settings is None and speech_engines.pinned_name_in(text):
+                # 2026-09-12 name pin: canned lines say the name exactly like composed ones
+                voice_settings, _seed = speech_engines.name_pin_voice_settings(), speech_engines.name_pin_seed()
+                print(f"[namepin] curated line: speed {voice_settings.get('speed')} stability {voice_settings.get('stability')} seed {_seed}")
             wav_from_eleven = speech_engines.tts_elevenlabs_wav(
-                text, voice_settings=voice_settings)
+                text, voice_settings=voice_settings, seed=_seed)
         except Exception as e:
             print(f"[tts] elevenlabs failed ({type(e).__name__}) — openai fallback")
             wav_from_eleven = None
@@ -2473,7 +2913,8 @@ def speak(text, filler=None, stop=None, voice_settings=None):
             subprocess.run(["ffmpeg", "-y", "-loglevel", "quiet", "-i", mp3_path, wav_path], check=True)
         try:  # speed ceiling for curated clips too (2026-08-30, "speaking is a bit fast")
             import speech_tempo
-            _cap = speech_tempo.cap_clip(wav_path)
+            # 2026-09-12 name pin: a clip that speaks the name keeps its rendered pace
+            _cap = None if speech_engines.pinned_name_in(text) else speech_tempo.cap_clip(wav_path)
             if _cap:
                 print(f"[tempo] curated clip {_cap[1]:.1f} -> {_cap[2]:.1f} chars/s (x{_cap[0]:.3f})")
         except Exception as _e:
@@ -2553,6 +2994,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
     listener_box = {}   # holds the answer-spanning StopListener once armed
 
     def _play(wav, prefed_age=None):
+        gestures.speak_envelope(wav)   # head tracks this sentence's loudness
         listener = listener_box.get("l")
         if listener is not None:
             return _play_wav_listener(wav, listener, prefed_age)
@@ -2602,15 +3044,30 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
     except Exception:
         pass
     threading.Thread(target=_worker, daemon=True).start()
+    # HARD TIMEOUT on the whole answer chain (2026-09-13). Until now the only
+    # bail-out was filler.exhausted, which counts CLIPS, not seconds: with
+    # CJ_FILLERS_ENABLED=0 it never fires at all, and with long clips the room
+    # could sit through a 17 s worst case (measured) with the robot silent and
+    # visibly not listening. This is a wall clock from the transcript, and the
+    # line it plays is the PRE-RENDERED one in the cloned voice (BAIL_WAV), not
+    # a live synthesis that would itself need the network we have just lost.
+    # 0 disables. Does not cover a stall AFTER first audio — see the runbook.
+    hard_s = _env_num("CJ_TURN_HARD_TIMEOUT_S", 20)
     try:
         while not done.wait(0.25):
-            if filler.exhausted.is_set() and not first_audio.is_set():
+            waited = time.monotonic() - t0
+            over = hard_s > 0 and waited > hard_s
+            if (filler.exhausted.is_set() or over) and not first_audio.is_set():
                 abort.set()
-                print(f"[filler] {filler.max_clips} fillers played, no speech yet — bailing out")
+                why = (f"hard timeout — {waited:.1f}s with no audio (limit {hard_s:g}s)"
+                       if over else f"{filler.max_clips} fillers played, no speech yet")
+                print(f"[turn] {why} — bailing out", flush=True)
                 _publish_transcript("note", "(no answer in time — asked for a more specific question)")
                 gestures.start("talk")
                 if os.path.exists(BAIL_WAV):
                     subprocess.run(_aplay_cmd(BAIL_WAV), stderr=subprocess.DEVNULL)
+                else:
+                    print(f"[turn] BAIL_WAV missing at {BAIL_WAV} — the room gets SILENCE", flush=True)
                 return True
         if "err" in result:
             if not internet_up():
@@ -2754,6 +3211,13 @@ def _safe_turn(*args, **kwargs):
     """handle_turn that cannot take the service down: any unexpected error is
     logged with its traceback, apologised for, and treated as a finished
     turn (True) so a locked conversation keeps going."""
+    if not personas.is_cjap():
+        print("[persona] host role — no STT, router or composer; turn refused", flush=True)
+        return False
+    if _mode() == "duet":
+        print("[mode] duet — nothing is composed live; turn refused", flush=True)
+        return False
+    _TURN["active"] = True          # console drains floor/mode/role changes until this clears
     try:
         return handle_turn(*args, **kwargs)
     except Exception as e:
@@ -2766,6 +3230,102 @@ def _safe_turn(*args, **kwargs):
             pass
         _say_apology(e)
         return True
+    finally:
+        _TURN["active"] = False
+def _answer_question(client, artifacts, gestures, history, question, stt_s,
+                     stop=None, lock=None):
+    """Question text -> answer, from the entity pass to the spoken reply.
+
+    Split out of handle_turn 2026-09-12 so a question that did NOT come
+    from this robot's microphone can take exactly the same path: the P0
+    entity correction, the farewell check, the canned fast path, then the
+    streaming composer. handle_turn passes what it heard; _typed_turn
+    passes what the operator typed for the Host to ask.
+    """
+    raw_asr = question
+    try:  # P0 entity correction on the transcript (fails open; DARK unless enabled)
+        from text_entities import process_transcript
+        corrected = process_transcript(question)
+        if corrected != question:
+            print(f"[postproc] corrected: \"{corrected}\"")
+            _publish_transcript("note", f"(raw ASR: {question})")
+            question = corrected
+    except Exception as e:
+        print(f"[postproc] transcript pass skipped: {e}")
+    _publish_transcript("user", question)
+    if lock is not None and lock.active() and _is_farewell(question):
+        print("[lock] farewell heard — closing the conversation")
+        _stage("route", "done", "farewell — closing the conversation",
+               extra={"scope": "farewell", "topic": "goodbye", "confidence": "curated",
+                      "scope_reason": "the speaker said goodbye"})
+        _stage("compose", "done", "curated farewell")
+        _stage("fidelity", "done", "curated — pre-verified")
+        # Warm, varied goodbye from the curated pool (2026-08-25, "improve
+        # the emotion in the farewells"); the flat one-liner is the fallback.
+        farewell = None
+        try:
+            import answer_canned
+            farewell = answer_canned.get("thanks_goodbye")
+        except Exception as e:
+            print(f"[canned] farewell pool unavailable ({e})")
+        _say_curated_line(gestures, farewell or FAREWELL_TEXT, stop)
+        return "bye"
+    try:  # canned fast path: curated answers for common questions (fails open)
+        import answer_canned
+        hit = answer_canned.match(question)
+    except Exception as e:
+        print(f"[canned] unavailable ({e})")
+        hit = None
+    if hit:
+        # No router, no composer, zero tokens — the clip cache makes repeats
+        # play near-instantly. speak() still runs the entity TTS pass,
+        # captions, and stop-word interruptible playback.
+        print(f"[canned] fast path hit: {hit['id']}")
+        if hit["id"].startswith("event_") and hit.get("ask"):
+            # Scripted event question: the plaques/feed must show the exact
+            # scripted wording (e.g. "State Properties Corporation"), not
+            # whatever STT made of it. raw_asr keeps the real transcript.
+            if hit["ask"] != question:
+                print(f"[canned] event script — display question: \"{hit['ask']}\"")
+                _replace_last_transcript("user", hit["ask"])
+                question = hit["ask"]
+        _publish_transcript("note", f"(canned answer: {hit['id']})")
+        _stage("route", "done", "matched a curated answer",
+               extra={"scope": "canned", "topic": hit["id"], "confidence": "curated",
+                      "scope_reason": "a question he has answered before — curated reply"})
+        _stage("compose", "done", "curated text — no composer")
+        _stage("fidelity", "done", "curated — pre-verified")
+        response = hit["answer"]
+        # goodbyes get the expressive delivery (see speech_engines.farewell_settings)
+        vs = speech_engines.farewell_settings() if hit["id"] == "thanks_goodbye" else None
+        return _speak_curated(gestures, history, question, response, hit["id"], stop,
+                              path="canned", confidence="canned", raw_asr=raw_asr,
+                              stt_s=stt_s, voice_settings=vs)
+    # Streaming is the only answer path (2026-08-29: the classic whole-answer
+    # composer path was removed; CJ_STREAM_SPEECH no longer needs to be set).
+    return _handle_turn_streaming(client, artifacts, gestures, history, stop,
+                                  question, raw_asr, stt_s)
+
+
+def _typed_turn(client, artifacts, gestures, history, question, stop=None, asked_by="operator"):
+    """Answer a question the operator typed instead of one this robot heard.
+
+    The Host robot speaks the question in the room (console -> lease -> its
+    pre-rendered clip); this robot is handed the same text and answers it
+    live — router, composer, corpus, voice. No microphone is involved, so a
+    noisy hall cannot mishear the question, and the exchange still costs a
+    real answer rather than a scripted one."""
+    question = (question or "").strip()
+    if not question:
+        return False
+    print(f"[ask] live question from {asked_by}: {question!r}", flush=True)
+    _stage(reset=True)
+    _stage("transcribe", "done", f"typed question ({asked_by})")
+    _publish_transcript("note", f"(question typed by the {asked_by})")
+    gestures.start("listen")
+    return _answer_question(client, artifacts, gestures, history, question, 0.0, stop=stop)
+
+
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -2937,69 +3497,8 @@ def handle_turn(client, artifacts, gestures, history, stop=None, followup=False,
     _gate_report(gate, sim=lock_box.get("res", (None, None))[1], outcome="heard")
     print(f"[stt] heard: \"{question}\"  ({stt_s:.1f}s)")
     _stage("transcribe", "done", f"heard in {stt_s:.1f}s")
-    raw_asr = question
-    try:  # P0 entity correction on the transcript (fails open; DARK unless enabled)
-        from text_entities import process_transcript
-        corrected = process_transcript(question)
-        if corrected != question:
-            print(f"[postproc] corrected: \"{corrected}\"")
-            _publish_transcript("note", f"(raw ASR: {question})")
-            question = corrected
-    except Exception as e:
-        print(f"[postproc] transcript pass skipped: {e}")
-    _publish_transcript("user", question)
-    if lock is not None and lock.active() and _is_farewell(question):
-        print("[lock] farewell heard — closing the conversation")
-        _stage("route", "done", "farewell — closing the conversation",
-               extra={"scope": "farewell", "topic": "goodbye", "confidence": "curated",
-                      "scope_reason": "the speaker said goodbye"})
-        _stage("compose", "done", "curated farewell")
-        _stage("fidelity", "done", "curated — pre-verified")
-        # Warm, varied goodbye from the curated pool (2026-08-25, "improve
-        # the emotion in the farewells"); the flat one-liner is the fallback.
-        farewell = None
-        try:
-            import answer_canned
-            farewell = answer_canned.get("thanks_goodbye")
-        except Exception as e:
-            print(f"[canned] farewell pool unavailable ({e})")
-        _say_curated_line(gestures, farewell or FAREWELL_TEXT, stop)
-        return "bye"
-    try:  # canned fast path: curated answers for common questions (fails open)
-        import answer_canned
-        hit = answer_canned.match(question)
-    except Exception as e:
-        print(f"[canned] unavailable ({e})")
-        hit = None
-    if hit:
-        # No router, no composer, zero tokens — the clip cache makes repeats
-        # play near-instantly. speak() still runs the entity TTS pass,
-        # captions, and stop-word interruptible playback.
-        print(f"[canned] fast path hit: {hit['id']}")
-        if hit["id"].startswith("event_") and hit.get("ask"):
-            # Scripted event question: the plaques/feed must show the exact
-            # scripted wording (e.g. "State Properties Corporation"), not
-            # whatever STT made of it. raw_asr keeps the real transcript.
-            if hit["ask"] != question:
-                print(f"[canned] event script — display question: \"{hit['ask']}\"")
-                _replace_last_transcript("user", hit["ask"])
-                question = hit["ask"]
-        _publish_transcript("note", f"(canned answer: {hit['id']})")
-        _stage("route", "done", "matched a curated answer",
-               extra={"scope": "canned", "topic": hit["id"], "confidence": "curated",
-                      "scope_reason": "a question he has answered before — curated reply"})
-        _stage("compose", "done", "curated text — no composer")
-        _stage("fidelity", "done", "curated — pre-verified")
-        response = hit["answer"]
-        # goodbyes get the expressive delivery (see speech_engines.farewell_settings)
-        vs = speech_engines.farewell_settings() if hit["id"] == "thanks_goodbye" else None
-        return _speak_curated(gestures, history, question, response, hit["id"], stop,
-                              path="canned", confidence="canned", raw_asr=raw_asr,
-                              stt_s=stt_s, voice_settings=vs)
-    # Streaming is the only answer path (2026-08-29: the classic whole-answer
-    # composer path was removed; CJ_STREAM_SPEECH no longer needs to be set).
-    return _handle_turn_streaming(client, artifacts, gestures, history, stop,
-                                  question, raw_asr, stt_s)
+    return _answer_question(client, artifacts, gestures, history, question, stt_s,
+                            stop=stop, lock=lock)
 
 # ════════════════════════════════════════════════════════════════════════════
 # 9. IDLE — WAKE WORD
@@ -3020,6 +3519,8 @@ def _wake_stream(det):
     muted_logged = False
     tap = _mic_tap()
     tap.flush()   # audio that piled up while the robot was busy is not a wake
+    onset, onset_frames = [], deque(maxlen=8)   # speech-onset trigger state (direct-event)
+    speech_mode_logged = None
     with contextlib.nullcontext(tap) as stream:
         muted_seen, nframe = None, 0
         while True:
@@ -3041,9 +3542,17 @@ def _wake_stream(det):
                 except (OSError, ValueError) as e:
                     print(f"[ask] bad trigger ignored: {e}")
                 # (mic mute does not block the event buttons — they are not the mic)
-                if ask and ask.get("a"):
+                # "a" = a scripted answer (event button); "live" = a question
+                # typed for the Host to ask, answered live here (2026-09-12).
+                if ask and not (ask.get("a") or ask.get("live")):
+                    ask = None
+                if ask and not personas.is_cjap():
+                    print("[ask] question ignored — this robot is the Host, not Panganiban")
+                    ask = None
+                if ask:
                     _pending_ask["ask"] = ask
-                    print(f"[ask] question button: {ask.get('id')}")
+                    print("[ask] " + (f"live question: {ask.get('q','')!r}" if ask.get("live")
+                                      else f"question button: {ask.get('id')}"))
                     _publish_wake(1.0, fired=True)
                     model.reset()
                     return 1.0
@@ -3072,8 +3581,44 @@ def _wake_stream(det):
                             _publish_wake(1.0, fired=True)
                         model.reset()
                         return ret
-            frame, _ = stream.read(frame_len)
+            if not personas.is_cjap() or _mode() == "duet":
+                model.reset()
+                return ROLE_SWITCH   # role swapped to Host / duet mode — leave the wake loop body
+            if not _floor_ok() or tap.stream is None:
+                # No floor (console says none / other robot / lease expired):
+                # the tap is closed by the lease thread; keep serving the
+                # dashboard triggers above, never read the mic.
+                time.sleep(0.1)
+                continue
+            try:
+                frame, _ = stream.read(frame_len)
+            except sd.PortAudioError:
+                continue          # closed under us — loop back to the floor check
             tap.note_rms(frame[:, 0])
+            if not _wake_listen():
+                # direct-event: the open mic IS the visitor's handheld transmitter.
+                # Sustained speech above the room's speech threshold starts the
+                # question; the onset frames are handed back as pre-roll.
+                if speech_mode_logged is not True:
+                    speech_mode_logged = True
+                    print("[listen] wake word OFF — any speech on the open mic starts a question "
+                          "(handheld transmitter)", flush=True)
+                rms = int(np.sqrt(np.mean(frame[:, 0].astype(np.float64) ** 2)) or 0)
+                noise = tap.noise_rms()
+                thr = _speech_threshold(noise if noise is not None else rms)
+                onset_frames.append(frame[:, 0].copy())
+                need = max(1, int(_env_num("CJ_MIC_MIN_SPEECH_MS", 240) // 80))
+                onset = (onset + [rms]) if rms > thr else []
+                _publish_wake(min(1.0, rms / float(thr or 1)) * 0.5)   # meter: 0.5 = at threshold
+                if len(onset) >= need and not _muted():
+                    print(_threshold_line(noise if noise is not None else rms), flush=True)
+                    print(f"[listen] speech on the open mic (rms {rms} > {thr}) — capturing", flush=True)
+                    tap.unread(list(onset_frames))
+                    _publish_wake(1.0, fired=True)
+                    model.reset()
+                    return 1.0
+                continue
+            speech_mode_logged = False
             score = float(max(model.predict(frame[:, 0]).values()))
             if score >= det.threshold and _muted():
                 if not muted_logged:
@@ -3133,6 +3678,14 @@ def _ask_turn(gestures, history, ask, stop=None):
     deterministic even if STT would have misheard the emcee."""
     question, response = ask.get("q") or "(question button)", ask["a"]
     entry_id = ask.get("id", "?")
+    _TURN["active"] = True
+    try:
+        return _ask_turn_inner(gestures, history, ask, question, response, entry_id, stop)
+    finally:
+        _TURN["active"] = False
+
+
+def _ask_turn_inner(gestures, history, ask, question, response, entry_id, stop):
     print(f"[ask] speaking scripted answer: {entry_id}")
     _publish_transcript("user", question)
     _publish_transcript("note", f"(question button: {entry_id})")
@@ -3165,6 +3718,9 @@ def wake_loop(client, artifacts, gestures):
     import wake_word    # inserts the repo root on sys.path, where config lives
     import config
     detector = wake_word.make_detector()        # config.WAKE_BACKEND picks the backend
+    _WAKE["detector"] = detector                # console retunes its threshold live
+    if _FLOOR["client"] is not None and _FLOOR["client"].env.get("CJ_WAKE_OWW_THRESHOLD"):
+        detector.threshold = float(_FLOOR["client"].env["CJ_WAKE_OWW_THRESHOLD"])
     # Post-answer pause before re-arming. The answer has fully played by then,
     # so this only needs to cover speaker/room tail — near-zero re-arms instantly.
     grace = max(0.0, float(getattr(config, "WAKE_COOLDOWN_S", 1.0)))
@@ -3184,17 +3740,61 @@ def wake_loop(client, artifacts, gestures):
         stop = StopWord(detector, getattr(config, "STOP_OWW_THRESHOLD", 0.4))
         print(f"[stop] stop word armed — \"{phrase}\" mid-answer cuts playback "
               f"(threshold {stop.threshold})")
+    announced = None
     while True:
+        if not personas.is_cjap():
+            # Host role (or no persona yet): no wake word, no STT, no router,
+            # no composer. Intro / duet playback are driven by the lease
+            # callbacks; here we only keep the room level flowing to the
+            # console and serve the gesture triggers. A role swap back to
+            # Panganiban needs no restart — the next iteration arms the wake word.
+            if announced != personas.active():
+                announced = personas.active()
+                print(f"[persona] idle as {announced or 'no persona yet'} — wake word off, composer off", flush=True)
+                _HOST_MOTION["cur"] = None
+            _host_step(gestures)
+            continue
+        if _mode() == "duet":
+            # Panganiban in duet: nothing composed live, no mic — the
+            # pre-rendered exchange is driven by the lease (step 5).
+            if announced != "duet":
+                announced = "duet"
+                print("[mode] duet — Panganiban idle: no wake word, no composer; pre-rendered lines only", flush=True)
+                gestures.start("sleep")
+            _host_step(gestures)
+            continue
+        if announced != "cjap":
+            announced = "cjap"
+            _HOST_MOTION["cur"] = None
+            print(f"[wake] armed as Panganiban — " + (f"say \"{phrase}\"" if _wake_listen()
+                  else "speak into the handheld mic (wake word off)"), flush=True)
         gestures.start("sleep")
         score = _wake_stream(detector)
+        if score == ROLE_SWITCH:
+            continue
         if score < 0:
             _run_enrollment(gestures)
             continue
         print(f"[wake] FIRED (streaming, score {score:.3f})")
+        if history:
+            # One wake fire = one visitor conversation. Follow-up turns stay
+            # inside THIS iteration (the post-answer window below) and keep
+            # their context; a fresh fire is a new person, so the previous
+            # visitor's exchanges must not reach the input gate or the
+            # composer — wrong answers, and someone else's words repeated
+            # back in a public hall (2026-09-13).
+            print(f"[history] cleared {len(history) // 2} exchange(s) from the "
+                  f"previous conversation", flush=True)
+            history.clear()
         ask, _pending_ask["ask"] = _pending_ask["ask"], None
-        if ask:   # /event question button: cached clip, works even offline
+        if ask:   # /event question button (cached clip) or a typed live question
             gestures.perk()
-            r = _ask_turn(gestures, history, ask, stop=stop)
+            if ask.get("live"):
+                prewarm_connections(client)
+                r = _typed_turn(client, artifacts, gestures, history, ask.get("q"),
+                                stop=stop, asked_by=ask.get("by") or "operator")
+            else:
+                r = _ask_turn(gestures, history, ask, stop=stop)
             gestures.neutral()
             time.sleep(grace)
             print(f"[wake] re-armed — say \"{phrase}\"")
@@ -3228,7 +3828,7 @@ def wake_loop(client, artifacts, gestures):
         # interrupted answer sent the robot back to sleep needing a fresh wake
         # word. Now a barge-in keeps the mic open too, and _always_listen()
         # covers the turns where no lock formed.
-        if (locked or _always_listen()) and r in (True, "interrupted"):
+        if _post_window_open() and (locked or _always_listen()) and r in (True, "interrupted"):
             # Voice-locked conversation (2026-08-24): keep the mic open for the
             # speaker who woke us. Other voices are ignored and cannot take
             # the lock (the wake detector is not even running in here). Ends
@@ -3251,6 +3851,9 @@ def wake_loop(client, artifacts, gestures):
                     break
                 if _muted():
                     print("[lock] mic muted from the dashboard — conversation closed")
+                    break
+                if not personas.is_cjap():
+                    print("[lock] role swapped to Host — conversation closed")
                     break
                 gestures.perk()
                 r = _safe_turn(client, artifacts, gestures, history, stop=stop,
@@ -3277,11 +3880,296 @@ def wake_loop(client, artifacts, gestures):
         print(f"[wake] re-armed — say \"{phrase}\"")
 
 
+# ════════════════════════════════════════════════════════════════════════════
+# 10b. FLOOR LEASE GLUE (2026-09-10) — callbacks the LeaseClient drives
+# ════════════════════════════════════════════════════════════════════════════
+
+def _floor_mic(want):
+    """on_mic: the ONLY place the capture stream is opened or closed."""
+    tap = _mic_tap()
+    if want:
+        tap.open()
+    else:
+        tap.close()
+
+
+def _floor_observe():
+    """What this robot's mic is ACTUALLY doing — sent to the console every
+    second and shown there as "observed" (never echoed from the console)."""
+    tap = _mic_tap_box.get("tap")
+    noise = tap.noise_rms() if (tap is not None and tap.is_open()) else None
+    recent = list(tap.rms_hist)[-13:] if (tap is not None and tap.is_open()) else []
+    rms_1s = ({"p50": int(np.median(recent)), "max": int(max(recent)), "min": int(min(recent))}
+              if len(recent) >= 4 else None)
+    thr = _speech_threshold_explain(noise) if noise is not None else (None, None, None)
+    return {"mic_open": bool(_OPEN_INPUTS),
+            "rms": noise,                      # idle floor (30th percentile, ~4.8 s)
+            "rms_1s": rms_1s,                  # last second: median / peak / min of 80 ms frames
+            "speech_threshold": thr[0],
+            "threshold_binding": thr[1],
+            "turn_threshold": dict(_MIC_LAST),  # what the LAST capture actually used
+            "speaking": bool(_SENT_OUT.stream is not None or _SENT_OUT._busy),
+            "turn_active": bool(_TURN["active"]),
+            "persona": personas.active(),
+            "intro_done": int(_INTRO["done"]),
+            "ask_done": int(_ASK["done"]),
+            "duet_done": int(_DUET["done"]),
+            "muted": _muted()}
+
+
+def _floor_settings(settings, mode, profile, env):
+    """on_settings: the console's effective config (profile -> drop-in ->
+    .env -> override) lands in os.environ; per-call knobs pick it up on the
+    next read, the wake detector is retuned in place."""
+    for k, v in (env or {}).items():
+        os.environ[k] = str(v)
+    det = _WAKE.get("detector")
+    if det is not None and env.get("CJ_WAKE_OWW_THRESHOLD"):
+        try:
+            det.threshold = float(env["CJ_WAKE_OWW_THRESHOLD"])
+        except ValueError:
+            pass
+    print(f"[floor] effective config from console (mode {mode}, profile {profile}): "
+          + ", ".join(f"{k}={v}" for k, v in sorted((env or {}).items())), flush=True)
+
+
+def _floor_interrupt():
+    """on_interrupt: operator "cut the answer short" — same path as the
+    dashboard Interrupt button (stop listeners and the recorder honour it)."""
+    print("[floor] operator cut — answer/capture interrupted", flush=True)
+    try:
+        open(MUTE_TRIGGER, "w").close()
+    except OSError as e:
+        print(f"[floor] interrupt trigger failed: {e}")
+    _SENT_OUT.abort()
+
+
+def _intro_clip(seq):
+    """The pre-rendered intro variant for THIS visitor, or None.
+
+    Every visitor used to hear the same sentence, synthesised live over the
+    network (2026-09-13 audit). The variants are rendered per mode because the
+    closing instruction differs — the wake phrase in kiosk, the handheld in
+    event — and rotated by the console's intro_seq, which increments once per
+    intro, so consecutive visitors never get the same one. Returns (path, text)
+    or None to fall back to live TTS of host_intro_text.
+    """
+    try:
+        with open(os.path.join(INTRO_DIR, "manifest.json"), encoding="utf-8") as f:
+            clips = json.load(f)["clips"]
+        mode = "kiosk" if _wake_listen() else "event"
+        pool = sorted((c for c in clips if c.get("mode") == mode),
+                      key=lambda c: str(c.get("id")))
+        if not pool:
+            return None
+        c = pool[int(seq) % len(pool)] if isinstance(seq, int) else pool[0]
+        path = os.path.join(INTRO_DIR, c["wav"])
+        return (path, c.get("text", "")) if os.path.isfile(path) else None
+    except Exception:
+        return None
+
+
+def _floor_intro():
+    """on_intro (Host role only): say the intro line once, then stay silent,
+    and report intro_done so the console hands the floor to Panganiban."""
+    c = _FLOOR["client"]
+    if c is None or not personas.is_host():
+        return
+    if os.environ.get("CJ_HOST_INTRO", "1").strip().lower() in {"0", "false", "no", "off"}:
+        print("[host] intro requested but 'Host says the intro line' is off")
+        return
+    text = (c.host_intro_text or "").strip()
+    if not text:
+        print("[host] intro requested but the profile has no host_intro_text")
+        return
+
+    seq = c.intro_seq
+
+    def _say():
+        _TURN["active"] = True
+        try:
+            pre = _intro_clip(seq)
+            if pre:
+                path, spoken = pre
+                print(f"[host] intro (variant {os.path.basename(path)}): {spoken[:80]}", flush=True)
+                if _gestures_inst is not None:
+                    _gestures_inst.start("talk")
+                subprocess.run(_aplay_cmd(path), timeout=120)
+            else:
+                print(f"[host] intro (live, no pre-rendered variant): {text[:80]}", flush=True)
+                _say_curated_line(_gestures_inst, text, None)
+        except Exception as e:
+            print(f"[host] intro failed ({type(e).__name__}: {e})")
+        finally:
+            _TURN["active"] = False
+            _INTRO["done"] = seq if isinstance(seq, int) else _INTRO["done"]
+            if _gestures_inst is not None:
+                _gestures_inst.neutral()
+    threading.Thread(target=_say, daemon=True).start()
+
+
+def _floor_ask(text, clip):
+    """on_ask (Host role only): ask the operator's question out loud, then
+    report ask_done so the console releases it to Panganiban.
+
+    A pre-recorded clip is preferred — the Host's voice is cloned by hand, so
+    a real take beats a synthesis and costs nothing per ask. Without one the
+    Host persona's own voice says it. If neither works we still report done:
+    a Host that cannot speak must not strand the question."""
+    c = _FLOOR["client"]
+    if c is None or not personas.is_host():
+        return
+    seq = c.ask_seq
+    wav = os.path.join(HOST_Q_DIR, clip) if clip else ""
+    if wav and not os.path.isfile(wav):
+        print(f"[host] asked for clip {clip!r} — not in {HOST_Q_DIR}, using the Host voice")
+        wav = ""
+
+    def _say():
+        _TURN["active"] = True
+        try:
+            print(f"[host] asking: {text[:100]!r}" + (f" (clip {clip})" if wav else ""), flush=True)
+            _publish_transcript("note", "(the Host is asking a question)")
+            _publish_transcript("user", text)
+            if _gestures_inst is not None:
+                _gestures_inst.start("talk")
+            if wav:
+                subprocess.run(_aplay_cmd(wav), timeout=120)
+            elif text:
+                _say_curated_line(_gestures_inst, text, None)
+        except Exception as e:
+            print(f"[host] asking failed ({type(e).__name__}: {e}) — releasing anyway")
+        finally:
+            _TURN["active"] = False
+            _ASK["done"] = seq if isinstance(seq, int) else _ASK["done"]
+            if _gestures_inst is not None:
+                _gestures_inst.neutral()
+    threading.Thread(target=_say, daemon=True).start()
+
+
+def _floor_duet(line_id):
+    """on_duet: play one pre-rendered duet line, then report it finished so the
+    authority hands the next line to the other robot. Either persona may play,
+    because the authority only hands a line to whoever currently holds its
+    role. The clip and the line id come straight from the manifest the render
+    step wrote; a missing clip still reports done, so one gap never freezes the
+    loop."""
+    c = _FLOOR["client"]
+    if c is None:
+        return
+    seq = c.duet_seq
+    line_id = (line_id or "").strip()
+    wav = os.path.join(DUET_DIR, f"{line_id}.wav") if line_id else ""
+
+    def _play():
+        _TURN["active"] = True
+        try:
+            if wav and os.path.isfile(wav):
+                print(f"[duet] playing {line_id} as {personas.active()}", flush=True)
+                if _gestures_inst is not None:
+                    _gestures_inst.start("talk")
+                subprocess.run(_aplay_cmd(wav), timeout=60)
+            else:
+                print(f"[duet] clip {line_id!r} not in {DUET_DIR} — skipping (loop continues)", flush=True)
+                time.sleep(0.3)
+        except Exception as e:
+            print(f"[duet] play failed ({type(e).__name__}: {e}) — reporting done anyway")
+        finally:
+            _TURN["active"] = False
+            _DUET["done"] = seq if isinstance(seq, int) else _DUET["done"]
+            if _gestures_inst is not None:
+                _gestures_inst.neutral()
+    threading.Thread(target=_play, daemon=True).start()
+
+
+def _floor_question(text):
+    """on_question (Panganiban role only): the Host has finished asking; answer
+    it live. Reuses the dashboard's queue file, so the wake loop picks it up on
+    its next frame exactly like an /event button — no microphone, no STT."""
+    if not personas.is_cjap() or not (text or "").strip():
+        return
+    try:
+        tmp = ASK_TRIGGER + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump({"q": text, "live": True, "by": "Host"}, f)
+        os.replace(tmp, ASK_TRIGGER)
+        print(f"[ask] question from the Host queued: {text[:100]!r}", flush=True)
+    except OSError as e:
+        print(f"[ask] could not queue the Host's question: {e}")
+
+
+def _host_step(gestures):
+    """One idle iteration in the Host role (or before any persona is known):
+    serve the dashboard gesture trigger, keep the room level flowing when
+    this robot holds the floor (the visitor's transmitter is heard by
+    whichever robot has the floor), otherwise sleep. Never composes."""
+    if os.path.exists(GESTURE_TRIGGER):   # /maintain mechanical action
+        try:
+            fresh = (time.time() - os.path.getmtime(GESTURE_TRIGGER)) < 10
+            gname = json.loads(open(GESTURE_TRIGGER).read() or "{}").get("g", "")
+            os.unlink(GESTURE_TRIGGER)
+        except (OSError, ValueError):
+            fresh, gname = False, ""
+        if fresh and gname:
+            print(f"[gesture] {gname}: {gestures.manual(gname)}", flush=True)
+    if os.path.exists(ASK_TRIGGER):       # event button pressed while we are the Host
+        with contextlib.suppress(OSError):
+            os.unlink(ASK_TRIGGER)
+        print("[ask] question button ignored — this robot is the Host, not Panganiban")
+    tap = _mic_tap()
+    # idle motion follows the mode: direct = the Host visibly "listens" beside
+    # the conversation; duet = resting sway between its lines
+    want = "listen" if _mode() == "direct" else "sleep"
+    if _HOST_MOTION.get("cur") != want:
+        _HOST_MOTION["cur"] = want
+        gestures.start(want)
+    if _floor_ok() and tap.is_open():
+        try:
+            frame, _ = tap.read(1280)
+            tap.note_rms(frame[:, 0])   # room level for the console's threshold warning
+        except sd.PortAudioError:
+            time.sleep(0.1)
+    else:
+        time.sleep(0.1)
+
+
+_HOST_MOTION = {"cur": None}
+
+
+def _floor_persona(persona, cjap_is):
+    """on_persona: activate the character this slot now plays. No restart,
+    no corpus reload — both are resident since boot (personas.load())."""
+    c = _FLOOR["client"]
+    personas.activate(persona)
+    who = f"{c.machine} ({c.slot})" if c is not None else "this robot"
+    _publish_transcript("note", f"({who} is now the {'Panganiban' if persona == 'cjap' else 'Host'} role)")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--wake", action="store_true",
                     help='hands-free behind the wake phrase (the only mode; flag kept for the systemd unit)')
     ap.parse_args()
+
+    # Both characters resident from boot; the lease says which one is live.
+    personas.load()
+    # Floor lease first: from here on the mic can only open on a grant.
+    import floor_lease
+    slot = floor_lease.robot_slot()
+    url = floor_lease.console_url()
+    lease = floor_lease.LeaseClient(slot, url, on_mic=_floor_mic, on_settings=_floor_settings,
+                                    on_persona=_floor_persona, on_interrupt=_floor_interrupt,
+                                    on_intro=_floor_intro, on_ask=_floor_ask,
+                                    on_question=_floor_question, on_duet=_floor_duet,
+                                    observe=_floor_observe)
+    _FLOOR["client"] = lease
+    lease.start()
+    print(f"[floor] machine {lease.machine} = slot {slot or 'UNKNOWN'} — authority {url} — the mic "
+          f"opens only while it grants the floor (lease {lease.ttl_s:.0f} s, fail closed); "
+          f"the persona (Panganiban/Host) comes from its cjap_is and is HELD if it goes away", flush=True)
+    if slot is None:
+        print("[floor] UNKNOWN SLOT: add this hostname to config/robots.json slots or set "
+              "CJ_ROBOT_SLOT=alpha|beta — this robot's microphone will NEVER open", flush=True)
 
     print("Loading artifacts...")
     artifacts = CorpusArtifacts()
@@ -3293,7 +4181,7 @@ def main():
     prewarm_boot()   # heavy imports + entity dictionary off the first turn
 
     try:
-        wake_loop(client, artifacts, gestures)
+        wake_loop(client, artifacts, gestures)   # one loop for both roles; persona decides per iteration
     except KeyboardInterrupt:
         gestures.neutral()
         print("\n" + cache_savings_summary())

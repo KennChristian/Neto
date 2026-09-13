@@ -288,6 +288,7 @@ class SentenceSpeaker:
         self._params = {}            # idx -> (speed, voice_settings, emotion) as synthesized
         self.curated = False         # True for canned prose (out-of-topic): base speed/delivery, so the clip cache hits
         self._skip = set()           # idx replaced by a merged re-synthesis (tail merge)
+        self._pinned = set()         # idx rendered at the fixed name-pin settings (no tempo stretch)
         try:
             from speech_tempo import TempoSmoother
             self._tempo = TempoSmoother()   # per-answer tempo normaliser
@@ -366,11 +367,12 @@ class SentenceSpeaker:
                 wav = speech_engines.tts_elevenlabs_wav(text, speed=speed,
                                                   previous_text=previous_text,
                                                   previous_request_ids=rids or None,
-                                                  meta_out=meta, voice_settings=vs)
+                                                  meta_out=meta, voice_settings=vs,
+                                                  seed=speech_engines.name_pin_seed() if idx in self._pinned else None)
                 if meta.get("request_id"):
                     with self._lock:
                         self._rids.append(meta["request_id"])
-                if self._tempo is not None:   # smooth the tempo across sentences
+                if self._tempo is not None and idx not in self._pinned:   # smooth the tempo across sentences
                     try:
                         res = self._tempo.process(wav, idx=idx, speed=speed)
                         if res and abs(res[0] - 1.0) >= 0.01:
@@ -443,6 +445,17 @@ class SentenceSpeaker:
                         vs = base
             except Exception:
                 vs = None
+            try:   # name pin: one fixed speed + delivery whenever the name is spoken
+                import speech_engines
+                if (not self.curated and getattr(speech_engines, "TTS_BACKEND", "openai") == "elevenlabs"
+                        and speech_engines.pinned_name_in(sentence)):
+                    spd, pair = speech_engines.name_pin_settings()
+                    vs = speech_engines.name_pin_voice_settings()
+                    self._speed_cur, self._deliv_cur = spd, pair   # neighbours slew from here
+                    self._pinned.add(idx)
+                    print(f"[namepin] sentence {idx}: speed {spd:.2f} stability {pair[0]:.2f} style {pair[1]:.2f}")
+            except Exception:
+                pass
             fut = self._submit_locked(sentence, prev, spd, idx, emo, vs)
         # outside the lock: a done future runs the callback inline
         fut.add_done_callback(lambda f, i=idx: self._prefeed(i))

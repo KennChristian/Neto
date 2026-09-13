@@ -11,6 +11,7 @@ persona-scoped guides.
 | 0001 | [handover_claude_code_2026-05-15.md](handover_claude_code_2026-05-15.md) | Implementation handover snapshot, 2026-05-15. Superseded by the 05-16 doc — read only for diff context. |
 | 0002 | [handover_claude_code_2026-05-16.md](handover_claude_code_2026-05-16.md) | Implementation handover snapshot, 2026-05-16. Adds prompt caching (commit `f7e47a1`). |
 | 0003 | [handover_claude_code_2026-05-26.md](handover_claude_code_2026-05-26.md) | Implementation handover snapshot, 2026-05-26. Latest implementation reality. |
+| 0004 | [RUNBOOK-venue-network.md](RUNBOOK-venue-network.md) | Venue networking for the two-robot kit (2026-09-12): what the floor lease needs, the travel-router setup, the failure chain, and the pre-show checklist. |
 
 ## Subdirectories
 

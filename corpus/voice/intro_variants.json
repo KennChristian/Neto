@@ -1,0 +1,34 @@
+{
+  "_readme": "Host intro variants (2026-09-13). Until now there was ONE intro line, synthesised live over the network on every arrival, so every visitor heard the identical sentence. {how_to_start} is filled per MODE by scripts/render_intro.py, because the closing instruction genuinely differs: direct-kiosk tells the visitor to say the wake phrase, direct-event tells them to use the handheld microphone. Each variant is rendered once per mode; the robot rotates them by the console's intro_seq so consecutive visitors never hear the same one. Every variant MUST say plainly that this is a recreation built from his own published work and not a recording of him — that frame is the Host's whole reason to exist. Re-render after editing: app/.venv/bin/python scripts/render_intro.py --force",
+  "version": 1,
+  "how_to_start": {
+    "kiosk": "Say, Hi Cee-Jap, to begin.",
+    "event": "Speak into the handheld microphone when you are ready."
+  },
+  "variants": [
+    {
+      "id": "i1",
+      "text": "Good day. What you are about to hear is a recreation of Chief Justice Artemio Panganiban, built from his own published columns and speeches. It is not a recording of him. {how_to_start}"
+    },
+    {
+      "id": "i2",
+      "text": "Welcome. I am your guide for this exhibit. The voice beside me is a recreation of Chief Justice Panganiban, assembled from the columns and speeches he published himself. Not a recording. {how_to_start}"
+    },
+    {
+      "id": "i3",
+      "text": "Hello, and welcome. Retired Chief Justice Artemio Panganiban is not here in person. What answers you is a recreation, drawn from his published writing and from nothing else. {how_to_start}"
+    },
+    {
+      "id": "i4",
+      "text": "Good day, and thank you for stopping. This is a recreation of retired Chief Justice Artemio Panganiban: his published columns and speeches, given a voice. It is not a recording. {how_to_start}"
+    },
+    {
+      "id": "i5",
+      "text": "Welcome to the exhibit. The Chief Justice himself is not here. What speaks beside me is a recreation, and everything it offers you is drawn from the work he published. {how_to_start}"
+    },
+    {
+      "id": "i6",
+      "text": "Good day. Before you ask anything, know this. Chief Justice Panganiban has been recreated here from his own published columns and speeches. No recording, and nothing he did not write. {how_to_start}"
+    }
+  ]
+}

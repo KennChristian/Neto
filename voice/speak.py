@@ -69,7 +69,8 @@ def synthesize(text: str, speed: Optional[float] = None,
                align_out: Optional[dict] = None,
                previous_text: Optional[str] = None,
                settings: Optional[dict] = None,
-               previous_request_ids: Optional[list] = None) -> np.ndarray:
+               previous_request_ids: Optional[list] = None,
+               seed: Optional[int] = None) -> np.ndarray:
     """Text → float32 mono PCM at audio.SYNTH_SAMPLE_RATE via ElevenLabs.
 
     previous_request_ids (2026-08-29): ElevenLabs request stitching — ids of
@@ -106,6 +107,8 @@ def synthesize(text: str, speed: Optional[float] = None,
         body["previous_text"] = previous_text[-400:]
     if previous_request_ids:
         body["previous_request_ids"] = [r for r in previous_request_ids if r][-3:]
+    if seed is not None:   # 2026-09-12 name pin: a fixed seed makes the take repeatable (best effort)
+        body["seed"] = int(seed)
     params = {"output_format": config.OUTPUT_FORMAT}
 
     last_detail = "unknown"
