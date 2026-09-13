@@ -75,8 +75,12 @@ def test_it_alternates_enough_to_read_as_a_conversation():
 
 
 def test_it_is_long_enough_to_stop_someone_and_short_enough_to_loop():
+    """2026-09-13: the bound was 80-400 words (~45-120 s). At 9 lines the whole
+    exchange ran in about 50 seconds, so anyone who stopped to watch heard it
+    repeat inside a minute. Widened deliberately after adding 12 more
+    exchanges; the ceiling still exists so the loop cannot become a lecture."""
     words = sum(len(l["text"].split()) for l in LINES)
-    assert 80 <= words <= 400, words        # ~45-120 s spoken
+    assert 80 <= words <= 900, words
 
 
 def test_the_manifest_matches_the_script_when_it_exists():

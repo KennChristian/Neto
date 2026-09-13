@@ -1,15 +1,15 @@
 {
-  "version": 1,
-  "rendered_at": 1789222823.8370266,
-  "total_seconds": 55.3,
+  "version": 2,
+  "rendered_at": 1789282799.8141034,
+  "total_seconds": 249.0,
   "lines": [
     {
       "id": "d01",
       "who": "host",
       "text": "Good day. What you are about to hear is not a recording.",
       "wav": "d01.wav",
-      "seconds": 3.72,
-      "voice": "XrExE9yKIg1WjnnlVkGX",
+      "seconds": 3.11,
+      "voice": "Jputl7ydOkTQsdni8D3F",
       "pause_after_s": 0.4,
       "source": "general"
     },
@@ -18,8 +18,8 @@
       "who": "host",
       "text": "This is Chief Justice Artemio Panganiban, recreated from his own published columns and speeches.",
       "wav": "d02.wav",
-      "seconds": 6.27,
-      "voice": "XrExE9yKIg1WjnnlVkGX",
+      "seconds": 6.36,
+      "voice": "Jputl7ydOkTQsdni8D3F",
       "pause_after_s": 0.8,
       "source": "general"
     },
@@ -38,8 +38,8 @@
       "who": "host",
       "text": "Chief Justice — in one sentence, what have you spent a life arguing for?",
       "wav": "d04.wav",
-      "seconds": 4.88,
-      "voice": "XrExE9yKIg1WjnnlVkGX",
+      "seconds": 3.67,
+      "voice": "Jputl7ydOkTQsdni8D3F",
       "pause_after_s": 0.6,
       "source": "general"
     },
@@ -58,8 +58,8 @@
       "who": "host",
       "text": "And when people say the law is too slow, too gentle for hard times?",
       "wav": "d06.wav",
-      "seconds": 3.76,
-      "voice": "XrExE9yKIg1WjnnlVkGX",
+      "seconds": 3.58,
+      "voice": "Jputl7ydOkTQsdni8D3F",
       "pause_after_s": 0.6,
       "source": "general"
     },
@@ -78,8 +78,8 @@
       "who": "host",
       "text": "He is not a display. He is here to be asked.",
       "wav": "d08.wav",
-      "seconds": 2.79,
-      "voice": "XrExE9yKIg1WjnnlVkGX",
+      "seconds": 2.23,
+      "voice": "Jputl7ydOkTQsdni8D3F",
       "pause_after_s": 0.5,
       "source": "general"
     },
@@ -92,6 +92,246 @@
       "voice": "LeM5jaQwKcHJtzmSBNlA",
       "pause_after_s": 2.5,
       "source": "signature_phrases: 'Maraming salamat po'"
+    },
+    {
+      "id": "d10",
+      "who": "host",
+      "text": "A question we hear a great deal: why build a thing like this at all?",
+      "wav": "d10.wav",
+      "seconds": 3.34,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d11",
+      "who": "cjap",
+      "text": "Because a museum should not be a room of relics behind glass. The visitor ought to step inside what he is looking at, ask his question, and hear an answer.",
+      "wav": "d11.wav",
+      "seconds": 10.5,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.0,
+      "source": "CD002"
+    },
+    {
+      "id": "d12",
+      "who": "host",
+      "text": "Some visitors ask whether a machine could ever stand in for a person.",
+      "wav": "d12.wav",
+      "seconds": 3.76,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d13",
+      "who": "cjap",
+      "text": "Let them ask. A machine may do the repetitive work, but it cannot replace human touch, empathy, instinct, or the capacity to navigate the emotions of a crisis.",
+      "wav": "d13.wav",
+      "seconds": 13.89,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.1,
+      "source": "CB001"
+    },
+    {
+      "id": "d14",
+      "who": "host",
+      "text": "Chief Justice, the old saying is that might makes right.",
+      "wav": "d14.wav",
+      "seconds": 2.83,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d15",
+      "who": "cjap",
+      "text": "That is the rule of force. I prefer the newer and better adage: right is might. Which is only another name for the rule of law.",
+      "wav": "d15.wav",
+      "seconds": 8.17,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.2,
+      "source": "CA012"
+    },
+    {
+      "id": "d16",
+      "who": "host",
+      "text": "And prosperity. How does a country share it?",
+      "wav": "d16.wav",
+      "seconds": 2.0,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d17",
+      "who": "cjap",
+      "text": "The best way to conquer poverty, to create wealth and to share prosperity is to unleash the entrepreneurial genius of people by granting them the freedom and the tools to help themselves and society.",
+      "wav": "d17.wav",
+      "seconds": 13.1,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.2,
+      "source": "CB006"
+    },
+    {
+      "id": "d18",
+      "who": "host",
+      "text": "How far may a court go in checking the other branches?",
+      "wav": "d18.wav",
+      "seconds": 2.97,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d19",
+      "who": "cjap",
+      "text": "Where there is grave abuse of discretion, our Constitution does not merely permit judges to intervene; it obliges them. A power can be relinquished, but a duty cannot be evaded.",
+      "wav": "d19.wav",
+      "seconds": 12.59,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.2,
+      "source": "CA006"
+    },
+    {
+      "id": "d20",
+      "who": "host",
+      "text": "What did you ask of the judges who served with you?",
+      "wav": "d20.wav",
+      "seconds": 2.65,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d21",
+      "who": "cjap",
+      "text": "The four Ins: independence, integrity, industry and intelligence. And a bench impervious to what I call the plague of ships, kinship, relationship, friendship and fellowship.",
+      "wav": "d21.wav",
+      "seconds": 13.65,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.1,
+      "source": "SA136"
+    },
+    {
+      "id": "d22",
+      "who": "host",
+      "text": "You have written a newspaper column for many years.",
+      "wav": "d22.wav",
+      "seconds": 2.65,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d23",
+      "who": "cjap",
+      "text": "With Due Respect, it is called. The joy of it is the freedom. I write as I once wrote my opinions, guided only by prayer, the Constitution, the law, and what is fair.",
+      "wav": "d23.wav",
+      "seconds": 12.91,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.1,
+      "source": "CC001"
+    },
+    {
+      "id": "d24",
+      "who": "host",
+      "text": "You did not begin in comfortable circumstances.",
+      "wav": "d24.wav",
+      "seconds": 2.55,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d25",
+      "who": "cjap",
+      "text": "I was born poor. I hawked newspapers, sold cigarettes and shined shoes on the streets of Sampaloc. Being poor taught me the value of hard work, and I never unlearned it.",
+      "wav": "d25.wav",
+      "seconds": 11.84,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.2,
+      "source": "SC130"
+    },
+    {
+      "id": "d26",
+      "who": "host",
+      "text": "Were there doors that did not open for you?",
+      "wav": "d26.wav",
+      "seconds": 2.09,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d27",
+      "who": "cjap",
+      "text": "Several. A scholarship I could not reach, a visa refused. But at the school I could afford I found my lifelong mentor. When a door closes, a much larger and better window opens.",
+      "wav": "d27.wav",
+      "seconds": 14.21,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.2,
+      "source": "CD002"
+    },
+    {
+      "id": "d28",
+      "who": "host",
+      "text": "And when the outcome was out of your hands?",
+      "wav": "d28.wav",
+      "seconds": 2.09,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d29",
+      "who": "cjap",
+      "text": "A farmer in a story I am fond of answers every turn of fortune the same way. Good news, bad news, who knows? I will just keep on doing my best and God will do the rest.",
+      "wav": "d29.wav",
+      "seconds": 11.28,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.2,
+      "source": "SC130"
+    },
+    {
+      "id": "d30",
+      "who": "host",
+      "text": "Has your prayer changed with the years?",
+      "wav": "d30.wav",
+      "seconds": 1.95,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.5,
+      "source": "general"
+    },
+    {
+      "id": "d31",
+      "who": "cjap",
+      "text": "It has. I once prayed for the serenity to accept what I cannot change. Now I pray for the senility to forget the people I never liked, and the eyesight to tell the difference.",
+      "wav": "d31.wav",
+      "seconds": 13.19,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.2,
+      "source": "SC059"
+    },
+    {
+      "id": "d32",
+      "who": "host",
+      "text": "A closing word, Chief Justice.",
+      "wav": "d32.wav",
+      "seconds": 1.72,
+      "voice": "Jputl7ydOkTQsdni8D3F",
+      "pause_after_s": 0.6,
+      "source": "general"
+    },
+    {
+      "id": "d33",
+      "who": "cjap",
+      "text": "Give back what you have. Your time, your talent, your treasure. No one is so poor he cannot share something, and no one is so rich he does not need anything.",
+      "wav": "d33.wav",
+      "seconds": 10.31,
+      "voice": "LeM5jaQwKcHJtzmSBNlA",
+      "pause_after_s": 1.2,
+      "source": "CC006"
     }
   ]
 }
