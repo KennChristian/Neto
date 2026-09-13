@@ -17,6 +17,8 @@ _MODEL = os.environ.get("CJ_VAD_MODEL_PATH") or os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "wake", "models", "silero_vad.onnx")
 _lock = threading.Lock()
 _vad_cfg = None
+_vad = None            # the one cached detector (see _detector)
+_vad_buffer_s = 0      # seconds of buffer it was built with
 
 
 def _config():
@@ -29,6 +31,24 @@ def _config():
                 min_silence_duration=0.25, min_speech_duration=0.2),
             sample_rate=16000)
     return _vad_cfg
+
+
+def _detector(total: float):
+    """The ONE VoiceActivityDetector, reused across calls. Caller holds _lock.
+
+    Until 2026-09-13 analyze() built a fresh detector — a fresh Silero ONNX
+    session — for every utterance. The recorder caps a capture at 30 s
+    (main_voice_robot.record_with_meter max_s=30), so one 35 s buffer covers
+    every real call; anything longer rebuilds once, bigger, and that becomes
+    the cached detector.
+    """
+    global _vad, _vad_buffer_s
+    import sherpa_onnx
+    want = max(35, int(total) + 5)
+    if _vad is None or want > _vad_buffer_s:
+        _vad = sherpa_onnx.VoiceActivityDetector(_config(), buffer_size_in_seconds=want)
+        _vad_buffer_s = want
+    return _vad
 
 
 def analyze(src, sr: int = 16000):
@@ -53,7 +73,10 @@ def analyze(src, sr: int = 16000):
         if total < 0.1:
             return {"speech_s": 0.0, "total_s": round(total, 2), "fraction": 0.0, "segments": 0}
         with _lock:   # sherpa detector objects are not thread-safe; one at a time
-            vad = sherpa_onnx.VoiceActivityDetector(_config(), buffer_size_in_seconds=max(10, int(total) + 5))
+            vad = _detector(total)
+            vad.reset()             # drop the previous utterance's buffered audio
+            while not vad.empty():  # ...and any segment reset() may have left queued
+                vad.pop()
             for i in range(0, len(x), 512):
                 vad.accept_waveform(x[i:i + 512])
             vad.flush()
