@@ -92,7 +92,8 @@ Two machines. Neither talks to the other; both talk to the authority.
   (per-machine tuning, root-owned), `app/.env` (keys), the rendered `.wav`s.
 
 Run the tests before anything else: `app/.venv/bin/python -m pytest tests/`.
-Operator procedure for a venue is [docs/event_runbook](docs/) and
+Operator procedure for a venue is [docs/EVENT_RUNBOOK.md](docs/EVENT_RUNBOOK.md)
+(illustrated version: `~/event_runbook.docx` on alpha) and
 [docs/PRE_EVENT_CHECKLIST.md](docs/PRE_EVENT_CHECKLIST.md).
 
 ## Known open items — read before trusting the safety story
