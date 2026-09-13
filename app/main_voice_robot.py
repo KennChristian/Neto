@@ -3676,6 +3676,16 @@ def wake_loop(client, artifacts, gestures):
             _run_enrollment(gestures)
             continue
         print(f"[wake] FIRED (streaming, score {score:.3f})")
+        if history:
+            # One wake fire = one visitor conversation. Follow-up turns stay
+            # inside THIS iteration (the post-answer window below) and keep
+            # their context; a fresh fire is a new person, so the previous
+            # visitor's exchanges must not reach the input gate or the
+            # composer — wrong answers, and someone else's words repeated
+            # back in a public hall (2026-09-13).
+            print(f"[history] cleared {len(history) // 2} exchange(s) from the "
+                  f"previous conversation", flush=True)
+            history.clear()
         ask, _pending_ask["ask"] = _pending_ask["ask"], None
         if ask:   # /event question button (cached clip) or a typed live question
             gestures.perk()
