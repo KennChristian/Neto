@@ -9,7 +9,11 @@ Two Reachy Mini units, two characters:
   composer. One pre-rendered intro line (rotating variants), pre-rendered
   duet playback, then silent. Authoring brief: ``corpus/voice/host_card.md``
   (used by the render scripts, never as a runtime prompt). Voice:
-  ``ELEVEN_HOST_VOICE_ID`` (only the render scripts synthesise with it).
+  ``ELEVEN_HOST_VOICE_ID`` — used by the render scripts AND live: ``activate()``
+  points ``voice.config.ELEVEN_VOICE_ID`` at it and ``voice/speak.py`` re-reads
+  that attribute on every synthesis, so a stale id here makes every live Host
+  line (intro, host-asks, /maintain say-text) come out in the wrong voice with
+  no error at all — 2026-09-12: the second robot ran a stale one all day.
 
 Which machine plays which is ``cjap_is`` (alpha | beta), held by the lease
 authority (dashboard/console.py) and delivered to each robot in its lease
@@ -60,7 +64,7 @@ def load(log=print) -> dict:
         if not voices["cjap"]:
             warnings.append("ELEVEN_VOICE_ID unset — Panganiban falls back to the OpenAI voice")
         if not voices["host"]:
-            warnings.append("ELEVEN_HOST_VOICE_ID unset — only the render scripts need it")
+            warnings.append("ELEVEN_HOST_VOICE_ID unset — the Host role would speak in the cjap voice")
         _state.update(cards=cards, voices=voices, warnings=warnings, loaded=True)
         for w in warnings:
             log(f"[persona] {w}")

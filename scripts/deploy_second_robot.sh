@@ -176,6 +176,55 @@ run_remote "sudo -n systemctl daemon-reload"
 run_remote "sudo -n systemctl enable --now pi-dashboard.service wifi-fallback.service"
 run_remote "sudo -n systemctl enable --now supervaise.service"
 
+# app/.env is excluded from the rsync above because it carries per-machine
+# SECRETS. Two of its keys are neither secret nor per-machine: the voice ids
+# ARE the identity of the two characters, and because the role is assignable
+# (cjap_is) either machine may have to speak either character. Divergence is
+# silent — the wrong voice simply comes out — which is how ELEVEN_HOST_VOICE_ID
+# stayed at its old value on the second robot after the Host voice was chosen
+# on 2026-09-12. So those two ids are PUSHED from this machine (the lease
+# authority owns character identity) and every change is announced; every other
+# shared-looking key is only COMPARED and reported, because it may be a
+# legitimate per-machine difference. Nothing outside these two lists is read and
+# no API key is ever copied or printed. The remote app/.env is already inside
+# $HOME/deploy-backups/$STAMP/repo-config.tgz from the backup step above.
+# This runs AFTER the units are installed and enabled so the restart below
+# starts the app on the new unit config and the new value in one go.
+SYNC_KEYS="ELEVEN_VOICE_ID ELEVEN_HOST_VOICE_ID"
+WARN_KEYS="WHISPER_MODEL CJ_TTS_BACKEND CJ_WAKE_STT_BACKEND CJ_ELEVEN_RESPELL CJ_ANSWER_GATE_ENABLED CJ_COMPOSER_MAX_TOKENS CJ_COMPOSER_EFFORT CJ_SKIP_FIDELITY"
+say "shared app/.env keys (voice ids pushed, everything else only compared)"
+ENV_SYNCED=0
+for VAR in $SYNC_KEYS $WARN_KEYS; do
+  MINE=$(sed -n "s|^${VAR}=||p" "$HERE/app/.env" 2>/dev/null | tail -1 || true)
+  THEIRS=$("${SSH[@]}" "$TARGET" "sed -n 's|^${VAR}=||p' $REMOTE/app/.env 2>/dev/null | tail -1" || true)
+  if [ "$MINE" = "$THEIRS" ]; then echo "  $VAR: same"; continue; fi
+  case " $SYNC_KEYS " in
+    *" $VAR "*)
+      if [ -z "$MINE" ]; then
+        echo "  $VAR: differs but is unset HERE — left alone (this machine is not its source)"
+        continue
+      fi
+      case "$MINE" in *[!A-Za-z0-9]*)
+        echo "  $VAR: local value is not a plain voice id — refusing to push it" >&2
+        continue ;;
+      esac
+      echo "  $VAR: DIFFERS — there='${THEIRS:-unset}' -> '$MINE'"
+      if [ "$MODE" != dry ]; then
+        "${SSH[@]}" "$TARGET" "if grep -q '^${VAR}=' $REMOTE/app/.env; then sed -i 's|^${VAR}=.*|${VAR}=${MINE}|' $REMOTE/app/.env; else printf '%s=%s\n' '${VAR}' '${MINE}' >> $REMOTE/app/.env; fi"
+        ENV_SYNCED=1
+      fi
+      ;;
+    *)
+      echo "  $VAR: DIFFERS — here='${MINE:-unset}' there='${THEIRS:-unset}' — NOT changed; reconcile by hand if it is meant to match"
+      ;;
+  esac
+done
+if [ "$ENV_SYNCED" = 1 ]; then
+  echo "  a voice id changed — restarting supervaise.service there (app/.env is read once, at import)"
+  "${SSH[@]}" "$TARGET" "sudo -n systemctl restart supervaise.service" ||
+    echo "  could NOT restart supervaise.service — restart it on that machine by hand" >&2
+fi
+
 say "checks"
 run_remote "systemctl is-active pi-dashboard.service supervaise.service | paste -sd' '"
 run_remote "cd $REMOTE && app/.venv/bin/python -m pytest tests/ -q 2>&1 | tail -1"
