@@ -1003,3 +1003,29 @@ def test_duet_line_only_goes_to_the_role_that_owns_it_after_a_swap(tmp_path):
     assert con.lease_for(owner, clock())["duet_seq"] == con.duet["seq"]
     other = "beta" if owner == "alpha" else "alpha"
     assert con.lease_for(other, clock())["duet_seq"] == 0
+
+
+def test_repeated_duet_reports_do_not_extend_the_hold(tmp_path):
+    """Regression, 2026-09-13. The robot re-reports the same duet_done on every
+    1 s lease poll and seq does not move until the hold ends, so re-arming the
+    hold on each report pushed its deadline forward forever and the exchange
+    stopped dead after its first line. Caught by a live soak, not by a test."""
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="duet", profile="kiosk", now=clock())
+    for r in ROBOTS:
+        _reporting(con, r, clock)
+    con.tick(clock())
+    idx0, seq0 = con.duet["idx"], con.duet["seq"]
+    owner = con.slot_of(con.duet["who"])
+    _reporting(con, owner, clock, duet_done=seq0)
+    deadline = con.duet["hold_until"]
+    assert deadline > clock()
+    for _ in range(5):                      # more polls INSIDE the pause, same duet_done
+        clock.advance(0.05)
+        _reporting(con, owner, clock, duet_done=seq0)
+        assert con.duet["hold_until"] == deadline, "the hold deadline must not move"
+        assert con.duet["idx"] == idx0, "and it must not have advanced yet"
+    clock.advance(cs.DUET_LOOP_GAP_S + 3.0)
+    con.tick(clock())
+    assert con.duet["idx"] == idx0 + 1, "it must still advance once the pause elapses"

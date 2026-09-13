@@ -607,6 +607,12 @@ class Console:
         exchange restarted instantly. Holding here (rather than sleeping in the
         robot) keeps the authority the only thing that decides timing.
         """
+        if self.duet.get("hold_until"):
+            # The robot re-reports the SAME duet_done on every 1 s lease poll,
+            # and seq does not move until the hold ends — so without this the
+            # deadline was pushed forward once a second and never elapsed, and
+            # the exchange stopped dead after its first line (2026-09-13).
+            return
         lines = self.sources.duet_lines()
         if not lines:
             self.duet["on"] = False
