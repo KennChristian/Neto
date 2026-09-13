@@ -1615,8 +1615,18 @@ class _RefFeed:
 
     @staticmethod
     def wanted():
-        return os.environ.get("CJ_AEC_REF_FEED", "0").strip().lower() in {
-            "1", "true", "yes", "on"} and (_bt_route() or _dac_route())
+        if os.environ.get("CJ_AEC_REF_FEED", "0").strip().lower() not in {
+                "1", "true", "yes", "on"}:
+            return False
+        if _bt_route():
+            return True      # CJ_AEC_REF_DELAY_MS=444, measured on the Sony
+        # 2026-09-13 external-PA prep: a DAC route must NOT arm the feed on the
+        # default 0 ms. The 444 ms above was measured on Bluetooth; the DAC path
+        # has never been calibrated, and an uncalibrated reference at REF_GAIN
+        # 1000 makes the XVF3800 subtract the wrong thing — worse than no AEC.
+        # Measure with ~/tools/aec_ref_calib.py while the DAC is the live route,
+        # then set CJ_AEC_REF_DELAY_DAC_MS in the drop-in to arm the feed.
+        return _dac_route() and _env_num("CJ_AEC_REF_DELAY_DAC_MS", 0) > 0
 
     def sync(self):
         """Follow the route; returns True when the feed is on. Cheap (one stat)."""
