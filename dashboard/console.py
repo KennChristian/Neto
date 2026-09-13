@@ -360,7 +360,8 @@ class Console:
         # `until` is when the current line + its pause is expected to end, after
         # which tick() advances even without a report (a robot that cannot play
         # must not stall the loop). It loops with a gap. No mic, nothing live.
-        self.duet = {"on": False, "seq": 0, "idx": -1, "who": "", "line": "", "until": 0.0}
+        self.duet = {"on": False, "seq": 0, "idx": -1, "who": "", "line": "", "until": 0.0,
+                     "hold_until": 0.0}   # authored pause between lines (2026-09-13)
         self.config_seq = 0
         self.journal_mem: deque = deque(maxlen=JOURNAL_KEEP)
         self._effective_cache = None
@@ -587,14 +588,34 @@ class Console:
         """Begin (or restart) the exchange at line 0 (lock held)."""
         lines = self.sources.duet_lines()
         if not lines:
-            self.duet.update(on=False, idx=-1, who="", line="", until=0.0)
+            self.duet.update(on=False, idx=-1, who="", line="", until=0.0, hold_until=0.0)
             self._journal("duet", "duet mode but no duet_script.json — nothing to play", who=who)
             return
         lid, lwho, pause = lines[0]
         self.duet.update(on=True, seq=self.duet["seq"] + 1, idx=0, who=lwho, line=lid,
-                         until=now + 30.0)   # 30 s cap until the robot reports the real end
+                         until=now + 30.0,   # 30 s cap until the robot reports the real end
+                         hold_until=0.0)
         self._journal("duet", f"duet start — line {lid} ({self.name(self.slot_of(lwho))})",
                       who=who, seq=self.duet["seq"], line=lid)
+
+    def _duet_hold(self, now, who="console"):
+        """A line just finished: wait its authored pause before the next one.
+
+        Until 2026-09-13 `pause_after_s` was read out of the script and thrown
+        away, and DUET_LOOP_GAP_S was never referenced at all, so the two
+        robots traded lines back to back with no beat between them and the
+        exchange restarted instantly. Holding here (rather than sleeping in the
+        robot) keeps the authority the only thing that decides timing.
+        """
+        lines = self.sources.duet_lines()
+        if not lines:
+            self.duet["on"] = False
+            return
+        cur = self.duet["idx"]
+        pause = lines[cur][2] if 0 <= cur < len(lines) else 0.6
+        if cur + 1 >= len(lines):
+            pause += DUET_LOOP_GAP_S      # a longer breath before it loops
+        self.duet["hold_until"] = now + max(0.0, pause)
 
     def _duet_advance(self, now, who="console"):
         """Move to the next line, looping with a gap (lock held)."""
@@ -606,7 +627,8 @@ class Console:
         if nxt >= len(lines):
             nxt = 0     # loop
         lid, lwho, pause = lines[nxt]
-        self.duet.update(seq=self.duet["seq"] + 1, idx=nxt, who=lwho, line=lid, until=now + 30.0)
+        self.duet.update(seq=self.duet["seq"] + 1, idx=nxt, who=lwho, line=lid,
+                         until=now + 30.0, hold_until=0.0)
         self._journal("duet", f"duet line {lid} ({self.name(self.slot_of(lwho))})"
                               + (" — loop" if nxt == 0 else ""),
                       who=who, seq=self.duet["seq"], line=lid)
@@ -617,11 +639,18 @@ class Console:
         the real advance is the robot's duet_done report in report()."""
         if self.mode != "duet":
             if self.duet["on"]:
-                self.duet.update(on=False, idx=-1, who="", line="", until=0.0)
+                self.duet.update(on=False, idx=-1, who="", line="", until=0.0, hold_until=0.0)
             return
         if not self.duet["on"]:
             self._duet_start(now)
             return
+        # authored pause between lines: hold, then advance
+        hold = self.duet.get("hold_until") or 0.0
+        if hold:
+            if now >= hold:
+                self.duet["hold_until"] = 0.0
+                self._duet_advance(now)
+            return      # never let the deadline below fire during a hold
         # deadline fallback: a robot that never reports (cannot play, or gone)
         # must not freeze the loop
         if self.duet["until"] and now >= self.duet["until"]:
@@ -888,7 +917,7 @@ class Console:
             # duet: the robot that owns the current line reported it finished -> next line
             if (self.mode == "duet" and self.duet["on"] and rec["duet_done"] >= self.duet["seq"]
                     and self.duet["seq"] > 0 and robot == self.slot_of(self.duet["who"])):
-                self._duet_advance(now, who=robot)
+                self._duet_hold(now, who=robot)
             self.tick(now)
             return True, self.lease_for(robot, now), 200
 

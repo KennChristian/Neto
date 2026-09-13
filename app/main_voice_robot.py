@@ -43,6 +43,8 @@ DUET_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 # Pre-recorded Host questions. The Host's voice is cloned/recorded by hand, so
 # the room hears a real take rather than a synthesis: drop <id>.wav here and
 # name it in the console. Falls back to the Host persona's own voice.
+INTRO_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                         "data", "prerendered", "intro")
 HOST_Q_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                           "data", "host_questions")
 ROLE_SWITCH = -2.0                 # _wake_stream sentinel: persona changed while idle-listening
@@ -3942,6 +3944,31 @@ def _floor_interrupt():
     _SENT_OUT.abort()
 
 
+def _intro_clip(seq):
+    """The pre-rendered intro variant for THIS visitor, or None.
+
+    Every visitor used to hear the same sentence, synthesised live over the
+    network (2026-09-13 audit). The variants are rendered per mode because the
+    closing instruction differs — the wake phrase in kiosk, the handheld in
+    event — and rotated by the console's intro_seq, which increments once per
+    intro, so consecutive visitors never get the same one. Returns (path, text)
+    or None to fall back to live TTS of host_intro_text.
+    """
+    try:
+        with open(os.path.join(INTRO_DIR, "manifest.json"), encoding="utf-8") as f:
+            clips = json.load(f)["clips"]
+        mode = "kiosk" if _wake_listen() else "event"
+        pool = sorted((c for c in clips if c.get("mode") == mode),
+                      key=lambda c: str(c.get("id")))
+        if not pool:
+            return None
+        c = pool[int(seq) % len(pool)] if isinstance(seq, int) else pool[0]
+        path = os.path.join(INTRO_DIR, c["wav"])
+        return (path, c.get("text", "")) if os.path.isfile(path) else None
+    except Exception:
+        return None
+
+
 def _floor_intro():
     """on_intro (Host role only): say the intro line once, then stay silent,
     and report intro_done so the console hands the floor to Panganiban."""
@@ -3961,8 +3988,16 @@ def _floor_intro():
     def _say():
         _TURN["active"] = True
         try:
-            print(f"[host] intro: {text[:80]}", flush=True)
-            _say_curated_line(_gestures_inst, text, None)
+            pre = _intro_clip(seq)
+            if pre:
+                path, spoken = pre
+                print(f"[host] intro (variant {os.path.basename(path)}): {spoken[:80]}", flush=True)
+                if _gestures_inst is not None:
+                    _gestures_inst.start("talk")
+                subprocess.run(_aplay_cmd(path), timeout=120)
+            else:
+                print(f"[host] intro (live, no pre-rendered variant): {text[:80]}", flush=True)
+                _say_curated_line(_gestures_inst, text, None)
         except Exception as e:
             print(f"[host] intro failed ({type(e).__name__}: {e})")
         finally:

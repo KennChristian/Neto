@@ -870,6 +870,55 @@ def test_client_fires_the_first_question_and_not_a_role_swap():
 # line, telling the robot whose ROLE owns the current line to play its clip,
 # waiting for that robot to report it finished, then advancing. No mic opens.
 
+def _finish_line(con, clock, owner=None):
+    """Report the current duet line finished, then step over its authored
+    pause (2026-09-13: the console now holds for pause_after_s, plus
+    DUET_LOOP_GAP_S at the end of the exchange, instead of advancing
+    instantly)."""
+    owner = owner or con.slot_of(con.duet["who"])
+    _reporting(con, owner, clock, duet_done=con.duet["seq"])
+    clock.advance(cs.DUET_LOOP_GAP_S + 3.0)
+    con.tick(clock())
+
+
+def test_duet_holds_the_authored_pause_before_the_next_line(tmp_path):
+    """pause_after_s used to be read out of the script and thrown away, so the
+    two robots traded lines with no beat between them."""
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    con.set_config(mode="duet", profile="kiosk", now=clock())
+    for r in ROBOTS:
+        _reporting(con, r, clock)
+    con.tick(clock())
+    idx0, seq0 = con.duet["idx"], con.duet["seq"]
+    owner = con.slot_of(con.duet["who"])
+    _reporting(con, owner, clock, duet_done=seq0)
+    assert con.duet["idx"] == idx0, "the line must HOLD, not advance instantly"
+    assert con.duet["hold_until"] > clock(), "a hold deadline must be set"
+    con.tick(clock())
+    assert con.duet["idx"] == idx0, "still holding before the pause elapses"
+    clock.advance(cs.DUET_LOOP_GAP_S + 3.0)
+    con.tick(clock())
+    assert con.duet["idx"] == idx0 + 1, "advances once the pause has elapsed"
+
+
+def test_duet_waits_longer_before_it_loops(tmp_path):
+    """The restart gets DUET_LOOP_GAP_S on top of the last line's pause."""
+    clock = Clock()
+    con = make_console(tmp_path, clock)
+    lines = con.sources.duet_lines()
+    con.set_config(mode="duet", profile="kiosk", now=clock())
+    for r in ROBOTS:
+        _reporting(con, r, clock)
+    con.tick(clock())
+    for _ in range(len(lines) - 1):      # walk to the LAST line
+        _finish_line(con, clock)
+    assert con.duet["idx"] == len(lines) - 1
+    _reporting(con, con.slot_of(con.duet["who"]), clock, duet_done=con.duet["seq"])
+    held = con.duet["hold_until"] - clock()
+    assert held >= cs.DUET_LOOP_GAP_S, f"loop gap not applied (held {held:.1f}s)"
+
+
 def test_duet_walks_the_script_line_by_line(tmp_path):
     clock = Clock()
     con = make_console(tmp_path, clock)
@@ -889,7 +938,7 @@ def test_duet_walks_the_script_line_by_line(tmp_path):
     assert con.lease_for(other, clock())["duet_seq"] == 0
     # it plays and reports done -> the next line, to the other role
     seq = con.duet["seq"]
-    _reporting(con, owner, clock, duet_done=seq)
+    _finish_line(con, clock, owner)
     assert con.duet["idx"] == 1 and con.duet["seq"] == seq + 1
     assert con.duet["line"] != first
 
@@ -905,9 +954,8 @@ def test_duet_loops_at_the_end(tmp_path):
     seen = []
     for _ in range(n):
         seen.append(con.duet["idx"])
-        owner = con.slot_of(con.duet["who"])
         clock.advance(1)
-        _reporting(con, owner, clock, duet_done=con.duet["seq"])
+        _finish_line(con, clock)
     assert seen == list(range(n))
     assert con.duet["idx"] == 0, "after the last line it loops to the first"
 
