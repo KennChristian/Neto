@@ -654,6 +654,7 @@ MOTION_KNOBS = {  # key: (min, max, default, label)
     "sway_hz":       (0.02, 0.3, 0.07, "sway speed (Hz)"),
     "breath_gain":   (0.3, 3.0,  1.3,  "breathing size"),
     "breath_pitch":  (0.0, 1.0,  0.75, "breathing nod amount"),
+    "env_deg":       (0.0, 12.0, 2.2,  "voice emphasis (deg nod at full volume; 0 = off)"),
     "avatar_offset": (-1.0, 2.0, 0.0,  "avatar sync offset (s; +later, -earlier)"),
 }
 

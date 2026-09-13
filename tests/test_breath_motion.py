@@ -63,3 +63,53 @@ def test_each_mode_has_an_amplitude_and_speaking_is_calmest():
     assert set(s) == {"listen", "think", "sleep", "talk"}
     assert s["talk"] < s["sleep"] < s["think"] <= s["listen"]   # the answer already moves plenty
     assert all(0 < v <= 1 for v in s.values())
+
+
+# ── envelope-driven emphasis (2026-09-13) ──────────────────────────────────
+# The head used to breathe at a fixed rate straight through an answer, so it
+# moved identically whether the robot was mid-sentence or mid-pause. The
+# emphasis term scales a faster nod by the loudness of the audio playing now.
+
+def _speaking(g, loud=1.0, frames=400, hz=50.0):
+    """Pretend a clip of constant loudness `loud` started this instant."""
+    import time as _t
+    g._env = {"amp": [loud] * frames, "hz": hz, "t0": _t.monotonic()}
+    return g
+
+
+def test_envelope_adds_motion_while_speaking():
+    quiet = max(max(abs(v) for v in _g().breath_offset(t / 20)) for t in range(600))
+    g = _speaking(_g())
+    loud = max(max(abs(v) for v in g.breath_offset(t / 20)) for t in range(600))
+    assert loud > quiet, "a loud clip must move the head more than silence"
+
+
+def test_envelope_returns_to_silence_when_the_clip_ends():
+    g = _speaking(_g(), frames=2)          # ~40 ms of audio, already over
+    import time as _t
+    g._env["t0"] = _t.monotonic() - 5.0    # started 5 s ago -> past the end
+    assert g._env_level() == 0.0
+    # and the offset matches a robot with no envelope at all
+    assert g.breath_offset(3.3) == _g().breath_offset(3.3)
+
+
+def test_envelope_is_disabled_at_zero_degrees(monkeypatch):
+    monkeypatch.setattr(mvr, "ENV_DEG", 0.0)
+    g = _speaking(_g())
+    assert g.breath_offset(2.0) == _g().breath_offset(2.0)
+
+
+def test_envelope_survives_a_gestures_built_without_init():
+    g = mvr.Gestures.__new__(mvr.Gestures)   # no __init__, so no _env attribute
+    g.breath_scale = 1.0
+    assert g._env_level() == 0.0             # must read as silence, not raise
+
+
+def test_speak_envelope_never_raises_on_a_bad_file(tmp_path):
+    g = _g()
+    bad = tmp_path / "not-a-wav.wav"
+    bad.write_bytes(b"this is not audio")
+    g.speak_envelope(str(bad))                # must fail silently
+    assert g._env_level() == 0.0
+    g.speak_envelope(str(tmp_path / "missing.wav"))
+    assert g._env_level() == 0.0

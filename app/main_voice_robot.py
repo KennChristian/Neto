@@ -855,6 +855,10 @@ except ValueError:
 # left-right yaw sway laid over the breath — degrees of swing and how often.
 try:
     HEAD_SWAY_DEG = max(0.0, min(25.0, float(os.environ.get("CJ_HEAD_SWAY_DEG", "4"))))
+    # Envelope-driven emphasis (2026-09-13): degrees of extra nod at FULL
+    # loudness. The head tracks the voice instead of breathing at a fixed rate
+    # straight through it. 0 disables and restores the pre-2026-09-13 motion.
+    ENV_DEG = max(0.0, min(12.0, float(os.environ.get("CJ_ENV_DEG", "2.2"))))
 except ValueError:
     HEAD_SWAY_DEG = 10.0
 try:
@@ -894,6 +898,11 @@ class Gestures:
         self.idle_gesture_s = float(os.environ.get("CJ_IDLE_GESTURE_S", "10"))
         self._last_idle = 0.0
         self.talk_style = "neutral"
+        # Audio envelope of the clip currently playing (2026-09-13), so the
+        # head moves WITH the voice. {amp: [0..1 per frame], hz, t0}; amp None
+        # when nothing is speaking. Written by speak_envelope(), read every
+        # breath cycle by _env_level(). Cheap: one list index per cycle.
+        self._env = {"amp": None, "hz": 50.0, "t0": 0.0}
         global _gestures_inst
         _gestures_inst = self
         # Continuous motion (2026-09-12). Every gesture until now was a
@@ -943,6 +952,63 @@ class Gestures:
         self._talk_style = value
         self._style_new.set()   # new sentence style → one accent gesture allowed
 
+    def speak_envelope(self, wav_path, hz=50.0, lead_s=0.0):
+        """Load the loudness envelope of `wav_path` and start tracking it now.
+
+        Called just before a clip is played. Failure is silent and simply
+        leaves the head on its normal breathing — this must never be able to
+        break playback.
+        """
+        if ENV_DEG <= 0:
+            return
+        try:
+            import wave
+            with wave.open(wav_path) as w:
+                sr = w.getframerate() or 16000
+                ch = w.getnchannels() or 1
+                raw = w.readframes(w.getnframes())
+            x = np.frombuffer(raw, dtype=np.int16)
+            if ch > 1:
+                x = x[::ch]
+            if x.size == 0:
+                return
+            block = max(1, int(sr / float(hz)))
+            n = x.size // block
+            if n < 1:
+                return
+            blocks = x[:n * block].astype(np.float32).reshape(n, block)
+            amp = np.sqrt((blocks * blocks).mean(axis=1))
+            peak = float(amp.max())
+            if peak <= 1.0:
+                return
+            amp = np.clip(amp / peak, 0.0, 1.0) ** 0.6   # perceptual-ish curve
+            self._env = {"amp": amp.tolist(), "hz": float(hz),
+                         "t0": time.monotonic() + lead_s}
+        except Exception:
+            self._env = {"amp": None, "hz": 50.0, "t0": 0.0}
+
+    def clear_envelope(self):
+        self._env = {"amp": None, "hz": 50.0, "t0": 0.0}
+
+    def _env_level(self):
+        """Loudness 0..1 at this instant, 0 when nothing is playing.
+
+        getattr, not self._env: the motion tests build a bare Gestures without
+        running __init__, and a missing envelope must read as silence rather
+        than raise inside the 30 Hz breath loop.
+        """
+        env = getattr(self, "_env", None) or {}
+        amp = env.get("amp")
+        if not amp:
+            return 0.0
+        i = int((time.monotonic() - env["t0"]) * env["hz"])
+        if i < 0:
+            return 0.0
+        if i >= len(amp):
+            self._env = {"amp": None, "hz": 50.0, "t0": 0.0}   # clip finished
+            return 0.0
+        return float(amp[i])
+
     def breath_offset(self, t):
         """Head offset in degrees at time `t`, as (yaw, pitch, roll).
 
@@ -967,7 +1033,18 @@ class Gestures:
         # incommensurable sines so the swing itself never lands in a metronome.
         sway = sway_deg * (0.82 * s(2 * math.pi * sway_hz * t)
                            + 0.18 * s(2 * math.pi * sway_hz * 0.37 * t + 1.1))
-        return (k * yaw + self.breath_scale * sway, k * pitch, k * roll)
+        # Envelope emphasis: a ~2.3 Hz nod and a slower yaw whose AMPLITUDE is
+        # the loudness of the audio playing right now. Silent passages fall to
+        # zero, so between sentences the head returns to plain breathing.
+        env_deg = _motion_val("env_deg", ENV_DEG)
+        e = self._env_level() if env_deg > 0 else 0.0
+        if e > 0:
+            emph_p = env_deg * e * s(2 * math.pi * 2.3 * t)
+            emph_y = 0.45 * env_deg * e * s(2 * math.pi * 1.7 * t + 0.7)
+        else:
+            emph_p = emph_y = 0.0
+        return (k * yaw + self.breath_scale * sway + emph_y,
+                k * pitch + emph_p, k * roll)
 
     def _breath_run(self):
         """Hold the head alive around whatever pose the last gesture chose.
@@ -2257,6 +2334,11 @@ def _play_wav_interruptible(wav_path, stop):
     model and kill playback if the phrase clears stop.threshold. Returns True
     if playback was cut short by the stop word, False if it played out.
     Any listener failure degrades to normal (uninterruptible) playback."""
+    try:                                   # head tracks this clip's loudness
+        if _gestures_inst is not None:
+            _gestures_inst.speak_envelope(wav_path)
+    except Exception:
+        pass
     proc = subprocess.Popen(_aplay_cmd(wav_path))
     fired = peak = 0.0
     trace = _StopTrace()
@@ -2910,6 +2992,7 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
     listener_box = {}   # holds the answer-spanning StopListener once armed
 
     def _play(wav, prefed_age=None):
+        gestures.speak_envelope(wav)   # head tracks this sentence's loudness
         listener = listener_box.get("l")
         if listener is not None:
             return _play_wav_listener(wav, listener, prefed_age)
@@ -2959,15 +3042,30 @@ def _handle_turn_streaming(client, artifacts, gestures, history, stop,
     except Exception:
         pass
     threading.Thread(target=_worker, daemon=True).start()
+    # HARD TIMEOUT on the whole answer chain (2026-09-13). Until now the only
+    # bail-out was filler.exhausted, which counts CLIPS, not seconds: with
+    # CJ_FILLERS_ENABLED=0 it never fires at all, and with long clips the room
+    # could sit through a 17 s worst case (measured) with the robot silent and
+    # visibly not listening. This is a wall clock from the transcript, and the
+    # line it plays is the PRE-RENDERED one in the cloned voice (BAIL_WAV), not
+    # a live synthesis that would itself need the network we have just lost.
+    # 0 disables. Does not cover a stall AFTER first audio — see the runbook.
+    hard_s = _env_num("CJ_TURN_HARD_TIMEOUT_S", 20)
     try:
         while not done.wait(0.25):
-            if filler.exhausted.is_set() and not first_audio.is_set():
+            waited = time.monotonic() - t0
+            over = hard_s > 0 and waited > hard_s
+            if (filler.exhausted.is_set() or over) and not first_audio.is_set():
                 abort.set()
-                print(f"[filler] {filler.max_clips} fillers played, no speech yet — bailing out")
+                why = (f"hard timeout — {waited:.1f}s with no audio (limit {hard_s:g}s)"
+                       if over else f"{filler.max_clips} fillers played, no speech yet")
+                print(f"[turn] {why} — bailing out", flush=True)
                 _publish_transcript("note", "(no answer in time — asked for a more specific question)")
                 gestures.start("talk")
                 if os.path.exists(BAIL_WAV):
                     subprocess.run(_aplay_cmd(BAIL_WAV), stderr=subprocess.DEVNULL)
+                else:
+                    print(f"[turn] BAIL_WAV missing at {BAIL_WAV} — the room gets SILENCE", flush=True)
                 return True
         if "err" in result:
             if not internet_up():
