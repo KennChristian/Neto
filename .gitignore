@@ -10,4 +10,5 @@ data/host_questions/*.mp3
 # Duet audio: re-renderable from corpus/voice/duet_script.json (scripts/render_duet.py).
 # The manifest IS tracked, so a machine with no API key still knows what the audio should be.
 data/prerendered/duet/*.wav
+data/prerendered/intro/*.wav
 data/prerendered/duet/*.mp3
