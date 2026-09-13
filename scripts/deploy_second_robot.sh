@@ -141,9 +141,19 @@ else
   PIN_SPEED=$(systemctl show supervaise.service -p Environment | tr ' ' '\n' | grep '^CJ_NAME_PIN_SPEED=' || true)
   PIN_SYL=$(systemctl show supervaise.service -p Environment | tr ' ' '\n' | grep '^CJ_NAME_PIN_SYLLABLE=' || true)
   LOCK=$(systemctl show supervaise.service -p Environment | tr ' ' '\n' | grep '^CJ_VOICE_LOCK_THRESHOLD=' || true)
+  # 2026-09-13: each value arrives as KEY=VALUE from `systemctl show -p Environment`.
+  # A systemd drop-in needs the `Environment=` PREFIX — without it systemd logs
+  # "Unknown key ... ignoring" and the whole file is inert. It was inert from
+  # 2026-09-12 until this was fixed, so the second robot never had the name pin
+  # and kept its own voice-lock threshold. Empty values are skipped rather than
+  # written as a bare `Environment=`, which systemd also rejects.
+  DROPIN_LINES=""
+  for KV in "$PIN_SPEED" "$PIN_SYL" "$LOCK"; do
+    [ -n "$KV" ] && DROPIN_LINES="${DROPIN_LINES}Environment=${KV}\n"
+  done
   "${SSH[@]}" "$TARGET" "sudo -n mkdir -p /etc/systemd/system/supervaise.service.d && \
-    printf '[Service]\n# Added by scripts/deploy_second_robot.sh from the authority machine.\n# Only settings this machine cannot have had at its build date. Its OWN\n# wakeword.conf is untouched: that file holds tuning specific to this\n# robot, its speaker and its room. Delete this file to undo.\n%s\n%s\n%s\n' \
-      '${PIN_SPEED}' '${PIN_SYL}' '${LOCK}' \
+    printf '[Service]\n# Added by scripts/deploy_second_robot.sh from the authority machine.\n# Only settings this machine cannot have had at its build date. Its OWN\n# wakeword.conf is untouched: that file holds tuning specific to this\n# robot, its speaker and its room. Delete this file to undo.\n%b' \
+      '${DROPIN_LINES}' \
       | sudo -n tee /etc/systemd/system/supervaise.service.d/zz-from-alpha.conf >/dev/null"
   echo "  wrote zz-from-alpha.conf; its own wakeword.conf left alone"
   echo "  differences between the two drop-ins (for a human to reconcile):"
