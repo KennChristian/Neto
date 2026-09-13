@@ -532,9 +532,14 @@ class Console:
         self._eff_sig = self.sources.signature(self.mode)
         values, sources, errors = self.sources.resolve(self.mode, self.profile, self.overrides)
         env = {SETTINGS[k]["env"]: env_string(SETTINGS[k]["type"], v) for k, v in values.items()}
-        # a zero post-answer window also switches the always-listen fallback off
-        if values.get("post_answer_window_s", 1) == 0:
-            env["CJ_ALWAYS_LISTEN"] = "0"
+        # A zero post-answer window also switches the always-listen fallback off.
+        # Emit the key in BOTH directions (2026-09-13 audit): _floor_settings on the
+        # robot only assigns keys PRESENT in this dict and never unsets, so omitting
+        # it on the way back left a stale "0" in the live process — the lock-less
+        # follow-up window stayed dead after any duet -> direct switch until a
+        # restart. Both robots were found in that state. "1" matches the robot-side
+        # default in main_voice_robot._always_listen().
+        env["CJ_ALWAYS_LISTEN"] = "0" if values.get("post_answer_window_s", 1) == 0 else "1"
         self._effective_cache = {"values": values, "sources": sources, "errors": errors, "env": env}
         if announce:
             self.config_seq += 1
